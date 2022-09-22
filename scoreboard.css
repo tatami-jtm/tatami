@@ -1,0 +1,249 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: sans-serif;
+    background-color: #000;
+}
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+.view {
+    position: absolute;
+    top: 0; left: 0;
+    right: 0; bottom: 0;
+
+    display: none;
+}
+.view.view-active {
+    display: block;
+}
+
+.view-main .main-grid {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 30rem 1fr;
+    grid-template-rows: 100px 1fr 1fr 100px;
+}
+.view-main .main-grid .main-row-name {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    font-size: 40px;
+    padding: 1rem 3rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+.view-main .main-grid .main-row-name.row-white {
+    grid-row: 1;
+    background-color: #ddd;
+}
+.view-main .main-grid .main-row-name.row-blue {
+    grid-row: 4;
+    background-color: #008;
+    color: white;
+}
+.view-main .main-grid .main-row-name .name {
+    text-overflow: ellipsis;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.view-main .main-grid .main-row-score {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    padding: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.view-main .main-grid .main-row-score.row-white {
+    grid-row: 2;
+    background-color: #fff;
+}
+.view-main .main-grid .main-row-score.row-blue {
+    grid-row: 3;
+    background-color: #00f;
+    color: white;
+}
+.view-main .main-grid .main-row-score.expand {
+    grid-row-start: 2;
+    grid-row-end: 4;
+}
+.view-main .main-grid .main-row-score.collapse {
+    display: none;
+}
+
+.view-main .main-grid .main-row-score .score-text {
+    font-size: 160px;
+    font-weight: bold;
+    text-align: center;
+    flex-grow: 1;
+}
+
+.view-main .main-grid .main-row-score .score-text:empty {
+    display: none;
+}
+
+
+.view-main .main-grid .main-row-score .score-grid {
+    display: none;
+    align-items: center;
+    padding: 0 5rem;
+    width: 100%;
+}
+.view-main .main-grid .main-row-score .score-text:empty + .score-grid {
+    display: flex;
+}
+
+.view-main .main-grid .main-row-score .score-grid .score-wazaari {
+    font-size: 180px;
+    flex-grow: 0;
+}
+
+.view-main .main-grid .main-row-score .score-grid .score-osaekomi {
+    flex-grow: 1;
+    padding-left: 4rem;
+}
+
+
+
+.time-osaekomi {
+    padding: 1rem 3rem;
+    width: 200px;
+    text-align: center;
+    font-size: 60px;
+    font-weight: bold;
+}
+.row-white .time-osaekomi {
+    color: black;
+    background-color: #ddd;
+}
+.row-blue .time-osaekomi {
+    color: white;
+    background-color: #00a;
+}
+.time-osaekomi:not(.running) {
+    visibility: hidden;
+}
+
+.view-main .main-grid .main-row-score .score-grid .score-shido {
+    width: 600px;
+    flex-grow: 0;
+    display: flex;
+    align-items: center;
+}
+.view-main .main-grid .main-row-score .score-grid .score-shido .card-shido,
+.view-main .main-grid .main-row-score .score-grid .score-shido .card-hansokumake {
+    height: 200px;
+    width: 150px;
+    margin-left: 50px;
+    display: block;
+    border-radius: 10px;
+    box-shadow: 3px 3px 20px -8px rgba(0, 0, 0, 0.7);
+    border: 3px solid white;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 120px;
+    line-height: 1;
+    padding: 40px 0;
+    text-align: center;
+}
+.view-main .main-grid .main-row-score .score-grid .score-shido .card-shido {
+    background-color: #dd0;
+}
+.view-main .main-grid .main-row-score .score-grid .score-shido .card-hansokumake {
+    background-color: #d00;
+}
+.view-main .main-grid .main-row-score .score-grid .score-shido .card-hansokumake::before {
+    content: 'H'
+}
+
+
+
+.view-main .main-grid .main-row-time {
+    grid-row-start: 1;
+    grid-row-end: 5;
+    grid-column: 1;
+    background-color: #222;
+    color: white;
+}
+.time-grid {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.time-grid .time-header {
+    font-size: 60px;
+    padding-top: 3rem;
+    height: 120px;
+    margin-bottom: 9.875rem;
+}
+.time-grid .time-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.time-grid .time-main .time-main-box {
+    padding: 1rem 3rem;
+    width: 400px;
+    text-align: center;
+    background-color: #dd6;
+    color: black;
+    font-size: 120px;
+    border: 0.25rem solid #222;
+}
+.time-grid .time-main.running .time-main-box {
+    background-color: #6d6;
+}
+.time-grid .time-main .time-main-label {
+    padding: 0.5rem;
+    width: 400px;
+    text-align: center;
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: -50px;
+    background-color: #222;
+}
+.time-grid .time-main .time-main-label:empty {
+    background-color: transparent;
+}
+.time-grid .time-class {
+    font-size: 35px;
+    padding-bottom: 0;
+    height: 40px;
+    margin-top: 9.875rem;
+}
+.time-grid .time-footer {
+    font-size: 30px;
+    padding-bottom: 3rem;
+    height: 40px;
+    margin-top: 1rem;
+}
+
+.view-main .main-grid .main-row-time.flashing-medical {
+    animation: medicalFlash 1.5s ease-in-out infinite;
+}
+.view-main .main-grid .main-row-time.flashing-alert {
+    animation: alertFlash 0.5s ease-in-out infinite;
+}
+
+@keyframes medicalFlash {
+    0%   { background-color: #f33; }
+    25%  { background-color: #f33; }
+    100% { background-color: #222;}
+}
+@keyframes alertFlash {
+    0%   { background-color: #fa2; }
+    25%  { background-color: #fa2 }
+    100% { background-color: #652;}
+}

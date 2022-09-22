@@ -1,0 +1,83 @@
+<!ruleset-list>
+
+name '8er-KO'
+require min 5 max 8
+
+alloc $1
+alloc $5
+alloc $3
+alloc $7
+alloc $2
+alloc $6
+alloc $4
+alloc $8
+
+-- Main // First
+match #AvB {
+    white $1
+    blue $2
+}
+match #CvD {
+    white $3
+    blue $4
+}
+match #EvF {
+    white $5
+    blue $6
+}
+match #GvH {
+    white $7
+    blue $8
+}
+
+-- Main // Semifinal
+match #ABvCD {
+    white #AvB.winner
+    blue #CvD.winner
+    is semifinal
+}
+match #EFvGH {
+    white #EvF.winner
+    blue #GvH.winner
+    is semifinal
+}
+
+-- Main // Final
+match #ABCDvEFGH {
+    white #ABvCD.winner
+    blue #EFvGH.winner
+    is final
+}
+
+-- Rep // First
+match #rabvcd {
+    white #AvB.loser
+    blue #CvD.loser
+    is repechage
+}
+match #refvgh {
+    white #EvF.loser
+    blue #GvH.loser
+    is repechage
+}
+
+-- Rep // Finale
+match #rRABCDvefgh {
+    white #rabvcd.winner
+    blue #EFvGH.loser
+    is repechage, thirdplace
+}
+match #rREFGHvrabcd {
+    white #refvgh.loser
+    blue #ABvCD.loser
+    is repechage, thirdplace
+}
+
+order #AvB, _clip, #AvC, _clip, #BvC
+
+score {
+    first #ABCDvEFGH.winner
+    second #ABCDvEFGH.loser
+    third #rRABCDvefgh.winner, #rREFGHvrabcd.winner
+    fifth #rRABCDvefgh.loser, #rREFGHvrabcd.loser
+}

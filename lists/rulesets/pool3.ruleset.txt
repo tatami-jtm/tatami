@@ -1,0 +1,54 @@
+<!ruleset-list>
+
+name '3er-Pool'
+require exact 3
+
+alloc $1
+alloc $2
+alloc $3
+
+match #AvB {
+    white $1
+    blue $2
+}
+match #AvC {
+    white $1
+    blue $3
+}
+match #BvC {
+    white $2
+    blue $3
+}
+
+order #AvB, _clip, #AvC, _clip, #BvC
+
+score {
+    calc points among all
+    resolve playoff
+
+    first %1
+    second %2
+    third %3
+}
+
+-- UP
+playoff {
+    if equal at %3, %2, %1
+    realloc $1, $2, $3
+    
+    match #upXvY {
+        white $1
+        blue $2
+    }
+    
+    match #upXYvZ {
+        white #upXvY.winner
+        blue $3
+    }
+    
+    order #upXvY, _clip, #upXYvZ
+    
+    first #upXYvZ.winner
+    second #upXYvZ.loser
+    third #upXvY.loser
+}
