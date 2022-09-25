@@ -1,0 +1,21 @@
+<!ruleset-list>
+
+name '2er-Pool'
+require exact 2
+
+alloc $1
+alloc $2
+
+match #AvB {
+    white $1
+    blue $2
+}
+
+order #AvB
+
+score {
+    calc points among all
+
+    first %1
+    second %2
+}

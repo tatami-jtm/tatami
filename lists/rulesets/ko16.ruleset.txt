@@ -1,0 +1,169 @@
+<!ruleset-list>
+
+name '8er-KO'
+require min 9 max 16
+
+alloc $1
+alloc $9
+alloc $5
+alloc $13
+alloc $3
+alloc $11
+alloc $7
+alloc $15
+alloc $2
+alloc $10
+alloc $6
+alloc $14
+alloc $4
+alloc $12
+alloc $8
+alloc $16
+
+-- Main // First
+match #F1 {
+    white $1
+    blue $2
+}
+match #F2 {
+    white $3
+    blue $4
+}
+match #F3 {
+    white $5
+    blue $6
+}
+match #F4 {
+    white $7
+    blue $8
+}
+match #F5 {
+    white $9
+    blue $10
+}
+match #F6 {
+    white $11
+    blue $12
+}
+match #F7 {
+    white $13
+    blue $14
+}
+match #F8 {
+    white $15
+    blue $16
+}
+
+-- Main // Second
+match #F9 {
+    white #F1.winner
+    blue #F2.winner
+}
+match #F10 {
+    white #F3.winner
+    blue #F4.winner
+}
+match #F11 {
+    white #F5.winner
+    blue #F6.winner
+}
+match #F12 {
+    white #F7.winner
+    blue #F8.winner
+}
+
+-- Main // Semifinal
+match #F21 {
+    white #F9.winner
+    blue #F10.winner
+    is semifinal
+}
+match #F22 {
+    white #F11.winner
+    blue #F12.winner
+    is semifinal
+}
+
+-- Main // Final
+match #F27 {
+    white #F21.winner
+    blue #F22.winner
+    is final
+}
+
+-- Rep // First
+match #F13 {
+    white #F1.loser
+    blue #F2.loser
+    is repechage
+}
+match #F14 {
+    white #F3.loser
+    blue #F4.loser
+    is repechage
+}
+match #F15 {
+    white #F5.loser
+    blue #F6.loser
+    is repechage
+}
+match #F16 {
+    white #F7.loser
+    blue #F8.loser
+    is repechage
+}
+
+-- Rep // Second
+match #F17 {
+    white #F13.winner
+    blue #F11.loser
+    is repechage
+}
+match #F18 {
+    white #F14.winner
+    blue #F12.loser
+    is repechage
+}
+match #F19 {
+    white #F15.winner
+    blue #F9.loser
+    is repechage
+}
+match #F20 {
+    white #F16.winner
+    blue #F10.loser
+    is repechage
+}
+
+-- Rep // Third
+match #F23 {
+    white #F17.winner
+    blue #F18.winner
+    is repechage
+}
+match #F24 {
+    white #F19.winner
+    blue #F20.winner
+    is repechage
+}
+
+-- Rep // Finale
+match #F25 {
+    white #F23.winner
+    blue #F21.loser
+    is repechage, thirdplace
+}
+match #F26 {
+    white #F24.winner
+    blue #F22.loser
+    is repechage, thirdplace
+}
+
+order #F1, #F2, #F3, #F4, #F5, #F6, #F7, #F8, _clip, #F10, #F11, #F12, #F13, #F14, #F15, #F16, _clip, #F17, #F18, #F19, #F20, #F21, #F22, _clip, #F23, #F24, _clip, #F25, #F26, #F27
+
+score {
+    first #F27.winner
+    second #F27.loser
+    third #F25.winner, #F25.winner
+    fifth #F25.loser, #F25.loser
+}

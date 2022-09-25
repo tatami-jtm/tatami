@@ -1,0 +1,10 @@
+<!ruleset-list>
+
+name 'Einzelbesetzung'
+require exact 1
+
+alloc $1
+
+score {
+    first $1
+}
