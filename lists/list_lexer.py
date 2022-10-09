@@ -32,7 +32,6 @@ def lex_list(ruleset):
                 token_stream += [current_token_type(ruleset[begin_ptr:end_ptr])]
                 begin_ptr, end_ptr = end_ptr, end_ptr + 1
                 current_token_type = None
-                print("Parsed:", len(token_stream), "token(s)")
             else:
                 end_ptr += 1
 
