@@ -17,7 +17,9 @@ def compile_list(filename):
         ruleset = f.read()
     
     lexed_ruleset = lex_list(ruleset)
-    parsed_ruleset = parse_list(ruleset)
+    parsed_ruleset = parse_list(lexed_ruleset)
+
+    return parsed_ruleset
 
 
 # Loads all registered lists from the registry and

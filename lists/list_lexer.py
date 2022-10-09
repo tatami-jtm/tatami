@@ -35,5 +35,5 @@ def lex_list(ruleset):
             else:
                 end_ptr += 1
 
-    print(token_stream)
+    #print(token_stream)
     return token_stream

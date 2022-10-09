@@ -59,7 +59,7 @@ match-type          -> <keyword:playoff>
 
 order-rule          -> <keyword:order> order-list
 order-list          -> order-entry <list-operator> order-list
-                    -> order-entry
+                     | order-entry
 order-entry         -> <match-id>
                      | <keyword:_clip>
 
