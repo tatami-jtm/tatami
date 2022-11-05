@@ -3,6 +3,3 @@ pool2
 bestof3
 pool3
 pool4
-pool5
-ko8
-ko16
