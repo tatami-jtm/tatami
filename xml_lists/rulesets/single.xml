@@ -8,7 +8,9 @@
     </meta>
 
     <rules>
-        <alloc fighter="1" />
+        <alloc>
+            <fighter id="1" />
+        </alloc>
 
         <score>
             <first><fighter id="1" /></first>

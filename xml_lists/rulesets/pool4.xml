@@ -8,10 +8,12 @@
     </meta>
 
     <rules>
-        <alloc fighter="1" />
-        <alloc fighter="2" />
-        <alloc fighter="3" />
-        <alloc fighter="4" />
+        <alloc>
+            <fighter id="1" />
+            <fighter id="2" />
+            <fighter id="3" />
+            <fighter id="4" />
+        </alloc>
 
         <match id="AvB">
             <white><fighter id="1" /></white>
@@ -71,9 +73,11 @@
                 <points-for place="1" />
             </only-if-equal>
 
-            <realloc fighter="1">
-            <realloc fighter="2">
-            <realloc fighter="3">
+            <realloc>
+                <fighter id="1" />
+                <fighter id="2" />
+                <fighter id="3" />
+            </realloc>
 
             <match id="upXvY">
                 <white><fighter id="1" /></white>
@@ -104,9 +108,11 @@
                 <points-for place="2" />
             </only-if-equal>
 
-            <realloc fighter="1">
-            <realloc fighter="2">
-            <realloc fighter="3">
+            <realloc>
+                <fighter id="1" />
+                <fighter id="2" />
+                <fighter id="3" />
+            </realloc>
 
             <match id="downXvY">
                 <white><fighter id="1" /></white>

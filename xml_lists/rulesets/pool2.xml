@@ -8,8 +8,10 @@
     </meta>
 
     <rules>
-        <alloc fighter="1" />
-        <alloc fighter="2" />
+        <alloc>
+            <fighter id="1" />
+            <fighter id="2" />
+        </alloc>
 
         <match id="AvB">
             <white><fighter id="1" /></white>
