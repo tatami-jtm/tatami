@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<ruleset>
+    <meta>
+        <name is="2er-Pool" />
+        <require>
+            <exact of="2" />
+        </require>
+    </meta>
+
+    <rules>
+        <alloc fighter="1" />
+        <alloc fighter="2" />
+
+        <match id="AvB">
+            <white><fighter id="1" /></white>
+            <blue><fighter id="2" /></blue>
+        </match>
+
+        <order>
+            <match id="AvB" />
+        </order>
+
+        <score>
+            <calc-points among="all" />
+            <first><placed on="1" /></first>
+            <second><placed on="2" /></second>
+        </score>
+    </rules>
+
+    <display></display>
+</ruleset>

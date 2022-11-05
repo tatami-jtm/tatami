@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<ruleset>
+    <meta>
+        <name is="Best of Three" />
+        <require>
+            <exact of="2" />
+        </require>
+    </meta>
+
+    <rules>
+        <alloc fighter="1" />
+        <alloc fighter="2" />
+
+        <match id="match1">
+            <white><fighter id="1" /></white>
+            <blue><fighter id="2" /></blue>
+        </match>
+
+        <match id="match2">
+            <white><fighter id="1" /></white>
+            <blue><fighter id="2" /></blue>
+        </match>
+
+        <order>
+            <match id="match1" />
+            <clip />
+            <match id="match2" />
+        </order>
+
+        <score>
+            <calc-points among="all" />
+            <resolve-playoffs />
+
+            <first><placed on="1" /></first>
+            <second><placed on="2" /></second>
+        </score>
+
+        <playoff>
+            <only-if-equal>
+                <points-for place="2" />
+                <points-for place="1" />
+            </only-if-equal>
+
+            <match id="match3">
+                <white><fighter id="1" /></white>
+                <blue><fighter id="2" /></blue>
+            </match>
+
+            <order>
+                <match id="match3" />
+            </order>
+
+            <first><winner match-id="match3" /></first>
+            <second><loser match-id="match3" /></second>
+        </playoff>
+    </rules>
+
+    <display></display>
+</ruleset>

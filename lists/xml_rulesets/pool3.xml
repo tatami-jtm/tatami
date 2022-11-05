@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<ruleset>
+    <meta>
+        <name is="3er-Pool" />
+        <require>
+            <exact of="3" />
+        </require>
+    </meta>
+
+    <rules>
+        <alloc fighter="1" />
+        <alloc fighter="2" />
+        <alloc fighter="3" />
+
+        <match id="AvB">
+            <white><fighter id="1" /></white>
+            <blue><fighter id="2" /></blue>
+        </match>
+
+        <match id="AvC">
+            <white><fighter id="1" /></white>
+            <blue><fighter id="3" /></blue>
+        </match>
+
+        <match id="BvC">
+            <white><fighter id="2" /></white>
+            <blue><fighter id="3" /></blue>
+        </match>
+
+        <order>
+            <match id="AvB" />
+            <clip />
+            <match id="AvC" />
+            <clip />
+            <match id="BvC" />
+        </order>
+
+        <score>
+            <calc-points among="all" />
+            <resolve-playoffs />
+
+            <first><placed on="1" /></first>
+            <second><placed on="2" /></second>
+            <third><placed on="3" /></third>
+        </score>
+
+        <!-- UP -->
+        <playoff>
+            <only-if-equal>
+                <points-for place="3" />
+                <points-for place="2" />
+                <points-for place="1" />
+            </only-if-equal>
+
+            <realloc fighter="1">
+            <realloc fighter="2">
+            <realloc fighter="3">
+
+            <match id="upXvY">
+                <white><fighter id="1" /></white>
+                <blue><fighter id="2" /></blue>
+            </match>
+
+            <match id="upXYvZ">
+                <white><winner match-id="upXvY" /></white>
+                <blue><fighter id="3" /></blue>
+            </match>
+
+            <order>
+                <match id="upXvY" />
+                <clip />
+                <match id="upXYvZ" />
+            </order>
+
+            <first><winner match-id="upXYvZ" /></first>
+            <second><loser match-id="upXYvZ" /></second>
+            <third><loser match-id="upXvY" /></third>
+        </playoff>
+    </rules>
+
+    <display></display>
+</ruleset>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<ruleset>
+    <meta>
+        <name is="Einzelbesetzung" />
+        <require>
+            <exact of="1" />
+        </require>
+    </meta>
+
+    <rules>
+        <alloc fighter="1" />
+
+        <score>
+            <first><fighter id="1" /></first>
+        </score>
+    </rules>
+
+    <display></display>
+</ruleset>
