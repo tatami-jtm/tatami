@@ -20,7 +20,7 @@ class List:
     def alloc(self, player):
         self.meta.alloc(self, player)
     
-    def get_schedule(self):
+    def get_schedule(self, informational_only=False):
         return self.meta.get_schedule(self)
 
     def get_match_by_id(self, match_id):

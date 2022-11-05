@@ -1,4 +1,5 @@
 from .match import Match
+from .fighter import BlankFighter
 
 ARBITRARY_MAX_VALUE = 1 << 16
 
@@ -111,7 +112,7 @@ class MetaList:
         return self._requirements['max']
 
     def init(self, obj):
-        obj._fighters = [None for _ in range(self.require_max())]
+        obj._fighters = [BlankFighter for _ in range(self.require_max())]
         obj._fighter_count = 0
         obj._match_order = self._match_order[::]
         obj._match_results = {}
@@ -125,7 +126,10 @@ class MetaList:
         obj._fighters[self._allocation_order[obj._fighter_count] - 1] = player
         obj._fighter_count += 1
 
-    def get_schedule(self, obj):
+    def get_schedule(self, obj, informational_only=False):
+        if not informational_only:
+            self.match_cleanup(obj)
+
         schedule = []
 
         for order_item in obj._match_order:
@@ -171,6 +175,8 @@ class MetaList:
             elif result.is_blue_winner():
                 if 'winner' in ref: return result.get_match().get_blue()
                 else:               return result.get_match().get_white()
+            elif result.get_absolute_winner() == 'blank':
+                return BlankFighter
             else:
                 # undecided yet (strangely the result is in, though)
                 return None
@@ -197,6 +203,37 @@ class MetaList:
 
         if match_id in obj._match_order:
             obj._match_order.remove(match_id)
+
+    # should be called regularly
+    def match_cleanup(self, obj):
+        for matchid in self._matches.keys():
+            match = self.get_match_by_id(obj, matchid)
+
+            if match is None: # unable to calculate so far
+                continue
+            
+            white_disqualified = match.get_white().is_disqualified()
+            blue_disqualified = match.get_blue().is_disqualified()
+
+            if white_disqualified and blue_disqualified:
+                mr = match.mk_result()
+                mr.set_absolute_winner('blank')
+                mr.set_data_white((), (), True)
+                mr.set_data_blue((), (), True)
+                self.enter_results(obj, mr)
+
+            elif blue_disqualified:
+                mr = match.mk_result()
+                mr.set_absolute_winner('white')
+                mr.set_data_white((), (), False)
+                mr.set_data_blue((), (), True)
+                self.enter_results(obj, mr)
+            elif white_disqualified:
+                mr = match.mk_result()
+                mr.set_absolute_winner('blue')
+                mr.set_data_white((), (), True)
+                mr.set_data_blue((), (), False)
+                self.enter_results(obj, mr)
 
     def completed(self, obj):
         for obligatory_match in self._match_order:

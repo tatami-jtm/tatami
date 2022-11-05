@@ -11,15 +11,27 @@ class MatchResult:
         self._score_blue = None
         self._data_blue = None
 
+        self._absolute_winner = None
+
         self._time = None
 
     def is_white_winner(self):
+        if self._absolute_winner == 'white':
+            return True
+        elif self._absolute_winner == 'blue':
+            return False
+
         if None in (self._points_white, self._points_blue):
             return False
 
         return self._points_white > self._points_blue
     
     def is_blue_winner(self):
+        if self._absolute_winner == 'blue':
+            return True
+        elif self._absolute_winner == 'white':
+            return False
+
         if None in (self._points_white, self._points_blue):
             return False
 
@@ -30,6 +42,12 @@ class MatchResult:
     
     def get_match(self):
         return self._match
+
+    def set_absolute_winner(self, absolute_winner):
+        self._absolute_winner = absolute_winner
+    
+    def get_absolute_winner(self):
+        return self._absolute_winner
 
     def set_points_white(self, pts):
         self._points_white = pts

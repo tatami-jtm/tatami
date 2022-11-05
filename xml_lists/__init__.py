@@ -1,5 +1,6 @@
 from .list_compiler import *
 from .metalist import *
+from .fighter import Fighter
 
 if __name__ == "__main__":
     all_lists = get_all_lists()
@@ -23,8 +24,8 @@ if __name__ == "__main__":
         ", ".join(map(str, metalist._allocation_order)))
     
     example_list = list_cls()
-    example_list.alloc('ABC')
-    example_list.alloc('DEF')
+    example_list.alloc(Fighter('aaa', 'A-Fighter', 'A-Team'))
+    example_list.alloc(Fighter('bbb', 'B-Fighter', 'B-Team'))
 
     print("Schedule:", example_list.get_schedule())
 

@@ -10,6 +10,11 @@ class Fighter:
         self._id = id
         self._name = name
         self._affil = affil
+
+        self._disqualified = False
+
+    def __repr__(self):
+        return f"Fighter({repr(self.get_id())}, {repr(self.get_name())}, {repr(self.get_affil())})"
     
     """
         Returns the (global) ID for the fighter;
@@ -19,7 +24,7 @@ class Fighter:
         as a database ID.
     """
     def get_id(self):
-        return self.id
+        return self._id
     
     """
         Returns the name of the fighter;
@@ -28,7 +33,7 @@ class Fighter:
         results, i.e. the natural name of the fighter
     """
     def get_name(self):
-        return self.name
+        return self._name
     
     """
         Returns the affiliation of the fighter;
@@ -38,4 +43,20 @@ class Fighter:
         tournament.
     """
     def get_affil(self):
-        return self.affil
+        return self._affil
+
+    def disqualify(self):
+        self._disqualified = True
+
+    def is_disqualified(self):
+        return self._disqualified
+
+class _BlankFighter(Fighter):
+
+    def __init__(self):
+        super().__init__('__blank', '-', '-')
+    
+    def is_disqualified(self):
+        return True
+
+BlankFighter = _BlankFighter()
