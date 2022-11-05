@@ -1,3 +1,5 @@
+from .match import Match
+
 ARBITRARY_MAX_VALUE = 1 << 16
 
 
@@ -113,6 +115,7 @@ class MetaList:
         obj._fighter_count = 0
         obj._match_order = self._match_order[::]
         obj._match_results = {}
+        obj._match_objs = {}
 
     def alloc(self, obj, player):
         if obj._fighter_count == self.require_max():
@@ -124,21 +127,17 @@ class MetaList:
 
     def get_schedule(self, obj):
         schedule = []
+
         for order_item in obj._match_order:
             if 'match' in order_item:
-                match = self._matches[order_item['match']]
-                white = self._evaluate_fighter_ref(obj, match['white'])
-                blue = self._evaluate_fighter_ref(obj, match['blue'])
-
-                if None in (white, blue):
-                    # this match is not (yet) fightable
+                # it's a match
+                match = self.get_match_by_id(obj, order_item['match'])
+                if match is None:
+                    # nothing to do, yet
                     continue
 
-                schedule.append({'type': 'match', 'match': {
-                    'white': white,
-                    'blue': blue,
-                    'tags': match['tags']
-                }})
+                schedule.append({'type': 'match', 'match': match})
+
             else:
                 # prevent continuous clips
                 if len(schedule) == 0 or schedule[-1]['type'] == 'clip':
@@ -154,11 +153,8 @@ class MetaList:
             return obj._fighters[ref['fighter'] - 1]
 
         if 'winner' in ref or 'loser' in ref:
-            if 'winner' in ref:
-                match_id = ref['winner']
-
-            if 'loser' in ref:
-                match_id = ref['loser']
+            if 'winner' in ref: match_id = ref['winner']
+            if 'loser' in ref:  match_id = ref['loser']
 
             if match_id not in obj._match_results:
                 return None
@@ -166,23 +162,29 @@ class MetaList:
             result = obj._match_results[match_id]
 
             if result.is_white_winner():
-                if 'winner' in ref:
-                    return result.get_match.get_white()
-                else:
-                    return result.get_match.get_blue()
-
+                if 'winner' in ref: return result.get_match().get_white()
+                else:               return result.get_match().get_blue()
             elif result.is_blue_winner():
-                if 'winner' in ref:
-                    return result.get_match.get_blue()
-                else:
-                    return result.get_match.get_white()
-
+                if 'winner' in ref: return result.get_match().get_blue()
+                else:               return result.get_match().get_white()
             else:
                 # undecided yet (strangely the result is in, though)
                 return None
 
     def get_match_by_id(self, obj, match_id):
-        pass
+        if match_id in obj._match_objs:
+            return obj._match_objs[match_id]
+        
+        else:
+            match = self._matches[match_id]
+            white = self._evaluate_fighter_ref(obj, match['white'])
+            blue = self._evaluate_fighter_ref(obj, match['blue'])
+
+            if None in (white, blue):
+                return None
+
+            obj._match_objs[match_id] = Match(match_id, white, blue, match['tags'])
+            return self.get_match_by_id(obj, match_id)
 
     def enter_results(self, obj, match_id, match_result):
         pass
