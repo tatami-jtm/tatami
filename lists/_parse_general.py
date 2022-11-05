@@ -176,8 +176,8 @@ ALL_TYPES = [
 ]
 
 ALL_RULES = [
-    Rule(BASE_RULE,                 '<ruleset-type> ruleset'),
-    Rule('ruleset',                 'rule ruleset', nest=0, nest_to=1),
+    Rule(BASE_RULE,                 '<ruleset-type> ruleset', only_full_exact_match=True),
+    Rule('ruleset',                 'ruleset rule', nest=1, nest_to=0, always_reduce=True),
     Rule('ruleset',                 'rule'),
 
     Rule('rule',                    'name-rule', always_reduce=True),
@@ -187,11 +187,6 @@ ALL_RULES = [
     Rule('rule',                    'order-rule'),
     Rule('rule',                    'score-rule', always_reduce=True),
     Rule('rule',                    'playoff-rule', always_reduce=True),
-
-    Rule('player-code',             '<fighter-number>'),
-    Rule('player-code',             '<fighter-placement>'),
-    Rule('player-code',             '<match-id> <connection-operator> <keyword:winner>'),
-    Rule('player-code',             '<match-id> <connection-operator> <keyword:loser>'),
 
     Rule('name-rule',               '<keyword:name> <string>', always_reduce=True),
 
@@ -204,19 +199,31 @@ ALL_RULES = [
 
     Rule('match-rule',              '<keyword:match> <match-id> <block-begin> match-block <block-end>', always_reduce=True),
 
-    Rule('match-block',             'mb-rule match-block', nest=0, nest_to=1),
-    Rule('match-block',             'mb-rule'),
+    Rule('match-block',             'match-block mb-rule', nest=1, nest_to=0, always_reduce=True),
+    Rule('match-block',             'mb-rule', always_reduce=True),
 
     Rule('mb-rule',                 'mb-white', always_reduce=True),
     Rule('mb-rule',                 'mb-blue', always_reduce=True),
     Rule('mb-rule',                 'mb-type', always_reduce=True),
 
-    Rule('mb-white',                '<keyword:white> player-code', always_reduce=True),
-    Rule('mb-blue',                 '<keyword:blue> player-code', always_reduce=True),
+    Rule('mb-white',                '<keyword:white> <fighter-number>', always_reduce=True),
+    Rule('mb-white',                '<keyword:white> <fighter-placement>', always_reduce=True),
+    Rule('mb-white',                '<keyword:white> <match-id> <connection-operator> <keyword:winner>', always_reduce=True),
+    Rule('mb-white',                '<keyword:white> <match-id> <connection-operator> <keyword:loser>', always_reduce=True),
+
+    Rule('mb-blue',                '<keyword:blue> <fighter-number>', always_reduce=True),
+    Rule('mb-blue',                '<keyword:blue> <fighter-placement>', always_reduce=True),
+    Rule('mb-blue',                '<keyword:blue> <match-id> <connection-operator> <keyword:winner>', always_reduce=True),
+    Rule('mb-blue',                '<keyword:blue> <match-id> <connection-operator> <keyword:loser>', always_reduce=True),
+
+    # Rule('player-code',             '<fighter-number>'),
+    # Rule('player-code',             '<fighter-placement>'),
+    # Rule('player-code',             '<match-id> <connection-operator> <keyword:winner>'),
+    # Rule('player-code',             '<match-id> <connection-operator> <keyword:loser>'),
 
     Rule('mb-type',                 '<keyword:is> list-of-match-types'),
-    Rule('list-of-match-types',     'match-type <list-operator> list-of-match-types', nest=0, nest_to=2),
-    Rule('list-of-match-types',     'match-type'),
+    Rule('list-of-match-types',     'list-of-match-types <list-operator> match-type', nest=2, nest_to=0, always_reduce=True),
+    Rule('list-of-match-types',     'match-type', always_reduce=True),
 
     Rule('match-type',              '<keyword:playoff>', always_reduce=True),
     Rule('match-type',              '<keyword:final>', always_reduce=True),
@@ -226,15 +233,15 @@ ALL_RULES = [
 
 
     Rule('order-rule',              '<keyword:order> order-list'),
-    Rule('order-list',              'order-entry <list-operator> order-list', nest=0, nest_to=2),
-    Rule('order-list',              'order-entry'),
+    Rule('order-list',              'order-list <list-operator> order-entry', nest=2, nest_to=0, always_reduce=True),
+    Rule('order-list',              'order-entry', always_reduce=True),
 
     Rule('order-entry',             '<match-id>'),
     Rule('order-entry',             '<keyword:_clip>', always_reduce=True),
 
     Rule('score-rule',              '<keyword:score> <block-begin> score-block <block-end>', always_reduce=True),
-    Rule('score-block',             'sb-rule score-block', nest=0, nest_to=1),
-    Rule('score-block',             'sb-rule'),
+    Rule('score-block',             'score-block sb-rule', nest=1, nest_to=0, always_reduce=True),
+    Rule('score-block',             'sb-rule', always_reduce=True),
 
     Rule('sb-rule',                 'sb-calc', always_reduce=True),
     Rule('sb-rule',                 'sb-resolve', always_reduce=True),
@@ -249,16 +256,70 @@ ALL_RULES = [
     Rule('sb-resolve',              '<keyword:resolve> <keyword:playoff>', always_reduce=True),
     Rule('sb-resolve',              '<keyword:resolve> <match-id>', always_reduce=True),
 
-    Rule('sb-first',                '<keyword:first> player-code', always_reduce=True),
-    Rule('sb-second',               '<keyword:second> player-code', always_reduce=True),
-    Rule('sb-third',                '<keyword:third> player-code'),
-    Rule('sb-third',                '<keyword:third> player-code <list-operator> player-code', always_reduce=True),
-    Rule('sb-fifth',                '<keyword:fifth> player-code'),
-    Rule('sb-fifth',                '<keyword:fifth> player-code <list-operator> player-code', always_reduce=True),
+    Rule('sb-first',                '<keyword:first> <fighter-number>', always_reduce=True),
+    Rule('sb-first',                '<keyword:first> <fighter-placement>', always_reduce=True),
+    Rule('sb-first',                '<keyword:first> <match-id> <connection-operator> <keyword:winner>', always_reduce=True),
+    Rule('sb-first',                '<keyword:first> <match-id> <connection-operator> <keyword:loser>', always_reduce=True),
+
+    Rule('sb-second',               '<keyword:second> <fighter-number>', always_reduce=True),
+    Rule('sb-second',               '<keyword:second> <fighter-placement>', always_reduce=True),
+    Rule('sb-second',               '<keyword:second> <match-id> <connection-operator> <keyword:winner>', always_reduce=True),
+    Rule('sb-second',               '<keyword:second> <match-id> <connection-operator> <keyword:loser>', always_reduce=True),
+
+    Rule('sb-third',                '<keyword:third> <fighter-number>'),
+    Rule('sb-third',                '<keyword:third> <fighter-placement>'),
+    Rule('sb-third',                '<keyword:third> <match-id> <connection-operator> <keyword:winner>'),
+    Rule('sb-third',                '<keyword:third> <match-id> <connection-operator> <keyword:loser>'),
+
+    Rule('sb-third',                '<keyword:third> <fighter-number> <list-operator> <fighter-number>', always_reduce=True),
+    Rule('sb-third',                '<keyword:third> <fighter-number> <list-operator> <fighter-placement>', always_reduce=True),
+    Rule('sb-third',                '<keyword:third> <fighter-number> <list-operator> <match-id> <connection-operator> <keyword:winner>', always_reduce=True),
+    Rule('sb-third',                '<keyword:third> <fighter-number> <list-operator> <match-id> <connection-operator> <keyword:loser>', always_reduce=True),
+
+    Rule('sb-third',                '<keyword:third> <fighter-placement> <list-operator> <fighter-number>', always_reduce=True),
+    Rule('sb-third',                '<keyword:third> <fighter-placement> <list-operator> <fighter-placement>', always_reduce=True),
+    Rule('sb-third',                '<keyword:third> <fighter-placement> <list-operator> <match-id> <connection-operator> <keyword:winner>', always_reduce=True),
+    Rule('sb-third',                '<keyword:third> <fighter-placement> <list-operator> <match-id> <connection-operator> <keyword:loser>', always_reduce=True),
+
+    Rule('sb-third',                '<keyword:third> <match-id> <connection-operator> <keyword:winner> <list-operator> <fighter-number>', always_reduce=True),
+    Rule('sb-third',                '<keyword:third> <match-id> <connection-operator> <keyword:winner> <list-operator> <fighter-placement>', always_reduce=True),
+    Rule('sb-third',                '<keyword:third> <match-id> <connection-operator> <keyword:winner> <list-operator> <match-id> <connection-operator> <keyword:winner>', always_reduce=True),
+    Rule('sb-third',                '<keyword:third> <match-id> <connection-operator> <keyword:winner> <list-operator> <match-id> <connection-operator> <keyword:loser>', always_reduce=True),
+
+    Rule('sb-third',                '<keyword:third> <match-id> <connection-operator> <keyword:loser> <list-operator> <fighter-number>', always_reduce=True),
+    Rule('sb-third',                '<keyword:third> <match-id> <connection-operator> <keyword:loser> <list-operator> <fighter-placement>', always_reduce=True),
+    Rule('sb-third',                '<keyword:third> <match-id> <connection-operator> <keyword:loser> <list-operator> <match-id> <connection-operator> <keyword:winner>', always_reduce=True),
+    Rule('sb-third',                '<keyword:third> <match-id> <connection-operator> <keyword:loser> <list-operator> <match-id> <connection-operator> <keyword:loser>', always_reduce=True),
+
+
+    Rule('sb-fifth',                '<keyword:fifth> <fighter-number>'),
+    Rule('sb-fifth',                '<keyword:fifth> <fighter-placement>'),
+    Rule('sb-fifth',                '<keyword:fifth> <match-id> <connection-operator> <keyword:winner>'),
+    Rule('sb-fifth',                '<keyword:fifth> <match-id> <connection-operator> <keyword:loser>'),
+
+    Rule('sb-fifth',                '<keyword:fifth> <fighter-number> <list-operator> <fighter-number>', always_reduce=True),
+    Rule('sb-fifth',                '<keyword:fifth> <fighter-number> <list-operator> <fighter-placement>', always_reduce=True),
+    Rule('sb-fifth',                '<keyword:fifth> <fighter-number> <list-operator> <match-id> <connection-operator> <keyword:winner>', always_reduce=True),
+    Rule('sb-fifth',                '<keyword:fifth> <fighter-number> <list-operator> <match-id> <connection-operator> <keyword:loser>', always_reduce=True),
+
+    Rule('sb-fifth',                '<keyword:fifth> <fighter-placement> <list-operator> <fighter-number>', always_reduce=True),
+    Rule('sb-fifth',                '<keyword:fifth> <fighter-placement> <list-operator> <fighter-placement>', always_reduce=True),
+    Rule('sb-fifth',                '<keyword:fifth> <fighter-placement> <list-operator> <match-id> <connection-operator> <keyword:winner>', always_reduce=True),
+    Rule('sb-fifth',                '<keyword:fifth> <fighter-placement> <list-operator> <match-id> <connection-operator> <keyword:loser>', always_reduce=True),
+
+    Rule('sb-fifth',                '<keyword:fifth> <match-id> <connection-operator> <keyword:winner> <list-operator> <fighter-number>', always_reduce=True),
+    Rule('sb-fifth',                '<keyword:fifth> <match-id> <connection-operator> <keyword:winner> <list-operator> <fighter-placement>', always_reduce=True),
+    Rule('sb-fifth',                '<keyword:fifth> <match-id> <connection-operator> <keyword:winner> <list-operator> <match-id> <connection-operator> <keyword:winner>', always_reduce=True),
+    Rule('sb-fifth',                '<keyword:fifth> <match-id> <connection-operator> <keyword:winner> <list-operator> <match-id> <connection-operator> <keyword:loser>', always_reduce=True),
+
+    Rule('sb-fifth',                '<keyword:fifth> <match-id> <connection-operator> <keyword:loser> <list-operator> <fighter-number>', always_reduce=True),
+    Rule('sb-fifth',                '<keyword:fifth> <match-id> <connection-operator> <keyword:loser> <list-operator> <fighter-placement>', always_reduce=True),
+    Rule('sb-fifth',                '<keyword:fifth> <match-id> <connection-operator> <keyword:loser> <list-operator> <match-id> <connection-operator> <keyword:winner>', always_reduce=True),
+    Rule('sb-fifth',                '<keyword:fifth> <match-id> <connection-operator> <keyword:loser> <list-operator> <match-id> <connection-operator> <keyword:loser>', always_reduce=True),
 
     Rule('playoff-rule',            '<keyword:playoff> <block-begin> playoff-block <block-end>', always_reduce=True),
-    Rule('playoff-block',           'pob-rule playoff-block', nest=0, nest_to=1),
-    Rule('playoff-block',           'pob-rule'),
+    Rule('playoff-block',           'playoff-block pob-rule', nest=1, nest_to=0, always_reduce=True),
+    Rule('playoff-block',           'pob-rule', always_reduce=True),
 
     Rule('pob-rule',                'pob-condition', always_reduce=True),
     Rule('pob-rule',                'pob-realloc', always_reduce=True),
@@ -271,10 +332,11 @@ ALL_RULES = [
 
     Rule('pob-condition',           '<keyword:if> pob-cond-equal2'),
     Rule('pob-condition',           '<keyword:if> pob-cond-equal3', always_reduce=True),
-    Rule('pob-cond-equal2',         '<keyword:equal> <keyword:at> player-code <list-operator> player-code'),
-    Rule('pob-cond-equal3',         '<keyword:equal> <keyword:at> player-code <list-operator> player-code <list-operator> player-code', always_reduce=True),
 
+    Rule('pob-cond-equal2',         '<keyword:equal> <keyword:at> <fighter-placement> <list-operator> <fighter-placement>'),
+    
+    Rule('pob-cond-equal3',         '<keyword:equal> <keyword:at> <fighter-placement> <list-operator> <fighter-placement> <list-operator> <fighter-placement>', always_reduce=True),
     Rule('pob-realloc',             '<keyword:realloc> pob-realloc-list'),
-    Rule('pob-realloc-list',        '<fighter-number> <list-operator> pob-realloc-list', nest=0, nest_to=2),
-    Rule('pob-realloc-list',        '<fighter-number>')
+    Rule('pob-realloc-list',        'pob-realloc-list <list-operator> <fighter-number>', nest=2, nest_to=0, always_reduce=True),
+    Rule('pob-realloc-list',        '<fighter-number>', always_reduce=True)
 ]

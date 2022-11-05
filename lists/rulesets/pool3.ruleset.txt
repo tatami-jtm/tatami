@@ -32,23 +32,23 @@ score {
 }
 
 -- UP
-playoff {
-    if equal at %3, %2, %1
-    realloc $1, $2, $3
-    
-    match #upXvY {
-        white $1
-        blue $2
-    }
-    
-    match #upXYvZ {
-        white #upXvY.winner
-        blue $3
-    }
-    
-    order #upXvY, _clip, #upXYvZ
-    
-    first #upXYvZ.winner
-    second #upXYvZ.loser
-    third #upXvY.loser
-}
+-- playoff {
+--     if equal at %3, %2, %1
+--     realloc $1, $2, $3
+--     
+--     match #upXvY {
+--         white $1
+--         blue $2
+--     }
+--     
+--     match #upXYvZ {
+--         white #upXvY.winner
+--         blue $3
+--     }
+--     
+--     order #upXvY, _clip, #upXYvZ
+--     
+--     first #upXYvZ.winner
+--     second #upXYvZ.loser
+--     third #upXvY.loser
+-- }

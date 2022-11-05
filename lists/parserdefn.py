@@ -92,18 +92,19 @@ BASE_RULE = '_base'
 # class Rule
 # base class for parser rules
 class Rule:
-    def __init__(self, name, right_side, nest=None, nest_to=None, always_reduce=False):
+    def __init__(self, name, right_side, nest=None, nest_to=None, always_reduce=False, only_full_exact_match=False):
         self.name = name
         self.right_side = right_side
         self.nest = nest
         self.nest_to = nest_to
         self.always_reduce = always_reduce
+        self.only_full_exact_match = only_full_exact_match
 
     def __repr__(self):
         return self.name + " => " + self.right_side
 
     def matches(self, tree):
-        return tree.rmatch(self.right_side) is not None
+        return tree.rmatch(self.right_side, only_full_exact_match=self.only_full_exact_match) is not None
 
     def apply(self, tree):
         if not (match := tree.rmatch(self.right_side)):
@@ -112,7 +113,7 @@ class Rule:
         if self.nest is None:
             return tree.rreplace(match, PT(self.name, match))
         else:
-            return tree.rreplace(match, PT(self.name, [match[self.nest]] + match[self.nest_to].content))
+            return tree.rreplace(match, PT(self.name, match[self.nest_to].content + [match[self.nest]]))
 
 class LTree:
     def __init__(self, tokens = None):
@@ -127,7 +128,7 @@ class LTree:
 
         return LTree(self.tree + [from_stream.tokens[0]])
     
-    def rmatch(self, right_side):
+    def rmatch(self, right_side, only_full_exact_match=False):
         index = len(self.tree) - 1
         match = []
 
@@ -140,6 +141,9 @@ class LTree:
             
             match = [self.tree[index]] + match
             index -= 1
+
+        if only_full_exact_match and index != -1:
+            return None
 
         return match
     

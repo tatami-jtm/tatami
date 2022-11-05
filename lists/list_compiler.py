@@ -17,6 +17,9 @@ def compile_list(filename):
         ruleset = f.read()
     
     lexed_ruleset = lex_list(ruleset)
+    print(len(lexed_ruleset))
+    lexed_ruleset = list(filter(lambda t: not t.is_comment(), lexed_ruleset))
+    print(len(lexed_ruleset))
     parsed_ruleset = parse_list(lexed_ruleset)
 
     return parsed_ruleset
