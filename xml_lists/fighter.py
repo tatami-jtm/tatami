@@ -55,6 +55,9 @@ class _BlankFighter(Fighter):
 
     def __init__(self):
         super().__init__('__blank', '-', '-')
+
+    def __repr__(self):
+        return "BlankFighter"
     
     def is_disqualified(self):
         return True

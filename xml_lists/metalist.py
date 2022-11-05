@@ -126,7 +126,7 @@ class MetaList:
         obj._fighters[self._allocation_order[obj._fighter_count] - 1] = player
         obj._fighter_count += 1
 
-    def get_schedule(self, obj, informational_only=False):
+    def get_schedule(self, obj, informational_only):
         if not informational_only:
             self.match_cleanup(obj)
 
@@ -135,7 +135,7 @@ class MetaList:
         for order_item in obj._match_order:
             if 'match' in order_item:
                 # it's a match
-                match = self.get_match_by_id(obj, order_item['match'])
+                match = self.get_match_by_id(obj, order_item['match'], informational_only=informational_only)
                 if match is None:
                     # nothing to do, yet
                     continue
@@ -181,7 +181,7 @@ class MetaList:
                 # undecided yet (strangely the result is in, though)
                 return None
 
-    def get_match_by_id(self, obj, match_id):
+    def get_match_by_id(self, obj, match_id, informational_only=False):
         if match_id in obj._match_objs:
             return obj._match_objs[match_id]
         
@@ -193,8 +193,12 @@ class MetaList:
             if None in (white, blue):
                 return None
 
-            obj._match_objs[match_id] = Match(match_id, white, blue, match['tags'])
-            return self.get_match_by_id(obj, match_id)
+            new_match = Match(match_id, white, blue, match['tags'])
+
+            if not informational_only:
+                obj._match_objs[match_id] = new_match
+
+            return new_match
 
     def enter_results(self, obj, match_result):
         match_id = match_result.get_match().get_id()

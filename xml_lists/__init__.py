@@ -25,6 +25,7 @@ if __name__ == "__main__":
     
     example_list = list_cls()
     example_list.alloc(Fighter('aaa', 'A-Fighter', 'A-Team'))
+    example_list.get_schedule(True)
     example_list.alloc(Fighter('bbb', 'B-Fighter', 'B-Team'))
 
     print("Schedule:", example_list.get_schedule())

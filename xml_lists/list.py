@@ -21,10 +21,10 @@ class List:
         self.meta.alloc(self, player)
     
     def get_schedule(self, informational_only=False):
-        return self.meta.get_schedule(self)
+        return self.meta.get_schedule(self, informational_only)
 
-    def get_match_by_id(self, match_id):
-        return self.meta.get_match_by_id(self, match_id)
+    def get_match_by_id(self, match_id, informational_only=True):
+        return self.meta.get_match_by_id(self, match_id, informational_only)
     
     def enter_results(self, match_result):
         self.meta.enter_results(self, match_result)
