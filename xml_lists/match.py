@@ -1,3 +1,5 @@
+from .match_result import MatchResult
+
 class Match:
 
     def __init__(self, id, white, blue, tags=None):
@@ -28,3 +30,7 @@ class Match:
 
     def get_result(self):
         return self._result
+
+    def mk_result(self):
+        self.set_result(result := MatchResult())
+        return result

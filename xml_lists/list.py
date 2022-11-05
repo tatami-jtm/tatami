@@ -26,8 +26,8 @@ class List:
     def get_match_by_id(self, match_id):
         return self.meta.get_match_by_id(self, match_id)
     
-    def enter_results(self, match_id, match_result):
-        self.meta.enter_results(match_id, match_result)
+    def enter_results(self, match_result):
+        self.meta.enter_results(self, match_result)
     
     def completed(self):
         return self.meta.completed(self)

@@ -26,4 +26,32 @@ if __name__ == "__main__":
     example_list.alloc('ABC')
     example_list.alloc('DEF')
 
-    print(example_list.get_schedule())
+    print("Schedule:", example_list.get_schedule())
+
+    print("Resolving first fight.")
+
+    first_match = example_list.get_schedule()[0]['match']
+    fmr = first_match.mk_result()
+    fmr.set_points_white(1)
+    fmr.set_score_white(10)
+    fmr.set_points_blue(0)
+    fmr.set_score_blue(0)
+    fmr.set_time(120)
+    example_list.enter_results(fmr)
+
+    print("Schedule:", example_list.get_schedule())
+
+    print(example_list.completed())
+
+    second_match = example_list.get_schedule()[0]['match']
+    smr = second_match.mk_result()
+    smr.set_points_white(0)
+    smr.set_score_white(0)
+    smr.set_points_blue(1)
+    smr.set_score_blue(7)
+    smr.set_time(120)
+    example_list.enter_results(smr)
+
+    print("Schedule:", example_list.get_schedule())
+
+    print(example_list.completed())

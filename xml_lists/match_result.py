@@ -29,7 +29,7 @@ class MatchResult:
         self._match = match
     
     def get_match(self):
-        return self.match
+        return self._match
 
     def set_points_white(self, pts):
         self._points_white = pts
@@ -72,3 +72,6 @@ class MatchResult:
     
     def get_time(self):
         return self._time
+
+    def clearly_decided(self):
+        return self.is_blue_winner() != self.is_white_winner()

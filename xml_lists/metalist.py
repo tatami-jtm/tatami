@@ -136,6 +136,10 @@ class MetaList:
                     # nothing to do, yet
                     continue
 
+                if match.get_id() in obj._match_results:
+                    # do not (re-)schedule resolved matches
+                    continue
+
                 schedule.append({'type': 'match', 'match': match})
 
             else:
@@ -186,11 +190,25 @@ class MetaList:
             obj._match_objs[match_id] = Match(match_id, white, blue, match['tags'])
             return self.get_match_by_id(obj, match_id)
 
-    def enter_results(self, obj, match_id, match_result):
-        pass
+    def enter_results(self, obj, match_result):
+        match_id = match_result.get_match().get_id()
+
+        obj._match_results[match_id] = match_result
+
+        if match_id in obj._match_order:
+            obj._match_order.remove(match_id)
 
     def completed(self, obj):
-        pass
+        for obligatory_match in self._match_order:
+            if 'match' not in obligatory_match: continue
+
+            if obligatory_match['match'] not in obj._match_results:
+                return False
+            
+            if not obj._match_results[obligatory_match['match']].clearly_decided():
+                return False
+        
+        return True
 
     def score(self, obj):
         pass
