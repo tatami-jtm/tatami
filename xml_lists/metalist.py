@@ -3,9 +3,20 @@ from .fighter import BlankFighter
 
 ARBITRARY_MAX_VALUE = 1 << 16
 
+"""
+    MetaList
 
+    is the working-core facility for all match lists, it extracts the data from the
+    loaded XML rulesets and is called by List instances to make everything work.
+"""
 class MetaList:
 
+    """
+        __init__(compilate)
+
+        Initializes the MetaList, being given a compilate (the ElementTree of the XML ruleset)
+        and then loading the name, the requirements and all other technical details of the list
+    """
     def __init__(self, compilate):
         self._com = compilate
 
@@ -15,9 +26,46 @@ class MetaList:
         self.__load_matches()
         self.__load_match_order()
 
+    """
+        __load_name()
+
+        Loads the list type name attribute out of the compilate and stores it in ._name
+
+        XML:
+
+            <ruleset>
+                <meta>
+                    <name is="..." />
+                </meta>
+            </ruleset>
+    """
     def __load_name(self):
         self._name = self._com.find('meta/name').attrib['is']
 
+    """
+        __load_requirements()
+
+        Loads and interpretes the requirements (in the form of either exact or min/max) out of
+        the compilate and stores them in a {min:..., max:...} dictionary.
+
+        Default values used are 0 and ARBITRARY_MAX_VALUE == 65536 (I consider it safe to presume,
+        for now, that no list will ever support more than 65536 participants, already due to
+        practical concerns; however in case such support were needed, it could easily be added
+        by increasing the number; also: this number is unlikely to be used anyway since most lists
+        - if not all - will have a maximum requirement, even if no minimum one)
+
+        XML:
+
+            <ruleset>
+                <meta>
+                    <require>
+                        <min of="..." />
+                        <max of="..." />        or:
+                        <exact of="..." />
+                    </require>
+                </meta>
+            </ruleset>
+    """
     def __load_requirements(self):
         require = self._com.find('meta/require')
 
@@ -35,12 +83,52 @@ class MetaList:
 
         self._requirements = {'min': min_, 'max': max_}
 
+    """
+        __load_allocation_order()
+
+        Loads the order, in which fighters will be allocated, from the compilate and stores it in _allocation_order.
+        This order is to be understood in the way, that the first entered fighter will be put into the position set
+        by the first allocate directive, the second into the position set by the second directive etc.
+
+        For POOL lists, this is likely to be just 1, 2, 3, ... up to max
+        For KO lists, this is likely to be binary swapping at the main axes
+        for PREPOOLED lists, this is likely to be swapping between the two pools
+
+        XML:
+
+            <ruleset>
+                <rules>
+                    <alloc>
+                        <fighter id="..." />
+                        <fighter id="..." />
+                        <fighter id="..." />
+                        <fighter id="..." />
+                    </alloc>
+                </rules>
+            </ruleset>
+    """
     def __load_allocation_order(self):
         alloc = self._com.find('rules/alloc')
         self._allocation_order = []
         for child in alloc:
             self._allocation_order.append(int(child.attrib['id']))
 
+    """
+        __load_matches()
+
+        Loads the general matches and the playoff matches into the list management; each match has an *unique* ID
+        (they must be unique among all general *and* playoff matches) under which it will be refered to later.
+
+        XML:
+
+            <ruleset>
+                <rules>
+                    <match id="BvC">
+                        ...
+                    </match>
+                </rules>
+            </ruleset>
+    """
     def __load_matches(self):
         self._matches = {}
 
@@ -56,6 +144,20 @@ class MetaList:
 
             self._matches[match_id] = match_data
 
+    """
+        __load_single_match()
+
+        Called for every match by __load_matches; parses the inner workings of a match (<white>, <blue> and <is />)
+        and transforms that into an abstract match dictionary, which is then returned
+
+        XML:
+
+            <match id="BvC">
+                <white><fighter id="1" /></white>
+                <blue><winner match-id="AvB" /></blue>
+                <is a="repechage" />
+            </match>
+    """
     def __load_single_match(self, match_xml):
         if (white_fighter := match_xml.find('white/fighter')) is not None:
             white = {'fighter': int(white_fighter.attrib['id'])}
@@ -91,6 +193,25 @@ class MetaList:
             'tags': tags
         }
 
+    """
+        __load_match_order()
+
+        Loads the match order (but only for the general matches, not for playoffs) from the compilate.
+        Each match is identified by the global ID; there may be <clip />s between matches to indicate
+        where the list should be clipped and either a break or an other list should be put.
+
+        XML:
+
+            <ruleset>
+                <rules>
+                    <order>
+                        <match id="..." />
+                        <clip />
+                        <match id="..." />
+                    </order>
+                </rules>
+            </ruleset>
+    """
     def __load_match_order(self):
         self._match_order = []
 
@@ -100,17 +221,45 @@ class MetaList:
             elif item.tag == 'clip':
                 self._match_order.append({'clip': True})
 
+
     # Managing functions:
 
+    """
+        get_name()
+
+        Returns the name of this list type (as previously loaded)
+    """
     def get_name(self):
         return self._name
 
+    """
+        require_min()
+
+        Returns the minimum fighter number requirement (as previously loaded)
+    """
     def require_min(self):
         return self._requirements['min']
 
+    """
+        require_max()
+
+        Returns the maximum fighter number requirement (as previously loaded)
+    """
     def require_max(self):
         return self._requirements['max']
 
+    """
+        init(obj)
+
+        takes an - empty - List() object and adds the data fields required by the MetaList
+        in order for it to function.
+
+        The List() class has functions mimicking the managing functions of this class, but the
+        class will be given a .meta class attribute which will contain a MetaList instance; all
+        functions on List() refer back to MetaList for functionality. This is to allow the
+        benefits of having an instantiable class type without sacrificing the flexibility of an
+        instance/having to struggle with nasty meta programming/self manipulation of objects
+    """
     def init(self, obj):
         obj._fighters = [BlankFighter for _ in range(self.require_max())]
         obj._fighter_count = 0
@@ -118,6 +267,12 @@ class MetaList:
         obj._match_results = {}
         obj._match_objs = {}
 
+    """
+        alloc(obj, Player)
+
+        attempts to allocate a Player on the concrete list obj using the previously loaded allocation
+        order; if all list slots have been allocated, an Index error will be raised.
+    """
     def alloc(self, obj, player):
         if obj._fighter_count == self.require_max():
             raise IndexError(
@@ -126,6 +281,17 @@ class MetaList:
         obj._fighters[self._allocation_order[obj._fighter_count] - 1] = player
         obj._fighter_count += 1
 
+    """
+        get_schedule(obj, informational_only)
+
+        generates and returns a schedule of upcoming matches and, where defined by the obj match order, clips;
+        matches that have already been resolved or matches where either party cannot yet be determined will not
+        be scheduled.
+
+        If informational_only is set to False (which should be the default), then get_schedule might change the
+        data to provide a better schedule output, however this is irreversible and might cause issues if not all
+        slots have been allocated yet.
+    """
     def get_schedule(self, obj, informational_only):
         if not informational_only:
             self.match_cleanup(obj)
@@ -156,6 +322,19 @@ class MetaList:
 
         return schedule
 
+    """
+        _evaluate_fighter_ref(obj, ref)
+
+        evaluates a reference to a fighter and returns the found fighter or None, if not found
+
+        Possible reference forms:
+
+            - {fighter: fighterID}
+            - {winner: matchID}
+            - {loser: matchID}
+            - {placed: position} (but only if placements have been calculated)
+            - {placed: position, group: groupID} (but only if placements have been calculated)
+    """
     def _evaluate_fighter_ref(self, obj, ref):
         if 'fighter' in ref:
             return obj._fighters[ref['fighter'] - 1]
@@ -176,11 +355,21 @@ class MetaList:
                 if 'winner' in ref: return result.get_match().get_blue()
                 else:               return result.get_match().get_white()
             elif result.get_absolute_winner() == 'blank':
+                # there is no winner, this only happens if both parties are
+                # disqualified (direct hansoku-make or blank fighters);
+                # no player advances as either winner or loser
                 return BlankFighter
             else:
                 # undecided yet (strangely the result is in, though)
                 return None
 
+    """
+        get_match_by_id(obj, match_id, informational_only=False)
+
+        looks for, and if not existing, creates a applied match object for the given match_id;
+        if information_only is True, then match objects will not be stored in the database, this
+        also means that a new match object will be created next time this function is called.
+    """
     def get_match_by_id(self, obj, match_id, informational_only=False):
         if match_id in obj._match_objs:
             return obj._match_objs[match_id]
@@ -200,15 +389,29 @@ class MetaList:
 
             return new_match
 
+    """
+        enter_results(obj, match_result)
+
+        enters the results as defined by match_result into the data of obj; if the match that has been
+        resolved is still scheduled; it will be removed.
+    """
     def enter_results(self, obj, match_result):
         match_id = match_result.get_match().get_id()
 
         obj._match_results[match_id] = match_result
 
+        # Remove resolved match, if still scheduled
         if match_id in obj._match_order:
             obj._match_order.remove(match_id)
 
     # should be called regularly
+    """
+        match_cleanup(obj)
+
+        cleans up matches that can be resolved right now without further consideration, i.e. those where
+        either party (or both) are disqualified (this means either direct hansoku-make or blank fighter, i.e.
+        a fighter slot that has not been allocated)
+    """
     def match_cleanup(self, obj):
         for matchid in self._matches.keys():
             match = self.get_match_by_id(obj, matchid)
@@ -232,6 +435,7 @@ class MetaList:
                 mr.set_data_white((), (), False)
                 mr.set_data_blue((), (), True)
                 self.enter_results(obj, mr)
+
             elif white_disqualified:
                 mr = match.mk_result()
                 mr.set_absolute_winner('blue')
@@ -239,7 +443,17 @@ class MetaList:
                 mr.set_data_blue((), (), False)
                 self.enter_results(obj, mr)
 
+    """
+        completed(obj)
+
+        returns, whether all obligatory matches (that are those, which are in the general order)
+        have been resolved and are clearly decided (either white or blue wins); also there must not
+        be any matches scheduled (playoff matches).
+    """
     def completed(self, obj):
+        if len(obj._match_order) != 0:
+            return False
+
         for obligatory_match in self._match_order:
             if 'match' not in obligatory_match: continue
 
