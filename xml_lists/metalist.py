@@ -401,8 +401,8 @@ class MetaList:
         obj._match_results[match_id] = match_result
 
         # Remove resolved match, if still scheduled
-        if match_id in obj._match_order:
-            obj._match_order.remove(match_id)
+        if (mo := { 'match': match_id }) in obj._match_order:
+            obj._match_order.remove(mo)
 
     # should be called regularly
     """
@@ -444,6 +444,27 @@ class MetaList:
                 self.enter_results(obj, mr)
 
     """
+        _filtered_match_oder(obj)
+
+        returns a match order where duplicate clips and clips at beginning/end
+        are removed (only for completeness-consideration intended)
+    """
+    def _filtered_match_order(self, obj):
+        new_mo = []
+
+        for item in obj._match_order:
+            if 'clip' in item:
+                if len(new_mo) == 0 or 'clip' in new_mo[-1]:
+                    continue
+            
+            new_mo.append(item)
+
+        if len(new_mo) and 'clip' in new_mo[-1]:
+            new_mo = new_mo[:-1]
+
+        return new_mo
+
+    """
         completed(obj)
 
         returns, whether all obligatory matches (that are those, which are in the general order)
@@ -451,7 +472,7 @@ class MetaList:
         be any matches scheduled (playoff matches).
     """
     def completed(self, obj):
-        if len(obj._match_order) != 0:
+        if len(self._filtered_match_order(obj)) != 0:
             return False
 
         for obligatory_match in self._match_order:
