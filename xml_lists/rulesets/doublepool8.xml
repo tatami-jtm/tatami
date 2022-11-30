@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<ruleset>
+    <meta>
+        <name is="Doppel-Pool 8 TN" />
+        <require>
+            <min of="5" />
+            <max of="8" />
+        </require>
+    </meta>
+
+    <rules>
+        <alloc>
+            <fighter id="1" group="poolA" />
+            <fighter id="2" group="poolB" />
+            <fighter id="3" group="poolA" />
+            <fighter id="4" group="poolB" />
+            <fighter id="5" group="poolA" />
+            <fighter id="6" group="poolB" />
+            <fighter id="7" group="poolA" />
+            <fighter id="8" group="poolB" />
+        </alloc>
+
+        <match id="A13">
+            <white><fighter id="1" /></white>
+            <blue><fighter id="3" /></blue>
+        </match>
+
+        <match id="A15">
+            <white><fighter id="1" /></white>
+            <blue><fighter id="5" /></blue>
+        </match>
+
+        <match id="A17">
+            <white><fighter id="1" /></white>
+            <blue><fighter id="7" /></blue>
+        </match>
+
+        <match id="A35">
+            <white><fighter id="3" /></white>
+            <blue><fighter id="5" /></blue>
+        </match>
+
+        <match id="A37">
+            <white><fighter id="3" /></white>
+            <blue><fighter id="7" /></blue>
+        </match>
+
+        <match id="A57">
+            <white><fighter id="5" /></white>
+            <blue><fighter id="7" /></blue>
+        </match>
+
+        <match id="B24">
+            <white><fighter id="2" /></white>
+            <blue><fighter id="4" /></blue>
+        </match>
+
+        <match id="B26">
+            <white><fighter id="2" /></white>
+            <blue><fighter id="6" /></blue>
+        </match>
+
+        <match id="B28">
+            <white><fighter id="2" /></white>
+            <blue><fighter id="8" /></blue>
+        </match>
+
+        <match id="B46">
+            <white><fighter id="4" /></white>
+            <blue><fighter id="6" /></blue>
+        </match>
+
+        <match id="B48">
+            <white><fighter id="4" /></white>
+            <blue><fighter id="8" /></blue>
+        </match>
+
+        <match id="B68">
+            <white><fighter id="6" /></white>
+            <blue><fighter id="8" /></blue>
+        </match>
+
+        <order>
+            <match id="A13" />
+            <match id="A57" />
+            <match id="B24" />
+            <match id="A68" />
+            <clip />
+            <match id="A15" />
+            <match id="A37" />
+            <match id="B26" />
+            <match id="A48" />
+            <clip />
+            <match id="A17" />
+            <match id="A35" />
+            <match id="B28" />
+            <match id="A46" />
+        </order>
+
+        <match id="F1">
+            <white><placed on="1" among="poolA" /></white>
+            <blue><placed on="2" among="poolB" /></blue>
+            <is a="semifinal" />
+        </match>
+
+        <match id="F2">
+            <white><placed on="2" among="poolA" /></white>
+            <blue><placed on="1" among="poolB" /></blue>
+            <is a="semifinal" />
+        </match>
+
+        <match id="FF">
+            <white><winner match-id="F1" /></white>
+            <blue><winner match-id="F2" /></blue>
+            <is a="final" />
+        </match>
+
+        <score>
+            <calc-points among="poolA" />
+            <calc-points among="poolB" />
+            <resolve-match id="F1" />
+            <resolve-match id="F2" />
+            <resolve-match id="FF" />
+
+            <first><winner match-id="FF" /></first>
+            <second><loser match-id="FF" /></second>
+            <third><loser match-id="F1" /><loser match-id="F2" /></third>
+            <fifth><placed on="3" among="poolA" /><placed on="3" among="poolB" /></fifth>
+        </score>
+
+        <!-- TODO: add playoffs -->
+    </rules>
+
+    <display></display>
+</ruleset>

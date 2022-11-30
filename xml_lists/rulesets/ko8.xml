@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <ruleset>
     <meta>
-        <name is="8er-Pool" />
+        <name is="Doppel-KO 8 TN" />
         <require>
             <min of="5" />
             <max of="8" />

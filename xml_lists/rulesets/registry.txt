@@ -5,3 +5,4 @@ pool3
 pool4
 pool5
 ko8
+doublepool8
