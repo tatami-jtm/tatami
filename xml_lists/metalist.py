@@ -26,6 +26,7 @@ class MetaList:
         self.__load_matches()
         self.__load_match_order()
         self.__load_score_rules()
+        self.__load_playoff_rules()
 
     """
         __load_name()
@@ -145,11 +146,12 @@ class MetaList:
 
             self._matches[match_id] = match_data
 
-        for match in self._com.findall('rules/playoff/match'):
-            match_id = match.attrib['id']
-            match_data = self.__load_single_match(match)
+        for po in self._com.findall("rules/playoff"):
+            for match in po.findall('./match'):
+                match_id = match.attrib['id']
+                match_data = self.__load_single_match(match, po.attrib['id'])
 
-            self._matches[match_id] = match_data
+                self._matches[match_id] = match_data
 
     """
         __load_single_match()
@@ -165,9 +167,12 @@ class MetaList:
                 <is a="repechage" />
             </match>
     """
-    def __load_single_match(self, match_xml):
+    def __load_single_match(self, match_xml, po_id=None):
         if (white_fighter := match_xml.find('white/fighter')) is not None:
-            white = {'fighter': int(white_fighter.attrib['id'])}
+            if po_id:
+                white = {'fighter': int(white_fighter.attrib['id']), "playoff": po_id}
+            else:
+                white = {'fighter': int(white_fighter.attrib['id'])}
 
         elif (white_winner := match_xml.find('white/winner')) is not None:
             white = {'winner': white_winner.attrib['match-id']}
@@ -179,7 +184,10 @@ class MetaList:
             white = None
 
         if (blue_fighter := match_xml.find('blue/fighter')) is not None:
-            blue = {'fighter': int(blue_fighter.attrib['id'])}
+            if po_id:
+                blue = {'fighter': int(blue_fighter.attrib['id']), "playoff": po_id}
+            else:
+                blue = {'fighter': int(blue_fighter.attrib['id'])}
 
         elif (blue_winner := match_xml.find('blue/winner')) is not None:
             blue = {'winner': blue_winner.attrib['match-id']}
@@ -272,6 +280,100 @@ class MetaList:
                 "attr": attr,
                 "props": props
             })
+
+    """
+        __load_playoff_rules()
+
+        Loads the playoff rules and parses them into a single, unified representation with
+        conditions, realloc, order and placement-rules.
+        
+        (matches are already parsed along the main ones)
+
+        XML:
+
+            <playoff id="...">
+                <only-if-equal>
+                    <points-for place="2" among="all" />
+                    <points-for place="1" among="all" />
+                </only-if-equal>
+
+                <realloc>
+                    <fighter id="..." />
+                </realloc>
+
+                <match>...</match>
+
+                <order>
+                    <match id="..." />
+                </order>
+
+                <first>
+                    <winner match-id="..." />
+                </first>
+                <second>
+                    <loser match-id="..." />
+                </second>
+            </playoff>
+    """
+    def __load_playoff_rules(self):
+        self._playoff_rules = {}
+
+        for por in self._com.findall('rules/playoff'):
+            po_id = por.attrib['id']
+            po_val = {
+                "conditions": [],
+                "realloc": [],
+                "match_order": [],
+                "placement_rules": {}
+            }
+
+            for rule in por:
+                if rule.tag == "only-if-equal":
+                    condition = {
+                        "equal": []
+                    }
+
+                    for child in rule:
+                        if child.tag != "points-for": continue
+                        condition['equal'].append({
+                            "place": child.attrib['place'],
+                            "among": child.attrib['among']
+                        })
+                    
+                    po_val["conditions"].append(condition)
+
+                elif rule.tag == "realloc":
+                    for child in rule:
+                        po_val["realloc"].append(int(child.attrib['id']))
+
+                elif rule.tag == "match":
+                    continue  # already parsed above
+
+                elif rule.tag == "order":
+                    pmo = []
+
+                    for item in rule:
+                        if item.tag == 'match':
+                            pmo.append({'match': item.attrib['id']})
+                        elif item.tag == 'clip':
+                            pmo.append({'clip': True})
+
+                    po_val["match_order"] += pmo
+
+                elif rule.tag in ("first", "second", "third"):
+                    pos = rule.tag
+                    ref = rule[0]  # we only allow ONE placement here
+
+                    if ref.tag == "fighter":
+                        po_val["placement_rules"][pos] = { "fighter": ref.attrib['id'], "playoff": po_id }
+                    elif ref.tag == "winner":
+                        po_val["placement_rules"][pos] = { "winner": ref.attrib['match-id'] }
+                    elif ref.tag == "loser":
+                        po_val["placement_rules"][pos] = { "loser": ref.attrib['match-id'] }
+
+            self._playoff_rules[po_id] = po_val
+        
+        print(self._playoff_rules)
 
     # Managing functions:
 
@@ -614,6 +716,12 @@ class MetaList:
 
         return True
 
+    """
+        __score_calc_points(obj, attr, props)
+
+        calculates the points within a given scope by adding all scores+points earned
+        in main matches for every fighter in the given scope-group
+    """
     def __score_calc_points(self, obj, attr, props):
         scope = props['among']
 
@@ -656,7 +764,9 @@ class MetaList:
                                        bs + mr.get_score_blue())
 
         # Store base data-duplicate
-        obj._score_deductions['calced'][scope]['base'] = { k: v for k, v in base_data.items() }
+        obj._score_deductions['calced'][scope]['base'] = {
+            k: v for k, v in base_data.items()
+        }
 
         # Sort base data by points/scores, where equal, order is undefined
         sorted_data = sorted(base_data.items(), key=lambda i: i[1], reverse=True)
@@ -667,6 +777,18 @@ class MetaList:
         # We do not validate for equal scores, that is a task for the playoff-resolvers
         return True
 
+    """
+        __score_set_result(obj, on, attr, props)
+
+        sets one of these below mentioned result slots by evaluating the given fighter
+        reference and storing the fighter(s) resulting from that in the slot
+
+            - first
+            - second
+            - third
+            - fifth
+
+    """
     def __score_set_result(self, obj, on, attr, props):
         fighter_refs = []
 
@@ -695,6 +817,12 @@ class MetaList:
 
         return True
 
+    """
+        __score_resolve_match(obj, attr, props)
+
+        resolves a (by-result or by-design) conflict by adding a match, unless added before;
+        succeeds only if the added match has been clearly decided; fails otherwise.
+    """
     def __score_resolve_match(self, obj, attr, props):
         match_id = props['id']
 

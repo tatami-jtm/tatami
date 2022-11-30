@@ -66,11 +66,11 @@
         </score>
 
         <!-- UP -->
-        <playoff>
+        <playoff id="e123up">
             <only-if-equal>
-                <points-for place="3" />
-                <points-for place="2" />
-                <points-for place="1" />
+                <points-for place="3" among="all" />
+                <points-for place="2" among="all" />
+                <points-for place="1" among="all" />
             </only-if-equal>
 
             <realloc>
@@ -101,11 +101,11 @@
         </playoff>
 
         <!-- DOWN -->
-        <playoff>
+        <playoff id="e432down">
             <only-if-equal>
-                <points-for place="4" />
-                <points-for place="3" />
-                <points-for place="2" />
+                <points-for place="4" among="all" />
+                <points-for place="3" among="all" />
+                <points-for place="2" among="all" />
             </only-if-equal>
 
             <realloc>

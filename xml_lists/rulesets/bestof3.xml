@@ -37,10 +37,10 @@
             <second><placed on="2" /></second>
         </score>
 
-        <playoff>
+        <playoff id="f3">
             <only-if-equal>
-                <points-for place="2" />
-                <points-for place="1" />
+                <points-for place="2" among="all" />
+                <points-for place="1" among="all" />
             </only-if-equal>
 
             <match id="match3">
