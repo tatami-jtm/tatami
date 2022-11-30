@@ -1,7 +1,10 @@
+import random
+
 from .match import Match
 from .fighter import BlankFighter
 
 ARBITRARY_MAX_VALUE = 1 << 16
+MAX_PLAYOFF = 3
 
 """
     MetaList
@@ -297,7 +300,7 @@ class MetaList:
                     <points-for place="1" among="all" />
                 </only-if-equal>
 
-                <realloc>
+                <realloc random?="true|false">
                     <fighter id="..." />
                 </realloc>
 
@@ -323,6 +326,7 @@ class MetaList:
             po_val = {
                 "conditions": [],
                 "realloc": [],
+                "realloc_random": False,
                 "match_order": [],
                 "placement_rules": {}
             }
@@ -336,7 +340,7 @@ class MetaList:
                     for child in rule:
                         if child.tag != "points-for": continue
                         condition['equal'].append({
-                            "place": child.attrib['place'],
+                            "place": int(child.attrib['place']),
                             "among": child.attrib['among']
                         })
                     
@@ -345,6 +349,9 @@ class MetaList:
                 elif rule.tag == "realloc":
                     for child in rule:
                         po_val["realloc"].append(int(child.attrib['id']))
+                    
+                    if "random" in rule.attrib and rule.attrib["random"] == "true":
+                        po_val["realloc_random"] = True
 
                 elif rule.tag == "match":
                     continue  # already parsed above
@@ -372,8 +379,6 @@ class MetaList:
                         po_val["placement_rules"][pos] = { "loser": ref.attrib['match-id'] }
 
             self._playoff_rules[po_id] = po_val
-        
-        print(self._playoff_rules)
 
     # Managing functions:
 
@@ -425,6 +430,7 @@ class MetaList:
             'results': {},
             'calced': {}
         }
+        obj._playoff_data = {}
 
     """
         alloc(obj, Player)
@@ -498,6 +504,7 @@ class MetaList:
         Possible reference forms:
 
             - {fighter: fighterID}
+            - {fighter: fighterID, playoff: playoffID}
             - {winner: matchID}
             - {loser: matchID}
             - {placed: position} (but only if placements have been calculated)
@@ -505,7 +512,13 @@ class MetaList:
     """
     def _evaluate_fighter_ref(self, obj, ref):
         if 'fighter' in ref:
-            return obj._fighters[ref['fighter'] - 1]
+            if 'playoff' in ref:
+                if ref['playoff'] not in obj._playoff_data:
+                    return None
+
+                return obj._playoff_data[ref['playoff']]['alloc'][ref['fighter']]
+            else:
+                return obj._fighters[ref['fighter'] - 1]
 
         if 'winner' in ref or 'loser' in ref:
             if 'winner' in ref: match_id = ref['winner']
@@ -687,7 +700,7 @@ class MetaList:
                     success = self.__score_calc_points(obj, func['attr'], func['props'])
                 
                 case 'resolve-playoffs':
-                    success = True  # TODO: later
+                    success = self.__score_resolve_playoffs(obj, func['attr'], func['props'])
 
                 case 'resolve-match':
                     success = self.__score_resolve_match(obj, func['attr'], func['props'])
@@ -835,6 +848,65 @@ class MetaList:
                 { "match": match_id }
             ]
 
+        return False
+
+    def __score_resolve_playoffs(self, obj, attr, props):
+        for po_id, po_val in self._playoff_rules.items():
+            if not po_id in obj._playoff_data:
+                obj._playoff_data[po_id] = {
+                    'required': None,
+                    'started': False,
+                    'completed': False,
+                    'alloc': [BlankFighter for _ in range(MAX_PLAYOFF)],
+                    'results': {}
+                }
+
+            pod = obj._playoff_data[po_id]
+            playoff_candidates = self.__is_playoff_required(obj, po_id)
+            pod['required'] = bool(playoff_candidates)
+
+            if pod['required'] and not pod['started']:
+                # TODO:
+                # realloc
+                if po_val['realloc_random']:
+                    playoff_candidates = random.shuffle(playoff_candidates)
+                
+                for fc, cand in enumerate(playoff_candidates):
+                    alloc_id = po_val['realloc'][fc]
+                    pod["alloc"][alloc_id] = cand
+
+                # schedule PO matches
+                obj._match_order += po_val['match_order']
+
+                # mark PO as started
+                pod['started'] = True
+                
+                return False
+            
+            elif pod['required'] and pod['started'] and not pod['completed']:
+                pass
+            
+            else:
+                return True
+
+        return False
+
+    def __is_playoff_required(self, obj, po_id):
+        po_val = self._playoff_rules[po_id]
+
+        for cond in po_val['conditions']:
+            if 'equal' in cond:
+                base_set = set()
+                player_list = []
+
+                for dp in cond['equal']:
+                    score = obj._score_deductions['calced'][dp['among']]['order'][dp['place'] - 1]
+                    base_set.add(score[1])
+                    player_list.append(score[0])
+                
+                if len(base_set) == 1:
+                    return player_list
+        
         return False
 
     """

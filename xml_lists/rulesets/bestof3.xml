@@ -39,9 +39,14 @@
 
         <playoff id="f3">
             <only-if-equal>
-                <points-for place="2" among="all" />
                 <points-for place="1" among="all" />
+                <points-for place="2" among="all" />
             </only-if-equal>
+
+            <realloc>
+                <fighter id="1" />
+                <fighter id="2" />
+            </realloc>
 
             <match id="match3">
                 <white><fighter id="1" /></white>

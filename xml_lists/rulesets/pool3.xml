@@ -54,7 +54,7 @@
                 <points-for place="1" among="all" />
             </only-if-equal>
 
-            <realloc>
+            <realloc random="true">
                 <fighter id="1" />
                 <fighter id="2" />
                 <fighter id="3" />

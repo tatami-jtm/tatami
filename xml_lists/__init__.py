@@ -50,17 +50,19 @@ if __name__ == "__main__":
     smr.set_points_white(0)
     smr.set_score_white(0)
     smr.set_points_blue(1)
-    smr.set_score_blue(7)
+    smr.set_score_blue(10)
     smr.set_time(120)
     example_list.enter_results(smr)
 
     print("Schedule:", example_list.get_schedule())
-
     print("completed?", example_list.completed())
 
     print("Scoring: is-finished?", example_list.score())
 
-    print("FIRST:", example_list.get_first())
-    print("SECOND:", example_list.get_second())
-    print("THIRD:", *example_list.get_third())
-    print("FIFTH:", *example_list.get_fifth())
+    print("Schedule:", example_list.get_schedule())
+    print("completed?", example_list.completed())
+
+    # print("FIRST:", example_list.get_first())
+    # print("SECOND:", example_list.get_second())
+    # print("THIRD:", *example_list.get_third())
+    # print("FIFTH:", *example_list.get_fifth())
