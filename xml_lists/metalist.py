@@ -111,8 +111,14 @@ class MetaList:
     def __load_allocation_order(self):
         alloc = self._com.find('rules/alloc')
         self._allocation_order = []
+        self._fighter_group_allocs = {}
         for child in alloc:
             self._allocation_order.append(int(child.attrib['id']))
+
+            if 'group' in child.attrib:
+                group_name = child.attrib['group']
+                self._fighter_group_allocs[self._allocation_order[-1] - 1] = group_name
+
 
     """
         __load_matches()
@@ -308,6 +314,7 @@ class MetaList:
     def init(self, obj):
         obj._fighters = [BlankFighter for _ in range(self.require_max())]
         obj._fighter_count = 0
+        obj._fighter_groups = {}
         obj._match_order = self._match_order[::]
         obj._match_results = {}
         obj._match_objs = {}
@@ -328,8 +335,17 @@ class MetaList:
             raise IndexError(
                 f"attempting to allocate more than {self.require_max()} fighters")
 
-        obj._fighters[self._allocation_order[obj._fighter_count] - 1] = player
+        alloc_id = self._allocation_order[obj._fighter_count] - 1
+        obj._fighters[alloc_id] = player
         obj._fighter_count += 1
+
+        if alloc_id in self._fighter_group_allocs:
+            group_name = self._fighter_group_allocs[alloc_id]
+
+            if group_name not in obj._fighter_groups:
+                obj._fighter_groups[group_name] = []
+            
+            obj._fighter_groups[group_name] += [player]
 
     """
         get_schedule(obj, informational_only)
@@ -571,8 +587,8 @@ class MetaList:
                 case 'resolve-playoffs':
                     success = True  # TODO: later
 
-                case 'resolve-fight':
-                    success = True  # TODO: later
+                case 'resolve-match':
+                    success = self.__score_resolve_match(obj, func['attr'], func['props'])
 
                 case 'first':
                     success = self.__score_set_result(obj, 'first', func['attr'], func['props'])
@@ -607,8 +623,16 @@ class MetaList:
         }
 
         # Initialize base data with 0 points and 0 scores for every non-blank fighter
-        # TODO: WE IGNORE SCOPE FOR NOW, WILL BE ADDED LATER
-        base_data = { f: (0, 0) for f in obj._fighters if f != BlankFighter }
+        # based on the given scope
+        if scope == 'all':
+            fss = obj._fighters
+        else:
+            if scope not in obj._fighter_groups:
+                fss = []
+            else:
+                fss = obj._fighter_groups[scope]
+
+        base_data = { f: (0, 0) for f in fss if f != BlankFighter }
 
         # Read every main match and add points/scores according to the match results
         # to white and blue
@@ -620,14 +644,16 @@ class MetaList:
             mobj = mr.get_match()
 
             white_key = mobj.get_white()
-            wp, ws = base_data[white_key]
-            base_data[white_key] = (wp + mr.get_points_white(),
-                                    ws + mr.get_score_white())
+            if white_key in base_data:  # may be false due to scopes
+                wp, ws = base_data[white_key]
+                base_data[white_key] = (wp + mr.get_points_white(),
+                                        ws + mr.get_score_white())
 
             blue_key = mobj.get_blue()
-            wp, ws = base_data[blue_key]
-            base_data[blue_key] = (wp + mr.get_points_blue(),
-                                   ws + mr.get_score_blue())
+            if blue_key in base_data:  # may be false due to scopes
+                bp, bs = base_data[blue_key]
+                base_data[blue_key] = (bp + mr.get_points_blue(),
+                                       bs + mr.get_score_blue())
 
         # Store base data-duplicate
         obj._score_deductions['calced'][scope]['base'] = { k: v for k, v in base_data.items() }
@@ -649,8 +675,8 @@ class MetaList:
             if 'placed' in fr:
                 fighter_refs += [{ "placed": int(fr['placed']['on']) }]
 
-                if 'among' in fr:
-                    fighter_refs[-1]['among'] = fr['among']
+                if 'among' in fr['placed']:
+                    fighter_refs[-1]['among'] = fr['placed']['among']
 
             elif 'winner' in fr:
                 fighter_refs += [{ "winner": fr['winner']['match-id'] }]
@@ -669,6 +695,29 @@ class MetaList:
 
         return True
 
+    def __score_resolve_match(self, obj, attr, props):
+        match_id = props['id']
+
+        if match_id in obj._match_results and obj._match_results[match_id].clearly_decided():
+            return True
+        
+        if match_id not in obj._match_order:
+            obj._match_order += [
+                { "clip": True },
+                { "match": match_id }
+            ]
+
+        return False
+
+    """
+        get_first(obj)
+
+        returns the person placed as first in the deducted results, returns BlankFighter if
+        no such placement exists, raises AssertionError if scoring has not been completed yet
+
+        if, through some glitch, there were two (or more) people ranked as first, then only one
+        of them will be returned
+    """
     def get_first(self, obj):
         assert obj._score_complete, \
             "placements not available until full score evaluation"
@@ -678,6 +727,12 @@ class MetaList:
 
         return obj._score_deductions['results']['first'][0]
 
+    """
+        get_second(obj)
+
+        materially equivalent to get_first, except the fighter placed in the 'second' slot is
+        returned
+    """
     def get_second(self, obj):
         assert obj._score_complete, \
             "placements not available until full score evaluation"
@@ -687,6 +742,12 @@ class MetaList:
 
         return obj._score_deductions['results']['second'][0]
 
+    """
+        get_third(obj)
+
+        materially equivalent to get_first, except the fighter(s) placed in the 'third' slot is
+        returned and not only one but all fighters placed in that slot are returned.
+    """
     def get_third(self, obj):
         assert obj._score_complete, \
             "placements not available until full score evaluation"
@@ -696,6 +757,12 @@ class MetaList:
 
         return obj._score_deductions['results']['third']
 
+    """
+        get_fifth(obj)
+
+        materially equivalent to get_third, except the fighter(s) placed in the 'fifth' slot is
+        returned
+    """
     def get_fifth(self, obj):
         assert obj._score_complete, \
             "placements not available until full score evaluation"
