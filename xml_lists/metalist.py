@@ -25,6 +25,7 @@ class MetaList:
         self.__load_allocation_order()
         self.__load_matches()
         self.__load_match_order()
+        self.__load_score_rules()
 
     """
         __load_name()
@@ -221,6 +222,48 @@ class MetaList:
             elif item.tag == 'clip':
                 self._match_order.append({'clip': True})
 
+    """
+        __load_score_rules()
+
+        Loads the score rules and parses them into a single, unified command/attr representation.
+
+        XML:
+
+            <score>
+                <calc-points among="all" />
+
+                <resolve-playoffs />
+
+                <first>
+                    <placed on="... />
+                </first>
+                <second>
+                    <winner match-id="..." />
+                </second>
+                <third>
+                    <loser match-id="..." />
+                    <fighter id="..." />
+                </third>
+            </score>
+    """
+    def __load_score_rules(self):
+        self._score_rules = []
+
+        for rule in self._com.findall('rules/score/*'):
+            command = rule.tag
+            attr = {
+                k: v for k,v in rule.items()
+            }
+
+            for child in rule:
+                attr[child.tag] = {
+                    k: v for k,v in child.items()
+                }
+            
+            self._score_rules.append({
+                "cmd": command,
+                "attr": attr
+            })
 
     # Managing functions:
 
@@ -266,6 +309,11 @@ class MetaList:
         obj._match_order = self._match_order[::]
         obj._match_results = {}
         obj._match_objs = {}
+        obj._score_complete = False
+        obj._score_deductions = {
+            'results': {},
+            'calced': {}
+        }
 
     """
         alloc(obj, Player)
@@ -486,8 +534,97 @@ class MetaList:
         
         return True
 
+    """
+        score(obj)
+
+        executes - if still needed - the scoring rules in order until either all succeed or any fails,
+        if successful (or a successful execution has already been), then returns True, otherwise, if
+        execution fails in any part, if the list is not yet completed or any other fixable issue occurs,
+        returns False. If False is returned, you should check for completed() which should return False
+        indicating open (or newly opened) matches necessary to resolve the scoring.
+    """
     def score(self, obj):
-        pass
+        if not self.completed(obj):
+            return False
+
+        if obj._score_complete:
+            return True
+        
+        for func in self._score_rules:
+            success = False
+            match func['cmd']:
+                case 'calc-points':
+                    success = self.__score_calc_points(obj, func['attr'])
+                
+                case 'resolve-playoffs':
+                    pass
+                
+                case 'resolve-fight':
+                    pass
+
+                case 'first':
+                    pass
+
+                case 'second':
+                    pass
+
+                case 'third':
+                    pass
+
+                case 'fifth':
+                    pass
+
+            if not success:
+                return False
+        
+        # We have succesfully executed all rules,
+        # completion is therefore OK.
+        obj._score_complete = True
+
+        return True
+
+    def __score_calc_points(self, obj, opts):
+        scope = opts['among']
+
+        obj._score_deductions['calced'][scope] = {
+            'base': [],
+            'order': []
+        }
+
+        # Initialize base data with 0 points and 0 scores for every non-blank fighter
+        # TODO: WE IGNORE SCOPE FOR NOW, WILL BE ADDED LATER
+        base_data = { f: (0, 0) for f in obj._fighters if f != BlankFighter }
+
+        # Read every main match and add points/scores according to the match results
+        # to white and blue
+        for m in self._match_order:
+            if 'clip' in m: continue
+
+            match_id = m['match']
+            mr = obj._match_results[match_id]
+            mobj = mr.get_match()
+
+            white_key = mobj.get_white()
+            wp, ws = base_data[white_key]
+            base_data[white_key] = (wp + mr.get_points_white(),
+                                    ws + mr.get_score_white())
+
+            blue_key = mobj.get_blue()
+            wp, ws = base_data[blue_key]
+            base_data[blue_key] = (wp + mr.get_points_blue(),
+                                   ws + mr.get_score_blue())
+
+        # Store base data-duplicate
+        obj._score_deductions['calced'][scope]['base'] = { k: v for k, v in base_data.items() }
+
+        # Sort base data by points/scores, where equal, order is undefined
+        sorted_data = sorted(base_data.items(), key=lambda i: i[1], reverse=True)
+
+        # Store sorted data-duplicate
+        obj._score_deductions['calced'][scope]['base'] = sorted_data[::]
+
+        # We do not validate for equal scores, that is a task for the playoff-resolvers
+        return True
 
     def get_first(self, obj):
         pass

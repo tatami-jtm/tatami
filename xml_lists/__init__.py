@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     print("Schedule:", example_list.get_schedule())
 
-    print(example_list.completed())
+    print("completed?", example_list.completed())
 
     second_match = example_list.get_schedule()[0]['match']
     smr = second_match.mk_result()
@@ -56,4 +56,6 @@ if __name__ == "__main__":
 
     print("Schedule:", example_list.get_schedule())
 
-    print(example_list.completed())
+    print("completed?", example_list.completed())
+
+    print("Scoring: is-finished?", example_list.score())
