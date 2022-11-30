@@ -59,3 +59,8 @@ if __name__ == "__main__":
     print("completed?", example_list.completed())
 
     print("Scoring: is-finished?", example_list.score())
+
+    print("FIRST:", example_list.get_first())
+    print("SECOND:", example_list.get_second())
+    print("THIRD:", *example_list.get_third())
+    print("FIFTH:", *example_list.get_fifth())

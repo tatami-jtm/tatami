@@ -250,19 +250,21 @@ class MetaList:
         self._score_rules = []
 
         for rule in self._com.findall('rules/score/*'):
-            command = rule.tag
-            attr = {
+            cmd = rule.tag
+            props = {
                 k: v for k,v in rule.items()
             }
+            attr = []
 
             for child in rule:
-                attr[child.tag] = {
+                attr += [{child.tag: {
                     k: v for k,v in child.items()
-                }
+                }}]
             
             self._score_rules.append({
-                "cmd": command,
-                "attr": attr
+                "cmd": cmd,
+                "attr": attr,
+                "props": props
             })
 
     # Managing functions:
@@ -411,6 +413,17 @@ class MetaList:
                 # undecided yet (strangely the result is in, though)
                 return None
 
+        if 'placed' in ref:
+            scope = 'all'
+
+            if 'among' in ref:
+                scope = ref['among']
+
+            if scope not in obj._score_deductions['calced']:
+                return None
+                
+            return obj._score_deductions['calced'][scope]['order'][ref['placed'] - 1][0]
+
     """
         get_match_by_id(obj, match_id, informational_only=False)
 
@@ -551,28 +564,30 @@ class MetaList:
             return True
         
         for func in self._score_rules:
-            success = False
             match func['cmd']:
                 case 'calc-points':
-                    success = self.__score_calc_points(obj, func['attr'])
+                    success = self.__score_calc_points(obj, func['attr'], func['props'])
                 
                 case 'resolve-playoffs':
-                    pass
-                
+                    success = True  # TODO: later
+
                 case 'resolve-fight':
-                    pass
+                    success = True  # TODO: later
 
                 case 'first':
-                    pass
+                    success = self.__score_set_result(obj, 'first', func['attr'], func['props'])
 
                 case 'second':
-                    pass
+                    success = self.__score_set_result(obj, 'second', func['attr'], func['props'])
 
                 case 'third':
-                    pass
+                    success = self.__score_set_result(obj, 'second', func['attr'], func['props'])
 
                 case 'fifth':
-                    pass
+                    success = self.__score_set_result(obj, 'second', func['attr'], func['props'])
+
+                case _:
+                    success = False
 
             if not success:
                 return False
@@ -583,8 +598,8 @@ class MetaList:
 
         return True
 
-    def __score_calc_points(self, obj, opts):
-        scope = opts['among']
+    def __score_calc_points(self, obj, attr, props):
+        scope = props['among']
 
         obj._score_deductions['calced'][scope] = {
             'base': [],
@@ -621,19 +636,71 @@ class MetaList:
         sorted_data = sorted(base_data.items(), key=lambda i: i[1], reverse=True)
 
         # Store sorted data-duplicate
-        obj._score_deductions['calced'][scope]['base'] = sorted_data[::]
+        obj._score_deductions['calced'][scope]['order'] = sorted_data[::]
 
         # We do not validate for equal scores, that is a task for the playoff-resolvers
         return True
 
+    def __score_set_result(self, obj, on, attr, props):
+        fighter_refs = []
+
+        # Transform parsed markup to valid fighter refs
+        for fr in attr:
+            if 'placed' in fr:
+                fighter_refs += [{ "placed": int(fr['placed']['on']) }]
+
+                if 'among' in fr:
+                    fighter_refs[-1]['among'] = fr['among']
+
+            elif 'winner' in fr:
+                fighter_refs += [{ "winner": fr['winner']['match-id'] }]
+            elif 'loser' in fr:
+                fighter_refs += [{ "loser": fr['loser']['match-id'] }]
+            elif 'fighter' in fr:
+                fighter_refs += [{ "fighter": int(fr['fighter']['id']) }]
+
+        # Evaluate references
+        fighters = []
+        for fr in fighter_refs:
+            fighters += [self._evaluate_fighter_ref(obj, fr)]
+
+        # Store results
+        obj._score_deductions['results'][on] = fighters
+
+        return True
+
     def get_first(self, obj):
-        pass
+        assert obj._score_complete, \
+            "placements not available until full score evaluation"
+
+        if not 'first' in obj._score_deductions['results']:
+            return BlankFighter
+
+        return obj._score_deductions['results']['first'][0]
 
     def get_second(self, obj):
-        pass
+        assert obj._score_complete, \
+            "placements not available until full score evaluation"
+
+        if not 'second' in obj._score_deductions['results']:
+            return BlankFighter
+
+        return obj._score_deductions['results']['second'][0]
 
     def get_third(self, obj):
-        pass
+        assert obj._score_complete, \
+            "placements not available until full score evaluation"
+
+        if not 'third' in obj._score_deductions['results']:
+            return (BlankFighter, BlankFighter)
+
+        return obj._score_deductions['results']['third']
 
     def get_fifth(self, obj):
-        pass
+        assert obj._score_complete, \
+            "placements not available until full score evaluation"
+
+        if not 'fifth' in obj._score_deductions['results']:
+            return (BlankFighter, BlankFighter)
+
+        return obj._score_deductions['results']['fifth']
