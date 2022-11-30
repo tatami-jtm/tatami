@@ -81,3 +81,5 @@ if __name__ == "__main__":
     print("SECOND:", example_list.get_second())
     print("THIRD:", *example_list.get_third())
     print("FIFTH:", *example_list.get_fifth())
+
+    print(example_list._score_deductions)

@@ -713,10 +713,10 @@ class MetaList:
                     success = self.__score_set_result(obj, 'second', func['attr'], func['props'])
 
                 case 'third':
-                    success = self.__score_set_result(obj, 'second', func['attr'], func['props'])
+                    success = self.__score_set_result(obj, 'third', func['attr'], func['props'])
 
                 case 'fifth':
-                    success = self.__score_set_result(obj, 'second', func['attr'], func['props'])
+                    success = self.__score_set_result(obj, 'fifth', func['attr'], func['props'])
 
                 case _:
                     success = False
@@ -867,8 +867,8 @@ class MetaList:
             pod['required'] = bool(match_cond)
 
             if pod['required'] and not pod['started']:
-                # TODO:
-                # realloc
+
+                # realloc fighters
                 if po_val['realloc_random']:
                     playoff_candidates = random.shuffle(playoff_candidates)
                 
