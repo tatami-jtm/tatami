@@ -468,6 +468,9 @@ class MetaList:
         slots have been allocated yet.
     """
     def get_schedule(self, obj, informational_only):
+        if obj._fighter_count < self.require_min():
+            return []
+
         if not informational_only:
             self.match_cleanup(obj)
 
