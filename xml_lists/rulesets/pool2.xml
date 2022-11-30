@@ -23,9 +23,8 @@
         </order>
 
         <score>
-            <calc-points among="all" />
-            <first><placed on="1" /></first>
-            <second><placed on="2" /></second>
+            <first><winner match-id="AvB" /></first>
+            <second><loser match-id="AvB" /></second>
         </score>
     </rules>
 
