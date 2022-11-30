@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<ruleset>
+    <meta>
+        <name is="5er-Pool" />
+        <require>
+            <exact of="5" />
+        </require>
+    </meta>
+
+    <rules>
+        <alloc>
+            <fighter id="1" />
+            <fighter id="2" />
+            <fighter id="3" />
+            <fighter id="4" />
+            <fighter id="5" />
+        </alloc>
+
+        <match id="AvB">
+            <white><fighter id="1" /></white>
+            <blue><fighter id="2" /></blue>
+        </match>
+
+        <match id="AvC">
+            <white><fighter id="1" /></white>
+            <blue><fighter id="3" /></blue>
+        </match>
+
+        <match id="AvD">
+            <white><fighter id="1" /></white>
+            <blue><fighter id="4" /></blue>
+        </match>
+
+        <match id="AvE">
+            <white><fighter id="1" /></white>
+            <blue><fighter id="5" /></blue>
+        </match>
+
+        <match id="BvC">
+            <white><fighter id="2" /></white>
+            <blue><fighter id="3" /></blue>
+        </match>
+
+        <match id="BvD">
+            <white><fighter id="2" /></white>
+            <blue><fighter id="4" /></blue>
+        </match>
+
+        <match id="BvE">
+            <white><fighter id="2" /></white>
+            <blue><fighter id="5" /></blue>
+        </match>
+
+        <match id="CvD">
+            <white><fighter id="3" /></white>
+            <blue><fighter id="4" /></blue>
+        </match>
+
+        <match id="CvE">
+            <white><fighter id="3" /></white>
+            <blue><fighter id="5" /></blue>
+        </match>
+
+        <match id="DvE">
+            <white><fighter id="4" /></white>
+            <blue><fighter id="5" /></blue>
+        </match>
+
+        <order>
+            <match id="AvB" />
+            <match id="CvD" />
+            <clip />
+            <match id="AvE" />
+            <match id="BvC" />
+            <clip />
+            <match id="DvE" />
+            <match id="AvC" />
+            <clip />
+            <match id="BvE" />
+            <match id="AvD" />
+            <clip />
+            <match id="CvE" />
+            <match id="BvD" />
+        </order>
+
+        <score>
+            <calc-points among="all" />
+            <resolve-playoffs />
+
+            <first><placed on="1" /></first>
+            <second><placed on="2" /></second>
+            <third><placed on="3" /><placed on="4" /></third>
+            <fifth><placed on="5" /></third>
+        </score>
+
+        <!-- UP -->
+        <playoff id="e123up">
+            <only-if-equal>
+                <points-for place="3" among="all" />
+                <points-for place="2" among="all" />
+                <points-for place="1" among="all" />
+            </only-if-equal>
+
+            <realloc random="true">
+                <fighter id="1" />
+                <fighter id="2" />
+                <fighter id="3" />
+            </realloc>
+
+            <match id="upXvY">
+                <white><fighter id="1" /></white>
+                <blue><fighter id="2" /></blue>
+            </match>
+
+            <match id="upXYvZ">
+                <white><winner match-id="upXvY" /></white>
+                <blue><fighter id="3" /></blue>
+            </match>
+
+            <order>
+                <match id="upXvY" />
+                <clip />
+                <match id="upXYvZ" />
+            </order>
+
+            <first><winner match-id="upXYvZ" /></first>
+            <second><loser match-id="upXYvZ" /></second>
+            <third><loser match-id="upXvY" /></third>
+        </playoff>
+
+        <!-- MIDDLE (DOWN) -->
+        <playoff id="e432down">
+            <only-if-equal>
+                <points-for place="4" among="all" />
+                <points-for place="3" among="all" />
+                <points-for place="2" among="all" />
+            </only-if-equal>
+
+            <realloc random="true">
+                <fighter id="1" />
+                <fighter id="2" />
+                <fighter id="3" />
+            </realloc>
+
+            <match id="downXvY">
+                <white><fighter id="1" /></white>
+                <blue><fighter id="2" /></blue>
+            </match>
+
+            <match id="downXYvZ">
+                <white><loser match-id="downXvY" /></white>
+                <blue><fighter id="3" /></blue>
+            </match>
+
+            <order>
+                <match id="downXvY" />
+                <clip />
+                <match id="downXYvZ" />
+            </order>
+
+            <first><winner match-id="downXvY" /></first>
+            <second><winner match-id="downXYvZ" /></second>
+            <third><loser match-id="downXYvZ" /></third>
+        </playoff>
+
+        <!-- DOWN -->
+        <playoff id="e543down">
+            <only-if-equal>
+                <points-for place="4" among="all" />
+                <points-for place="3" among="all" />
+                <points-for place="2" among="all" />
+            </only-if-equal>
+
+            <realloc random="true">
+                <fighter id="1" />
+                <fighter id="2" />
+                <fighter id="3" />
+            </realloc>
+
+            <match id="downXvY">
+                <white><fighter id="1" /></white>
+                <blue><fighter id="2" /></blue>
+            </match>
+
+            <match id="downXYvZ">
+                <white><loser match-id="downXvY" /></white>
+                <blue><fighter id="3" /></blue>
+            </match>
+
+            <order>
+                <match id="downXvY" />
+                <clip />
+                <match id="downXYvZ" />
+            </order>
+
+            <first><winner match-id="downXvY" /></first>
+            <second><winner match-id="downXYvZ" /></second>
+            <third><loser match-id="downXYvZ" /></third>
+        </playoff>
+    </rules>
+
+    <display></display>
+</ruleset>
