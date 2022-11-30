@@ -5,6 +5,7 @@ from .fighter import BlankFighter
 
 ARBITRARY_MAX_VALUE = 1 << 16
 MAX_PLAYOFF = 3
+PLACE_MAPPING = [None, "first", "second", "third", "third", "fifth", "fifth"]
 
 """
     MetaList
@@ -862,8 +863,8 @@ class MetaList:
                 }
 
             pod = obj._playoff_data[po_id]
-            playoff_candidates = self.__is_playoff_required(obj, po_id)
-            pod['required'] = bool(playoff_candidates)
+            playoff_candidates, match_cond = self.__is_playoff_required(obj, po_id)
+            pod['required'] = bool(match_cond)
 
             if pod['required'] and not pod['started']:
                 # TODO:
@@ -884,8 +885,24 @@ class MetaList:
                 return False
             
             elif pod['required'] and pod['started'] and not pod['completed']:
-                pass
-            
+                # Due to the pre-checking of .completed(), this can only be reached
+                # if all playoff matches have been resolved
+
+                for pos, ref in po_val["placement_rules"].items():
+                    pod["results"][pos] = self._evaluate_fighter_ref(obj, ref)
+                
+                match_cond_keys = sorted([c['place'] for c in match_cond['equal']])
+
+                match_results = [(PLACE_MAPPING.index(k), v) for k, v in pod["results"].items()]
+                match_results = sorted(match_results, key = lambda r: r[0])
+
+                for mr, mainpos in zip(match_results, match_cond_keys):
+                    obj._score_deductions['calced']["all"]['order'][mainpos - 1] = (mr[1], "via-playoff")
+
+                pod['completed'] = True
+
+                return True
+
             else:
                 return True
 
@@ -905,9 +922,9 @@ class MetaList:
                     player_list.append(score[0])
                 
                 if len(base_set) == 1:
-                    return player_list
+                    return player_list, cond
         
-        return False
+        return False, None
 
     """
         get_first(obj)

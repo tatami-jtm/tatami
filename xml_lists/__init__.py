@@ -4,7 +4,7 @@ from .fighter import Fighter
 
 if __name__ == "__main__":
     all_lists = get_all_lists()
-    chosen_list = all_lists[2]
+    chosen_list = all_lists[3]
 
     print("Avail. lists:",
         ", ".join(all_lists))
@@ -27,6 +27,7 @@ if __name__ == "__main__":
     example_list.alloc(Fighter('aaa', 'A-Fighter', 'A-Team'))
     example_list.get_schedule(True)
     example_list.alloc(Fighter('bbb', 'B-Fighter', 'B-Team'))
+    example_list.alloc(Fighter('ccc', 'C-Fighter', 'C-Team'))
 
     print("Schedule:", example_list.get_schedule())
 
@@ -62,7 +63,21 @@ if __name__ == "__main__":
     print("Schedule:", example_list.get_schedule())
     print("completed?", example_list.completed())
 
-    # print("FIRST:", example_list.get_first())
-    # print("SECOND:", example_list.get_second())
-    # print("THIRD:", *example_list.get_third())
-    # print("FIFTH:", *example_list.get_fifth())
+    po_match = example_list.get_schedule()[0]['match']
+    pomr = po_match.mk_result()
+    pomr.set_points_white(0)
+    pomr.set_score_white(0)
+    pomr.set_points_blue(1)
+    pomr.set_score_blue(1)
+    pomr.set_time(120)
+    example_list.enter_results(pomr)
+
+    print("Schedule:", example_list.get_schedule())
+    print("completed?", example_list.completed())
+
+    print("Scoring: is-finished?", example_list.score())
+
+    print("FIRST:", example_list.get_first())
+    print("SECOND:", example_list.get_second())
+    print("THIRD:", *example_list.get_third())
+    print("FIFTH:", *example_list.get_fifth())
