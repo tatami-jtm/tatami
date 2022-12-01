@@ -5,8 +5,11 @@
 html {
     font-family: sans-serif;
     background-color: #000;
-    cursor: none;
+    cursor: not-allowed;
     user-select: none;
+}
+html.active {
+    cursor: none;
 }
 body {
     margin: 0;

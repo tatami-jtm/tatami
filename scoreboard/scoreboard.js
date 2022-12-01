@@ -1,6 +1,7 @@
 // Initialize audio
 const alert_audio = new Audio('alert.mp3');
 alert_audio.loop = true;
+alert_audio.playsinline = true;
 alert_audio.load();
 
 const properties = {
@@ -313,3 +314,7 @@ let reset = () => {
 };
 
 setInterval(update, 50);
+
+document.body.addEventListener("click", (e) => {
+    document.body.parentNode.classList.add('active');
+})
