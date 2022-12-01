@@ -1,0 +1,50 @@
+html {
+    --primary: #8A9B68;
+    --secondary: #363946;
+    --blue: #136090;
+    --white: #F4F7F5;
+}
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+/** ** Splash page (/) ** */
+body.splash {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    height: 100vh;
+    background-color: var(--primary);
+    background-image: linear-gradient(-45deg, hsla(65, 20%, 51%, 1), hsla(95, 20%, 51%, 1));
+    background-attachment: fixed;
+}
+.splash .container {
+    padding: 3rem;
+    margin-top: 3rem;
+    background-color: rgba(0, 0, 0, 0.1);
+    background-image: linear-gradient(-45deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.4));
+    border-radius: 0.5rem;
+    max-width: 812px;
+    box-shadow: 5px 5px 20px -5px rgba(0, 0, 0, 0.1);
+}
+.splash .splash-logo {
+    display: block;
+    margin: 0 auto;
+    height: 96px; width: 96px;
+    filter: invert(100%);
+}
+.splash h1 {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    font-size: 3rem;
+    font-weight: normal;
+    text-align: center;
+}
+
+.splash h3 {
+    font-size: 1.3333rem;
+    text-transform: uppercase;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}

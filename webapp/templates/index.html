@@ -1,2 +1,11 @@
 {% extends "layouts/splash.html" %}
 {% block title %}Willkommen!{% endblock %}
+{% block body %}
+<img src="{{ url_for('static', filename='brand/logo_white.png') }}" alt="" class="splash-logo">
+<h1>Willkommen!</h1>
+<h3>In Turnier einwählen</h3>
+<p>Kein aktuelles Turnier verfügbar.</p>
+
+<h3>Als Administrator/in anmelden</h3>
+<a href="" class="btn btn-dark">Zum Administrationsbereich</a>
+{% endblock body %}
