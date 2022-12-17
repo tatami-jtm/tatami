@@ -7,7 +7,7 @@
     <title>Scoreboard Controller</title>
 
     <script>
-        const timeDefault = 5;
+        const timeDefault = 120;
         var timeops = {
             globalTime: 0,
             ticking: 0,
@@ -139,5 +139,35 @@
     </details>
     <h2>Kampfdurchführung</h2>
     <p>Zeit: <span id="global-time">4:00</span> <button onclick="startTime()">Start</button> <button onclick="stopTime()">Stop</button></p>
+    <p>Weiß:
+        <button onclick="setOption('white:ippon', 1)">I+</button>
+        <button onclick="setOption('white:ippon', 0)">I-</button>
+        <button onclick="setOption('white:wazaari', 'active')">W+</button>
+        <button onclick="setOption('white:wazaari', 'pending')">W?</button>
+        <button onclick="setOption('white:wazaari', false)">W-</button>
+    </p>
+    <p>
+        <button onclick="setOption('white:shido', 0)">S0</button>
+        <button onclick="setOption('white:shido', 1)">S1</button>
+        <button onclick="setOption('white:shido', 2)">S2</button>
+        <button onclick="setOption('white:shido', 3)">S3</button>
+        <button onclick="setOption('white:hansokumake', 1)">H+</button>
+        <button onclick="setOption('white:hansokumake', 0)">H-</button>
+    </p>
+    <p>Blau:
+        <button onclick="setOption('blue:ippon', 1)">I+</button>
+        <button onclick="setOption('blue:ippon', 0)">I-</button>
+        <button onclick="setOption('blue:wazaari', 'active')">W+</button>
+        <button onclick="setOption('blue:wazaari', 'pending')">W?</button>
+        <button onclick="setOption('blue:wazaari', false)">W-</button>
+    </p>
+    <p>
+        <button onclick="setOption('blue:shido', 0)">S0</button>
+        <button onclick="setOption('blue:shido', 1)">S1</button>
+        <button onclick="setOption('blue:shido', 2)">S2</button>
+        <button onclick="setOption('blue:shido', 3)">S3</button>
+        <button onclick="setOption('blue:hansokumake', 1)">H+</button>
+        <button onclick="setOption('blue:hansokumake', 0)">H-</button>
+    </p>
 </body>
 </html>

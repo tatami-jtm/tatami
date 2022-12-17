@@ -17,6 +17,9 @@ const properties = {
             "tatami-scoreboard:white:club"
         ],
         complex_render: (props) => {
+            if (!props["tatami-scoreboard:white:club"])
+                return props["tatami-scoreboard:white:name"];
+
             return props["tatami-scoreboard:white:name"] + " (" + props["tatami-scoreboard:white:club"] + ")"
         }
     },
@@ -26,6 +29,9 @@ const properties = {
             "tatami-scoreboard:blue:club"
         ],
         complex_render: (props) => {
+            if (!props["tatami-scoreboard:blue:club"])
+                return props["tatami-scoreboard:blue:name"];
+
             return props["tatami-scoreboard:blue:name"] + " (" + props["tatami-scoreboard:blue:club"] + ")"
         }
     },
@@ -35,6 +41,9 @@ const properties = {
             "tatami-scoreboard:prepare:white:club"
         ],
         complex_render: (props) => {
+            if (!props["tatami-scoreboard:prepare:white:club"])
+                return props["tatami-scoreboard:prepare:white:name"];
+
             return props["tatami-scoreboard:prepare:white:name"] + " (" + props["tatami-scoreboard:prepare:white:club"] + ")"
         }
     },
@@ -44,6 +53,9 @@ const properties = {
             "tatami-scoreboard:prepare:blue:club"
         ],
         complex_render: (props) => {
+            if(!props["tatami-scoreboard:prepare:blue:club"])
+                return props["tatami-scoreboard:prepare:blue:name"];
+
             return props["tatami-scoreboard:prepare:blue:name"] + " (" + props["tatami-scoreboard:prepare:blue:club"] + ")"
         }
     },
@@ -57,7 +69,18 @@ const properties = {
             return (prop == "1") ? 'IPPON' : ''
         }
     },
-    "tatami-scoreboard:white:wazaari": null,
+    "tatami-scoreboard:white:wazaari": {
+        changed: (prop) => {
+            wazaari = document.querySelector("[data-sbf-id='tatami-scoreboard:white:wazaari']");
+            wazaari.classList.remove("active");
+            wazaari.classList.remove("pending");
+
+            if (prop == 'active')
+                wazaari.classList.add("active");
+            else if (prop == 'pending')
+                wazaari.classList.add("pending");
+        }
+    },
     "tatami-scoreboard:prepare:white:shido+hansokumake": {
         depends_on: [
             "tatami-scoreboard:white:shido",
@@ -95,7 +118,18 @@ const properties = {
             return (prop == "1") ? 'IPPON' : ''
         }
     },
-    "tatami-scoreboard:blue:wazaari": null,
+    "tatami-scoreboard:blue:wazaari": {
+        changed: (prop) => {
+            wazaari = document.querySelector("[data-sbf-id='tatami-scoreboard:blue:wazaari']");
+            wazaari.classList.remove("active");
+            wazaari.classList.remove("pending");
+
+            if (prop == 'active')
+                wazaari.classList.add("active");
+            else if (prop == 'pending')
+                wazaari.classList.add("pending");
+        }
+    },
     "tatami-scoreboard:prepare:blue:shido+hansokumake": {
         depends_on: [
             "tatami-scoreboard:blue:shido",
