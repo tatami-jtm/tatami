@@ -11,39 +11,55 @@ html, body {
 
 /** ** Splash page (/) ** */
 body.splash {
-    position: absolute;
+    position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     height: 100vh;
-    background-color: var(--primary);
-    background-image: linear-gradient(-45deg, hsla(65, 20%, 51%, 1), hsla(95, 20%, 51%, 1));
+    background-color: var(--secondary);
+    padding: 2rem;
+}
+body.splash::before {
+    content: '';
+    background-image: url(/static/brand/fighting.png);
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
     background-attachment: fixed;
+    filter: brightness(0.5) blur(35px);
 }
 .splash .container {
     padding: 3rem;
-    margin-top: 3rem;
     background-color: rgba(0, 0, 0, 0.1);
-    background-image: linear-gradient(-45deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.4));
-    border-radius: 0.5rem;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.85),  rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.6));
+    border-radius: 0.25rem;
     max-width: 812px;
-    box-shadow: 5px 5px 20px -5px rgba(0, 0, 0, 0.1);
+    box-shadow: 5px 5px 20px -5px rgba(0, 0, 0, 0.5);
 }
 .splash .splash-logo {
     display: block;
     margin: 0 auto;
-    height: 96px; width: 96px;
-    filter: invert(100%);
+    height: 82px; width: 82px;
+    user-select: none;
 }
 .splash h1 {
-    margin-top: 1rem;
+    margin-top: -.15rem;
     margin-bottom: 2rem;
-    font-size: 3rem;
-    font-weight: normal;
+    font-size: 1.6666rem;
+    font-weight: bold;
     text-align: center;
+    user-select: none;
+    background-color: var(--primary);
+    color: white;
+    padding: 0.15rem 0;
+    border-radius: 0.25rem;
 }
 
 .splash h3 {
     font-size: 1.3333rem;
-    text-transform: uppercase;
     margin-top: 3rem;
     margin-bottom: 1rem;
     font-weight: bold;
