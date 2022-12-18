@@ -2,5 +2,48 @@
 {% block title %}Administrationsbereich{% endblock %}
 {% block body %}
 <h1>Hallo {{ current_user.qualified_name() }}</h1>
-<p>Deine Rollen: {% for role in current_user.roles %}<span class="badge bg-{{ 'secondary' if not role.is_admin else 'primary' }}" title="{{ role.description }}">{{ role.name }}</span>{% endfor %}</p>
+
+<div class="row mt-4">
+    <div class="col-12 col-lg-3 mb-4">
+        <div class="card">
+            <div class="card-header">Profilübersicht</div>
+            <div class="card-body">
+                <h6>Deine E-Mail-Adresse</h6>
+                {{ current_user.email }}
+            </div>
+            <div class="card-body border-top">
+                <h6>Deine Rollen</h6>
+                {% for role in current_user.roles %}
+                    <span class="badge text-bg-{{ 'secondary' if not role.is_admin else 'primary' }}" title="{{ role.description }}">{{ role.name }}</span>
+                {% endfor %}
+            </div>
+            <div class="card-body border-top">
+                <a href="" class="btn btn-secondary btn-sm">Profil bearbeiten</a>
+                <a href="" class="btn btn-outline-danger btn-sm">Problem melden</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header">Deine Veranstaltungen</div>
+            <div class="card-body">
+                <p>Du hast keine aktuellen Veranstaltungen.</p>
+            </div>
+            <div class="card-body border-top">
+                <a href="" class="btn btn-primary btn-sm">Alle Veranstaltungen</a>
+                {% if current_user.has_privilege('create_tournaments') %}
+                <a href="" class="btn btn-secondary btn-sm">Veranstaltung hinzufügen</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-3 mb-4">
+        <div class="card">
+            <div class="card-header">Systemnachrichten</div>
+            <div class="card-body">
+                <p>Hier gibt es zurzeit nichts.</p>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock body %}
