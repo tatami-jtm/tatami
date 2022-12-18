@@ -1,4 +1,4 @@
 flask
-flask-security
+flask-security-too
 flask-sqlalchemy
 flask-migrate

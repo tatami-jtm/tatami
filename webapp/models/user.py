@@ -32,6 +32,7 @@ class User(db.Model, UserMixin):
     confirmed_at = db.Column(db.DateTime())
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
+    fs_uniquifier = db.Column(db.String(255), unique=True, nullable=False)
 
     display_name = db.Column(db.String(50))
 
