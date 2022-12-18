@@ -1,0 +1,18 @@
+<h1>Kontenverwaltung</h1>
+
+<div class="nav nav-tabs mb-4">
+    <div class="nav-item">
+        <a class="nav-link {{ 'active' if curpage == 'accts' }}"
+           {{ 'aria-current="page"' if curpage == 'accts' }}
+           href="{{ url_for('admin.user') }}">
+            Konten
+        </a>
+    </div>
+    <div class="nav-item">
+        <a class="nav-link {{ 'active' if curpage == 'roles' }}"
+           {{ 'aria-current="page"' if curpage == 'roles' }}
+           href="{{ url_for('admin.user') }}">
+            Rollen
+        </a>
+    </div>
+</div>

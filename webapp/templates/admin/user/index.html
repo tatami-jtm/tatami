@@ -1,0 +1,53 @@
+{% extends "layouts/admin.html" %}
+{% set curpage = "accts" %}
+{% block title %}Administrationsbereich{% endblock %}
+{% block body %}
+{% include "admin/user/_header.html" %}
+
+<h3>Kontenübersicht</h3>
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>E-Mail</th>
+                <th>Rollen</th>
+                <th>Status</th>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        {% for user in all_user %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.display_name or '' }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    <ul class="list-unstyled">
+                    {% for role in user.roles %}
+                        <li>
+                            <span class="badge text-bg-{{ 'secondary' if not role.is_admin else 'primary' }}" title="{{ role.description }}">{{ role.name }}</span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </td>
+                <td>
+                {% if user.active %}
+                    <span class="badge text-bg-success">Aktiv</span>
+                {% else %}
+                    <span class="badge bg-light text-danger">Inaktiv</span>
+                {% endif %}
+                </td>
+                <td>
+                    <div class="d-flex">
+                        <a href="" class="m-1 btn btn-secondary btn-sm">Bearbeiten</a>
+                        <a href="" class="m-1 btn btn-outline-danger btn-sm">{{ 'Deaktivieren' if user.active else 'Aktivieren' }}</a>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock body %}
