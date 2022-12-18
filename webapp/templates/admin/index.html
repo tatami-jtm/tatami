@@ -2,5 +2,5 @@
 {% block title %}Administrationsbereich{% endblock %}
 {% block body %}
 <h1>Hallo {{ current_user.qualified_name() }}</h1>
-<p>Willkommen im Administrationsbereich!</p>
+<p>Deine Rollen: {% for role in current_user.roles %}<span class="badge bg-{{ 'secondary' if not role.is_admin else 'primary' }}" title="{{ role.description }}">{{ role.name }}</span>{% endfor %}</p>
 {% endblock body %}

@@ -20,6 +20,7 @@ class Role(db.Model, RoleMixin):
     description = db.Column(db.String(255))
 
     is_admin = db.Column(db.Boolean)
+    may_create_tournaments = db.Column(db.Boolean)
 
 
 class User(db.Model, UserMixin):
@@ -33,8 +34,26 @@ class User(db.Model, UserMixin):
 
     display_name = db.Column(db.String(50))
 
+    _privilege = None
+
     def qualified_name(self):
         if self.display_name:
             return self.display_name
         else:
             return self.email    
+
+    def has_privilege(self, priv):
+        if self._privilege is None:
+            self._privilege = {
+                "admin": False,
+                "create_tournaments": False
+            }
+
+            for role in self.roles:
+                if role.is_admin:
+                    self._privilege['admin'] = True
+                if role.may_create_tournaments:
+                    self._privilege['create_tournaments'] = True
+
+        return priv in self._privilege.keys() and (
+            self._privilege['admin'] or self._privilege[priv])
