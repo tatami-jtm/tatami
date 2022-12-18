@@ -32,3 +32,9 @@ class User(db.Model, UserMixin):
                             backref=db.backref('users', lazy='dynamic'))
 
     display_name = db.Column(db.String(50))
+
+    def qualified_name(self):
+        if self.display_name:
+            return self.display_name
+        else:
+            return self.email    

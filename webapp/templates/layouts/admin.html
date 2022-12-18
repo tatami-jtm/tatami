@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    {% include "layouts/_header.html" %}
+    <title>TATAMI | {% block title %}{% endblock title %}</title>
+</head>
+<body>
+    <nav class="navbar navbar-admin navbar-expand-lg navbar-dark mb-3">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('admin.index') }}">
+                <img src="{{ url_for('static', filename='brand/logo_white.png') }}" alt="TATAMI">
+                <span>Administration</span>
+            </a>
+            <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#adminMainNav"
+                aria-controls="adminMainNav" aria-expanded="false"
+                aria-label="Navigation ein-/ausblenden">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse d-flex justify-content-between" id="adminMainNav">
+                <div class="navbar-nav">
+                    <div class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin.index') }}">Übersicht</a>
+                    </div>
+                </div>
+                <div class="navbar-nav">
+                    <div class="nav-item">
+                        <a class="nav-link" href="{{ url_for('security.logout') }}">Abmelden</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>      
+    <div class="container">
+        {% block body %}{% endblock body %}
+    </div>
+</body>
+</html>

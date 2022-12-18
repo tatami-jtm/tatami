@@ -9,6 +9,25 @@ html, body {
     padding: 0;
 }
 
+.navbar-admin {
+    background-color: var(--primary);
+}
+.navbar .navbar-brand {
+    display: flex;
+    align-items: center;
+}
+.navbar .navbar-brand img {
+    height: 1.5em;
+    width: 1.5em;
+    margin-top: 0.05rem;
+    margin-bottom: -0.05rem;
+    margin-right: 0.15em;
+}
+.navbar-admin .navbar-brand {
+    border-right: 1px solid rgba(255, 255, 255, 0.5);
+    padding-right: 1em;
+}
+
 /** ** Splash page (/) ** */
 body.splash {
     position: fixed;
