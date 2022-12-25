@@ -22,6 +22,7 @@ def user():
 
     return render_template("admin/user/index.html", all_user=all_user)
 
+
 @admin_view.route('/user/me')
 @login_required
 def edit_user_me():
@@ -38,6 +39,7 @@ def edit_user(id):
     roles = Role.query.order_by(Role.is_admin.desc(), Role.name).all()
 
     return render_template("admin/user/edit.html", user=user, roles=roles)
+
 
 @admin_view.route('/user/<int:id>', methods=['POST'])
 @login_required
@@ -61,8 +63,26 @@ def update_user(id):
                 user.roles.append(role)
             elif role in user.roles:
                 user.roles.remove(role)
-    
+
     db.session.commit()
     flash('Änderungen erfolgreich gespeichert.')
 
     return redirect(url_for('admin.edit_user', id=user.id))
+
+
+@admin_view.route('/user/toggle-active/<int:id>', methods=['POST'])
+@login_required
+def user_toggle_active(id):
+    if not current_user.has_privilege('manage_users'):
+        abort(404)
+
+    if id == current_user.id:
+        flash('Fehler: eigenes Konto kann nicht deaktiviert werden')
+        return redirect(url_for('admin.user'))
+
+    user = User.query.get_or_404(id)
+    user.active = not user.active
+    db.session.commit()
+    flash('Änderungen erfolgreich gespeichert.')
+
+    return redirect(url_for('admin.user'))
