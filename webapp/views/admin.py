@@ -69,11 +69,14 @@ def update_user(id):
         user.password = request.form['password']
 
     if current_user.has_privilege('manage_users'):
-        selected_role_ids = list(map(int, request.form.getlist('roles')))
+        selected_role_ids = list(map(Role.query.get, request.form.getlist('roles')))
         for role in roles:
-            if role.id in selected_role_ids:
+            if role.is_admin and not current_user.has_privilege('admin'):
+                continue
+
+            if (role in selected_role_ids) and (role not in user.roles):
                 user.roles.append(role)
-            elif role in user.roles:
+            elif (role not in selected_role_ids) and (role in user.roles):
                 user.roles.remove(role)
 
     db.session.commit()
