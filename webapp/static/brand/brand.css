@@ -11,6 +11,7 @@ html, body {
 
 .navbar-admin {
     background-color: var(--primary);
+    padding: 0.125rem;
 }
 .navbar .navbar-brand {
     display: flex;
@@ -26,6 +27,23 @@ html, body {
 .navbar-admin .navbar-brand {
     border-right: 1px solid rgba(255, 255, 255, 0.5);
     padding-right: 1em;
+    font-size: 1.125rem;
+}
+.navbar-admin .navbar-nav {
+    display: flex;
+    align-items: center;
+}
+.navbar-admin .nav-link {
+    color: #ffffff;
+    padding: 0.125rem 0.5rem;
+    margin: 0.25rem;
+    border: 1px solid white;
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+}
+.navbar-admin .nav-link:hover {
+    color: #000000;
+    background-color: #ffffff;
 }
 
 /** ** Splash page (/) ** */

@@ -5,7 +5,7 @@
     <title>TATAMI | {% block title %}{% endblock title %}</title>
 </head>
 <body>
-    <nav class="navbar navbar-admin navbar-expand-lg navbar-dark mb-5">
+    <nav class="navbar navbar-admin navbar-expand-lg navbar-dark mb-2">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('admin.index') }}">
                 <img src="{{ url_for('static', filename='brand/logo_white.png') }}" alt="TATAMI">
@@ -40,7 +40,7 @@
     </nav>
     {% with messages = get_flashed_messages(with_categories=True) %}
     {% if messages %}
-    <div class="container mb-3">
+    <div class="container mt-2 mb-3">
     {% for category, message in messages %}
         <div class="alert alert-{{ category or 'light' }} alert-dismissible fade show" role="alert">
             {% if ":" in message %}
@@ -54,7 +54,7 @@
     </div>
     {% endif %}
     {% endwith %}
-    <div class="container">
+    <div class="container mt-4">
         {% block body %}{% endblock body %}
     </div>
 </body>
