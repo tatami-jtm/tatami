@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort
+from flask import Blueprint, render_template, abort, redirect, url_for, request, flash
 from flask_security import login_required, current_user
 
 from ..models import db, User, Role
@@ -21,3 +21,48 @@ def user():
     all_user = User.query.all()
 
     return render_template("admin/user/index.html", all_user=all_user)
+
+@admin_view.route('/user/me')
+@login_required
+def edit_user_me():
+    return redirect(url_for('admin.edit_user', id=current_user.id))
+
+
+@admin_view.route('/user/<int:id>')
+@login_required
+def edit_user(id):
+    if not (current_user.has_privilege('manage_users') or current_user.id == id):
+        abort(404)
+
+    user = User.query.get_or_404(id)
+    roles = Role.query.order_by(Role.is_admin.desc(), Role.name).all()
+
+    return render_template("admin/user/edit.html", user=user, roles=roles)
+
+@admin_view.route('/user/<int:id>', methods=['POST'])
+@login_required
+def update_user(id):
+    if not (current_user.has_privilege('manage_users') or current_user.id == id):
+        abort(404)
+
+    user = User.query.get_or_404(id)
+    roles = Role.query.order_by(Role.is_admin.desc(), Role.name).all()
+
+    user.display_name = request.form['display_name']
+    user.email = request.form['email']
+
+    if request.form['password']:
+        user.password = request.form['password']
+
+    if current_user.has_privilege('manage_users'):
+        selected_role_ids = list(map(int, request.form.getlist('roles')))
+        for role in roles:
+            if role.id in selected_role_ids:
+                user.roles.append(role)
+            elif role in user.roles:
+                user.roles.remove(role)
+    
+    db.session.commit()
+    flash('Änderungen erfolgreich gespeichert.')
+
+    return redirect(url_for('admin.edit_user', id=user.id))

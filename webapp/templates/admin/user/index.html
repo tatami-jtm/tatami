@@ -1,6 +1,6 @@
 {% extends "layouts/admin.html" %}
 {% set curpage = "accts" %}
-{% block title %}Administrationsbereich{% endblock %}
+{% block title %}Administrationsbereich | Kontenübersicht{% endblock %}
 {% block body %}
 {% include "admin/user/_header.html" %}
 
@@ -41,7 +41,7 @@
                 </td>
                 <td>
                     <div class="d-flex">
-                        <a href="" class="m-1 btn btn-secondary btn-sm">Bearbeiten</a>
+                        <a href="{{ url_for('admin.edit_user', id=user.id) }}" class="m-1 btn btn-secondary btn-sm">Bearbeiten</a>
                         <a href="" class="m-1 btn btn-outline-danger btn-sm">{{ 'Deaktivieren' if user.active else 'Aktivieren' }}</a>
                     </div>
                 </td>
