@@ -8,7 +8,7 @@ from .config_base import SETTINGS
 from .models import db, User, Role
 from .views import admin_view
 
-app = Flask(__name__)
+app = Flask(__name__, instance_path=SETTINGS['INSTANCE_PATH'])
 app.config['SQLALCHEMY_DATABASE_URI'] = SETTINGS['SQL_URL']
 
 # SQLAlchemy and Migrate
