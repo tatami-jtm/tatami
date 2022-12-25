@@ -65,7 +65,7 @@ def update_user(id):
                 user.roles.remove(role)
 
     db.session.commit()
-    flash('Änderungen erfolgreich gespeichert.')
+    flash('Änderungen erfolgreich gespeichert.', 'success')
 
     return redirect(url_for('admin.edit_user', id=user.id))
 
@@ -77,12 +77,16 @@ def user_toggle_active(id):
         abort(404)
 
     if id == current_user.id:
-        flash('Fehler: eigenes Konto kann nicht deaktiviert werden')
+        flash('Fehler: eigenes Konto kann nicht deaktiviert werden', 'danger')
         return redirect(url_for('admin.user'))
 
     user = User.query.get_or_404(id)
     user.active = not user.active
     db.session.commit()
-    flash('Änderungen erfolgreich gespeichert.')
+
+    if user.active:
+        flash('Konto erfolgreich aktiviert.', 'success')
+    else:
+        flash('Konto erfolgreich deaktiviert.', 'success')
 
     return redirect(url_for('admin.user'))
