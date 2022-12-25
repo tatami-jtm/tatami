@@ -12,6 +12,13 @@
                 {{ current_user.email }}
             </div>
             <div class="card-body border-top">
+                <h6>Dein Theme</h6>
+                <div>
+                    {{ 'hell' if not current_user.prefers_dark_mode else 'dunkel' }}
+                    <a href="{{ url_for('admin.toggle_display_mode_preference') }}">(wechseln)</a>
+                </div>
+            </div>
+            <div class="card-body border-top">
                 <h6>Deine Rollen</h6>
                 {% for role in current_user.roles %}
                     <span class="badge text-bg-{{ 'secondary' if not role.is_admin else 'primary' }}" title="{{ role.description }}">{{ role.name }}</span>

@@ -12,6 +12,18 @@ def index():
     return render_template("admin/index.html")
 
 
+@admin_view.route('/toggle-display-mode-preference')
+@login_required
+def toggle_display_mode_preference():
+    current_user.prefers_dark_mode = not current_user.prefers_dark_mode
+    db.session.commit()
+    
+    flash('Anzeigemodus erfolgreich aktualisiert.', 'success')
+
+    return redirect(url_for('admin.index'))
+
+
+
 @admin_view.route('/user')
 @login_required
 def user():

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="de" data-bs-theme="dark">
+<html lang="de" {{ 'data-bs-theme="dark"'|safe if current_user.prefers_dark_mode }}>
 <head>
     {% include "layouts/_header.html" %}
     <title>TATAMI | {% block title %}{% endblock title %}</title>
 </head>
 <body>
-    <nav class="navbar navbar-admin navbar-expand-lg navbar-light mb-5">
+    <nav class="navbar navbar-admin navbar-expand-lg navbar-dark mb-5">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('admin.index') }}">
                 <img src="{{ url_for('static', filename='brand/logo_white.png') }}" alt="TATAMI">

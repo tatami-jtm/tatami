@@ -35,6 +35,7 @@ class User(db.Model, UserMixin):
     fs_uniquifier = db.Column(db.String(255), unique=True, nullable=False)
 
     display_name = db.Column(db.String(50))
+    prefers_dark_mode = db.Column(db.Boolean)
 
     _privilege = None
 
