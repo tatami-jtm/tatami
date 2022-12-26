@@ -1,0 +1,43 @@
+{% extends "layouts/admin.html" %}
+{% set curpage = "roles" %}
+{% block title %}Administrationsbereich | Rollen{% endblock %}
+{% block body %}
+{% include "admin/user/_header.html" %}
+
+<h3>Rollen</h3>
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Beschreibung</th>
+                <th>Berechtigungen</th>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        {% for role in all_roles %}
+            <tr>
+                <td>{{ role.id }}</td>
+                <td><span class="fs-6 badge text-bg-{{ 'secondary' if not role.is_admin else 'primary' }}" title="{{ role.description }}">{{ role.name }}</span>
+                </td>
+                <td><p style="max-width: 400px;">{{ role.description }}</p></td>
+                <td>
+                    <ul class="ps-3">
+                        {% if role.is_admin %}<li>alle (Admin-Rechte)</li>{% endif %}
+                        {% if role.may_create_tournaments %}<li>Turniere erstellen</li>{% endif %}
+                        {% if role.may_manage_users %}<li>Benutzerverwaltung</li>{% endif %}
+                    </ul>
+                </td>
+                <td>
+                    <div class="d-flex">
+                        <a href="" class="m-1 btn btn-secondary btn-sm">Rolle bearbeiten</a>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock body %}

@@ -32,7 +32,7 @@ def user():
 
     all_user = User.query.all()
 
-    return render_template("admin/user/index.html", all_user=all_user)
+    return render_template("admin/user/users.html", all_user=all_user)
 
 
 @admin_view.route('/user/me')
@@ -105,3 +105,15 @@ def user_toggle_active(id):
         flash('Konto erfolgreich deaktiviert.', 'success')
 
     return redirect(url_for('admin.user'))
+
+
+
+@admin_view.route('/user/roles')
+@login_required
+def roles():
+    if not current_user.has_privilege('manage_users'):
+        abort(404)
+
+    all_roles = Role.query.order_by(Role.is_admin.desc(), Role.name).all()
+
+    return render_template("admin/user/roles.html", all_roles=all_roles)
