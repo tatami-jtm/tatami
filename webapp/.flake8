@@ -1,0 +1,6 @@
+[flake8]
+exclude = .git, migrations, templates, static, config.pym, __pycache__
+max-complexity = 10
+per-file-ignores =
+    models/__init__.py: F401, F402, F403
+    views/__init__.py: F401, F403

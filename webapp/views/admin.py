@@ -17,11 +17,10 @@ def index():
 def toggle_display_mode_preference():
     current_user.prefers_dark_mode = not current_user.prefers_dark_mode
     db.session.commit()
-    
+
     flash('Anzeigemodus erfolgreich aktualisiert.', 'success')
 
     return redirect(url_for('admin.index'))
-
 
 
 @admin_view.route('/user')
@@ -69,7 +68,8 @@ def update_user(id):
         user.password = request.form['password']
 
     if current_user.has_privilege('manage_users'):
-        selected_role_ids = list(map(Role.query.get, request.form.getlist('roles')))
+        selected_role_ids = list(
+            map(Role.query.get, request.form.getlist('roles')))
         for role in roles:
             if role.is_admin and not current_user.has_privilege('admin'):
                 continue
@@ -109,7 +109,6 @@ def user_toggle_active(id):
         flash('Konto erfolgreich deaktiviert.', 'success')
 
     return redirect(url_for('admin.user'))
-
 
 
 @admin_view.route('/user/roles')
@@ -153,7 +152,6 @@ def update_role(id):
 
     if current_user.has_privilege('create_tournaments'):
         role.may_create_tournaments = 'may_create_tournaments' in request.form
-
 
     db.session.commit()
     flash('Änderungen erfolgreich gespeichert.', 'success')

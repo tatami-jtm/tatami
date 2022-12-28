@@ -43,7 +43,7 @@ class User(db.Model, UserMixin):
         if self.display_name:
             return self.display_name
         else:
-            return self.email    
+            return self.email
 
     def has_privilege(self, priv):
         if self._privilege is None:
