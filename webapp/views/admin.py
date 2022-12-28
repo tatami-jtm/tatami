@@ -73,6 +73,10 @@ def update_user(id):
         for role in roles:
             if role.is_admin and not current_user.has_privilege('admin'):
                 continue
+            if role.may_manage_users and not current_user.has_privilege('manage_users'):
+                continue
+            if role.may_create_tournaments and not current_user.has_privilege('create_tournaments'):
+                continue
 
             if (role in selected_role_ids) and (role not in user.roles):
                 user.roles.append(role)
@@ -140,9 +144,15 @@ def update_role(id):
 
     role.name = request.form['name']
     role.description = request.form['description']
-    role.is_admin = 'is_admin' in request.form
-    role.may_manage_users = 'may_manage_users' in request.form
-    role.may_create_tournaments = 'may_create_tournaments' in request.form
+
+    if current_user.has_privilege('admin'):
+        role.is_admin = 'is_admin' in request.form
+
+    if current_user.has_privilege('manage_users'):
+        role.may_manage_users = 'may_manage_users' in request.form
+
+    if current_user.has_privilege('create_tournaments'):
+        role.may_create_tournaments = 'may_create_tournaments' in request.form
 
 
     db.session.commit()

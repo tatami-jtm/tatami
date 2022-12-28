@@ -22,21 +22,21 @@
 
     <h3 class="fw-bold mt-4 mb-3">Berechtigungen</h3>
     <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" name="is_admin" id="perm-is_admin" {{ 'checked' if role.is_admin }}>
+        <input class="form-check-input" type="checkbox" name="is_admin" id="perm-is_admin" {{ 'checked' if role.is_admin }} {{ 'disabled' if not current_user.has_privilege('admin') }}>
         <label class="form-check-label mb-1" for="perm-is_admin">
             Administrator*in
         </label>
         <div class="form-text mt-0">Nutzer*innen mit dieser Rolle haben alle Berechtigungen und volle, uneingeschränkte Kontrolle über die Plattform.<br>ROLLEN MIT DIESER BERECHTIGUNG NUR AN VERTRAUENSWÜRDIGE PERSONEN VERGEBEN!</div>
     </div>
     <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" name="may_manage_users" id="perm-may_manage_users" {{ 'checked' if role.may_manage_users }}>
+        <input class="form-check-input" type="checkbox" name="may_manage_users" id="perm-may_manage_users" {{ 'checked' if role.may_manage_users }} {{ 'disabled' if not current_user.has_privilege('manage_users') }}>
         <label class="form-check-label mb-1" for="perm-may_manage_users">
             Konten und Rollen verwalten
         </label>
         <div class="form-text mt-0">Nutzer*innen mit dieser Rolle können die Eigenschaften von anderen Benutzerkonten und von Rollen verwalten. Sie können nur solche Rechte vergeben, die sie auch selber haben.</div>
     </div>
     <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" name="may_create_tournaments" id="perm-may_create_tournaments" {{ 'checked' if role.may_create_tournaments }}>
+        <input class="form-check-input" type="checkbox" name="may_create_tournaments" id="perm-may_create_tournaments" {{ 'checked' if role.may_create_tournaments }} {{ 'disabled' if not current_user.has_privilege('create_tournaments') }}>
         <label class="form-check-label mb-1" for="perm-may_create_tournaments">
             Turniere anlegen
         </label>
