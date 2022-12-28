@@ -10,13 +10,13 @@
         <button type="submit" class="btn btn-primary">Speichern</button>
         <a href="{{ url_for('admin.index' if not current_user.has_privilege('manage_users') else 'admin.user') }}" class="btn btn-link">Abbrechen</a>
     </div>
-    <h3 class="fw-bold mt-4">Profil</h3>
+    <h3 class="fw-bold mt-4 mb-3">Profil</h3>
     <div class="mb-3">
         <label for="display_name" class="form-label">Name</label>
         <input name="display_name" id="display_name" value="{{ user.display_name or '' }}" class="form-control" placeholder="(leer)">
     </div>
 
-    <h3 class="fw-bold mt-4">Kontodaten</h3>
+    <h3 class="fw-bold mt-4 mb-3">Kontodaten</h3>
     <div class="mb-3">
         <label for="email" class="form-label">E-Mail-Adresse</label>
         <input type="email" name="email" id="email" value="{{ user.email }}" class="form-control">
@@ -27,7 +27,7 @@
         <div id="password_help" class="form-text">Das Passwort wird nicht verändert, wenn das Feld leer bleibt.</div>
     </div>
 
-    <h3 class="fw-bold mt-4">Rollen</h3>
+    <h3 class="fw-bold mt-4 mb-3">Rollen</h3>
     {% for role in roles %}
     <div class="form-check mb-3">
         <input class="form-check-input" type="checkbox" value="{{ role.id }}" name="roles" id="role-{{ role.id }}" {{ 'checked' if role in user.roles }} {{ 'disabled' if not current_user.has_privilege('manage_users') or role.is_admin and not current_user.has_privilege('admin') }}>

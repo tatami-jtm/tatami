@@ -117,3 +117,35 @@ def roles():
     all_roles = Role.query.order_by(Role.is_admin.desc(), Role.name).all()
 
     return render_template("admin/user/roles.html", all_roles=all_roles)
+
+
+@admin_view.route('/user/roles/<int:id>')
+@login_required
+def edit_role(id):
+    if not current_user.has_privilege('manage_users'):
+        abort(404)
+
+    role = Role.query.get_or_404(id)
+
+    return render_template("admin/user/edit_role.html", role=role)
+
+
+@admin_view.route('/user/roles/<int:id>', methods=['POST'])
+@login_required
+def update_role(id):
+    if not current_user.has_privilege('manage_users'):
+        abort(404)
+
+    role = Role.query.get_or_404(id)
+
+    role.name = request.form['name']
+    role.description = request.form['description']
+    role.is_admin = 'is_admin' in request.form
+    role.may_manage_users = 'may_manage_users' in request.form
+    role.may_create_tournaments = 'may_create_tournaments' in request.form
+
+
+    db.session.commit()
+    flash('Änderungen erfolgreich gespeichert.', 'success')
+
+    return redirect(url_for('admin.edit_role', id=role.id))

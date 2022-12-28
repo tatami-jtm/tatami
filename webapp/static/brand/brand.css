@@ -101,3 +101,8 @@ body.splash::before {
     margin-bottom: 1rem;
     font-weight: bold;
 }
+
+label[for] {
+    font-weight: bold;
+    cursor: pointer;
+}
