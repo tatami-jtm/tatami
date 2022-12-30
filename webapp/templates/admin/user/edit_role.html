@@ -17,7 +17,7 @@
     </div>
     <div class="mb-3">
         <label for="description" class="form-label">Beschreibung</label>
-        <textarea name="description" id="description" class="form-control" rows="3">{{ role.description }}</textarea>
+        <textarea name="description" id="description" class="form-control" rows="3">{{ role.description or '' }}</textarea>
     </div>
 
     <h3 class="fw-bold mt-4 mb-3">Berechtigungen</h3>

@@ -122,6 +122,48 @@ def roles():
     return render_template("admin/user/roles.html", all_roles=all_roles)
 
 
+@admin_view.route('/user/roles/new')
+@login_required
+def new_role():
+    if not current_user.has_privilege('manage_users'):
+        abort(404)
+
+    role = Role()
+    role.name = 'Neue Rolle'
+
+    return render_template("admin/user/edit_role.html", role=role)
+
+
+@admin_view.route('/user/roles/new', methods=['POST'])
+@login_required
+def create_role():
+    if not current_user.has_privilege('manage_users'):
+        abort(404)
+
+    role = Role()
+
+    role.name = request.form['name']
+    role.description = request.form['description']
+    role.is_admin = False
+    role.may_manage_users = False
+    role.may_create_tournaments = False
+
+    if current_user.has_privilege('admin'):
+        role.is_admin = 'is_admin' in request.form
+
+    if current_user.has_privilege('manage_users'):
+        role.may_manage_users = 'may_manage_users' in request.form
+
+    if current_user.has_privilege('create_tournaments'):
+        role.may_create_tournaments = 'may_create_tournaments' in request.form
+
+    db.session.add(role)
+    db.session.commit()
+    flash('Rolle erfolgreich erzeugt.', 'success')
+
+    return redirect(url_for('admin.edit_role', id=role.id))
+
+
 @admin_view.route('/user/roles/<int:id>')
 @login_required
 def edit_role(id):

@@ -4,7 +4,7 @@
 {% block body %}
 {% include "admin/user/_header.html" %}
 
-<div class="float-end"><a href="" class="btn btn-primary">Rolle erstellen</a></div>
+<div class="float-end"><a href="{{ url_for('admin.new_role') }}" class="btn btn-primary">Rolle erstellen</a></div>
 <h3 class="mb-4">Rollen</h3>
 
 
