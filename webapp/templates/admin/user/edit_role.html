@@ -1,9 +1,9 @@
 {% extends "layouts/admin.html" %}
 {% set curpage = "accts" %}
-{% block title %}Administrationsbereich | Rolle bearbeiten: {{ role.name }}{% endblock %}
+{% block title %}Administrationsbereich | Rolle {% if action == 'new' %}erstellen{% else %}bearbeiten: {{ role.name }}{% endif %}{% endblock %}
 {% block body %}
 
-<h1>Rolle bearbeiten<br><span class="fs-4">{{ role.name }}</span></h1>
+<h1>Rolle {{ 'erstellen' if action == 'new' else 'bearbeiten' }}{% if action == 'edit' %}<br><span class="fs-4">{{ role.name }}</span>{% endif %}</h1>
 
 <form action="" method="POST">
     <div class="mb-3 d-flex gap-1">

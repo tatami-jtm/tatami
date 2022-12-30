@@ -129,9 +129,9 @@ def new_role():
         abort(404)
 
     role = Role()
-    role.name = 'Neue Rolle'
+    role.name = 'new_role'
 
-    return render_template("admin/user/edit_role.html", role=role)
+    return render_template("admin/user/edit_role.html", role=role, action='new')
 
 
 @admin_view.route('/user/roles/new', methods=['POST'])
@@ -172,7 +172,7 @@ def edit_role(id):
 
     role = Role.query.get_or_404(id)
 
-    return render_template("admin/user/edit_role.html", role=role)
+    return render_template("admin/user/edit_role.html", role=role, action='edit')
 
 
 @admin_view.route('/user/roles/<int:id>', methods=['POST'])
