@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, abort, redirect, url_for, request, flash
 from flask_security import login_required, current_user
 
-from ..models import db, User, Role
+from ..models import db, User, Role, Event
+
+from datetime import datetime
 
 admin_view = Blueprint('admin', __name__)
 
@@ -9,7 +11,8 @@ admin_view = Blueprint('admin', __name__)
 @admin_view.route('/')
 @login_required
 def index():
-    return render_template("admin/index.html")
+    events = current_user.get_all_supervised_events()
+    return render_template("admin/index.html", events=events)
 
 
 @admin_view.route('/toggle-display-mode-preference')

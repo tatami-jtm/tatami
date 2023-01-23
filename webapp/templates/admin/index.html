@@ -33,10 +33,26 @@
     <div class="col-12 col-lg-6 mb-4">
         <div class="card">
             <div class="card-header">Deine Veranstaltungen</div>
-            <div class="card-body">
+            {% if events == [] %}
+            <div class="card-body border-bottom">
                 <p>Du hast keine aktuellen Veranstaltungen.</p>
             </div>
-            <div class="card-body border-top">
+            {% else %}
+            <div class="card-body border-bottom p-1">
+                <div class="list-group list-group-flush">
+                {% for evt in events %}
+                    <a href="" class="list-group-item list-group-item-action">
+                        <div>
+                            <strong>{{ evt.title }}</strong>
+                            ({{ evt.first_day.strftime("%d.%m.%Y") }} &ndash; {{ evt.last_day.strftime("%d.%m.%Y") }})
+                        </div>
+                        <div class="font-monospace small">{{ evt.slug }}</div>
+                    </a>
+                {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            <div class="card-body">
                 <a href="" class="btn btn-primary btn-sm">Alle Veranstaltungen</a>
                 {% if current_user.has_privilege('create_tournaments') %}
                 <a href="" class="btn btn-secondary btn-sm">Veranstaltung hinzufügen</a>

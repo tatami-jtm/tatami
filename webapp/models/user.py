@@ -39,11 +39,13 @@ class User(db.Model, UserMixin):
 
     _privilege = None
 
+
     def qualified_name(self):
         if self.display_name:
             return self.display_name
         else:
             return self.email
+
 
     def has_privilege(self, priv):
         if self._privilege is None:
@@ -63,3 +65,13 @@ class User(db.Model, UserMixin):
 
         return priv in self._privilege.keys() and (
             self._privilege['admin'] or self._privilege[priv])
+
+
+    def get_all_supervised_events(self):
+        evt_list = self.supervised_events[:]
+        for role in self.roles:
+            for evt in role.supervised_events:
+                if evt not in evt_list:
+                    evt_list.append(evt)
+        
+        return evt_list
