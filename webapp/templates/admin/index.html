@@ -55,7 +55,7 @@
             <div class="card-body">
                 <a href="" class="btn btn-primary btn-sm">Alle Veranstaltungen</a>
                 {% if current_user.has_privilege('create_tournaments') %}
-                <a href="" class="btn btn-secondary btn-sm">Veranstaltung hinzufügen</a>
+                <a href="{{ url_for('admin.new_event') }}" class="btn btn-secondary btn-sm">Veranstaltung hinzufügen</a>
                 {% endif %}
             </div>
         </div>

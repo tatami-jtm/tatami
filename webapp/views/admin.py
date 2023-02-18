@@ -202,3 +202,41 @@ def update_role(id):
     flash('Änderungen erfolgreich gespeichert.', 'success')
 
     return redirect(url_for('admin.edit_role', id=role.id))
+
+@admin_view.route('/event/new')
+@login_required
+def new_event():
+    if not current_user.has_privilege('create_tournaments'):
+        abort(404)
+
+    event = Event()
+    roles = Role.query.order_by(Role.is_admin.desc(), Role.name).all()
+    users = User.query.all()
+
+    return render_template("admin/event/new.html", event=event, roles=roles, users=users)
+
+@admin_view.route('/event/new', methods=['POST'])
+@login_required
+def create_event():
+    if not current_user.has_privilege('create_tournaments'):
+        abort(404)
+
+    role = Role.query.get_or_404(request.form['supervising_role'])
+    user = User.query.get_or_404(request.form['supervising_user'])
+    first_day = request.form['event_day'] + "T06:00"
+    last_day = request.form['event_day'] + "T23:00"
+
+    event = Event()
+    event.slug = role.name + ':' + request.form['slug_part']
+    event.title = request.form['title']
+    event.first_day = datetime.fromisoformat(first_day)
+    event.last_day = datetime.fromisoformat(last_day)
+    event.supervising_role = role
+    event.supervising_user = user
+
+    db.session.add(event)
+    db.session.commit()
+
+    flash(f'Erfolg: Veranstaltung {event.slug} wurde erstellt!', 'success')
+
+    return redirect(url_for('admin.index'))
