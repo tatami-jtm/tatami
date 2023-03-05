@@ -1,5 +1,4 @@
 from flask import Flask, render_template
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_security import Security, SQLAlchemyUserDatastore
 
@@ -29,7 +28,8 @@ app.config['SECURITY_POST_LOGIN_VIEW'] = 'admin.index'
 app.config['SECURITY_SEND_REGISTER_EMAIL'] = False
 
 app.config['SECURITY_EMAIL_VALIDATOR_ARGS'] = {
-    'check_deliverability': app.env == 'production' and not app.debug and not SETTINGS['NEVER_VALIDATE_EMAIL_DNS']
+    'check_deliverability': (app.env == 'production' and not app.debug and
+                             not SETTINGS['NEVER_VALIDATE_EMAIL_DNS'])
 }
 
 app.config['SECURITY_MSG_UNAUTHORIZED'] = (

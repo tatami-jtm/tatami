@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, abort, redirect, url_for, request, flash
+from flask import Blueprint, render_template, abort, redirect,\
+    url_for, request, flash
 from flask_security import login_required, current_user
 
 from ..models import db, User, Role, Event
@@ -46,7 +47,8 @@ def edit_user_me():
 @admin_view.route('/user/<int:id>')
 @login_required
 def edit_user(id):
-    if not (current_user.has_privilege('manage_users') or current_user.id == id):
+    if not (current_user.has_privilege(
+            'manage_users') or current_user.id == id):
         abort(404)
 
     user = User.query.get_or_404(id)
@@ -58,7 +60,8 @@ def edit_user(id):
 @admin_view.route('/user/<int:id>', methods=['POST'])
 @login_required
 def update_user(id):
-    if not (current_user.has_privilege('manage_users') or current_user.id == id):
+    if not (current_user.has_privilege(
+            'manage_users') or current_user.id == id):
         abort(404)
 
     user = User.query.get_or_404(id)
@@ -76,9 +79,11 @@ def update_user(id):
         for role in roles:
             if role.is_admin and not current_user.has_privilege('admin'):
                 continue
-            if role.may_manage_users and not current_user.has_privilege('manage_users'):
+            if role.may_manage_users and not current_user.has_privilege(
+                    'manage_users'):
                 continue
-            if role.may_create_tournaments and not current_user.has_privilege('create_tournaments'):
+            if role.may_create_tournaments and not current_user.has_privilege(
+                    'create_tournaments'):
                 continue
 
             if (role in selected_role_ids) and (role not in user.roles):
@@ -134,7 +139,10 @@ def new_role():
     role = Role()
     role.name = 'new_role'
 
-    return render_template("admin/user/edit_role.html", role=role, action='new')
+    return render_template(
+        "admin/user/edit_role.html",
+        role=role,
+        action='new')
 
 
 @admin_view.route('/user/roles/new', methods=['POST'])
@@ -175,7 +183,10 @@ def edit_role(id):
 
     role = Role.query.get_or_404(id)
 
-    return render_template("admin/user/edit_role.html", role=role, action='edit')
+    return render_template(
+        "admin/user/edit_role.html",
+        role=role,
+        action='edit')
 
 
 @admin_view.route('/user/roles/<int:id>', methods=['POST'])
@@ -203,6 +214,7 @@ def update_role(id):
 
     return redirect(url_for('admin.edit_role', id=role.id))
 
+
 @admin_view.route('/event/new')
 @login_required
 def new_event():
@@ -213,7 +225,12 @@ def new_event():
     roles = Role.query.order_by(Role.is_admin.desc(), Role.name).all()
     users = User.query.all()
 
-    return render_template("admin/event/new.html", event=event, roles=roles, users=users)
+    return render_template(
+        "admin/event/new.html",
+        event=event,
+        roles=roles,
+        users=users)
+
 
 @admin_view.route('/event/new', methods=['POST'])
 @login_required
