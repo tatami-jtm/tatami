@@ -23,3 +23,31 @@ class Event(db.Model):
     @classmethod
     def from_slug(cls, slug):
         return cls.query.where(cls.slug==slug).one()
+    
+
+class EventClass(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    title = db.Column(db.String(150))
+
+    begin_weigh_in = db.Column(db.Boolean())
+    begin_weigh_in_at = db.Column(db.DateTime())
+
+    begin_placement = db.Column(db.Boolean())
+    begin_placement_at = db.Column(db.DateTime())
+
+    begin_fighting = db.Column(db.Boolean())
+    begin_fighting_at = db.Column(db.DateTime())
+
+    ended_fighting = db.Column(db.Boolean())
+    ended_fighting_at = db.Column(db.DateTime())
+
+    fighting_time = db.Column(db.Integer())
+    golden_score_time = db.Column(db.Integer())
+    between_fights_time = db.Column(db.Integer())
+
+    use_proximity_weight_mode = db.Column(db.Boolean()) # gewichtsnahe Gruppen
+    default_maximal_proximity = db.Column(db.Integer())
+    weight_generator = db.Column(db.Text())
+
+    event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
+    event = db.relationship('Event', backref=db.backref('classes', lazy='dynamic'))
