@@ -105,4 +105,45 @@ body.splash::before {
 label[for] {
     font-weight: bold;
     cursor: pointer;
+
+}
+
+.event-container .row>.col {    
+    min-height: calc(100vh - 2.55rem);
+}
+
+.event-sidebar {
+    background-color: #8A9B6888;
+    max-width: 400px;
+    padding: 3rem 1rem;
+}
+
+.event-sidebar h3 {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.event-sidebar .nav, .event-sidebar .nav .nav-item {
+    margin: 0;
+    padding: 0;
+}
+.event-sidebar .nav .nav-item .nav-link {
+    padding: 1.15rem;
+    background: #fffd;
+    color: black;
+    font-weight: bold;
+    margin: 0.5rem 0;
+    font-size: 1.15rem;
+    border-radius: 0.25rem;
+    border-left: 0.5rem solid transparent;
+    transition: all .3s ease;
+}
+.event-sidebar .nav .nav-item .nav-link:hover {
+    background-color: white;
+    box-shadow: 0 .25rem 2rem -1.2rem #000a;
+}
+.event-sidebar .nav .nav-item .nav-link.active {
+    border-left-color: var(--primary);
+    background-color: white;
 }

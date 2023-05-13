@@ -18,4 +18,8 @@ class Event(db.Model):
         'Role', backref=db.backref('supervised_events', lazy='dynamic'))
 
     def is_supervisor(self, user):
-        return False
+        return user == self.supervising_user or any(self.supervising_role == role for role in user.roles)
+    
+    @classmethod
+    def from_slug(cls, slug):
+        return cls.query.where(cls.slug==slug).one()
