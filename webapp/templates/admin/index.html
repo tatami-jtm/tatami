@@ -41,7 +41,7 @@
             <div class="card-body border-bottom p-1">
                 <div class="list-group list-group-flush">
                 {% for evt in events %}
-                    <a href="" class="list-group-item list-group-item-action">
+                    <a href="{{ url_for('event_manager.index', event=evt.slug) }}" class="list-group-item list-group-item-action">
                         <div>
                             <strong>{{ evt.title }}</strong>
                             ({{ evt.first_day.strftime("%d.%m.%Y") }} &ndash; {{ evt.last_day.strftime("%d.%m.%Y") }})

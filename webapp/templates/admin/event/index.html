@@ -12,7 +12,7 @@
 {% else %}
 <div class="list-group mt-3 list-group-flush">
 {% for evt in events %}
-    <a href="" class="list-group-item list-group-item-action p-3">
+    <a href="{{ url_for('event_manager.index', event=evt.slug) }}" class="list-group-item list-group-item-action p-3">
         <div>
             <strong>{{ evt.title }}</strong>
             ({{ evt.first_day.strftime("%d.%m.%Y") }} &ndash; {{ evt.last_day.strftime("%d.%m.%Y") }})
