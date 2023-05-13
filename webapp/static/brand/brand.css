@@ -12,6 +12,9 @@ html, body {
 .navbar-admin {
     background-color: var(--primary);
     padding: 0.125rem;
+    position: fixed;
+    left: 0; right: 0;
+    top: 0;
 }
 .navbar .navbar-brand {
     display: flex;
@@ -44,6 +47,10 @@ html, body {
 .navbar-admin .nav-link:hover {
     color: #000000;
     background-color: #ffffff;
+}
+
+.navbar-admin + * {
+    margin-top: 2.55rem;
 }
 
 /** ** Splash page (/) ** */
@@ -113,9 +120,15 @@ label[for] {
 }
 
 .event-sidebar {
-    background-color: #8A9B6888;
+    background-color: #c0c9ae;
     max-width: 400px;
     padding: 3rem 1rem;
+    position: fixed;
+    z-index: 100;
+}
+
+.event-sidebar + .col {
+    margin-left: 400px;
 }
 
 .event-sidebar h3 {
