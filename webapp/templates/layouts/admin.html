@@ -23,6 +23,9 @@
                         <div class="nav-item">
                             <a class="nav-link" href="{{ url_for('admin.index') }}">Übersicht</a>
                         </div>
+                        <div class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin.events') }}">Veranstaltungen</a>
+                        </div>
                         {% if current_user.has_privilege('manage_users') %}
                         <div class="nav-item">
                             <a class="nav-link" href="{{ url_for('admin.user') }}">Konten und Rollen</a>

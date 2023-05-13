@@ -215,6 +215,18 @@ def update_role(id):
     return redirect(url_for('admin.edit_role', id=role.id))
 
 
+@admin_view.route('/events')
+@login_required
+def events():
+    current_user_events = events = current_user.get_all_supervised_events()
+
+    if current_user.has_privilege('create_tournaments'):
+        events = Event.query.all()
+
+    return render_template(
+        "admin/event/index.html", events=events, current_user_events=current_user_events)
+
+
 @admin_view.route('/event/new')
 @login_required
 def new_event():
