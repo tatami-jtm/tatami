@@ -1,0 +1,53 @@
+{% set event_page="classes" %}
+{% extends "layouts/event-manager.html" %}
+{% block title %}{{ g.event.title }} | Kampfklassen{% endblock %}
+{% block body %}
+<h1>Kampfklassen</h1>
+
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>Bezeichnung</th>
+            <th>Stand</th>
+            <th>Zeiten (Kampf/GS/Pause)</th>
+            <th>Verteilung</th>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cl in g.event.classes %}
+        <tr>
+            <td>{{ cl.title }}</td>
+            <td>
+                {% if not cl.begin_weigh_in %}
+                <span class="badge text-bg-secondary">Ausstehend</span>
+                {% elif not cl.begin_placement %}
+                <span class="badge text-bg-warning">In Waage</span>
+                {% elif not cl.begin_fighting %}
+                <span class="badge text-bg-secondary">Wiegen beendet</span>
+                {% elif not cl.ended_fighting %}
+                <span class="badge text-bg-danger">Kämpft</span>
+                {% else %}
+                <span class="badge text-bg-success">Beendet</span>
+                {% endif %}
+            </td>
+            <td>
+                {{ (cl.fighting_time / 60) ~ "min" }} / {{ (cl.golden_score_time  / 60) ~ "min" if cl.golden_score_time >= 0 else "unbegrenzt" }} / {{ (cl.between_fights_time / 60) ~ "min" }}
+            </td>
+            <td>
+                {% if cl.use_proximity_weight_mode %}
+                <em>Gewichtsnahe Gruppen</em><br>mit Differenz kleiner {{ cl.default_maximal_proximity / 100 }}kg
+                {% else %}
+                <em>Gewichtsklassen</em><br>{{ cl.weight_generator }}
+                {% endif %}
+            </td>
+            <td>
+                <a href="" class="btn btn-sm btn-primary">Bearbeiten</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="" class="btn btn-primary">Kampfklasse hinzufügen</a>
+{% endblock body %}

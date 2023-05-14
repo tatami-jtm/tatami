@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, abort, flash, g
 from flask_security import login_required, current_user
 
-from ..models import db, Event
+from ..models import db, Event, EventClass
 
 eventmgr_view = Blueprint('event_manager', __name__)
 
@@ -26,3 +26,9 @@ def check_and_apply_event(func):
 @check_and_apply_event
 def index(event):
     return render_template("event-manager/index.html")
+
+@eventmgr_view.route('/classes')
+@login_required
+@check_and_apply_event
+def classes(event):
+    return render_template("event-manager/classes/index.html")

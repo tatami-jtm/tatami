@@ -160,3 +160,18 @@ label[for] {
     border-left-color: var(--primary);
     background-color: white;
 }
+
+
+[data-bs-theme="dark"] .event-sidebar {
+    background-color: #3d443a;
+}
+[data-bs-theme="dark"] .event-sidebar .nav .nav-item .nav-link {
+    background-color: #111;
+    color: white;
+}
+[data-bs-theme="dark"] .event-sidebar .nav .nav-item .nav-link:hover {
+    background-color: #222;
+}
+[data-bs-theme="dark"] .event-sidebar .nav .nav-item .nav-link.active {
+    background-color: #222;
+}
