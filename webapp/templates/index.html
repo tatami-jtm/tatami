@@ -1,11 +1,13 @@
 {% extends "layouts/splash.html" %}
 {% block title %}Willkommen!{% endblock %}
 {% block body %}
-<img src="{{ url_for('static', filename='brand/logo.png') }}" alt="" class="splash-logo">
-<h1>TATAMI 2023</h1>
-<h3>In Turnier einwählen</h3>
-<p>Kein aktuelles Turnier verfügbar.</p>
+<div class="float-end">
+    <a href="{{ url_for('admin.index') }}" class="btn btn-dark">Zum Administrationsbereich</a>
+</div>
+<h1>Anmeldung</h1>
+<p class="lead">Wählen Sie eine Veranstaltung aus, um sich in diese einzuwählen.</p>
 
-<h3>Als Administrator/in anmelden</h3>
-<a href="{{ url_for('admin.index') }}" class="btn btn-dark">Zum Administrationsbereich</a>
+<div class="alert alert-warning">
+    <p>Kein aktuelles Turnier verfügbar.</p>
+</div>
 {% endblock body %}

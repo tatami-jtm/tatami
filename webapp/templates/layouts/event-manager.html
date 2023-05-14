@@ -4,7 +4,7 @@
     {% include "layouts/_header.html" %}
     <title>TATAMI | {% block title %}{% endblock title %}</title>
 </head>
-<body>
+<body class="admin">
     <nav class="navbar navbar-admin navbar-expand-lg navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ url_for('admin.index') }}">
@@ -20,6 +20,9 @@
             <div class="collapse navbar-collapse" id="adminMainNav">
                 <div class="d-flex justify-content-end w-100">
                     <div class="navbar-nav">
+                        <div class="nav-item me-2">
+                            <a class="btn btn-dark btn-sm" href="{{ url_for('admin.index') }}">Ansicht schließen</a>
+                        </div>
                         <div class="nav-item">
                             <a class="btn btn-dark btn-sm" href="{{ url_for('security.logout') }}">Abmelden</a>
                         </div>
@@ -70,7 +73,7 @@
                 </div>
                 {% endif %}
                 {% endwith %}
-                <div class="container mt-4">
+                <div class="container mt-4 main-container">
                     {% block body %}{% endblock body %}
                 </div>
             </div>

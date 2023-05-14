@@ -4,7 +4,7 @@
     {% include "layouts/_header.html" %}
     <title>TATAMI | {% block title %}{% endblock title %}</title>
 </head>
-<body>
+<body class="admin">
     <nav class="navbar navbar-admin navbar-expand-lg navbar-dark mb-2">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('admin.index') }}">
@@ -57,7 +57,7 @@
     </div>
     {% endif %}
     {% endwith %}
-    <div class="container pt-4">
+    <div class="container main-container">
         {% block body %}{% endblock body %}
     </div>
 </body>
