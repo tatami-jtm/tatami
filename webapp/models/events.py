@@ -55,7 +55,7 @@ class EventClass(db.Model):
     event = db.relationship('Event', backref=db.backref('classes', lazy='dynamic'))
 
 
-class EventRoles(db.Model):
+class EventRole(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
@@ -84,5 +84,5 @@ class DeviceRegistration(db.Model):
     registered_by_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
     registered_by = db.relationship('User')
 
-    event_role_id = db.Column(db.Integer(), db.ForeignKey('event_roles.id'))
-    event_role = db.relationship('EventRoles')
+    event_role_id = db.Column(db.Integer(), db.ForeignKey('event_role.id'))
+    event_role = db.relationship('EventRole')
