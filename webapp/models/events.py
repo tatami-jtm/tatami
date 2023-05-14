@@ -9,6 +9,8 @@ class Event(db.Model):
     first_day = db.Column(db.DateTime())
     last_day = db.Column(db.DateTime())
 
+    allow_device_registration = db.Column(db.Boolean())
+
     supervising_user_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
     supervising_user = db.relationship(
         'User', backref=db.backref('supervised_events', lazy='dynamic'))
@@ -51,3 +53,36 @@ class EventClass(db.Model):
 
     event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
     event = db.relationship('Event', backref=db.backref('classes', lazy='dynamic'))
+
+
+class EventRoles(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+    may_use_registration = db.Column(db.Boolean)
+    may_use_weigh_in = db.Column(db.Boolean)
+    may_use_placement_tool = db.Column(db.Boolean)
+    may_use_global_list = db.Column(db.Boolean)
+    may_use_assigned_lists = db.Column(db.Boolean)
+    may_use_scoreboard = db.Column(db.Boolean)
+    may_use_display = db.Column(db.Boolean)
+    may_use_results = db.Column(db.Boolean)
+
+
+class DeviceRegistration(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    title = db.Column(db.String(150))
+    token = db.Column(db.String(60), unique=True)
+
+    event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
+    event = db.relationship('Event', backref=db.backref('classes', lazy='dynamic'))
+
+    registered_at = db.Column(db.DateTime())
+    last_used_at = db.Column(db.DateTime())
+
+    registered_by_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    registered_by = db.relationship('User')
+
+    event_role_id = db.Column(db.Integer(), db.ForeignKey('event_roles.id'))
+    event_role = db.relationship('EventRoles')
