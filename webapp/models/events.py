@@ -86,7 +86,10 @@ class DeviceRegistration(db.Model):
     event = db.relationship('Event', backref=db.backref('device_registrations', lazy='dynamic'))
 
     registered_at = db.Column(db.DateTime())
+    confirmed_at = db.Column(db.DateTime())
     last_used_at = db.Column(db.DateTime())
+
+    confirmed = db.Column(db.Boolean())
 
     registered_by_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
     registered_by = db.relationship('User')
