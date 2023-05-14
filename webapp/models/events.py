@@ -1,4 +1,5 @@
 from . import db
+from datetime import datetime
 
 
 class Event(db.Model):
@@ -25,6 +26,12 @@ class Event(db.Model):
     @classmethod
     def from_slug(cls, slug):
         return cls.query.where(cls.slug==slug).one()
+    
+
+    @classmethod
+    def that_allows_registration(cls):
+        now = datetime.now()
+        return cls.query.where(cls.first_day <= now, cls.last_day >= now, cls.allow_device_registration==True).all()
     
 
 class EventClass(db.Model):

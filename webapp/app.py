@@ -4,7 +4,7 @@ from flask_security import Security, SQLAlchemyUserDatastore
 
 from .config_base import SETTINGS
 
-from .models import db, User, Role
+from .models import db, User, Role, Event
 from .views import admin_view, eventmgr_view
 
 app = Flask(__name__, instance_path=SETTINGS['INSTANCE_PATH'])
@@ -42,7 +42,8 @@ security = Security(app, user_datastore)
 
 @app.route("/")
 def splash():
-    return render_template("index.html")
+    avail_events = Event.that_allows_registration()
+    return render_template("index.html", avail_events=avail_events)
 
 
 app.register_blueprint(admin_view, url_prefix='/admin')
