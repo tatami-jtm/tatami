@@ -5,7 +5,7 @@ from flask_security import Security, SQLAlchemyUserDatastore
 from .config_base import SETTINGS
 
 from .models import db, User, Role, Event
-from .views import admin_view, eventmgr_view
+from .views import admin_view, eventmgr_view, devices_view
 
 app = Flask(__name__, instance_path=SETTINGS['INSTANCE_PATH'])
 app.config['SQLALCHEMY_DATABASE_URI'] = SETTINGS['SQL_URL']
@@ -48,3 +48,4 @@ def splash():
 
 app.register_blueprint(admin_view, url_prefix='/admin')
 app.register_blueprint(eventmgr_view, url_prefix='/event-manager/<event>')
+app.register_blueprint(devices_view, url_prefix='/devices/<event>')

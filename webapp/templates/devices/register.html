@@ -1,0 +1,17 @@
+{% extends "layouts/splash.html" %}
+{% block title %}Willkommen!{% endblock %}
+{% block body %}
+<h1>Anmeldung</h1>
+<div class="alert alert-info">
+    <p>Sie benötigen die Bestätigung durch eine/n Administrator/in, um sich einzuwählen.</p>
+    <p>Wenn Sie gefragt werden, geben Sie die folgenden Informationen an:</p>
+    <p><strong>Veranstaltung:</strong> {{ registration.event.title }}</p>
+    <p><strong>Kennung:</strong> {{ registration.get_human_readable_code() }}</p>
+    <p>Eine Berechtigung wird Ihnen anschließend durch die/den Administrator/in zugewiesen.</p>
+    <p>Drücken Sie nach Freigabe auf den folgenden Knopf:</p>
+
+    <a href="" class="btn btn-secondary">Freigabe prüfen</a>
+</div>
+
+<p></p>
+{% endblock body %}

@@ -1,6 +1,8 @@
 from . import db
 from datetime import datetime
 
+import hashlib
+
 
 class Event(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
@@ -96,3 +98,7 @@ class DeviceRegistration(db.Model):
 
     event_role_id = db.Column(db.Integer(), db.ForeignKey('event_role.id'))
     event_role = db.relationship('EventRole')
+
+    def get_human_readable_code(self):
+        token_hash = hashlib.md5(self.token.encode()).hexdigest()
+        return token_hash[:6]

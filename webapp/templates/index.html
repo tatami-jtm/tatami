@@ -10,7 +10,7 @@
 {% if avail_events %}
 <div class="list-group list-group-flush mb-3">
     {% for event in avail_events %}
-    <a href="{{ url_for('event_manager.index', event=event.slug) }}" class="list-group-item list-group-item-action">
+    <a href="{{ url_for('devices.register', event=event.slug) }}" class="list-group-item list-group-item-action">
         <div>
             <strong>{{ event.title }}</strong>
             ({{ event.first_day.strftime("%d.%m.%Y") }} &ndash; {{ event.last_day.strftime("%d.%m.%Y") }})
