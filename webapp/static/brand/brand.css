@@ -215,6 +215,10 @@ label[for] {
 
 }
 
+body.application {
+    background-color: #e5e9de;
+}
+
 .event-container .row>.col {    
     min-height: calc(100vh - 2.55rem);
 }
@@ -377,13 +381,17 @@ label[for] {
 .card-link {
     text-decoration: none;
     color: inherit;
-    border-color: #ddd;
     transition: all .3s ease;
     min-height: 200px;
 }
 .card-link:hover {
     background-color: #f0f0f0;
 }
+.card-link:active {
+    background-color: #e0e0e0;
+    box-shadow: 0 0 10px -6px #0008 inset;
+}
+
 .card-link .card-body {
     display: flex;
     flex-direction: column;
