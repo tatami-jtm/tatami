@@ -99,6 +99,20 @@ class DeviceRegistration(db.Model):
     event_role_id = db.Column(db.Integer(), db.ForeignKey('event_role.id'))
     event_role = db.relationship('EventRole')
 
+    position_id = db.Column(db.Integer(), db.ForeignKey('device_position.id'))
+    position = db.relationship('DevicePosition', backref=db.backref('devices', lazy='dynamic'))
+
     def get_human_readable_code(self):
         token_hash = hashlib.md5(self.token.encode()).hexdigest()
         return token_hash[:6]
+
+
+class DevicePosition(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    title = db.Column(db.String(150))
+    position = db.Column(db.Integer())
+
+    is_mat = db.Column(db.Boolean())
+
+    event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
+    event = db.relationship('Event', backref=db.backref('device_positions', lazy='dynamic'))
