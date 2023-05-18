@@ -3,8 +3,9 @@
 {% block body %}
 
 <div class="container my-5">
-    <h1 class="mb-3">Willkommen!</h1>
-    <p class="lead">Wähle eine Systemkomponente aus, um loszulegen.</p>
+    <h1>Willkommen!</h1>
+    <p class="lead mb-0">Sie haben von Ihrer/m Administrator/in die Aufgabe <strong>{{ g.device.event_role.name }}</strong> an {{ g.device.position.title }} zugewiesen bekommen.</p>
+    <p class="lead mb-0">Wählen Sie eine der Ihnen zugewiesenen Systemkomponenten aus, um loszulegen.</p>
 
     <div class="row g-3 mt-3">
         {% if g.device.event_role.may_use_registration %}
