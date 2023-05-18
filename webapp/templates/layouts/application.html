@@ -5,7 +5,7 @@
     <title>TATAMI | {% block title %}{% endblock title %}</title>
 </head>
 <body>
-    <div class="border-bottom bg-light shadow-sm">
+    <div class="border-bottom shadow-sm">
         <div class="container-fluid py-2 d-flex justify-content-between align-items-center">
             <div class="splash-logo">TATAMI 2023</div>
             <div class="fw-bold">{{ g.event.title }}</div>
@@ -14,6 +14,22 @@
             </div>
         </div>
     </div>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    <div class="container-fluid mt-3">
+    {% for category, message in messages %}
+        <div class="alert alert-{{ category or 'light' }} alert-dismissible fade show" role="alert">
+            {% if ":" in message %}
+            <p class="mb-0"><strong>{{ message.split(":", 1)[0] }}:</strong> {{ message.split(":", 1)[1] }}</p>
+            {% else %}
+            <p class="mb-0">{{ message }}</p>
+            {% endif %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schließen"></button>
+        </div>
+    {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
     <div class="container-fluid mt-3">
         {% block body %}{% endblock body %}
     </div>

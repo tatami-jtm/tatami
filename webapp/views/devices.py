@@ -34,6 +34,7 @@ def register():
 
         if len(matching_registration) == 1:    
             if (registration := matching_registration[0]).confirmed:
+                flash('Willkommen! Dieses Gerät wurde freigegeben.', 'success')
                 return redirect(url_for('devices.index', event=g.event.slug))
 
             return render_template("devices/register.html", registration=registration)
