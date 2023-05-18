@@ -21,8 +21,8 @@
     <div class="col-12 col-lg-2">
         <div class="card">
             <div class="card-body p-4">
-                <div class="fs-1 text-center fw-bold">0</div>
-                <div class="text-center fw-bold">Klassen</div>
+                <div class="fs-1 text-center fw-bold">{{ stat.classes }}</div>
+                <div class="text-center fw-bold">{{ 'Klassen' if stat.classes != 1 else 'Klasse' }}</div>
             </div>
         </div>
     </div>
@@ -37,8 +37,8 @@
     <div class="col-12 col-lg-2">
         <div class="card">
             <div class="card-body p-4">
-                <div class="fs-1 text-center fw-bold">0</div>
-                <div class="text-center fw-bold">Matten</div>
+                <div class="fs-1 text-center fw-bold">{{ stat.mats }}</div>
+                <div class="text-center fw-bold">{{ 'Matten' if stat.mats != 1 else 'Matte' }}</div>
             </div>
         </div>
     </div>

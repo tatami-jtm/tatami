@@ -35,7 +35,10 @@ def check_is_event_supervisor(func):
 @check_and_apply_event
 @check_is_event_supervisor
 def index():
-    return render_template("event-manager/index.html")
+    return render_template("event-manager/index.html", stat={
+        "mats": DevicePosition.query.filter_by(event=g.event, is_mat=True).count(),
+        "classes": EventClass.query.filter_by(event=g.event).count()
+    })
 
 
 @eventmgr_view.route('/classes')
