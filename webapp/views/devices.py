@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort, flash, g, session
+from flask import Blueprint, render_template, abort, flash, g, session, request
 
 from ..models import db, DeviceRegistration
 from .event_manager import check_and_apply_event
@@ -27,7 +27,7 @@ def register():
     registration.token = str(uuid.uuid4())
     registration.registered_at = datetime.now()
     registration.confirmed = False
-    registration.title = "Gerät " + registration.get_human_readable_code()
+    registration.title = "Gerät " + registration.get_human_readable_code() + " - " + request.remote_addr
 
     db.session.add(registration)
     db.session.commit()
