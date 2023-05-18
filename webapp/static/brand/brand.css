@@ -373,3 +373,31 @@ label[for] {
 .dropdown-menu.dropdown-wide {
     width: 350px;
 }
+
+.card-link {
+    text-decoration: none;
+    color: inherit;
+    border-color: #ddd;
+    transition: all .3s ease;
+    min-height: 200px;
+}
+.card-link:hover {
+    background-color: #f0f0f0;
+}
+.card-link .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-link .cll-icon {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.card-link h3 {
+    font-size: 1.75rem;
+    text-align: center;
+}

@@ -1,7 +1,105 @@
 {% extends "layouts/application.html" %}
 {% block title %}Willkommen!{% endblock %}
 {% block body %}
-<p>Sie wurden angemeldet.</p>
+
+<div class="container my-5">
+    <h1 class="mb-3">Willkommen!</h1>
+    <p class="lead">Wähle eine Systemkomponente aus, um loszulegen.</p>
+
+    <div class="row g-3 mt-3">
+        {% if g.device.event_role.may_use_registration %}
+        <div class="col col-lg-3">
+            <a href="#" class="card card-link">
+                <div class="card-body p-3">
+                    <div class="cll-icon">📝</div>
+                    <h3>Anmeldungen</h3>
+                </div>
+            </a>
+        </div>
+        {% endif %}
+        {% if g.device.event_role.may_use_weigh_in %}
+        <div class="col col-lg-3">
+            <a href="#" class="card card-link">
+                <div class="card-body p-3">
+                    <div class="cll-icon">⚖️</div>
+                    <h3>Waage</h3>
+                </div>
+            </a>
+        </div>
+        {% endif %}
+        {% if g.device.event_role.may_use_placement_tool %}
+        <div class="col col-lg-3">
+            <a href="#" class="card card-link">
+                <div class="card-body p-3">
+                    <div class="cll-icon">🎲</div>
+                    <h3>Einteilung</h3>
+                </div>
+            </a>
+        </div>
+        {% endif %}
+        {% if g.device.event_role.may_use_global_list %}
+        <div class="col col-lg-3">
+            <a href="#" class="card card-link">
+                <div class="card-body p-3">
+                    <div class="cll-icon">📜</div>
+                    <h3>Hauptliste</h3>
+                </div>
+            </a>
+        </div>
+        {% endif %}
+        {% if g.device.event_role.may_use_assigned_lists %}
+        <div class="col col-lg-3">
+            <a href="#" class="card card-link">
+                <div class="card-body p-3">
+                    <div class="cll-icon">🗒️</div>
+                    <h3>Listen</h3>
+                </div>
+            </a>
+        </div>
+        {% endif %}
+        {% if g.device.event_role.may_use_scoreboard %}
+        <div class="col col-lg-3">
+            <a href="#" class="card card-link">
+                <div class="card-body p-3">
+                    <div class="cll-icon">🖥️</div>
+                    <h3>Scoreboard<br>(nur Anzeige)</h3>
+                </div>
+            </a>
+        </div>
+        {% endif %}
+        {% if g.device.event_role.may_use_assigned_lists and g.device.event_role.may_use_scoreboard %}
+        <div class="col col-lg-3">
+            <a href="#" class="card card-link">
+                <div class="card-body p-3">
+                    <div class="cll-icon">🗒️🖥️</div>
+                    <h3>Scoreboard<br>(mit Liste)</h3>
+                </div>
+            </a>
+        </div>
+        {% endif %}
+        {% if g.device.event_role.may_use_display %}
+        <div class="col col-lg-3">
+            <a href="#" class="card card-link">
+                <div class="card-body p-3">
+                    <div class="cll-icon">📽️</div>
+                    <h3>Listenanzeige</h3>
+                </div>
+            </a>
+        </div>
+        {% endif %}
+        {% if g.device.event_role.may_use_results %}
+        <div class="col col-lg-3">
+            <a href="#" class="card card-link">
+                <div class="card-body p-3">
+                    <div class="cll-icon">🏅</div>
+                    <h3>Ergebnisse</h3>
+                </div>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<!-- <p>Sie wurden angemeldet.</p>
 <p>Ihre Aufgabe: {{ g.device.event_role.name }}</p>
-<p>Ihre Position: {{ g.device.position.title }}</p>
+<p>Ihre Position: {{ g.device.position.title }}</p> -->
 {% endblock body %}
