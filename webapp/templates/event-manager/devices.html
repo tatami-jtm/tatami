@@ -47,13 +47,26 @@
 <div class="row">
     <div class="col-12 p-2">
         <div class="card">
+            {% if requests %}
             <div class="card-header">Offene Anfragen</div>
-            <div class="card-body">
+            <div class="card-body border-bottom">
                 <div class="list-group">
                     {% for dev in requests %}
                         {{ device(dev, roles, mat_pos + admin_pos)}}
                     {% endfor %}
                 </div>
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <form action="{{ url_for('event_manager.devices_allow_register', event=g.event.slug) }}" method="POST">
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="allow-registrations" name="allow" {{ 'checked' if g.event.allow_device_registration }}>
+                            <label class="form-check-label" for="allow-registrations">Neue Geräte dürfen sich registrieren</label>
+                        </div>          
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Speichern</button>
+                </form>
             </div>
         </div>
     </div>

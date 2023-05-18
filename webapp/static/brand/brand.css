@@ -209,7 +209,7 @@ body.admin .main-container {
     font-weight: 400;
 }
 
-label[for] {
+label[for]:not(.form-check-label) {
     font-weight: bold;
     cursor: pointer;
 

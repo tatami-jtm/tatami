@@ -96,4 +96,15 @@ def device_delete(id):
     db.session.commit()
 
     return redirect(url_for('event_manager.devices', event=g.event.slug))
+
+
+@eventmgr_view.route('/devices/allow-registration', methods=["POST"])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def devices_allow_register():
+    g.event.allow_device_registration = 'allow' in request.form
+    db.session.commit()
+
+    return redirect(url_for('event_manager.devices', event=g.event.slug))
     
