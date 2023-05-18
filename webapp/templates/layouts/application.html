@@ -1,10 +1,20 @@
 <!DOCTYPE html>
-<html lang="de" data-bs-theme="dark">
+<html lang="de">
 <head>
     {% include "layouts/_header.html" %}
     <title>TATAMI | {% block title %}{% endblock title %}</title>
 </head>
 <body>
-    {% block body %}{% endblock body %}
+    <div class="border-bottom bg-light shadow-sm">
+        <div class="container p-2 d-flex justify-content-between align-items-center">
+            <div class="splash-logo">TATAMI 2023</div>
+            <div class="menu">
+                <a href="{{ url_for('devices.exit', event=g.event.slug) }}" class="btn btn-sm btn-dark">Abmelden</a>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-3">
+        {% block body %}{% endblock body %}
+    </div>
 </body>
 </html>

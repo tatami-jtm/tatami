@@ -147,7 +147,7 @@ body.splash {
 body.admin {
     padding-top: 2rem;
 }
-body::before, body.admin::before {
+body.splash::before, body.admin::before {
     content: '';
     background-image: url(/static/brand/fighting.png);
     z-index: -1;
@@ -182,13 +182,18 @@ body.admin .main-container {
     margin-right: 2rem;
     flex-grow: 0;
 }
-.splash .splash-logo {
-    font-size: 3rem;
+.splash-logo {
+    font-size: 1.5rem;
     font-weight: bold;
     text-align: center;
     user-select: none;
     background-color: var(--primary);
     color: white;
+    padding: 0.0625rem 0.35rem;
+    border-radius: 0.125rem;
+}
+.splash .splash-logo {
+    font-size: 3rem;
     padding: 0.125rem 0.65rem;
     border-radius: 0.125rem;
 }

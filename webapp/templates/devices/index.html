@@ -1,0 +1,7 @@
+{% extends "layouts/application.html" %}
+{% block title %}Willkommen!{% endblock %}
+{% block body %}
+<p>Sie wurden angemeldet.</p>
+<p>Ihre Aufgabe: {{ g.device.event_role.name }}</p>
+<p>Ihre Position: {{ g.device.position.title }}</p>
+{% endblock body %}
