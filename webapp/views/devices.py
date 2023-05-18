@@ -27,6 +27,7 @@ def register():
     registration.token = str(uuid.uuid4())
     registration.registered_at = datetime.now()
     registration.confirmed = False
+    registration.title = "Gerät " + registration.get_human_readable_code()
 
     db.session.add(registration)
     db.session.commit()
