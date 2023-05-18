@@ -1,0 +1,96 @@
+{% set event_page="devices" %}
+{% extends "layouts/event-manager.html" %}
+{% block title %}{{ g.event.title }} | Geräte- und Hallenplan{% endblock %}
+{% block body %}
+<h1>Geräte- und Hallenplan</h1>
+
+<h3 class="mt-4">Matten</h3>
+
+<div class="row">
+    {% for mat in mat_pos %}
+    <div class="col-12 col-xl-4 p-2">
+        <div class="card">
+            <div class="card-header">{{ mat.title }}</div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for dev in mat.devices %}
+                        {{ device(dev, roles, mat_pos + admin_pos)}}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<h3 class="mt-4">Verwaltung</h3>
+
+<div class="row">
+    {% for admin in admin_pos %}
+    <div class="col-12 col-xl-4 p-2">
+        <div class="card">
+            <div class="card-header">{{ admin.title }}</div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for dev in admin.devices %}
+                        {{ device(dev, roles, mat_pos + admin_pos)}}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<h3 class="mt-4">Geräteanmeldungen (Anfragen)</h3>
+{% endblock body %}
+
+
+{% macro device(dev, roles, positions) %}
+<div class="list-group-item">
+    <div class="dropdown float-end">
+        <button
+            class="btn btn-light btn-sm fw-bold"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            data-bs-auto-close="outside">
+            ⋮
+        </button>
+
+        <div class="dropdown-menu dropdown-wide">
+            <form target="" method="POST" class="px-3 py-2">
+                <div class="mb-3">
+                    <label for="dev-{{ dev.id }}-role" class="mb-1">Aufgabe</label>
+                    <select name="role" id="dev-{{ dev.id }}-role" class="form-select">
+                        {% for role in roles %}
+                        <option value="{{ role.id }}" {{ 'selected' if role.id == dev.event_role.id }}>{{ role.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="dev-{{ dev.id }}-pos" class="mb-1">Position</label>
+                    <select name="role" id="dev-{{ dev.id }}-pos" class="form-select">
+                        {% for pos in positions %}
+                        <option value="{{ pos.id }}" {{ 'selected' if pos.id == dev.position.id }}>{{ pos.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="dev-{{ dev.id }}-name" class="mb-1">Bezeichnung</label>
+                    <input name="role" id="dev-{{ dev.id }}-name" class="form-control" value="{{ dev.title }}">
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-sm">Speichern</button>
+            </form>
+            <div><hr class="dropdown-divider"></div>
+            <div><a class="dropdown-item" href="#">Gerät entfernen</a></div>
+        </div>
+    </div>
+
+    <div>{{ dev.title }}</div>
+
+</div>
+{% endmacro %}

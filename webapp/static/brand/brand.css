@@ -356,3 +356,15 @@ label[for] {
 [data-bs-theme="dark"] .nav.nav-tabs .nav-item .nav-link.active {
     border-color: #fff6;
 }
+
+.fs-small {
+    font-size: 0.9rem;
+}
+
+.fs-smaller {
+    font-size: 0.8rem;
+}
+
+.dropdown-menu.dropdown-wide {
+    width: 350px;
+}

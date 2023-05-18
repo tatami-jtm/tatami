@@ -11,9 +11,9 @@ devices_view = Blueprint('devices', __name__)
 
 @devices_view.route('/register')
 @check_and_apply_event
-def register(event):
+def register():
     if "device_token" in session:
-        matching_registration = DeviceRegistration.query.filter_by(event=event, token=session["device_token"]).all()
+        matching_registration = DeviceRegistration.query.filter_by(event=g.event, token=session["device_token"]).all()
 
         if len(matching_registration) == 1:    
             if (registration := matching_registration[0]).confirmed:
@@ -23,7 +23,7 @@ def register(event):
         else:
             del session["device_token"]
 
-    registration = DeviceRegistration(event=event)
+    registration = DeviceRegistration(event=g.event)
     registration.token = str(uuid.uuid4())
     registration.registered_at = datetime.now()
     registration.confirmed = False
