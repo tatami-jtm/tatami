@@ -281,7 +281,7 @@ label[for] {
     border-right: none;
     border-top: none;
     border-bottom: none;
-    border-left-width: 0.75rem;
+    border-left-width: 0.5rem;
     border-radius: 0;
     padding: 1.5rem 1rem;
 }
