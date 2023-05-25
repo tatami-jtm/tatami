@@ -4,6 +4,7 @@ from flask_security import login_required, current_user
 from ..models import db, Event, EventClass, DeviceRegistration, DevicePosition, EventRole
 
 from datetime import datetime
+import time
 
 eventmgr_view = Blueprint('event_manager', __name__)
 
@@ -107,4 +108,51 @@ def devices_allow_register():
     db.session.commit()
 
     return redirect(url_for('event_manager.devices', event=g.event.slug))
+
+
+
+@eventmgr_view.route('/devices/position/<id>/update', methods=["POST"])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def device_position_update(id):
+    device_position = DevicePosition.query.filter_by(event=g.event, id=id).one_or_404()
+    name = request.form['name']
+    is_mat = request.form['is_mat'] == '1'
+
+    device_position.title = name
+    device_position.is_mat = is_mat
+
+    db.session.commit()
+
+    return redirect(url_for('event_manager.devices', event=g.event.slug))
     
+
+
+@eventmgr_view.route('/devices/position/<id>/delete', methods=["GET", "POST"])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def device_position_delete(id):
+    device = DevicePosition.query.filter_by(event=g.event, id=id).one_or_404()
+    db.session.delete(device)
+    db.session.commit()
+
+    return redirect(url_for('event_manager.devices', event=g.event.slug))
+
+
+
+@eventmgr_view.route('/devices/position/create', methods=["GET", "POST"])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def device_position_create():
+    device_position = DevicePosition(event=g.event)
+    device_position.title = "Neue Position"
+    device_position.is_mat = request.values.get("mat", '0') == '1'
+    device_position.position = int(time.time())
+
+    db.session.add(device_position)
+    db.session.commit()
+
+    return redirect(url_for('event_manager.devices', event=g.event.slug))

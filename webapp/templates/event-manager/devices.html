@@ -9,38 +9,24 @@
 <div class="row">
     {% for mat in mat_pos %}
     <div class="col-12 col-xl-4 p-2">
-        <div class="card">
-            <div class="card-header">{{ mat.title }}</div>
-            <div class="card-body">
-                <div class="list-group">
-                    {% for dev in mat.devices %}
-                        {{ device(dev, roles, mat_pos + admin_pos)}}
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
+        {{ position(mat, roles, mat_pos + admin_pos) }}
     </div>
     {% endfor %}
 </div>
+
+<a href="{{ url_for('event_manager.device_position_create', event=g.event.slug, mat=1) }}" class="btn btn-secondary btn-sm">Neue Position</a>
 
 <h3 class="mt-5">Verwaltung</h3>
 
 <div class="row">
     {% for admin in admin_pos %}
     <div class="col-12 col-xl-4 p-2">
-        <div class="card">
-            <div class="card-header">{{ admin.title }}</div>
-            <div class="card-body">
-                <div class="list-group">
-                    {% for dev in admin.devices %}
-                        {{ device(dev, roles, mat_pos + admin_pos)}}
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
+        {{ position(admin, roles, mat_pos + admin_pos) }}
     </div>
     {% endfor %}
 </div>
+
+<a href="{{ url_for('event_manager.device_position_create', event=g.event.slug) }}" class="btn btn-secondary btn-sm">Neue Position</a>
 
 <h3 class="mt-5">Geräteanmeldungen</h3>
 
@@ -73,6 +59,53 @@
 </div>
 
 {% endblock body %}
+
+
+{% macro position(pos, roles, positions) %}
+<div class="card">
+    <div class="card-header p-1">
+        <div class="dropdown">
+            <button
+                class="btn btn-light dropdown-toggle border-none py-0 px-1 fw-bold"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                data-bs-auto-close="outside">
+                {{ pos.title }}
+            </button>
+
+            <div class="dropdown-menu dropdown-wide">
+                <form action="{{ url_for('event_manager.device_position_update', event=g.event.slug, id=pos.id) }}" method="POST" class="px-3 py-2">
+
+                    <div class="mb-3">
+                        <label for="pos-{{ pos.id }}-name" class="mb-1">Bezeichnung</label>
+                        <input name="name" id="pos-{{ pos.id }}-name" class="form-control" value="{{ pos.title }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="pos-{{ pos.id }}-role" class="mb-1">Kategorie</label>
+                        <select name="is_mat" id="pos-{{ pos.id }}-role" class="form-select">
+                            <option value="1" {{ 'selected' if pos.is_mat }}>Matten</option>
+                            <option value="0" {{ 'selected' if not pos.is_mat }}>Verwaltung</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-sm">Speichern</button>
+                </form>
+                <div><hr class="dropdown-divider"></div>
+                <div><a class="dropdown-item" href="{{ url_for('event_manager.device_position_delete', event=g.event.slug, id=pos.id) }}">Position entfernen</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="list-group">
+            {% for dev in pos.devices %}
+                {{ device(dev, roles, mat_pos + admin_pos)}}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endmacro %}
 
 
 {% macro device(dev, roles, positions) %}
