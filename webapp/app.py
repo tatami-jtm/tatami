@@ -48,4 +48,4 @@ def splash():
 
 app.register_blueprint(admin_view, url_prefix='/admin')
 app.register_blueprint(eventmgr_view, url_prefix='/event-manager/<event>')
-app.register_blueprint(devices_view, url_prefix='/devices/<event>')
+app.register_blueprint(devices_view, url_prefix='/go/<event>')
