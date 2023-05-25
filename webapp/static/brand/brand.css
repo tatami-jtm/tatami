@@ -1,6 +1,6 @@
 html {
     --primary: #8A9B68;
-    --secondary: #363946;
+    --secondary: #868587aa;
     --blue: #136090;
     --white: #F4F7F5;
 }
@@ -31,13 +31,21 @@ html, body {
 .btn.btn-outline-danger:active {
     box-shadow: 0 0 10px -6px #0008 inset;
 }
+.btn.btn-primary:focus,
+.btn.btn-secondary:focus,
+.btn.btn-dark:focus,
+.btn.btn-outline-danger:focus,
+.btn.btn-light:focus {
+    outline: 1px solid var(--secondary);
+}
 
 .btn.btn-secondary {
     background-color: #ddd;
     color: #000;
     border-color: #aaa;
 }
-.btn.btn-secondary:hover {
+.btn.btn-secondary:hover,
+.btn.btn-secondary:focus {
     background-color: #ccc;
     color: #000;
 }
@@ -52,7 +60,8 @@ html, body {
     color: #fff;
     border-color: #465724;
 }
-.btn.btn-primary:hover {
+.btn.btn-primary:hover,
+.btn.btn-primary:focus {
     background-color: #687946;
     color: #fff;
 }
@@ -67,7 +76,8 @@ html, body {
     color: #a00;
     border-color: transparent;
 }
-.btn.btn-outline-danger:hover {
+.btn.btn-outline-danger:hover,
+.btn.btn-outline-danger:focus {
     color: #a00;
     border-color: #a00;
 }
@@ -257,9 +267,13 @@ body.application {
     border-left: 0.5rem solid transparent;
     transition: all .3s ease;
 }
-.event-sidebar .nav .nav-item .nav-link:hover {
+.event-sidebar .nav .nav-item .nav-link:hover,
+.event-sidebar .nav .nav-item .nav-link:focus {
     background-color: white;
     box-shadow: 0 .25rem 2rem -1.2rem #000a;
+}
+.event-sidebar .nav .nav-item .nav-link:focus {
+    outline: 1px solid var(--secondary);
 }
 .event-sidebar .nav .nav-item .nav-link.active {
     border-left-color: var(--primary);
@@ -274,7 +288,8 @@ body.application {
     background-color: #111;
     color: white;
 }
-[data-bs-theme="dark"] .event-sidebar .nav .nav-item .nav-link:hover {
+[data-bs-theme="dark"] .event-sidebar .nav .nav-item .nav-link:hover,
+[data-bs-theme="dark"] .event-sidebar .nav .nav-item .nav-link:focus {
     background-color: #222;
 }
 [data-bs-theme="dark"] .event-sidebar .nav .nav-item .nav-link.active {
@@ -384,8 +399,12 @@ body.application {
     transition: all .3s ease;
     min-height: 200px;
 }
-.card-link:hover {
+.card-link:hover,
+.card-link:focus {
     background-color: #f0f0f0;
+}
+.card-link:focus {
+    outline: 1px solid var(--secondary);
 }
 .card-link:active {
     background-color: #e0e0e0;
