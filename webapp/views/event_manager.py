@@ -134,8 +134,13 @@ def device_position_update(id):
 @check_and_apply_event
 @check_is_event_supervisor
 def device_position_delete(id):
-    device = DevicePosition.query.filter_by(event=g.event, id=id).one_or_404()
-    db.session.delete(device)
+    device_position = DevicePosition.query.filter_by(event=g.event, id=id).one_or_404()
+
+    if device_position.devices.count():
+        flash(f"Position {device_position.title} kann nicht gelöscht werden, da ihr noch Geräte zugewiesen sind.", 'danger')
+        return redirect(url_for('event_manager.devices', event=g.event.slug))
+
+    db.session.delete(device_position)
     db.session.commit()
 
     return redirect(url_for('event_manager.devices', event=g.event.slug))
