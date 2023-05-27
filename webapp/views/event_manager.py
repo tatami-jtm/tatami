@@ -91,6 +91,34 @@ def update_class(id):
     return redirect(url_for('event_manager.edit_class', event=g.event.slug, id=event_class.id))
 
 
+@eventmgr_view.route('/classes/create', methods=["GET", "POST"])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def create_class():
+    event_class = EventClass(event=g.event)
+
+    if request.method == "POST":
+        event_class.title = request.form['name']
+        event_class.use_proximity_weight_mode = request.form['weight_mode'] == 'proximity'
+        event_class.weight_generator = request.form['weight_generator']
+
+        event_class.default_maximal_proximity = None
+        if request.form['default_maximal_proximity']:
+            event_class.default_maximal_proximity = int(request.form['default_maximal_proximity'])
+
+        event_class.fighting_time = int(request.form['fighting_time'])
+        event_class.golden_score_time = int(request.form['golden_score_time'])
+        event_class.between_fights_time = int(request.form['between_fights_time'])
+
+        db.session.add(event_class)
+        db.session.commit()
+
+        return redirect(url_for('event_manager.edit_class', event=g.event.slug, id=event_class.id))
+    
+    return render_template("event-manager/classes/new.html", event_class=event_class)
+
+
 @eventmgr_view.route('/devices')
 @login_required
 @check_and_apply_event

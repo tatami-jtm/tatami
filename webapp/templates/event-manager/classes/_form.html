@@ -7,7 +7,7 @@
     <h3 class="fw-bold mt-4 mb-3">Eigenschaften</h3>
     <div class="mb-3">
         <label for="name" class="form-label">Bezeichnung</label>
-        <input name="name" id="name" value="{{ event_class.title }}" class="form-control">
+        <input name="name" id="name" value="{{ event_class.title or '' }}" class="form-control">
     </div>
 
 
@@ -20,7 +20,7 @@
         </label>
     </div>
     <div class="mb-2 ms-5">
-        <textarea name="weight_generator" id="weight_generator" class="form-control font-monospace">{{ event_class.weight_generator }}</textarea>
+        <textarea name="weight_generator" id="weight_generator" class="form-control font-monospace">{{ event_class.weight_generator or '' }}</textarea>
         <div class="form-text">Jeweils eine Gewichtsklasse pro Zeile; Bezeichner können mit "-" beginnen, Plusklasse muss mit "+" beginnen</div>
     </div>
 
@@ -33,7 +33,7 @@
     <div class="mb-2 ms-5">
         <label for="default_maximal_proximity" class="form-label fw-normal">mit einem Höchstabstand von</label>
         <div class="input-group">
-            <input name="default_maximal_proximity" id="default_maximal_proximity" value="{{ event_class.default_maximal_proximity }}" class="form-control" type="number">
+            <input name="default_maximal_proximity" id="default_maximal_proximity" value="{{ event_class.default_maximal_proximity or '' }}" class="form-control" type="number">
             <div class="input-group-text">Gramm</div>
         </div>
         <div class="form-text">
