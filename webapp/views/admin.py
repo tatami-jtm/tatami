@@ -224,7 +224,9 @@ def events():
         events = Event.query.all()
 
     return render_template(
-        "admin/event/index.html", events=events, current_user_events=current_user_events)
+        "admin/event/index.html",
+        events=events,
+        current_user_events=current_user_events)
 
 
 @admin_view.route('/event/new')

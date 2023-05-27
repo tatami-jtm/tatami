@@ -1,5 +1,4 @@
 from . import db
-from datetime import datetime
 
 import hashlib
 
@@ -23,18 +22,17 @@ class Event(db.Model):
         'Role', backref=db.backref('supervised_events', lazy='dynamic'))
 
     def is_supervisor(self, user):
-        return user == self.supervising_user or any(self.supervising_role == role for role in user.roles)
-    
+        return user == self.supervising_user or any(
+            self.supervising_role == role for role in user.roles)
+
     @classmethod
     def from_slug(cls, slug):
-        return cls.query.where(cls.slug==slug).one()
-    
+        return cls.query.where(cls.slug == slug).one()
 
     @classmethod
     def that_allows_registration(cls):
-        now = datetime.now()
-        return cls.query.where(cls.allow_device_registration==True).all()
-    
+        return cls.query.where(cls.allow_device_registration).all()
+
 
 class EventClass(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
@@ -56,12 +54,13 @@ class EventClass(db.Model):
     golden_score_time = db.Column(db.Integer())
     between_fights_time = db.Column(db.Integer())
 
-    use_proximity_weight_mode = db.Column(db.Boolean()) # gewichtsnahe Gruppen
+    use_proximity_weight_mode = db.Column(db.Boolean())  # gewichtsnahe Gruppen
     default_maximal_proximity = db.Column(db.Integer())
     weight_generator = db.Column(db.Text())
 
     event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
-    event = db.relationship('Event', backref=db.backref('classes', lazy='dynamic'))
+    event = db.relationship(
+        'Event', backref=db.backref('classes', lazy='dynamic'))
 
 
 class EventRole(db.Model):
@@ -85,7 +84,8 @@ class DeviceRegistration(db.Model):
     token = db.Column(db.String(60), unique=True)
 
     event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
-    event = db.relationship('Event', backref=db.backref('device_registrations', lazy='dynamic'))
+    event = db.relationship('Event', backref=db.backref(
+        'device_registrations', lazy='dynamic'))
 
     registered_at = db.Column(db.DateTime())
     confirmed_at = db.Column(db.DateTime())
@@ -100,7 +100,8 @@ class DeviceRegistration(db.Model):
     event_role = db.relationship('EventRole')
 
     position_id = db.Column(db.Integer(), db.ForeignKey('device_position.id'))
-    position = db.relationship('DevicePosition', backref=db.backref('devices', lazy='dynamic'))
+    position = db.relationship(
+        'DevicePosition', backref=db.backref('devices', lazy='dynamic'))
 
     def get_human_readable_code(self):
         token_hash = hashlib.md5(self.token.encode()).hexdigest()
@@ -115,4 +116,5 @@ class DevicePosition(db.Model):
     is_mat = db.Column(db.Boolean())
 
     event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
-    event = db.relationship('Event', backref=db.backref('device_positions', lazy='dynamic'))
+    event = db.relationship('Event', backref=db.backref(
+        'device_positions', lazy='dynamic'))
