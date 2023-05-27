@@ -56,6 +56,14 @@ def index():
 def classes():
     return render_template("event-manager/classes/index.html")
 
+@eventmgr_view.route('/classes/<id>/edit')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def edit_class(id):
+    event_class = EventClass.query.filter_by(id=id).one_or_404()
+    return render_template("event-manager/classes/edit.html", event_class=event_class)
+
 
 @eventmgr_view.route('/devices')
 @login_required

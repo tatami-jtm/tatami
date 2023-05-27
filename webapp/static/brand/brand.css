@@ -428,3 +428,7 @@ body.application {
     font-size: 1.75rem;
     text-align: center;
 }
+
+textarea.form-control {
+    min-height: 150px;
+}

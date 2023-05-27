@@ -1,0 +1,90 @@
+<form action="" method="POST">
+    <div class="mb-3 d-flex gap-1">
+        <button type="submit" class="btn btn-primary">Speichern</button>
+        <button type="button" class="btn btn-dark">Voreinstellungen</button>
+        <a href="{{ url_for('event_manager.classes', event=g.event.slug) }}" class="btn btn-secondary">Abbrechen</a>
+    </div>
+    <h3 class="fw-bold mt-4 mb-3">Eigenschaften</h3>
+    <div class="mb-3">
+        <label for="name" class="form-label">Bezeichnung</label>
+        <input name="name" id="name" value="{{ event_class.title }}" class="form-control">
+    </div>
+
+
+    <h3 class="fw-bold mt-4 mb-3">Gewichtsklassen</h3>
+    <p class="fw-bold">Die Gruppen werden eingeteilt &hellip;</p>
+    <div class="form-check mb-1">
+        <input class="form-check-input" type="radio" name="weight_mode" id="perm-weight_mode-predefined" {{ 'checked' if not event_class.use_proximity_weight_mode }}>
+        <label class="form-check-label mb-1 fw-bold" for="perm-weight_mode-predefined">
+            in die folgenden Gewichtsklassen:
+        </label>
+    </div>
+    <div class="mb-2 ms-5">
+        <textarea name="weight_generator" id="weight_generator" class="form-control font-monospace">{{ event_class.weight_generator }}</textarea>
+        <div class="form-text">Jeweils eine Gewichtsklasse pro Zeile; Bezeichner können mit "-" beginnen, Plusklasse muss mit "+" beginnen</div>
+    </div>
+
+    <div class="form-check mb-3">
+        <input class="form-check-input" type="radio" name="weight_mode" id="perm-weight_mode-proximity" {{ 'checked' if event_class.use_proximity_weight_mode }}>
+        <label class="form-check-label mb-1 fw-bold" for="perm-weight_mode-proximity">
+            nach gewichtsnahen Gruppen
+        </label>
+    </div>
+    <div class="mb-2 ms-5">
+        <label for="default_maximal_proximity" class="form-label fw-normal">mit einem Höchstabstand von</label>
+        <div class="input-group">
+            <input name="default_maximal_proximity" id="default_maximal_proximity" value="{{ event_class.default_maximal_proximity }}" class="form-control" type="number">
+            <div class="input-group-text">Gramm</div>
+        </div>
+        <div class="form-text">
+            <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=2000;">2 kg</button>
+            <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=3000;">3 kg</button>
+            <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=4000;">4 kg</button>
+            <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=5000;">5 kg</button>
+            <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=10000;">10 kg</button>
+        </div>
+    </div>
+
+    
+    <h3 class="fw-bold mt-4 mb-3">Wettkampfverwaltung</h3>
+    <div class="mb-3">
+        <label for="fighting_time" class="form-label">Kampfdauer</label>
+        <div class="input-group">
+            <input name="fighting_time" id="fighting_time" value="{{ event_class.fighting_time }}" class="form-control" type="number">
+            <div class="input-group-text">Sekunden</div>
+        </div>
+        <div class="form-text">
+            <button class="btn btn-sm btn-link" type="button" onclick="fighting_time.value=120;">2 min</button>
+            <button class="btn btn-sm btn-link" type="button" onclick="fighting_time.value=180;">3 min</button>
+            <button class="btn btn-sm btn-link" type="button" onclick="fighting_time.value=240;">4 min</button>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="golden_score_time" class="form-label">Golden Score-Dauer</label>
+        <div class="input-group">
+            <input name="golden_score_time" id="golden_score_time" value="{{ event_class.golden_score_time }}" class="form-control" type="number">
+            <div class="input-group-text">Sekunden</div>
+        </div>
+        <div class="form-text">
+            <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=0;">ohne</button>
+            <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=120;">2 min</button>
+            <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=180;">3 min</button>
+            <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=240;">4 min</button>
+            <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=-1;">unbegrenzt</button>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="between_fights_time" class="form-label">Pausendauer</label>
+        <div class="input-group">
+            <input name="between_fights_time" id="between_fights_time" value="{{ event_class.between_fights_time }}" class="form-control" type="number">
+            <div class="input-group-text">Sekunden</div>
+        </div>
+        <div class="form-text">
+            <button class="btn btn-sm btn-link" type="button" onclick="between_fights_time.value=360;">6 min</button>
+            <button class="btn btn-sm btn-link" type="button" onclick="between_fights_time.value=600;">10 min</button>
+        </div>
+    </div>
+
+
+    <h3 class="fw-bold mt-4 mb-3">Fortschritt</h3>
+</form>
