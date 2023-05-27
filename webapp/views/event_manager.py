@@ -157,6 +157,10 @@ def device_position_create():
     device_position.is_mat = request.values.get("mat", '0') == '1'
     device_position.position = int(time.time())
 
+    if device_position.is_mat:
+        mat_count = DevicePosition.query.filter_by(event=g.event, is_mat=True).count()
+        device_position.title = f"Matte {mat_count}"
+
     db.session.add(device_position)
     db.session.commit()
 
