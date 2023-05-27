@@ -14,7 +14,7 @@
     <h3 class="fw-bold mt-4 mb-3">Gewichtsklassen</h3>
     <p class="fw-bold">Die Gruppen werden eingeteilt &hellip;</p>
     <div class="form-check mb-1">
-        <input class="form-check-input" type="radio" name="weight_mode" id="perm-weight_mode-predefined" {{ 'checked' if not event_class.use_proximity_weight_mode }}>
+        <input class="form-check-input" type="radio" value="predefined" name="weight_mode" id="perm-weight_mode-predefined" {{ 'checked' if not event_class.use_proximity_weight_mode }}>
         <label class="form-check-label mb-1 fw-bold" for="perm-weight_mode-predefined">
             in die folgenden Gewichtsklassen:
         </label>
@@ -25,7 +25,7 @@
     </div>
 
     <div class="form-check mb-3">
-        <input class="form-check-input" type="radio" name="weight_mode" id="perm-weight_mode-proximity" {{ 'checked' if event_class.use_proximity_weight_mode }}>
+        <input class="form-check-input" type="radio" value="proximity" name="weight_mode" id="perm-weight_mode-proximity" {{ 'checked' if event_class.use_proximity_weight_mode }}>
         <label class="form-check-label mb-1 fw-bold" for="perm-weight_mode-proximity">
             nach gewichtsnahen Gruppen
         </label>
