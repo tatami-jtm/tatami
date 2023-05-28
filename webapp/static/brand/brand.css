@@ -337,16 +337,18 @@ body.application {
 
 .nav.nav-tabs {
     border-bottom: 3px solid;
+    margin: 0 -0.25rem;
+    margin-bottom: 1rem;
 }
 .nav.nav-tabs .nav-item {
     border: none;
-    margin: 0 0.75rem;
+    margin: 0 0.25rem;
 }
 .nav.nav-tabs .nav-item .nav-link {
     border: 1px solid transparent;
     border-bottom: none;
     margin: 0;
-    padding: 0.5rem 1.5rem;
+    padding: 0.5rem 1rem;
     color: inherit;
     font-weight: bold;
     border-radius: 0;
@@ -356,7 +358,7 @@ body.application {
     background-color: #fff8;
 }
 .nav.nav-tabs .nav-item .nav-link.active {
-    border-color: #0006;
+    border-color: #0008;
 }
 
 [data-bs-theme="dark"] body.admin::before {
