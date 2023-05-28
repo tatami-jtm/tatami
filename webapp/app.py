@@ -46,6 +46,11 @@ def splash():
     return render_template("index.html", avail_events=avail_events)
 
 
+@app.route("/scoreboard")
+def scoreboard():
+    return render_template("scoreboard.html")
+
+
 app.register_blueprint(admin_view, url_prefix='/admin')
 app.register_blueprint(eventmgr_view, url_prefix='/event-manager/<event>')
 app.register_blueprint(devices_view, url_prefix='/go/<event>')
