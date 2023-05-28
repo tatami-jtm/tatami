@@ -58,6 +58,9 @@ class EventClass(db.Model):
     default_maximal_proximity = db.Column(db.Integer())
     weight_generator = db.Column(db.Text())
 
+    is_template = db.Column(db.Boolean())
+    template_name = db.Column(db.String(75))
+
     event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
     event = db.relationship(
         'Event', backref=db.backref('classes', lazy='dynamic'))
