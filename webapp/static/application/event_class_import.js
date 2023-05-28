@@ -27,7 +27,7 @@ document.querySelector("[data-event_class-call]").addEventListener("click", asyn
 
     if (data.use_proximity_weight_mode)
         document.getElementById("perm-weight_mode-proximity").checked = true
-    else (data.use_proximity_weight_mode)
+    else
         document.getElementById("perm-weight_mode-predefined").checked = true
 
     document.getElementById("weight_generator").value = data.weight_generator.join("\n")
