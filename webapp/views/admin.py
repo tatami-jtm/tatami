@@ -283,6 +283,19 @@ def create_event():
     return redirect(url_for('admin.index'))
 
 
+@admin_view.route("/templates")
+@login_required
+def presets():
+    if not current_user.has_privilege('alter_presets'):
+        abort(404)
+
+    event_classes = EventClass.query.filter_by(is_template=True).order_by(EventClass.template_name).all()
+
+    return render_template(
+        "admin/presets.html",
+        event_classes=event_classes)
+
+
 @admin_view.route("/template/event_class/<id>")
 @login_required
 def event_class_template(id):

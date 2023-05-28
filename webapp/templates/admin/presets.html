@@ -1,0 +1,35 @@
+{% extends "layouts/admin.html" %}
+{% block title %}Administrationsbereich{% endblock %}
+{% block body %}
+
+<h1>Voreinstellungen</h1>
+
+<div class="nav nav-tabs" id="presets-tab" role="tablist">
+    <div class="nav-item">
+        <button class="nav-link active" id="event_classes-tab"
+                data-bs-toggle="tab" type="button" role="tab"
+                data-bs-target="#event_classes" aria-controls="event_classes"
+                aria-selected="true">
+            Kampfklassen
+        </button>
+    </div>
+</div>
+<div class="tab-content" id="presets-tabContent">
+    <div class="tab-pane show active" role="tabpanel" tabindex="0"
+         id="event_classes" aria-labelledby="event_classes-tab">
+        <h3 class="fw-bold mt-4 mb-3">Kampfklassen</h3>
+
+        <div class="list-group">
+            {% for ec in event_classes %}
+                <a href="{{ url_for('event_manager.edit_class', event=ec.event.slug, id=ec.id) }}" class="list-group-item list-group-item-action">
+                    <div>
+                        <strong>{{ ec.template_name }}</strong>
+                    </div>
+                    <div>bei <span class="font-monospace small">{{ ec.event.slug }}</span></div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
