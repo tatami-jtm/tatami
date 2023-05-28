@@ -1,5 +1,15 @@
 {% extends "layouts/application.html" %}
-{% block title %}Willkommen!{% endblock %}
+{% block title %}Scoreboard (nur Anzeige){% endblock %}
 {% block body %}
-{% include "mod_scoreboard/_controller.html" %}
+<div class="row h-full">
+    <div class="col-12 col-xl-3 p-4 border-end shadow-sm bg-light">
+        {% include "mod_scoreboard/_standalone_properties.html" %}
+    </div>
+    <div class="col-12 col-xl-9">
+        {% include "mod_scoreboard/_controller.html" %}
+    </div>
+</div>
 {% endblock body %}
+{% block custom_header %}
+<script src="{{ url_for('static', filename='application/scoreboard/controller.js') }}" defer></script>
+{% endblock custom_header %}

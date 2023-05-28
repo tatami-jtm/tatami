@@ -1,161 +1,200 @@
-<script>
-    const timeDefault = 120;
-    var timeops = {
-        globalTime: 0,
-        ticking: 0,
-        lastTick: null
-    };
-    var globalTime, ticking;
-    function initTime() {
-        timeops.globalTime = timeDefault * 1000;
-        timeops.ticking = false;
-        updateTime();
-    }
-    function updateTime() {
-        setOption("time:main", Math.ceil(timeops.globalTime / 1000));
-        setOption("time:running", timeops.ticking);
-        document.getElementById("global-time").innerText = new Date(Math.ceil(timeops.globalTime / 1000) * 1000).toISOString().substr(15, 4)
-    }
-    function startTime() {
-        timeops.ticking = true;
-    }
-    function stopTime() {
-        timeops.ticking = false;
-    }
-    function endTime() {
-        stopTime();
-        timeops.globalTime = 0;
-        setOption("time:flash-alert", true);
-        setTimeout(() => {
-            setOption("time:flash-alert", false);
-        }, 3000);
-    }
-    function setOption(key, value) {
-        console.log("tatami-scoreboard:" + key, value)
-        if (value != null)
-            localStorage.setItem("tatami-scoreboard:" + key, value);
-        else
-            localStorage.removeItem("tatami-scoreboard:" + key);
-    }
-    function tick() {
-        let now = Date.now();
-        let differ = now - timeops.lastTick;
-        timeops.lastTick = now;
-        if (timeops.ticking) timeops.globalTime -= differ;
-        if (timeops.ticking && timeops.globalTime <= 0) endTime();
-        updateTime();
-    }
+<div class="row mb-5 p-3 text-bg-dark align-items-center">
+    <div class="col-12 col-md-4">
+        <div class="btn-group w-100" role="group" aria-label="Ansicht">
+            <button type="button" onclick="setOption('view', 'main')" class="btn active btn-light fs-5">Kampf</button>
+            <button type="button" onclick="setOption('view', 'callup')" class="btn btn-light fs-5">Aufruf</button>
+            <button type="button" onclick="setOption('view', 'break')" class="btn btn-light fs-5">Pause</button>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        <h1 class="h3 text-center m-0">{{ g.device.position.title }}</h1>
+    </div>
+    <div class="col-12 col-md-4 text-end">
+        <a href="{{ url_for('scoreboard') }}" target="_new" type="button" class="btn btn-light fs-5">Scoreboard öffnen</a>
+    </div>
+</div>
 
-    window.addEventListener("load", () => {
-        initTime();
-        timeops.lastTick = Date.now();
-        setInterval(tick, 50);
-    });
-</script>
-<h1>Scoreboard controller</h1>
-<h2>Technische Details</h2>
-<p>Ansicht:
-    <button onclick="setOption('view', 'main')">Kampf</button>
-    <button onclick="setOption('view', 'callup')">Aufruf</button>
-    <button onclick="setOption('view', 'break')">Pause</button>
-</p>
-<p>Mattennummer:
-    <input id="matnr" placeholder="Matte X">
-    <button onclick="setOption('mat-number', document.getElementById('matnr').value)">Setzen</button>
-</p>
-<details>
-    <summary>Aktueller Kampf</summary>
-    <p>Kampfklasse:
-        <input id="current-class">
-        <button onclick="setOption('class', document.getElementById('current-class').value)">Setzen</button>
-    </p>
-    <p>Fortschritt:
-        <select id="current-progress">
-            <option>Hauptrunde</option>
-            <option>Halbfinale</option>
-            <option>Finale</option>
-            <option>Trostrunde</option>
-            <option>Kampf um Platz 3</option>
-        </select>
-        <button onclick="setOption('progress', document.getElementById('current-progress').value)">Setzen</button>
-    </p>
-    <h5>Weiß</h5>
-    <p>Name:
-        <input id="current-white-name">
-        <button onclick="setOption('white:name', document.getElementById('current-white-name').value)">Setzen</button>
-    </p>
-    <p>
-        Verein:
-        <input id="current-white-club">
-        <button onclick="setOption('white:club', document.getElementById('current-white-club').value)">Setzen</button>
-    </p>
-    <h5>Blau</h5>
-    <p>Name:
-        <input id="current-blue-name">
-        <button onclick="setOption('blue:name', document.getElementById('current-blue-name').value)">Setzen</button>
-    </p>
-    <p>
-        Verein:
-        <input id="current-blue-club">
-        <button onclick="setOption('blue:club', document.getElementById('current-blue-club').value)">Setzen</button>
-    </p>
-</details>
-<details>
-    <summary>Vorbereitungskampf</summary>
-    <p>Kampfklasse:
-        <input id="prepare-class">
-        <button onclick="setOption('prepare:class', document.getElementById('prepare-class').value)">Setzen</button>
-    </p>
-    <h5>Weiß</h5>
-    <p>Name:
-        <input id="prepare-white-name">
-        <button onclick="setOption('prepare:white:name', document.getElementById('prepare-white-name').value)">Setzen</button>
-    </p>
-    <p>
-        Verein:
-        <input id="prepare-white-club">
-        <button onclick="setOption('prepare:white:club', document.getElementById('prepare-white-club').value)">Setzen</button>
-    </p>
-    <h5>Blau</h5>
-    <p>Name:
-        <input id="prepare-blue-name">
-        <button onclick="setOption('prepare:blue:name', document.getElementById('prepare-blue-name').value)">Setzen</button>
-    </p>
-    <p>
-        Verein:
-        <input id="prepare-blue-club">
-        <button onclick="setOption('prepare:blue:club', document.getElementById('prepare-blue-club').value)">Setzen</button>
-    </p>
-</details>
-<h2>Kampfdurchführung</h2>
-<p>Zeit: <span id="global-time">4:00</span> <button onclick="startTime()">Start</button> <button onclick="stopTime()">Stop</button></p>
-<p>Weiß:
-    <button onclick="setOption('white:ippon', 1)">I+</button>
-    <button onclick="setOption('white:ippon', 0)">I-</button>
-    <button onclick="setOption('white:wazaari', 'active')">W+</button>
-    <button onclick="setOption('white:wazaari', 'pending')">W?</button>
-    <button onclick="setOption('white:wazaari', false)">W-</button>
-</p>
-<p>
-    <button onclick="setOption('white:shido', 0)">S0</button>
-    <button onclick="setOption('white:shido', 1)">S1</button>
-    <button onclick="setOption('white:shido', 2)">S2</button>
-    <button onclick="setOption('white:shido', 3)">S3</button>
-    <button onclick="setOption('white:hansokumake', 1)">H+</button>
-    <button onclick="setOption('white:hansokumake', 0)">H-</button>
-</p>
-<p>Blau:
-    <button onclick="setOption('blue:ippon', 1)">I+</button>
-    <button onclick="setOption('blue:ippon', 0)">I-</button>
-    <button onclick="setOption('blue:wazaari', 'active')">W+</button>
-    <button onclick="setOption('blue:wazaari', 'pending')">W?</button>
-    <button onclick="setOption('blue:wazaari', false)">W-</button>
-</p>
-<p>
-    <button onclick="setOption('blue:shido', 0)">S0</button>
-    <button onclick="setOption('blue:shido', 1)">S1</button>
-    <button onclick="setOption('blue:shido', 2)">S2</button>
-    <button onclick="setOption('blue:shido', 3)">S3</button>
-    <button onclick="setOption('blue:hansokumake', 1)">H+</button>
-    <button onclick="setOption('blue:hansokumake', 0)">H-</button>
-</p>
+<div class="row mt-3">
+    <div class="col-12 offset-lg-3 col-lg-6">
+        <div class="card">
+            <div class="card-body p-2">
+                <div class="global-time text-center fw-bold" id="global-time">4:00</div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <button onclick="startTime()" class="btn btn-success fs-3 fw-bold btn-lg w-100" data-control="time.main.start">Starten</button>
+                    </div>
+                    <div class="col-6">
+                        <button onclick="stopTime()" class="btn btn-outline-secondary fs-3 fw-bold btn-lg w-100" disabled data-control="time.main.stop">Stoppen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5 px-3 px-xl-5">
+    <div class="col-12 col-md-6 col-xl-5 col-xl-5">
+        <div class="card card-of-white">
+            <div class="card-header">
+                Weiß
+            </div>
+            <div class="card-body border-bottom p-2">
+                <div class="row my-2 align-items-center">
+                    <div class="col-6 fs-3 fw-bold text-uppercase">
+                        OSAE-KOMI
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="osaekomi.white.stop" disabled class="btn btn-outline-secondary fw-bold w-100">Stopp</button>
+                    </div>
+                    <div class="col-2 p-0 d-flex align-items-center text-center" id="osaekomi-white">
+                        <div class="fs-4 fw-bold w-100">---</div>
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="osaekomi.white.start" class="btn btn-secondary fw-bold w-100">Start</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-2">
+                <div class="row my-2 align-items-center">
+                    <div class="col-6 fs-4 fw-bold text-uppercase">
+                        Ippon
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="ippon.white.reduce" disabled class="btn btn-outline-secondary fw-bold w-100">Nein</button>
+                    </div>
+                    <div class="col-2 p-0 d-flex align-items-center text-center" id="ippon-white">
+                        <div class="fs-4 fw-bold w-100">Nein</div>
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="ippon.white.expand" class="btn btn-secondary fw-bold w-100">Ja</button>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <div class="col-6 fs-4 fw-bold text-uppercase">
+                        Waza-Ari
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="wazaari.white.reduce" disabled class="btn btn-outline-secondary fw-bold w-100">0</button>
+                    </div>
+                    <div class="col-2 p-0 d-flex align-items-center text-center" id="wazaari-white">
+                        <div class="fs-4 fw-bold w-100">0</div>
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="wazaari.white.expand" class="btn btn-secondary fw-bold w-100">1</button>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <div class="col-6 fs-4 fw-bold text-uppercase text-danger">
+                        Shido
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="shido.white.reduce" disabled class="btn btn-outline-secondary fw-bold w-100">0</button>
+                    </div>
+                    <div class="col-2 p-0 d-flex align-items-center text-center" id="shido-white">
+                        <div class="fs-4 fw-bold w-100">0</div>
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="shido.white.expand" class="btn btn-secondary fw-bold w-100">1</button>
+                    </div>
+                </div>
+                <div class="row my-2 align-items-center">
+                    <div class="col-6 fs-4 fw-bold text-uppercase text-danger">
+                        Hansoku-make
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="hansokumake.white.reduce" disabled class="btn btn-outline-secondary fw-bold w-100">Nein</button>
+                    </div>
+                    <div class="col-2 p-0 d-flex align-items-center text-center" id="hansokumake-white">
+                        <div class="fs-4 fw-bold w-100">Nein</div>
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="hansokumake.white.expand" class="btn btn-secondary fw-bold w-100">Ja</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-xl-5 offset-xl-2">
+        <div class="card card-of-blue">
+            <div class="card-header">
+                Blau
+            </div>
+            <div class="card-body border-bottom p-2">
+                <div class="row my-2 align-items-center">
+                    <div class="col-6 fs-3 fw-bold text-uppercase">
+                        OSAE-KOMI
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="osaekomi.blue.stop" disabled class="btn btn-outline-secondary fw-bold w-100">Stopp</button>
+                    </div>
+                    <div class="col-2 p-0 d-flex align-items-center text-center" id="osaekomi-blue">
+                        <div class="fs-4 fw-bold w-100">---</div>
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="osaekomi.blue.start" class="btn btn-secondary fw-bold w-100">Start</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-2">
+                <div class="row my-2 align-items-center">
+                    <div class="col-6 fs-4 fw-bold text-uppercase">
+                        Ippon
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="ippon.blue.reduce" disabled class="btn btn-outline-secondary fw-bold w-100">Nein</button>
+                    </div>
+                    <div class="col-2 p-0 d-flex align-items-center text-center" id="ippon-blue">
+                        <div class="fs-4 fw-bold w-100">Nein</div>
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="ippon.blue.expand" class="btn btn-secondary fw-bold w-100">Ja</button>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <div class="col-6 fs-4 fw-bold text-uppercase">
+                        Waza-Ari
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="wazaari.blue.reduce" disabled class="btn btn-outline-secondary fw-bold w-100">0</button>
+                    </div>
+                    <div class="col-2 p-0 d-flex align-items-center text-center" id="wazaari-blue">
+                        <div class="fs-4 fw-bold w-100">0</div>
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="wazaari.blue.expand" class="btn btn-secondary fw-bold w-100">1</button>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <div class="col-6 fs-4 fw-bold text-uppercase text-danger">
+                        Shido
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="shido.blue.reduce" disabled class="btn btn-outline-secondary fw-bold w-100">0</button>
+                    </div>
+                    <div class="col-2 p-0 d-flex align-items-center text-center" id="shido-blue">
+                        <div class="fs-4 fw-bold w-100">0</div>
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="shido.blue.expand" class="btn btn-secondary fw-bold w-100">1</button>
+                    </div>
+                </div>
+                <div class="row my-2 align-items-center">
+                    <div class="col-6 fs-4 fw-bold text-uppercase text-danger">
+                        Hansoku-make
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="hansokumake.blue.reduce" disabled class="btn btn-outline-secondary fw-bold w-100">Nein</button>
+                    </div>
+                    <div class="col-2 p-0 d-flex align-items-center text-center" id="hansokumake-blue">
+                        <div class="fs-4 fw-bold w-100">Nein</div>
+                    </div>
+                    <div class="col-2 p-0">
+                        <button type="button" data-control="hansokumake.blue.expand" class="btn btn-secondary fw-bold w-100">Ja</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

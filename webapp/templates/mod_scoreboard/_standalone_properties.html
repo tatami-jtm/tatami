@@ -1,0 +1,68 @@
+<p>Mattennummer:
+    <input id="matnr" placeholder="Matte X">
+    <button onclick="setOption('mat-number', document.getElementById('matnr').value)">Setzen</button>
+</p>
+<details>
+    <summary>Aktueller Kampf</summary>
+    <p>Kampfklasse:
+        <input id="current-class">
+        <button onclick="setOption('class', document.getElementById('current-class').value)">Setzen</button>
+    </p>
+    <p>Fortschritt:
+        <select id="current-progress">
+            <option>Hauptrunde</option>
+            <option>Halbfinale</option>
+            <option>Finale</option>
+            <option>Trostrunde</option>
+            <option>Kampf um Platz 3</option>
+        </select>
+        <button onclick="setOption('progress', document.getElementById('current-progress').value)">Setzen</button>
+    </p>
+    <h5>Weiß</h5>
+    <p>Name:
+        <input id="current-white-name">
+        <button onclick="setOption('white:name', document.getElementById('current-white-name').value)">Setzen</button>
+    </p>
+    <p>
+        Verein:
+        <input id="current-white-club">
+        <button onclick="setOption('white:club', document.getElementById('current-white-club').value)">Setzen</button>
+    </p>
+    <h5>Blau</h5>
+    <p>Name:
+        <input id="current-blue-name">
+        <button onclick="setOption('blue:name', document.getElementById('current-blue-name').value)">Setzen</button>
+    </p>
+    <p>
+        Verein:
+        <input id="current-blue-club">
+        <button onclick="setOption('blue:club', document.getElementById('current-blue-club').value)">Setzen</button>
+    </p>
+</details>
+<details>
+    <summary>Vorbereitungskampf</summary>
+    <p>Kampfklasse:
+        <input id="prepare-class">
+        <button onclick="setOption('prepare:class', document.getElementById('prepare-class').value)">Setzen</button>
+    </p>
+    <h5>Weiß</h5>
+    <p>Name:
+        <input id="prepare-white-name">
+        <button onclick="setOption('prepare:white:name', document.getElementById('prepare-white-name').value)">Setzen</button>
+    </p>
+    <p>
+        Verein:
+        <input id="prepare-white-club">
+        <button onclick="setOption('prepare:white:club', document.getElementById('prepare-white-club').value)">Setzen</button>
+    </p>
+    <h5>Blau</h5>
+    <p>Name:
+        <input id="prepare-blue-name">
+        <button onclick="setOption('prepare:blue:name', document.getElementById('prepare-blue-name').value)">Setzen</button>
+    </p>
+    <p>
+        Verein:
+        <input id="prepare-blue-club">
+        <button onclick="setOption('prepare:blue:club', document.getElementById('prepare-blue-club').value)">Setzen</button>
+    </p>
+</details>

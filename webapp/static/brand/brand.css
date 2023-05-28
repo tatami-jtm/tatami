@@ -2,7 +2,7 @@ html {
     --primary: #8A9B68;
     --secondary: #868587aa;
     --blue: #136090;
-    --white: #F4F7F5;
+    --white: #ffffff;
 }
 html, body {
     margin: 0;
@@ -15,7 +15,7 @@ html, body {
 .btn {
     border-radius: 0.25em;
 }
-.btn[href], .btn[href]:hover { color: white; }
+.btn[href]:not(.btn-light), .btn[href]:not(.btn-light):hover { color: white; }
 .btn.btn-sm {
     padding: 0.125rem 0.35rem;
 }
@@ -440,4 +440,41 @@ body.application {
 
 textarea.form-control {
     min-height: 150px;
+}
+
+.application .h-full {
+    margin-top: -1rem;
+    height: calc(100vh - 3.45rem);
+}
+
+.application .application-header {
+    z-index: 150;
+    position: relative;
+}
+
+.global-time {
+    font-size: 6rem;
+}
+
+.card.card-of-blue,
+.card.card-of-white {
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
+}
+.card.card-of-white .card-header {
+    background-color: var(--white);
+    padding: 1rem;
+    border: none;
+    border-radius: 0;
+    font-size: 0;
+}
+.card.card-of-blue .card-header {
+    background-color: var(--blue);
+    color: white;
+    padding: 1rem;
+    border: none;
+    border-radius: 0;
+    font-size: 0;
 }
