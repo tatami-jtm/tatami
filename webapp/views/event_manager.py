@@ -63,7 +63,8 @@ def classes():
 @check_is_event_supervisor
 def edit_class(id):
     event_class = EventClass.query.filter_by(id=id).one_or_404()
-    return render_template("event-manager/classes/edit.html", event_class=event_class)
+    templates = EventClass.query.filter_by(is_template=True).order_by(EventClass.template_name).all()
+    return render_template("event-manager/classes/edit.html", event_class=event_class, templates=templates)
 
 
 
@@ -85,6 +86,9 @@ def update_class(id):
     event_class.fighting_time = int(request.form['fighting_time'])
     event_class.golden_score_time = int(request.form['golden_score_time'])
     event_class.between_fights_time = int(request.form['between_fights_time'])
+
+    event_class.is_template = 'is_template' in request.form
+    event_class.template_name = request.form['template_name']
 
     db.session.commit()
 
@@ -111,12 +115,17 @@ def create_class():
         event_class.golden_score_time = int(request.form['golden_score_time'])
         event_class.between_fights_time = int(request.form['between_fights_time'])
 
+        event_class.is_template = 'is_template' in request.form
+        event_class.template_name = request.form['template_name']
+
         db.session.add(event_class)
         db.session.commit()
 
         return redirect(url_for('event_manager.edit_class', event=g.event.slug, id=event_class.id))
     
-    return render_template("event-manager/classes/new.html", event_class=event_class)
+    templates = EventClass.query.filter_by(is_template=True).order_by(EventClass.template_name).all()
+
+    return render_template("event-manager/classes/new.html", event_class=event_class, templates=templates)
 
 
 @eventmgr_view.route('/devices')

@@ -48,7 +48,30 @@
                 <input name="name" id="name" value="{{ event_class.title or '' }}" class="form-control">
             </div>
 
-            <h3 class="fw-bold mt-5 mb-3">Voreinstellungen laden</h3>
+            <h3 class="fw-bold mt-5 mb-3">Voreinstellungen</h3>
+
+            <div class="mb-3">
+                <label for="templates" class="form-label">Vorlage auswählen</label>
+                <div class="d-flex align-items-center">
+                    <select id="templates" class="form-select">
+                        <option disabled selected></option>
+                        {% for tpl in templates %}
+                        <option value="{{ tpl.id }}">{{ tpl.template_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn btn-dark btn-sm ms-2" type="button">Anwenden</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Als Vorlage bereitstellen</div>
+                <div class="card-body">
+                    <div class="form-check">
+                        <input class="form-check-input mt-2" type="checkbox" id="is_template" name="is_template" {{ 'checked' if event_class.is_template }}>
+                        <label class="form-check-label p-0" for="is_template">Diese Kampfklasse ist unter dem Namen <input class="form-control d-inline w-25 mx-1 form-control-sm" id="template_name" name="template_name" value="{{ event_class.template_name or '' }}"> als Vorlage verfügbar.</label>
+                    </div>
+                </div>
+            </div>
 
         </div>
         <div class="tab-pane" role="tabpanel" tabindex="0"
