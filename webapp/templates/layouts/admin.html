@@ -3,6 +3,7 @@
 <head>
     {% include "layouts/_header.html" %}
     <title>TATAMI | {% block title %}{% endblock title %}</title>
+    {% block custom_header %}{% endblock custom_header %}
 </head>
 <body class="admin">
     <nav class="navbar navbar-admin navbar-expand-lg navbar-dark mb-2">

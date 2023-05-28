@@ -53,13 +53,13 @@
             <div class="mb-3">
                 <label for="templates" class="form-label">Vorlage auswählen</label>
                 <div class="d-flex align-items-center">
-                    <select id="templates" class="form-select">
+                    <select id="templates" class="form-select" data-event_class-template>
                         <option disabled selected></option>
                         {% for tpl in templates %}
                         <option value="{{ tpl.id }}">{{ tpl.template_name }}</option>
                         {% endfor %}
                     </select>
-                    <button class="btn btn-dark btn-sm ms-2" type="button">Anwenden</button>
+                    <button class="btn btn-dark btn-sm ms-2" type="button" data-event_class-call>Anwenden</button>
                 </div>
             </div>
 

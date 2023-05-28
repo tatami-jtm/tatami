@@ -28,7 +28,11 @@ html, body {
 .btn.btn-primary:active,
 .btn.btn-secondary:active,
 .btn.btn-dark:active,
-.btn.btn-outline-danger:active {
+.btn.btn-outline-danger:active,
+.btn.btn-primary.active,
+.btn.btn-secondary.active,
+.btn.btn-dark.active,
+.btn.btn-outline-danger.active {
     box-shadow: 0 0 10px -6px #0008 inset;
 }
 .btn.btn-primary:focus,
@@ -49,7 +53,8 @@ html, body {
     background-color: #ccc;
     color: #000;
 }
-.btn.btn-secondary:active {
+.btn.btn-secondary:active,
+.btn.btn-secondary.active {
     background-color: #bbb;
     color: #000;
     border-color: #999;
@@ -65,7 +70,8 @@ html, body {
     background-color: #687946;
     color: #fff;
 }
-.btn.btn-primary:active {
+.btn.btn-primary:active,
+.btn.btn-primary.active {
     background-color: #576835;
     color: #fff;
     border-color: #465724;
@@ -81,7 +87,8 @@ html, body {
     color: #a00;
     border-color: #a00;
 }
-.btn.btn-outline-danger:active {
+.btn.btn-outline-danger:active,
+.btn.btn-outline-danger.active {
     background-color: #a00;
     color: #fff;
     border-color: #600;
@@ -295,7 +302,7 @@ body.application {
 [data-bs-theme="dark"] .event-sidebar .nav .nav-item .nav-link.active {
     background-color: #222;
 }
-[data-bs-theme="dark"] .btn.btn-outline-danger:not(:active) {
+[data-bs-theme="dark"] .btn.btn-outline-danger:not(:active):not(.active) {
     background-color: #fff;
 }
 

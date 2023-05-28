@@ -295,5 +295,6 @@ def event_class_template(id):
         "between_fights_time": event_class.between_fights_time,
         "use_proximity_weight_mode": event_class.use_proximity_weight_mode,
         "default_maximal_proximity": event_class.default_maximal_proximity,
+        "default_maximal_size": event_class.default_maximal_size,
         "weight_generator": event_class.weight_generator.split("\n") if event_class.weight_generator else [],
     })

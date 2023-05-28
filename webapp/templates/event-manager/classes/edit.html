@@ -6,3 +6,7 @@
 
 {% include "event-manager/classes/_form.html" %}
 {% endblock body %}
+
+{% block custom_header %}
+<script src="{{ url_for('static', filename='application/event_class_import.js') }}" defer></script>
+{% endblock custom_header %}
