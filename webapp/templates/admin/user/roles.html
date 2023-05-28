@@ -31,6 +31,7 @@
                         {% if role.is_admin %}<li>alle (Admin-Rechte)</li>{% endif %}
                         {% if role.may_create_tournaments %}<li>Turniere erstellen</li>{% endif %}
                         {% if role.may_manage_users %}<li>Benutzerverwaltung</li>{% endif %}
+                        {% if role.may_alter_presets %}<li>Voreinstellungen</li>{% endif %}
                     </ul>
                 </td>
                 <td>
