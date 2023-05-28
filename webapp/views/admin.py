@@ -172,7 +172,7 @@ def create_role():
     if current_user.has_privilege('create_tournaments'):
         role.may_create_tournaments = 'may_create_tournaments' in request.form
 
-    if current_user.has_privilege('may_alter_presets'):
+    if current_user.has_privilege('alter_presets'):
         role.may_alter_presets = 'may_alter_presets' in request.form
 
     db.session.add(role)
@@ -216,7 +216,7 @@ def update_role(id):
     if current_user.has_privilege('create_tournaments'):
         role.may_create_tournaments = 'may_create_tournaments' in request.form
 
-    if current_user.has_privilege('may_alter_presets'):
+    if current_user.has_privilege('alter_presets'):
         role.may_alter_presets = 'may_alter_presets' in request.form
 
     db.session.commit()

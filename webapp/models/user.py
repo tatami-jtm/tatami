@@ -63,7 +63,7 @@ class User(db.Model, UserMixin):
                 if role.may_manage_users:
                     self._privilege['manage_users'] = True
                 if role.may_alter_presets:
-                    self._privilege['may_alter_presets'] = True
+                    self._privilege['alter_presets'] = True
 
         return priv in self._privilege.keys() and (
             self._privilege['admin'] or self._privilege[priv])
