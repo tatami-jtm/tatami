@@ -42,5 +42,12 @@
         </label>
         <div class="form-text mt-0">Nutzer*innen mit dieser Rolle können neue Turniere erstellen und Nutzer*innen oder Rollen zuweisen.</div>
     </div>
+    <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" name="may_alter_presets" id="perm-may_alter_presets" {{ 'checked' if role.may_alter_presets }} {{ 'disabled' if not current_user.has_privilege('alter_presets') }}>
+        <label class="form-check-label mb-1" for="perm-may_alter_presets">
+            Voreinstellungen ändern
+        </label>
+        <div class="form-text mt-0">Nutzer*innen mit dieser Rolle können Voreinstellungen (z. B. Kampfklassen) erstellen und ändern.</div>
+    </div>
 </form>
 {% endblock body %}

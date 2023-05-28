@@ -85,6 +85,9 @@ def update_user(id):
             if role.may_create_tournaments and not current_user.has_privilege(
                     'create_tournaments'):
                 continue
+            if role.may_alter_presets and not current_user.has_privilege(
+                    'may_alter_presets'):
+                continue
 
             if (role in selected_role_ids) and (role not in user.roles):
                 user.roles.append(role)
@@ -158,6 +161,7 @@ def create_role():
     role.is_admin = False
     role.may_manage_users = False
     role.may_create_tournaments = False
+    role.may_alter_presets = False
 
     if current_user.has_privilege('admin'):
         role.is_admin = 'is_admin' in request.form
@@ -167,6 +171,9 @@ def create_role():
 
     if current_user.has_privilege('create_tournaments'):
         role.may_create_tournaments = 'may_create_tournaments' in request.form
+
+    if current_user.has_privilege('may_alter_presets'):
+        role.may_alter_presets = 'may_alter_presets' in request.form
 
     db.session.add(role)
     db.session.commit()
@@ -208,6 +215,9 @@ def update_role(id):
 
     if current_user.has_privilege('create_tournaments'):
         role.may_create_tournaments = 'may_create_tournaments' in request.form
+
+    if current_user.has_privilege('may_alter_presets'):
+        role.may_alter_presets = 'may_alter_presets' in request.form
 
     db.session.commit()
     flash('Änderungen erfolgreich gespeichert.', 'success')
