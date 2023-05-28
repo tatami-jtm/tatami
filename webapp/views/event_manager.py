@@ -87,8 +87,9 @@ def update_class(id):
     event_class.golden_score_time = int(request.form['golden_score_time'])
     event_class.between_fights_time = int(request.form['between_fights_time'])
 
-    event_class.is_template = 'is_template' in request.form
-    event_class.template_name = request.form['template_name']
+    if current_user.has_privilege('alter_presets'):
+        event_class.is_template = 'is_template' in request.form
+        event_class.template_name = request.form['template_name']
 
     db.session.commit()
 
@@ -115,8 +116,11 @@ def create_class():
         event_class.golden_score_time = int(request.form['golden_score_time'])
         event_class.between_fights_time = int(request.form['between_fights_time'])
 
-        event_class.is_template = 'is_template' in request.form
-        event_class.template_name = request.form['template_name']
+        if current_user.has_privilege('alter_presets'):
+            event_class.is_template = 'is_template' in request.form
+            event_class.template_name = request.form['template_name']
+        else:
+            event_class.is_template = False
 
         db.session.add(event_class)
         db.session.commit()

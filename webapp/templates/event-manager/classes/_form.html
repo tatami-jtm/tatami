@@ -63,6 +63,7 @@
                 </div>
             </div>
 
+            {% if current_user.has_privilege('alter_presets') %}
             <div class="card">
                 <div class="card-header">Als Vorlage bereitstellen</div>
                 <div class="card-body">
@@ -72,6 +73,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
 
         </div>
         <div class="tab-pane" role="tabpanel" tabindex="0"
