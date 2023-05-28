@@ -112,6 +112,13 @@
                     <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=10000;">10 kg</button>
                 </div>
             </div>
+            <div class="mb-2 ms-5">
+                <label for="default_maximal_size" class="form-label fw-normal">sowie mit je höchstens</label>
+                <div class="input-group">
+                    <input name="default_maximal_size" id="default_maximal_size" value="{{ event_class.default_maximal_size or '' }}" class="form-control" type="number">
+                    <div class="input-group-text">Kämpfer*innen</div>
+                </div>
+            </div>
 
         </div>
         <div class="tab-pane" role="tabpanel" tabindex="0"

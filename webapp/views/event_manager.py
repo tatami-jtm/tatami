@@ -87,6 +87,10 @@ def update_class(id):
     if request.form['default_maximal_proximity']:
         event_class.default_maximal_proximity = int(request.form['default_maximal_proximity'])
 
+    event_class.default_maximal_size = None
+    if request.form['default_maximal_size']:
+        event_class.default_maximal_size = int(request.form['default_maximal_size'])
+
     event_class.fighting_time = int(request.form['fighting_time'])
     event_class.golden_score_time = int(request.form['golden_score_time'])
     event_class.between_fights_time = int(request.form['between_fights_time'])
@@ -119,6 +123,10 @@ def create_class():
         event_class.default_maximal_proximity = None
         if request.form['default_maximal_proximity']:
             event_class.default_maximal_proximity = int(request.form['default_maximal_proximity'])
+
+        event_class.default_maximal_size = None
+        if request.form['default_maximal_size']:
+            event_class.default_maximal_size = int(request.form['default_maximal_size'])
 
         event_class.fighting_time = int(request.form['fighting_time'])
         event_class.golden_score_time = int(request.form['golden_score_time'])
