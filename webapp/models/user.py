@@ -22,6 +22,7 @@ class Role(db.Model, RoleMixin):
     is_admin = db.Column(db.Boolean)
     may_create_tournaments = db.Column(db.Boolean)
     may_manage_users = db.Column(db.Boolean)
+    may_alter_presets = db.Column(db.Boolean)
 
 
 class User(db.Model, UserMixin):
@@ -50,7 +51,8 @@ class User(db.Model, UserMixin):
             self._privilege = {
                 "admin": False,
                 "create_tournaments": False,
-                "manage_users": False
+                "manage_users": False,
+                "alter_presets": False,
             }
 
             for role in self.roles:
@@ -60,6 +62,8 @@ class User(db.Model, UserMixin):
                     self._privilege['create_tournaments'] = True
                 if role.may_manage_users:
                     self._privilege['manage_users'] = True
+                if role.may_alter_presets:
+                    self._privilege['may_alter_presets'] = True
 
         return priv in self._privilege.keys() and (
             self._privilege['admin'] or self._privilege[priv])
