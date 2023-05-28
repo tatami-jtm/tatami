@@ -79,6 +79,10 @@ def update_class(id):
     event_class.use_proximity_weight_mode = request.form['weight_mode'] == 'proximity'
     event_class.weight_generator = request.form['weight_generator']
 
+    event_class.weight_generator = event_class.weight_generator.replace("\r\n", "\n")
+    event_class.weight_generator = event_class.weight_generator.replace("\n\r", "\n")
+    event_class.weight_generator = event_class.weight_generator.replace("\r", "\n")
+
     event_class.default_maximal_proximity = None
     if request.form['default_maximal_proximity']:
         event_class.default_maximal_proximity = int(request.form['default_maximal_proximity'])
@@ -107,6 +111,10 @@ def create_class():
         event_class.title = request.form['name']
         event_class.use_proximity_weight_mode = request.form['weight_mode'] == 'proximity'
         event_class.weight_generator = request.form['weight_generator']
+
+        event_class.weight_generator = event_class.weight_generator.replace("\r\n", "\n")
+        event_class.weight_generator = event_class.weight_generator.replace("\n\r", "\n")
+        event_class.weight_generator = event_class.weight_generator.replace("\r", "\n")
 
         event_class.default_maximal_proximity = None
         if request.form['default_maximal_proximity']:

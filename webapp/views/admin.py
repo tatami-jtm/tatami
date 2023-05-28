@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, abort, redirect,\
-    url_for, request, flash
+    url_for, request, flash, jsonify
 from flask_security import login_required, current_user
 
-from ..models import db, User, Role, Event
+from ..models import db, User, Role, Event, EventClass
 
 from datetime import datetime
 
@@ -281,3 +281,19 @@ def create_event():
     flash(f'Erfolg: Veranstaltung {event.slug} wurde erstellt!', 'success')
 
     return redirect(url_for('admin.index'))
+
+
+@admin_view.route("/template/event_class/<id>")
+@login_required
+def event_class_template(id):
+    event_class = EventClass.query.filter_by(id=id, is_template=True).one_or_404()
+
+    return jsonify({
+        "title": event_class.template_name,
+        "fighting_time": event_class.fighting_time,
+        "golden_score_time": event_class.golden_score_time,
+        "between_fights_time": event_class.between_fights_time,
+        "use_proximity_weight_mode": event_class.use_proximity_weight_mode,
+        "default_maximal_proximity": event_class.default_maximal_proximity,
+        "weight_generator": event_class.weight_generator.split("\n") if event_class.weight_generator else [],
+    })
