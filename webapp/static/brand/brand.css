@@ -15,7 +15,8 @@ html, body {
 .btn {
     border-radius: 0.25em;
 }
-.btn[href]:not(.btn-light), .btn[href]:not(.btn-light):hover { color: white; }
+.btn[href], .btn[href]:hover { color: white; }
+.btn[href].btn-light, .btn[href].btn-light:hover { color: black; }
 .btn.btn-sm {
     padding: 0.125rem 0.35rem;
 }
@@ -28,10 +29,12 @@ html, body {
 .btn.btn-primary:active,
 .btn.btn-secondary:active,
 .btn.btn-dark:active,
+.btn.btn-danger:active,
 .btn.btn-outline-danger:active,
 .btn.btn-primary.active,
 .btn.btn-secondary.active,
 .btn.btn-dark.active,
+.btn.btn-danger.active,
 .btn.btn-outline-danger.active {
     box-shadow: 0 0 10px -6px #0008 inset;
 }

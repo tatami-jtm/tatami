@@ -175,7 +175,12 @@ const properties = {
     },
     "tatami-scoreboard:time:golden-score": {
         render: (prop) => {
-            return (prop != "false") ? 'Golden Score' : ''
+            if (prop != "false") {
+                document.querySelector("[data-sbf-id='tatami-scoreboard:time:running']").classList.add("lit")
+            } else {
+                document.querySelector("[data-sbf-id='tatami-scoreboard:time:running']").classList.remove("lit")
+            }
+            return (prop != "false") ? "Golden Score" : "";
         }
     },
     "tatami-scoreboard:time:osaekomi:white": {
@@ -347,7 +352,7 @@ let reset = () => {
     console.log("TOTAL RESET done");
 };
 
-setInterval(update, 50);
+setInterval(update, 25);
 
 document.body.addEventListener("click", (e) => {
     document.body.parentNode.classList.add('active');

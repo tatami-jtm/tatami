@@ -66,7 +66,7 @@ body {
 .view-main .main-grid .main-row-score {
     grid-column-start: 2;
     grid-column-end: 3;
-    padding: 4rem 2rem;
+    /* padding: 4rem 2rem; */
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -89,10 +89,12 @@ body {
 }
 
 .view-main .main-grid .main-row-score .score-text {
-    font-size: 160px;
+    font-size: 250px;
     font-weight: bold;
     text-align: center;
     flex-grow: 1;
+    min-height: 256px;
+    padding-top: calc((256px - 1.15em) / 2);
 }
 
 .view-main .main-grid .main-row-score .score-text:empty {
@@ -121,6 +123,7 @@ body {
     padding-top: 1.5rem;
     flex-grow: 0;
     opacity: 0;
+    transition: opacity .5s ease-in-out;
 }
 .view-main .main-grid .main-row-score .score-grid .score-wazaari.active {
     opacity: 1.0;
@@ -176,11 +179,12 @@ body {
     text-align: center;
     box-shadow: 3px 3px 20px -8px rgba(0, 0, 0, 0.5);
     margin-left: 2rem;
+    transition: opacity .5s ease-in-out;
 }
 
 .view-main .main-grid .main-row-score .score-grid .score-shido .card-shido.hidden,
 .view-main .main-grid .main-row-score .score-grid .score-shido .card-hansokumake.hidden {
-    visibility: hidden;
+    opacity: 0;
 }
 .view-main .main-grid .main-row-score .score-grid .score-shido .card-shido {
     background-color: #dd0;
@@ -222,6 +226,9 @@ body {
     background-color: #111;
     padding: 0.5rem;
 }
+.time-grid .time-main.lit {
+    background-color: #fa2;
+}
 .time-grid .time-main .time-main-box {
     padding: 1rem 0;
     width: 525px;
@@ -238,10 +245,9 @@ body {
     padding: 0.5rem;
     width: 525px;
     text-align: center;
-    color: white;
+    color: black;
     font-size: 30px;
     font-weight: bold;
-    /* margin-bottom: -60px; */
 }
 .time-grid .time-main .time-main-label:empty {
     display: none;
