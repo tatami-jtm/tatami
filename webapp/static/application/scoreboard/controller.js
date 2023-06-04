@@ -1,4 +1,4 @@
-const timeDefault = 10
+const timeDefault = 240
 
 const main_view = document.querySelector("[data-control=\"view.main\"]")
 const callup_view = document.querySelector("[data-control=\"view.callup\"]")
@@ -110,6 +110,20 @@ const updateTime = () => {
         let osaekomi_time = Math.floor((timeops.blue.osaekomiSince - timeops.globalTime) / 1000)
         setOption("time:osaekomi:blue", osaekomi_time)
         document.getElementById("osaekomi-blue").innerText = osaekomi_time
+
+        if (osaekomi_time >= 20) {
+            blueExpandIppon()
+            blueStopOsaekomi()
+            endTime()
+        } else if (osaekomi_time >= 10) {
+            if (timeops.blue.wazaari == 'active') {
+                blueExpandIppon()
+                blueStopOsaekomi()
+                endTime()
+            } else if (timeops.blue.wazaari != 'pending') {
+                blueUnclearWazaari()
+            }
+        }
     } else {
         setOption("time:osaekomi:blue", -1)
         document.getElementById("osaekomi-blue").innerText = "---"
