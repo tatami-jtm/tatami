@@ -113,9 +113,9 @@ body {
 }
 
 .view-main .main-grid .main-row-score .score-grid .score-wazaari {
-    font-size: 140px;
+    font-size: 160px;
     font-weight: bold;
-    border: 2rem solid currentColor;
+    border: 1rem solid currentColor;
     height: 16rem;
     width: 16rem;
     text-align: center;
@@ -130,8 +130,9 @@ body {
     box-shadow: 3px 3px 20px -8px rgba(0, 0, 0, 0.5);
 }
 .view-main .main-grid .main-row-score .score-grid .score-wazaari.pending {
-    opacity: 0.65;
-    border-style: dotted;
+    opacity: 0.45;
+    border-style: dashed;
+    font-weight: normal;
 }
 
 .view-main .main-grid .main-row-score .score-grid .score-osaekomi {
@@ -171,11 +172,11 @@ body {
     width: 12rem;
     display: block;
     border-radius: 100%;
-    color: rgba(255, 255, 255, 0.75);
-    font-size: 140px;
+    color: #600;
+    font-size: 100px;
     font-weight: bold;
     line-height: 1;
-    padding: 34px 0;
+    padding: 49px 0;
     text-align: center;
     box-shadow: 3px 3px 20px -8px rgba(0, 0, 0, 0.5);
     margin-left: 2rem;
