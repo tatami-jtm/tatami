@@ -68,7 +68,6 @@ prepare_goto.addEventListener("click", () => {
     prepare_blue_club.value = ""
 
     resetState(local_config)
-    sbState.view.screen = 'callup'
 })
 
 window.addEventListener("load", () => {
