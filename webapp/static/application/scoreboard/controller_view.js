@@ -42,14 +42,17 @@ const renderControls = () => {
         main_view.classList.add("active")
         callup_view.classList.remove("active")
         break_view.classList.remove("active")
+        current_screen.innerText = "- Kampf -"
     } else if (sbState.view.screen == 'callup') {
         main_view.classList.remove("active")
         callup_view.classList.add("active")
         break_view.classList.remove("active")
+        current_screen.innerText = "- Aufruf -"
     } else if (sbState.view.screen == 'break') {
         main_view.classList.remove("active")
         callup_view.classList.remove("active")
         break_view.classList.add("active")
+        current_screen.innerText = "- Pause -"
     }
 
     if (sbState.view.medical) {
