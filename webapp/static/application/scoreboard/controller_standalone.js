@@ -21,6 +21,9 @@ const prepare_blue_club = document.querySelector("[data-control=\"prepare.blue.c
 
 const prepare_goto = document.querySelector("[data-control=\"prepare.goto\"]")
 
+const config_fighting_time = document.querySelector("[data-control=\"config.fighting_time\"]")
+const config_golden_score_time = document.querySelector("[data-control=\"config.golden_score_time\"]")
+
 const standaloneTick = () => {
     setOption("class", class_.value)
     setOption("progress", progress.value)
@@ -34,6 +37,20 @@ const standaloneTick = () => {
     setOption("prepare:white:club", prepare_white_club.value)
     setOption("prepare:blue:name", prepare_blue_name.value)
     setOption("prepare:blue:club", prepare_blue_club.value)
+
+    local_config.fightDuration = parseInt(config_fighting_time.value)
+    let gs_value = parseInt(config_golden_score_time.value)
+
+    if (gs_value == -1) {
+        local_config.hasGoldenScore = true
+        local_config.maxGoldenScore = null
+    } else if (gs_value == 0) {
+        local_config.hasGoldenScore = false
+        local_config.maxGoldenScore = null
+    } else {
+        local_config.hasGoldenScore = true
+        local_config.maxGoldenScore = gs_value
+    }
 }
 
 prepare_goto.addEventListener("click", () => {
