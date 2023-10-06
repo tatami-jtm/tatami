@@ -3,7 +3,7 @@
 const makeState = (config) => {
     return {
         view: {
-            screen: 'main',
+            screen: 'break',
             medicalAlert: false,
             timeAlert: false
         },
@@ -177,4 +177,8 @@ const properIntegralConversion = (val) => {
 
 const osaekomiTimeToSeconds = (val) => {
     return Math.floor((sbState.time.globalTick - val) / 1000)
+}
+
+const resetState = (config) => {
+    sbState = makeState(config || sbState.config)
 }

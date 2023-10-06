@@ -43,6 +43,7 @@ prepare_goto.addEventListener("click", () => {
     prepare_blue_name.value = ""
     prepare_blue_club.value = ""
 
+    resetState()
     sbState.view.screen = 'callup'
 })
 
