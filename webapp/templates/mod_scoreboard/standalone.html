@@ -2,7 +2,7 @@
 {% block title %}Scoreboard (nur Anzeige){% endblock %}
 {% block body %}
 <div class="row h-full">
-    <div class="col-12 col-xl-3 p-4 border-end shadow-sm bg-light">
+    <div class="col-12 col-xl-3 p-3 ignorable border-end shadow-sm bg-light overflow-y-auto h-100">
         {% include "mod_scoreboard/_standalone_properties.html" %}
     </div>
     <div class="col-12 col-xl-9">
@@ -11,5 +11,9 @@
 </div>
 {% endblock body %}
 {% block custom_header %}
-<script src="{{ url_for('static', filename='application/scoreboard/controller.js') }}" defer></script>
+<script src="{{ url_for('static', filename='application/scoreboard/controller_action.js') }}" defer></script>
+<script src="{{ url_for('static', filename='application/scoreboard/controller_state.js') }}" defer></script>
+<script src="{{ url_for('static', filename='application/scoreboard/controller_view.js') }}" defer></script>
+
+<script src="{{ url_for('static', filename='application/scoreboard/controller_standalone.js') }}" defer></script>
 {% endblock custom_header %}

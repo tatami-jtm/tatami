@@ -483,3 +483,11 @@ textarea.form-control {
     border-radius: 0;
     font-size: 0;
 }
+
+.ignorable {
+    transition: opacity 0.5s ease, filter 0.5s ease;
+}
+.ignorable:not(:hover):not(:active):not(:focus) {
+    opacity: 0.45;
+    filter: grayscale(0.85);
+}

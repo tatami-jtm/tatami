@@ -1,13 +1,13 @@
 <div class="row mb-5 p-3 text-bg-dark align-items-center">
     <div class="col-12 col-md-4">
         <div class="btn-group w-100" role="group" aria-label="Ansicht">
-            <button type="button" data-control="view.main" class="btn active btn-light fs-5">Kampf</button>
+            <button type="button" data-control="view.main" class="btn btn-light fs-5">Kampf</button>
             <button type="button" data-control="view.callup" class="btn btn-light fs-5">Aufruf</button>
-            <button type="button" data-control="view.break" class="btn btn-light fs-5">Pause</button>
+            <button type="button" data-control="view.break" class="btn active btn-light fs-5">Pause</button>
         </div>
     </div>
     <div class="col-12 col-md-4">
-        <h1 class="h3 text-center m-0">{{ g.device.position.title }}</h1>
+        <h1 class="h3 text-center m-0" data-static="mat-number">{{ g.device.position.title }}</h1>
     </div>
     <div class="col-12 col-md-4 text-end">
         <a href="{{ url_for('scoreboard') }}" target="_new" type="button" class="btn btn-light fs-5">Scoreboard öffnen</a>
