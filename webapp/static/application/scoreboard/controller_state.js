@@ -3,7 +3,7 @@
 const makeState = (config) => {
     return {
         view: {
-            screen: 'break',
+            screen: config.defaultScreen || 'break',
             medicalAlert: false,
             timeAlert: false
         },
@@ -58,6 +58,8 @@ const tick = () => {
 
         if (effectiveNewTime < 0)
             endOfTime()
+        else if (sbState.time.goldenScore && sbState.config.maxGoldenScore && sbState.time.displayTime > sbState.config.maxGoldenScore * 1000)
+            endOfTime()
         else
             sbState.time.displayTime = effectiveNewTime
     }
@@ -78,7 +80,7 @@ const endOfTime = () => {
     if (winner)
         return
 
-    if (sbState.config.hasGoldenScore) {
+    if (!sbState.time.goldenScore && sbState.config.hasGoldenScore) {
         sbState.time.goldenScore = true
         sbState.time.displayTimeDirection = 1
         sbState.time.displayTime = 0

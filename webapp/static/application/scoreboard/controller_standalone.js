@@ -1,3 +1,10 @@
+var local_config = {
+    fightDuration: 240,
+    hasGoldenScore: true,
+    maxGoldenScore: null,
+    defaultScreen: 'main'
+}
+
 const class_ = document.querySelector("[data-control=\"class\"]")
 const progress = document.querySelector("[data-control=\"progress\"]")
 const white_name = document.querySelector("[data-control=\"white.name\"]")
@@ -43,7 +50,7 @@ prepare_goto.addEventListener("click", () => {
     prepare_blue_name.value = ""
     prepare_blue_club.value = ""
 
-    resetState()
+    resetState(local_config)
     sbState.view.screen = 'callup'
 })
 

@@ -59,7 +59,12 @@ const blue_reduce_hansokumake = document.querySelector("[data-control=\"hansokum
 /* Main load */
 window.addEventListener("load", () => {
     setOption("reset", true)
-    sbState = makeState({ fightDuration: 240, hasGoldenScore: true });
+    sbState = makeState(local_config || {
+        fightDuration: 240,
+        hasGoldenScore: true,
+        maxGoldenScore: null,
+        defaultScreen: 'main'
+    });
 
     setInterval(tick, 50)
     setInterval(renderControls, 100)
