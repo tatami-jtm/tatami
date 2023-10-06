@@ -20,7 +20,8 @@ const makeState = (config) => {
         white: {
             osaekomi: {
                 running: false,
-                since: null
+                since: null,
+                wazaari_given: false
             },
             ippon: false,
             wazaari: false,
@@ -31,7 +32,8 @@ const makeState = (config) => {
         blue: {
             osaekomi: {
                 running: false,
-                since: null
+                since: null,
+                wazaari_given: false
             },
             ippon: false,
             wazaari: false,
@@ -84,18 +86,47 @@ const endOfTime = () => {
 }
 
 const osaekomiCheck = () => {
-    if (sbState.white.osaekomi.running && osaekomiTimeToSeconds(sbState.white.osaekomi.since) >= 11) {
-        sbState.white.osaekomi.running = false
-        sbState.white.ippon = true
-        sbState.white.wazaari_pending = false
-        endOfTime()
+    if (sbState.white.osaekomi.running) {
+        white_osaekomi_time = osaekomiTimeToSeconds(sbState.white.osaekomi.since)
+
+        if (white_osaekomi_time >= 20) {
+            sbState.white.osaekomi.running = false
+            sbState.white.ippon = true
+            sbState.white.wazaari_pending = false
+            endOfTime()
+        } else if (white_osaekomi_time >= 10 && !sbState.white.osaekomi.wazaari_given) {
+            if (sbState.white.wazaari) {
+                sbState.white.osaekomi.running = false
+                sbState.white.ippon = true
+                sbState.white.wazaari_pending = false
+                endOfTime()
+            } else {
+                sbState.white.wazaari_pending = true
+                sbState.white.osaekomi.wazaari_given = true
+            }
+        }
     }
 
-    if (sbState.blue.osaekomi.running && osaekomiTimeToSeconds(sbState.blue.osaekomi.since) >= 21) {
-        sbState.blue.osaekomi.running = false
-        sbState.blue.ippon = true
-        sbState.blue.wazaari_pending = false
-        endOfTime()
+    if (sbState.blue.osaekomi.running) {
+        blue_osaekomi_time = osaekomiTimeToSeconds(sbState.blue.osaekomi.since)
+
+        if (blue_osaekomi_time >= 20) {
+            sbState.blue.osaekomi.running = false
+            sbState.blue.ippon = true
+            sbState.blue.wazaari_pending = false
+            endOfTime()
+        } else if (blue_osaekomi_time >= 10 && !sbState.blue.osaekomi.wazaari_given) {
+            alert(sbState.blue.wazaari)
+            if (sbState.blue.wazaari) {
+                sbState.blue.osaekomi.running = false
+                sbState.blue.ippon = true
+                sbState.blue.wazaari_pending = false
+                endOfTime()
+            } else {
+                sbState.blue.wazaari_pending = true
+                sbState.blue.osaekomi.wazaari_given = true
+            }
+        }
     }
 }
 

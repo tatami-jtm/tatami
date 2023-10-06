@@ -36,11 +36,15 @@ const white_reduce_wazaari = document.querySelector("[data-control=\"wazaari.whi
 const blue_expand_wazaari = document.querySelector("[data-control=\"wazaari.blue.expand\"]")
 const blue_reduce_wazaari = document.querySelector("[data-control=\"wazaari.blue.reduce\"]")
 
+const shido_white = document.getElementById("shido-white")
+const shido_blue = document.getElementById("shido-blue")
 const white_expand_shido = document.querySelector("[data-control=\"shido.white.expand\"]")
 const white_reduce_shido = document.querySelector("[data-control=\"shido.white.reduce\"]")
 const blue_expand_shido = document.querySelector("[data-control=\"shido.blue.expand\"]")
 const blue_reduce_shido = document.querySelector("[data-control=\"shido.blue.reduce\"]")
 
+const hansokumake_white = document.getElementById("hansokumake-white")
+const hansokumake_blue = document.getElementById("hansokumake-blue")
 const white_expand_hansokumake = document.querySelector("[data-control=\"hansokumake.white.expand\"]")
 const white_reduce_hansokumake = document.querySelector("[data-control=\"hansokumake.white.reduce\"]")
 const blue_expand_hansokumake = document.querySelector("[data-control=\"hansokumake.blue.expand\"]")
@@ -90,6 +94,7 @@ flash_medical.addEventListener("click", () => {
 white_start_osaekomi.addEventListener("click", () => {
     sbState.white.osaekomi.running = true
     sbState.white.osaekomi.since = sbState.time.globalTick
+    sbState.white.osaekomi.wazaari_given = false
 })
 white_stop_osaekomi.addEventListener("click", () => {
     sbState.white.osaekomi.running = false
@@ -98,6 +103,7 @@ white_stop_osaekomi.addEventListener("click", () => {
 blue_start_osaekomi.addEventListener("click", () => {
     sbState.blue.osaekomi.running = true
     sbState.blue.osaekomi.since = sbState.time.globalTick
+    sbState.blue.osaekomi.wazaari_given = false
 })
 blue_stop_osaekomi.addEventListener("click", () => {
     sbState.blue.osaekomi.running = false
@@ -143,4 +149,44 @@ blue_expand_wazaari.addEventListener("click", () => {
 blue_reduce_wazaari.addEventListener("click", () => {
     sbState.blue.wazaari = false
     sbState.blue.wazaari_pending = false
+})
+
+/* Control: Shido */
+
+white_expand_shido.addEventListener("click", () => {
+    if (sbState.white.shido < 3)
+        sbState.white.shido += 1
+})
+
+white_reduce_shido.addEventListener("click", () => {
+    if (sbState.white.shido > 0)
+        sbState.white.shido -= 1
+})
+
+blue_expand_shido.addEventListener("click", () => {
+    if (sbState.blue.shido < 3)
+        sbState.blue.shido += 1
+})
+
+blue_reduce_shido.addEventListener("click", () => {
+    if (sbState.blue.shido > 0)
+        sbState.blue.shido -= 1
+})
+
+/* Control: Hansoku-Make */
+
+white_expand_hansokumake.addEventListener("click", () => {
+    sbState.white.hansokumake = true
+})
+
+white_reduce_hansokumake.addEventListener("click", () => {
+    sbState.white.hansokumake = false
+})
+
+blue_expand_hansokumake.addEventListener("click", () => {
+    sbState.blue.hansokumake = true
+})
+
+blue_reduce_hansokumake.addEventListener("click", () => {
+    sbState.blue.hansokumake = false
 })

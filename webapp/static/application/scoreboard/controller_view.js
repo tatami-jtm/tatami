@@ -125,6 +125,63 @@ const renderControls = () => {
         disable_btn(blue_reduce_wazaari, "btn-secondary")
         enable_btn(blue_expand_wazaari, "btn-secondary")
     }
+
+    shido_white.innerText = sbState.white.shido
+    shido_blue.innerText = sbState.blue.shido
+
+    if (sbState.white.shido == 3) {
+        white_expand_shido.innerText = 3
+        white_reduce_shido.innerText = 2
+        disable_btn(white_expand_shido, "btn-secondary")
+        enable_btn(white_reduce_shido, "btn-secondary")
+    } else if (sbState.white.shido == 0) {
+        white_expand_shido.innerText = 1
+        white_reduce_shido.innerText = 0
+        disable_btn(white_reduce_shido, "btn-secondary")
+        enable_btn(white_expand_shido, "btn-secondary")
+    } else {
+        white_expand_shido.innerText = sbState.white.shido + 1
+        white_reduce_shido.innerText = sbState.white.shido - 1
+        enable_btn(white_expand_shido, "btn-secondary")
+        enable_btn(white_reduce_shido, "btn-secondary")
+    }
+
+    if (sbState.blue.shido == 3) {
+        blue_expand_shido.innerText = 3
+        blue_reduce_shido.innerText = 2
+        disable_btn(blue_expand_shido, "btn-secondary")
+        enable_btn(blue_reduce_shido, "btn-secondary")
+    } else if (sbState.blue.shido == 0) {
+        blue_expand_shido.innerText = 1
+        blue_reduce_shido.innerText = 0
+        disable_btn(blue_reduce_shido, "btn-secondary")
+        enable_btn(blue_expand_shido, "btn-secondary")
+    } else {
+        blue_expand_shido.innerText = sbState.blue.shido + 1
+        blue_reduce_shido.innerText = sbState.blue.shido - 1
+        enable_btn(blue_expand_shido, "btn-secondary")
+        enable_btn(blue_reduce_shido, "btn-secondary")
+    }
+
+    if (sbState.white.hansokumake) {
+        hansokumake_white.innerText = "H"
+        disable_btn(white_expand_hansokumake, "btn-secondary")
+        enable_btn(white_reduce_hansokumake, "btn-secondary")
+    } else {
+        hansokumake_white.innerText = "-"
+        disable_btn(white_reduce_hansokumake, "btn-secondary")
+        enable_btn(white_expand_hansokumake, "btn-secondary")
+    }
+
+    if (sbState.blue.hansokumake) {
+        hansokumake_blue.innerText = "H"
+        disable_btn(blue_expand_hansokumake, "btn-secondary")
+        enable_btn(blue_reduce_hansokumake, "btn-secondary")
+    } else {
+        hansokumake_blue.innerText = "-"
+        disable_btn(blue_reduce_hansokumake, "btn-secondary")
+        enable_btn(blue_expand_hansokumake, "btn-secondary")
+    }
 }
 
 const renderBoard = () => {
@@ -190,5 +247,20 @@ const renderBoard = () => {
         setOption("blue:wazaari", 'pending')
     } else {
         setOption("blue:wazaari", '')
+    }
+
+    setOption("white:shido", sbState.white.shido)
+    setOption("blue:shido", sbState.blue.shido)
+
+    if (sbState.white.hansokumake) {
+        setOption("white:hansokumake", 1)
+    } else {
+        setOption("white:hansokumake", 0)
+    }
+
+    if (sbState.blue.hansokumake) {
+        setOption("blue:hansokumake", 1)
+    } else {
+        setOption("blue:hansokumake", 0)
     }
 }
