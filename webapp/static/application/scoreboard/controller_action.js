@@ -139,6 +139,10 @@ blue_reduce_ippon.addEventListener("click", () => {
 white_expand_wazaari.addEventListener("click", () => {
     sbState.white.wazaari = true
     sbState.white.wazaari_pending = false
+
+    if (sbState.time.goldenScore) {
+        sbState.time.running = false
+    }
 })
 
 white_reduce_wazaari.addEventListener("click", () => {
@@ -149,6 +153,10 @@ white_reduce_wazaari.addEventListener("click", () => {
 blue_expand_wazaari.addEventListener("click", () => {
     sbState.blue.wazaari = true
     sbState.blue.wazaari_pending = false
+
+    if (sbState.time.goldenScore) {
+        sbState.time.running = false
+    }
 })
 
 blue_reduce_wazaari.addEventListener("click", () => {

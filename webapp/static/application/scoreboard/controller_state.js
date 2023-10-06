@@ -66,6 +66,10 @@ const tick = () => {
 }
 
 const endOfTime = () => {
+    if (!sbState.time.goldenScore) {
+        sbState.time.displayTime = 0
+    }
+
     if (sbState.white.osaekomi.running || sbState.blue.osaekomi.running)
         return
 
@@ -83,7 +87,6 @@ const endOfTime = () => {
     if (!sbState.time.goldenScore && sbState.config.hasGoldenScore) {
         sbState.time.goldenScore = true
         sbState.time.displayTimeDirection = 1
-        sbState.time.displayTime = 0
     }
 }
 
