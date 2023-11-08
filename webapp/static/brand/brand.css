@@ -462,7 +462,8 @@ textarea.form-control {
 }
 
 .card.card-of-blue,
-.card.card-of-white {
+.card.card-of-white,
+.card.card-of-none {
     border: none;
     border-radius: 0;
     background-color: transparent;
@@ -482,6 +483,10 @@ textarea.form-control {
     border: none;
     border-radius: 0;
     font-size: 0;
+}
+
+.card.card-of-none {
+    margin-top: 2.6em;
 }
 
 .ignorable {

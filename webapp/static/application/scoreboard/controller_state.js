@@ -65,8 +65,8 @@ const tick = () => {
     }
 }
 
-const endOfTime = () => {
-    if (!sbState.time.goldenScore) {
+const endOfTime = (becauseOfOseakomi) => {
+    if (!sbState.time.goldenScore && !becauseOfOseakomi) {
         sbState.time.displayTime = 0
     }
 
@@ -98,13 +98,13 @@ const osaekomiCheck = () => {
             sbState.white.osaekomi.running = false
             sbState.white.ippon = true
             sbState.white.wazaari_pending = false
-            endOfTime()
+            endOfTime(true)
         } else if (white_osaekomi_time >= 10 && !sbState.white.osaekomi.wazaari_given) {
             if (sbState.white.wazaari) {
                 sbState.white.osaekomi.running = false
                 sbState.white.ippon = true
                 sbState.white.wazaari_pending = false
-                endOfTime()
+                endOfTime(true)
             } else {
                 sbState.white.wazaari_pending = true
                 sbState.white.osaekomi.wazaari_given = true
@@ -119,14 +119,13 @@ const osaekomiCheck = () => {
             sbState.blue.osaekomi.running = false
             sbState.blue.ippon = true
             sbState.blue.wazaari_pending = false
-            endOfTime()
+            endOfTime(true)
         } else if (blue_osaekomi_time >= 10 && !sbState.blue.osaekomi.wazaari_given) {
-            alert(sbState.blue.wazaari)
             if (sbState.blue.wazaari) {
                 sbState.blue.osaekomi.running = false
                 sbState.blue.ippon = true
                 sbState.blue.wazaari_pending = false
-                endOfTime()
+                endOfTime(true)
             } else {
                 sbState.blue.wazaari_pending = true
                 sbState.blue.osaekomi.wazaari_given = true

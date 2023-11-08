@@ -81,6 +81,17 @@ const renderControls = () => {
         blue_osaekomi.innerText = "---"
     }
 
+    if (sbState.white.osaekomi.running) {
+        enable_btn(toggle_osaekomi, 'btn-secondary')
+        toggle_osaekomi.innerText = 'Tauschen »'
+    } else if (sbState.blue.osaekomi.running) {
+        enable_btn(toggle_osaekomi, 'btn-secondary')
+        toggle_osaekomi.innerText = '« Tauschen'
+    } else {
+        disable_btn(toggle_osaekomi, 'btn-secondary')
+        toggle_osaekomi.innerText = '« Tauschen »'
+    }
+
     if (sbState.white.ippon) {
         ippon_white.innerText = "1"
         disable_btn(white_expand_ippon, "btn-secondary")

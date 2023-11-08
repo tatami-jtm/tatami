@@ -18,6 +18,8 @@ const start_time = document.querySelector("[data-control=\"time.main.start\"]")
 const stop_time = document.querySelector("[data-control=\"time.main.stop\"]")
 const flash_medical = document.querySelector("[data-control=\"flash.medical\"]")
 
+const toggle_osaekomi = document.querySelector("[data-control=\"osaekomi.toggle\"]")
+
 const white_start_osaekomi = document.querySelector("[data-control=\"osaekomi.white.start\"]")
 const white_stop_osaekomi = document.querySelector("[data-control=\"osaekomi.white.stop\"]")
 const blue_start_osaekomi = document.querySelector("[data-control=\"osaekomi.blue.start\"]")
@@ -101,6 +103,7 @@ white_start_osaekomi.addEventListener("click", () => {
     sbState.white.osaekomi.running = true
     sbState.white.osaekomi.since = sbState.time.globalTick
     sbState.white.osaekomi.wazaari_given = false
+    sbState.blue.osaekomi.running = false
 })
 white_stop_osaekomi.addEventListener("click", () => {
     sbState.white.osaekomi.running = false
@@ -110,9 +113,28 @@ blue_start_osaekomi.addEventListener("click", () => {
     sbState.blue.osaekomi.running = true
     sbState.blue.osaekomi.since = sbState.time.globalTick
     sbState.blue.osaekomi.wazaari_given = false
+    sbState.white.osaekomi.running = false
 })
 blue_stop_osaekomi.addEventListener("click", () => {
     sbState.blue.osaekomi.running = false
+})
+
+toggle_osaekomi.addEventListener("click", () => {
+    if(sbState.blue.osaekomi.running) {
+        sbState.blue.osaekomi.running = false
+        sbState.white.osaekomi.running = true
+        sbState.white.osaekomi.since = sbState.blue.osaekomi.since
+        sbState.white.osaekomi.wazaari_given = false
+        if (sbState.blue.osaekomi.wazaari_given)
+            sbState.blue.wazaari_pending = false;
+    } else if(sbState.white.osaekomi.running) {
+        sbState.white.osaekomi.running = false
+        sbState.blue.osaekomi.running = true
+        sbState.blue.osaekomi.since = sbState.white.osaekomi.since
+        sbState.blue.osaekomi.wazaari_given = false
+        if (sbState.white.osaekomi.wazaari_given)
+            sbState.white.wazaari_pending = false;
+    }
 })
 
 /* Control: Ippon */
