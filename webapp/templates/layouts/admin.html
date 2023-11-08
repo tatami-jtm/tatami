@@ -6,11 +6,15 @@
     {% block custom_header %}{% endblock custom_header %}
 </head>
 <body class="admin">
-    <nav class="navbar navbar-admin navbar-expand-lg navbar-dark mb-2">
-        <div class="container">
+    <nav class="navbar navbar-admin navbar-expand-lg navbar-light bg-white shadow-sm mb-2">
+        <div class="container-fluid py-2">
             <a class="navbar-brand" href="{{ url_for('admin.index') }}">
-                <img src="{{ url_for('static', filename='brand/logo_white.png') }}" alt="TATAMI">
-                <span>Administration</span>
+                <div class="splash-logo first-part">
+                    TATAMI 2023
+                </div>
+                <div class="splash-logo second-part">
+                    Administration
+                </div>
             </a>
             <button class="navbar-toggler" type="button"
                 data-bs-toggle="collapse" data-bs-target="#adminMainNav"

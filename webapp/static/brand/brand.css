@@ -108,23 +108,18 @@ html, body {
 
 
 .navbar-admin {
-    background-color: var(--primary);
-    padding: 0.125rem;
+    background-color: white;
+    padding: 0;
     position: fixed;
     left: 0; right: 0;
     top: 0;
     z-index: 152;
 }
-.navbar .navbar-brand {
+.navbar-admin .navbar-brand {
+    margin: 0;
+    padding: 0;
     display: flex;
     align-items: center;
-}
-.navbar .navbar-brand img {
-    height: 1.5em;
-    width: 1.5em;
-    margin-top: 0.05rem;
-    margin-bottom: -0.05rem;
-    margin-right: 0.15em;
 }
 .navbar-admin .navbar-brand,
 .navbar-admin .navbar-brand:hover {
@@ -138,28 +133,28 @@ html, body {
     align-items: center;
 }
 .navbar-admin .nav-link {
-    color: #ffffff;
-    padding: 0.125rem 0.5rem;
-    margin: 0.25rem;
-    border: 1px solid white;
+    color: black;
+    padding: 0.25rem 0.5rem;
+    margin: 0 0.5rem;
+    /* border: 1px solid #dddddd; */
+    background-color: #f0f0f0;
     border-radius: 0.25rem;
-    font-size: 0.9rem;
+    font-size: 1.05rem;
 }
 .navbar-admin .nav-link:hover {
-    color: #000000;
-    background-color: #ffffff;
+    background-color: #e0e0e0;
 }
 
 .navbar-admin + * {
-    margin-top: 2.55rem;
+    margin-top: 3.55rem;
 }
 
 /** ** Splash page (/) ** */
-body.splash, body.admin {
+body.splash {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     min-height: 100vh;
-    background-color: var(--secondary);
+    background-color: #222222;
 }
 body.splash {
     padding: 3rem;
@@ -168,7 +163,7 @@ body.splash {
 body.admin {
     padding-top: 2rem;
 }
-body.splash::before, body.admin::before {
+/* body.splash::before {
     content: '';
     background-image: url(/static/brand/fighting.png);
     z-index: -1;
@@ -181,18 +176,23 @@ body.splash::before, body.admin::before {
     background-position: center;
     background-attachment: fixed;
     filter: saturate(0.5) brightness(0.5);
+} */
+body.admin {
+    background-color: #e5e9de;
 }
-.splash .container, body.admin .main-container {
+.splash .container {
     padding: 4rem;
-    background-color: rgba(0, 0, 0, 0.1);
-    background-image: radial-gradient(rgba(255, 255, 255, 0.75),  rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.6));
+    background-color: #e5e9de;
     border-radius: 0.25rem;
     flex-grow: 1;
     box-shadow: 5px 5px 20px -5px rgba(0, 0, 0, 0.5);
 }
 body.admin .main-container {
     margin-bottom: 2rem;
-    background-image: radial-gradient(rgba(255, 255, 255, 0.95),  rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+}
+body.admin table {
+    background-color: white;
+    border-color: #aaaaaa;
 }
 .splash .splash-container {
     width: 512px;
@@ -218,6 +218,22 @@ body.admin .main-container {
     font-size: 3rem;
     padding: 0.125rem 0.65rem;
     border-radius: 0.125rem;
+}
+
+.splash-logo.first-part {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.splash-logo.second-part {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top: 0.125rem solid;
+    border-right: 0.125rem solid;
+    border-bottom: 0.125rem solid;
+    background-color: white;
+    color: var(--primary);
+    font-size: 1em;
+    padding: 0.225rem 0.5rem;
 }
 
 .splash h1 {
@@ -246,7 +262,6 @@ body.application {
 }
 
 .event-sidebar {
-    background-color: #c0c9ae;
     max-width: 400px;
     padding: 3rem 1rem;
     position: fixed;
@@ -273,11 +288,22 @@ body.application {
     background: #fffd;
     color: black;
     font-weight: bold;
-    margin: 0.5rem 0;
+    margin: 0;
     font-size: 1.15rem;
-    border-radius: 0.25rem;
-    border-left: 0.5rem solid transparent;
+    border: 1px solid #aaa;
+    border-left-width: 0.2rem;
     transition: all .3s ease;
+}
+.event-sidebar .nav .nav-item + .nav-item .nav-link {
+    border-top: 0;
+}
+.event-sidebar .nav .nav-item:first-of-type .nav-link {
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+}
+.event-sidebar .nav .nav-item:last-of-type .nav-link {
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
 }
 .event-sidebar .nav .nav-item .nav-link:hover,
 .event-sidebar .nav .nav-item .nav-link:focus {
@@ -289,6 +315,7 @@ body.application {
 }
 .event-sidebar .nav .nav-item .nav-link.active {
     border-left-color: var(--primary);
+    border-left-width: 0.75rem;
     background-color: white;
 }
 
@@ -348,7 +375,7 @@ body.application {
 }
 
 .nav.nav-tabs {
-    border-bottom: 3px solid;
+    border-bottom: 3px solid #aaaaaa;
     margin: 0 -0.25rem;
     margin-bottom: 1rem;
 }
@@ -364,13 +391,15 @@ body.application {
     color: inherit;
     font-weight: bold;
     border-radius: 0;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
 }
 .nav.nav-tabs .nav-item .nav-link:hover,
 .nav.nav-tabs .nav-item .nav-link.active {
-    background-color: #fff8;
+    background-color: #fff;
 }
 .nav.nav-tabs .nav-item .nav-link.active {
-    border-color: #0008;
+    border-color: #aaa;
 }
 
 [data-bs-theme="dark"] body.admin::before {
