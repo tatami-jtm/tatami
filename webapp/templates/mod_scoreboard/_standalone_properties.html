@@ -132,6 +132,15 @@
                     <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=240;">4 min</button>
                     <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=-1;">unbegrenzt</button>
                 </div>
+
+                <div class="mb-3">
+                    <label for="goto_goes_to" class="mb-1">Nächster Kampf geht zu...</label>
+                    <select id="goto_goes_to" data-control="prepare.goto.where" class="form-select">
+                        <option value="main">Kampf</option>
+                        <option value="callup">Aufruf</option>
+                        <option value="break">Pause</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>

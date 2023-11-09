@@ -21,6 +21,8 @@ const prepare_blue_club = document.querySelector("[data-control=\"prepare.blue.c
 
 const prepare_goto = document.querySelector("[data-control=\"prepare.goto\"]")
 
+const goto_goes_to = document.querySelector("[data-control=\"prepare.goto.where\"]")
+
 const config_fighting_time = document.querySelector("[data-control=\"config.fighting_time\"]")
 const config_golden_score_time = document.querySelector("[data-control=\"config.golden_score_time\"]")
 
@@ -40,6 +42,8 @@ const standaloneTick = () => {
 
     local_config.fightDuration = parseInt(config_fighting_time.value)
     let gs_value = parseInt(config_golden_score_time.value)
+
+    local_config.defaultScreen = goto_goes_to.value
 
     if (gs_value == -1) {
         local_config.hasGoldenScore = true
