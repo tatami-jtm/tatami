@@ -20,6 +20,7 @@ const prepare_blue_name = document.querySelector("[data-control=\"prepare.blue.n
 const prepare_blue_club = document.querySelector("[data-control=\"prepare.blue.club\"]")
 
 const prepare_goto = document.querySelector("[data-control=\"prepare.goto\"]")
+const transactional_end_fight = prepare_goto
 
 const goto_goes_to = document.querySelector("[data-control=\"prepare.goto.where\"]")
 
