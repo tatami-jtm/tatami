@@ -1,0 +1,52 @@
+{% extends "layouts/application.html" %}
+{% block title %}Anmeldung{% endblock %}
+{% block body %}
+
+<div class="container container-small">
+    <h1 class="my-4 text-center">Anmeldungen</h1>
+    <div class="card mb-5">
+        <div class="card-body">
+            <form class="row align-items-center" target="" method="POST">
+                <div class="col">
+                    <input class="form-control fs-2" autofocus="true" name="query" placeholder="Nachnamen eingeben..." value="{{ quarg or '' }}">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-lg fs-3 btn-secondary">Suchen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% for reg in query %}
+    <div class="card mb-3 {{ 'ignorable' if reg.registered }}">
+        <div class="card-header p-3">
+            <h4 class="m-0 fs-2">{{ reg.first_name }} {{ reg.last_name }}</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-4">
+                    <div class="fw-bold">Verein</div>
+                    <div>{{ reg.club or '-' }}</div>
+                </div>
+                <div class="col-4">
+                    <div class="fw-bold">Verband</div>
+                    <div>{{ reg.association.name if reg.association else '-' }}</div>
+                </div>
+                <div class="col-4">
+                    <div class="fw-bold">Kampfklasse</div>
+                    <div>{{ reg.event_class.title }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer p-2">
+            {% if not reg.registered %}
+            <button class="btn w-100 p-2 fs-5 fw-bold btn-success">Bestätigen</button>
+            {% else %}
+            <button class="btn w-100 p-2 fs-5 btn-outline-danger">Bestätigung zurücknehmen</button>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock body %}

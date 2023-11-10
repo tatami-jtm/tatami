@@ -526,3 +526,7 @@ textarea.form-control {
     opacity: 0.45;
     filter: grayscale(0.85);
 }
+
+.container.container-small {
+    max-width: 812px;
+}
