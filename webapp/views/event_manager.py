@@ -153,7 +153,12 @@ def create_class():
 @check_and_apply_event
 @check_is_event_supervisor
 def registrations():
-    return render_template("event-manager/registrations/index.html")
+    filtered_class = None
+
+    if request.values.get('class_filter', None):
+        filtered_class = EventClass.query.filter_by(id=request.values['class_filter']).one_or_404()
+
+    return render_template("event-manager/registrations/index.html", filtered_class=filtered_class)
 
 
 @eventmgr_view.route('/associations')

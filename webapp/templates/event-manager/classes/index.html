@@ -15,7 +15,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for cl in g.event.classes.order_by('template_name') %}
+        {% for cl in g.event.classes.order_by('title') %}
         <tr>
             <td>{{ cl.title }}</td>
             <td>

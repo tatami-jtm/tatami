@@ -34,9 +34,9 @@ class Registration(db.Model):
     def short_name(self):
         assoc_pt = ""
         if self.association:
-            assoc_pt = f"({self.association.short_name})"
+            assoc_pt = f" ({self.association.short_name})"
 
-        return self.last_name.upper() + assoc_pt
+        return self.first_name[0].upper() + ". " + self.last_name.upper() + assoc_pt
 
 
 class Association(db.Model):
