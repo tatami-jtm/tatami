@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, abort, flash, g, \
 from flask_security import login_required, current_user
 
 from ..models import db, Event, EventClass, DeviceRegistration, \
-    DevicePosition, EventRole, Association
+    DevicePosition, EventRole, Association, Registration
 
 from datetime import datetime
 import time
@@ -159,6 +159,51 @@ def registrations():
         filtered_class = EventClass.query.filter_by(id=request.values['class_filter']).one_or_404()
 
     return render_template("event-manager/registrations/index.html", filtered_class=filtered_class)
+
+
+@eventmgr_view.route('/registrations/<id>/edit')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def edit_registration(id):
+    registration = Registration.query.filter_by(id=id).one_or_404()
+    return render_template("event-manager/registrations/edit.html", registration=registration)
+
+
+@eventmgr_view.route('/registrations/<id>/edit', methods=["POST"])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def update_registration(id):
+    registration = Registration.query.filter_by(id=id).one_or_404()
+    registration.first_name = request.form['first_name']
+    registration.last_name = request.form['last_name']
+    registration.club = request.form['club']
+    registration.contact_details = request.form['contact_details']
+    registration.suggested_group = request.form['suggested_group']
+
+    registration.confirmed = "confirmed" in request.form
+    registration.registered = "registered" in request.form
+    registration.weighed_in = "weighed_in" in request.form
+
+    if len(request.form['association']):
+        registration.association_id = int(request.form['association'])
+    else:
+        registration.association_id = None
+
+    if len(request.form['event_class']):
+        registration.event_class_id = int(request.form['event_class'])
+    else:
+        registration.event_class_id = None
+
+    if request.form['verified_weight']:
+        registration.verified_weight = int(float(request.form['verified_weight']) * 100)
+    else:
+        registration.verified_weight = None
+
+    db.session.commit()
+
+    return redirect(url_for('event_manager.edit_registration', event=g.event.slug, id=registration.id))
 
 
 @eventmgr_view.route('/associations')

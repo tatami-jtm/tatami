@@ -53,17 +53,19 @@
             <td>{{ reg.association.short_name if reg.association else "-" }}</td>
             <td>
                 {% if reg.weighed_in %}
-                Eingewogen auf <strong>{{ reg.verified_weight / 100 }} kg</strong>
+                Eingewogen auf:<br>
+                <strong>{{ reg.verified_weight / 100 }} kg</strong>.
                 {% elif reg.registered %}
-                <strong>Angemeldet</strong>
+                <strong>Angemeldet</strong>.<br>
+                Warten auf Wiegedaten.
                 {% elif reg.confirmed %}
-                <strong>Voranmeldung bestätigt</strong>
+                <strong>Voranmeldung bestätigt</strong>.
                 {% else %}
-                Voranmeldung erhalten
+                Voranmeldung erhalten.
                 {% endif %}
             </td>
             <td>
-                <a href="" class="btn btn-sm btn-primary">Bearbeiten</a>
+                <a href="{{ url_for('event_manager.edit_registration', event=g.event.slug, id=reg.id) }}" class="btn btn-sm btn-primary">Bearbeiten</a>
             </td>
         </tr>
         {% endfor %}

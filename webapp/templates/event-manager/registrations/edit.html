@@ -1,0 +1,9 @@
+{% set event_page="registrations" %}
+{% extends "layouts/event-manager.html" %}
+{% block title %}{{ g.event.title }}{% endblock %}
+{% block body %}
+<h1>TN bearbeiten<br><span class="fs-4">{{ registration.first_name }} {{ registration.last_name }}</span></h1>
+
+{% include "event-manager/registrations/_form.html" %}
+
+{% endblock body %}
