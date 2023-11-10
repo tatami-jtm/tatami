@@ -3,10 +3,9 @@
 {% block body %}
 
 <div class="container container-small">
-    <h1 class="my-4 text-center">Anmeldungen</h1>
-    <div class="card mb-5">
+    <div class="card mb-5 shadow-lg">
         <div class="card-body">
-            <form class="row align-items-center" target="" method="POST">
+            <form class="row align-items-center" target="" method="GET">
                 <div class="col">
                     <input class="form-control fs-2" autofocus="true" name="query" placeholder="Nachnamen eingeben..." value="{{ quarg or '' }}">
                 </div>
@@ -40,9 +39,9 @@
         </div>
         <div class="card-footer p-2">
             {% if not reg.registered %}
-            <button class="btn w-100 p-2 fs-5 fw-bold btn-success">Bestätigen</button>
+            <a href="{{ url_for('mod_registrations.confirm', event=g.event.slug, id=reg.id) }}" class="btn w-100 p-2 fs-5 fw-bold btn-success">Bestätigen</a>
             {% else %}
-            <button class="btn w-100 p-2 fs-5 btn-outline-danger">Bestätigung zurücknehmen</button>
+            <a href="{{ url_for('mod_registrations.unconfirm', event=g.event.slug, id=reg.id) }}" class="btn w-100 p-2 fs-5 btn-outline-danger">Bestätigung zurücknehmen</a>
             {% endif %}
         </div>
     </div>
