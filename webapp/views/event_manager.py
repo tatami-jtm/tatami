@@ -44,8 +44,18 @@ def index():
         "mats":
             DevicePosition.query.filter_by(event=g.event, is_mat=True).count(),
         "classes":
-            EventClass.query.filter_by(event=g.event).count()
+            EventClass.query.filter_by(event=g.event).count(),
+        "registrations":
+            (total_registrations := g.event.total_registrations_count()),
+        "confirmed_registrations":
+            g.event.confirmed_registrations_count(),
+        "registered_ratio":
+            g.event.registered_registrations_count(),
+        "weighed_in_ratio":
+            g.event.weighed_registrations_count(),
     }
+
+    stats
     return render_template("event-manager/index.html", stat=stats)
 
 

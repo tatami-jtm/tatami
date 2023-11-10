@@ -6,11 +6,11 @@
 
 <h2>Vorbereitung</h2>
 <div class="row mt-3 mb-5">
-    <div class="col-12 col-lg-6">
+    <div class="col-12 col-lg-4">
         <div class="card">
-            <div class="card-body p-4">
+            <div class="card-body p-4 px-0">
                 <div class="fs-1 text-center">
-                    <strong>{{ g.event.first_day.strftime("%d.%m.%Y") }}</strong>
+                    <strong title="{{ g.event.first_day.strftime("%d.%m.%Y") }}">{{ g.event.first_day.strftime("%d.%m.") }}</strong>
                     &ndash;
                     <strong>{{ g.event.last_day.strftime("%d.%m.%Y") }}</strong>
                 </div>
@@ -29,8 +29,16 @@
     <div class="col-12 col-lg-2">
         <div class="card">
             <div class="card-body p-4">
-                <div class="fs-1 text-center fw-bold">0</div>
-                <div class="text-center fw-bold">Anmeldungen</div>
+                <div class="fs-1 text-center fw-bold">{{ stat.registrations }}</div>
+                <div class="text-center fw-bold">{{ 'Voranmeldungen' if stat.registrations != 1 else 'Anmeldung' }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-2">
+        <div class="card">
+            <div class="card-body p-4">
+                <div class="fs-1 text-center fw-bold">{{ stat.confirmed_registrations }}</div>
+                <div class="text-center fw-bold">davon bestätigt</div>
             </div>
         </div>
     </div>
@@ -57,16 +65,16 @@
     <div class="col-12 col-lg-3">
         <div class="card">
             <div class="card-body p-4">
-                <div class="fs-1 text-center fw-bold">0%</div>
-                <div class="text-center fw-bold">Angemeldet</div>
+                <div class="fs-1 text-center fw-bold">{{ stat.registered_ratio }}</div>
+                <div class="text-center fw-bold">TN Angemeldet</div>
             </div>
         </div>
     </div>
     <div class="col-12 col-lg-3">
         <div class="card">
             <div class="card-body p-4">
-                <div class="fs-1 text-center fw-bold">0%</div>
-                <div class="text-center fw-bold">Eingewogen</div>
+                <div class="fs-1 text-center fw-bold">{{ stat.weighed_in_ratio }}</div>
+                <div class="text-center fw-bold">TN Eingewogen</div>
             </div>
         </div>
     </div>

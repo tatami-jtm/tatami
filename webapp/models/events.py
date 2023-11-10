@@ -24,6 +24,34 @@ class Event(db.Model):
     def is_supervisor(self, user):
         return user == self.supervising_user or any(
             self.supervising_role == role for role in user.roles)
+    
+    def total_registrations_count(self):
+        total_all = 0
+        for cl in self.classes:
+            total_all += cl.total_registrations_count()
+        
+        return total_all
+    
+    def confirmed_registrations_count(self):
+        total_confirmed = 0
+        for cl in self.classes:
+            total_confirmed += cl.confirmed_registrations_count()
+        
+        return total_confirmed
+    
+    def registered_registrations_count(self):
+        total_registered = 0
+        for cl in self.classes:
+            total_registered += cl.registered_registrations_count()
+        
+        return total_registered
+    
+    def weighed_registrations_count(self):
+        total_weighed = 0
+        for cl in self.classes:
+            total_weighed += cl.weighed_registrations_count()
+        
+        return total_weighed
 
     @classmethod
     def from_slug(cls, slug):
@@ -65,6 +93,18 @@ class EventClass(db.Model):
     event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
     event = db.relationship(
         'Event', backref=db.backref('classes', lazy='dynamic'))
+    
+    def total_registrations_count(self):
+        return self.registrations.count()
+    
+    def confirmed_registrations_count(self):
+        return self.registrations.filter_by(confirmed=True).count()
+    
+    def registered_registrations_count(self):
+        return self.registrations.filter_by(confirmed=True, registered=True).count()
+    
+    def weighed_registrations_count(self):
+        return self.registrations.filter_by(confirmed=True, registered=True, weighed_in=True).count()
 
 
 class EventRole(db.Model):
