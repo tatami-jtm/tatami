@@ -1,0 +1,10 @@
+{% set event_page="registrations" %}
+{% set curpage = "associations" %}
+{% extends "layouts/event-manager.html" %}
+{% block title %}{{ g.event.title }}{% endblock %}
+{% block body %}
+{% include "event-manager/registrations/_header.html" %}
+
+<h2>Verbände</h2>
+
+{% endblock body %}

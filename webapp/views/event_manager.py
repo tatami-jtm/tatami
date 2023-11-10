@@ -148,6 +148,22 @@ def create_class():
     return render_template("event-manager/classes/new.html", event_class=event_class, templates=templates)
 
 
+@eventmgr_view.route('/registrations')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def registrations():
+    return render_template("event-manager/registrations/index.html")
+
+
+@eventmgr_view.route('/associations')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def associations():
+    return render_template("event-manager/associations/index.html")
+
+
 @eventmgr_view.route('/devices')
 @login_required
 @check_and_apply_event
