@@ -441,6 +441,7 @@ body.application {
     color: inherit;
     transition: all .3s ease;
     min-height: 200px;
+    border-bottom-width: 0.25rem;
 }
 .card-link:hover,
 .card-link:focus {
