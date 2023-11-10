@@ -187,6 +187,25 @@ def update_association(id):
     return redirect(url_for('event_manager.edit_association', event=g.event.slug, id=association.id))
 
 
+@eventmgr_view.route('/associations/create', methods=["GET", "POST"])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def create_association():
+    association = Association(event=g.event)
+
+    if request.method == "POST":
+        association.short_name = request.form['short_name']
+        association.name = request.form['name']
+
+        db.session.add(association)
+        db.session.commit()
+
+        return redirect(url_for('event_manager.edit_association', event=g.event.slug, id=association.id))
+
+    return render_template("event-manager/associations/new.html", association=association)
+
+
 @eventmgr_view.route('/devices')
 @login_required
 @check_and_apply_event
