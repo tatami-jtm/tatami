@@ -14,10 +14,7 @@
 
 <h2>Teilnehmende</h2>
 
-<form action="" method="GET" class="row gx-1 mb-4 align-items-center">
-    <div class="col-auto pt-2 me-2">
-        <label for="class_filter" class="form-label">Kampfklasse</label>
-    </div>
+<form action="" method="GET" class="row gx-2 mb-4 align-items-center">
     <div class="col-auto">
         <select name="class_filter" id="class_filter" class="form-select">
             <option value="">(alle anzeigen)</option>
@@ -28,6 +25,9 @@
     </div>
     <div class="col-auto">
         <button type="submit" class="btn btn-secondary">Filtern</button>
+    </div>
+    <div class="col-auto">
+        <a href="?">Zurücksetzen</a>
     </div>
 </form>
 
@@ -50,7 +50,7 @@
             <td>{{ reg.last_name }}</td>
             <td>{{ reg.first_name }}</td>
             <td>{{ reg.club }}</td>
-            <td>{{ reg.association.name if reg.association else "-" }}</td>
+            <td>{{ reg.association.short_name if reg.association else "-" }}</td>
             <td>
                 {% if reg.weighed_in %}
                 Eingewogen auf <strong>{{ reg.verified_weight / 100 }} kg</strong>
@@ -63,12 +63,13 @@
                 {% endif %}
             </td>
             <td>
-                <a href="{{ url_for('event_manager.edit_association', event=g.event.slug, id=reg.id) }}" class="btn btn-sm btn-primary">Bearbeiten</a>
+                <a href="" class="btn btn-sm btn-primary">Bearbeiten</a>
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 
-<a href="{{ url_for('event_manager.create_association', event=g.event.slug) }}" class="btn btn-primary">Verband hinzufügen</a>
+<a href="" class="btn btn-primary">TN hinzufügen</a>
+<a href="" class="btn btn-secondary">TN importieren</a>
 {% endblock body %}
