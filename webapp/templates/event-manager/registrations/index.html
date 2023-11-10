@@ -59,7 +59,7 @@
                 <strong>Angemeldet</strong>.<br>
                 Warten auf Wiegedaten.
                 {% elif reg.confirmed %}
-                <strong>Voranmeldung bestätigt</strong>.
+                Voranmeldung <strong>bestätigt</strong>.
                 {% else %}
                 Voranmeldung erhalten.
                 {% endif %}
@@ -72,6 +72,6 @@
     </tbody>
 </table>
 
-<a href="" class="btn btn-primary">TN hinzufügen</a>
+<a href="{{ url_for('event_manager.create_registration', event=g.event.slug) }}" class="btn btn-primary">TN hinzufügen</a>
 <a href="" class="btn btn-secondary">TN importieren</a>
 {% endblock body %}

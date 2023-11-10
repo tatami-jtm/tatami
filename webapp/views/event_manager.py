@@ -206,6 +206,47 @@ def update_registration(id):
     return redirect(url_for('event_manager.edit_registration', event=g.event.slug, id=registration.id))
 
 
+@eventmgr_view.route('/registrations/create', methods=["GET", "POST"])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def create_registration():
+    registration = Registration(event=g.event)
+
+    if request.method == "POST":
+        registration.first_name = request.form['first_name']
+        registration.last_name = request.form['last_name']
+        registration.club = request.form['club']
+        registration.contact_details = request.form['contact_details']
+        registration.suggested_group = request.form['suggested_group']
+
+        registration.confirmed = "confirmed" in request.form
+        registration.registered = "registered" in request.form
+        registration.weighed_in = "weighed_in" in request.form
+
+        if len(request.form['association']):
+            registration.association_id = int(request.form['association'])
+        else:
+            registration.association_id = None
+
+        if len(request.form['event_class']):
+            registration.event_class_id = int(request.form['event_class'])
+        else:
+            registration.event_class_id = None
+
+        if request.form['verified_weight']:
+            registration.verified_weight = int(float(request.form['verified_weight']) * 100)
+        else:
+            registration.verified_weight = None
+
+        db.session.add(registration)
+        db.session.commit()
+
+        return redirect(url_for('event_manager.edit_registration', event=g.event.slug, id=registration.id))
+
+    return render_template("event-manager/registrations/new.html", registration=registration)
+
+
 @eventmgr_view.route('/associations')
 @login_required
 @check_and_apply_event
