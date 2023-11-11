@@ -5,7 +5,7 @@
 <div class="container container-small">
     <div class="card mb-5 shadow-lg">
         <div class="card-body">
-            <h1 class="h4 fw-bold mb-4">📝 Anmeldungen</h1>
+            <h1 class="h4 fw-bold mb-4">⚖️ Waage</h1>
             <form class="row align-items-center" target="" method="GET">
                 <div class="col">
                     <input class="form-control fs-2" autofocus="true" name="query" placeholder="Nachnamen eingeben..." value="{{ quarg or '' }}">
@@ -18,7 +18,7 @@
     </div>
 
     {% for reg in query %}
-    <div class="card mb-3 {{ 'ignorable' if reg.registered }}">
+    <div class="card mb-3">
         <div class="card-header p-3">
             <h4 class="m-0 fs-2">{{ reg.first_name }} {{ reg.last_name }}</h4>
         </div>
@@ -40,9 +40,7 @@
         </div>
         <div class="card-footer p-2">
             {% if not reg.registered %}
-            <a href="{{ url_for('mod_registrations.confirm', event=g.event.slug, id=reg.id) }}" class="btn w-100 p-2 fs-5 fw-bold btn-success">Bestätigen</a>
-            {% else %}
-            <a href="{{ url_for('mod_registrations.unconfirm', event=g.event.slug, id=reg.id) }}" class="btn w-100 p-2 fs-5 btn-outline-danger">Bestätigung zurücknehmen</a>
+            <a href="{{ url_for('mod_registrations.confirm', event=g.event.slug, id=reg.id) }}" class="btn w-100 p-2 fs-5 fw-bold btn-success">Einwiegen</a>
             {% endif %}
         </div>
     </div>
