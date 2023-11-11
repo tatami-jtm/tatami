@@ -1,0 +1,63 @@
+{% extends "layouts/application.html" %}
+{% block title %}Waage{% endblock %}
+{% block body %}
+
+<div class="container container-small">
+    <div class="card mb-3">
+        <div class="card-body">
+            <h1 class="h4 fw-bold mb-4">⚖️ Waage</h1>
+
+            <a class="btn btn-secondary" href="{{ url_for('mod_weighin.index', event=g.event.slug) }}">&larr; Zurück zur Übersicht</a>
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-header p-3">
+            <h4 class="m-0 fs-2">{{ registration.first_name }} {{ registration.last_name }}</h4>
+        </div>
+        <div class="card-body">
+            <div class="mb-2">
+                <div class="fw-bold">Verein</div>
+                <div>{{ registration.club or '-' }}</div>
+            </div>
+            <div class="mb-2">
+                <div class="fw-bold">Verband</div>
+                <div>{{ registration.association.name if registration.association else '-' }}</div>
+            </div>
+            <div class="mb-2">
+                <div class="fw-bold">Kampfklasse</div>
+                <div>{{ registration.event_class.title }}</div>
+            </div>
+        </div>
+        {% if not registration.registered %}
+        <div class="card-body border-top">
+            <div class="alert alert-danger m-0">
+                <p>{{ registration.first_name }} {{ registration.last_name }} wurde noch nicht offiziell vor Ort <strong>angemeldet</strong>.</p>
+                <p>Mit der Eintragung der Waageergebnisse gilt die/der TN als angemeldet.</p>
+            </div>
+        </div>
+        {% endif %}
+        <div class="card-body border-top">
+            <form action="" method="POST">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="fw-bold mb-2 fs-5">Vorgeschlagene Einteilung</div>
+                        <div class="fs-3">{{ registration.suggested_group }}</div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="verified_weight" class="fw-bold mb-2 fs-5">Gemessenes Gewicht</label>
+
+                        <div class="input-group mb-3">
+                            <input class="form-control fs-3" type="number" step="0.1" autofocus name="verified_weight" id="verified_weight">
+                            <span class="input-group-text fs-3">kg</span>
+                        </div>
+
+                        <button type="submit" class="btn btn-lg py-2 btn-primary w-100">Speichern</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+{% endblock body %}

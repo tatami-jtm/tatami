@@ -1,5 +1,5 @@
 {% extends "layouts/application.html" %}
-{% block title %}Anmeldung{% endblock %}
+{% block title %}Waage{% endblock %}
 {% block body %}
 
 <div class="container container-small">
@@ -39,8 +39,8 @@
             </div>
         </div>
         <div class="card-footer p-2">
-            {% if not reg.registered %}
-            <a href="{{ url_for('mod_registrations.confirm', event=g.event.slug, id=reg.id) }}" class="btn w-100 p-2 fs-5 fw-bold btn-success">Einwiegen</a>
+            {% if not reg.weiged_in %}
+            <a href="{{ url_for('mod_weighin.for_participant', event=g.event.slug, id=reg.id) }}" class="btn w-100 p-2 fs-5 fw-bold btn-success">Einwiegen</a>
             {% endif %}
         </div>
     </div>

@@ -31,3 +31,30 @@ def index():
     query = [q for q in query if q.event_class.begin_weigh_in and not q.event_class.begin_placement]
     
     return render_template("mod_weighin/index.html", query=query, quarg=quarg)
+
+
+@mod_weighin_view.route('/for/<id>', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def for_participant(id):
+    if not g.device.event_role.may_use_weigh_in:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+    
+    registration = Registration.query.filter_by(event=g.event, id=id, confirmed=True, weighed_in=False).one_or_404()
+
+    if request.method == 'POST':
+        registration.weighed_in = True
+        registration.weighed_in_at = dt.now()
+
+        if not registration.registered:
+            registration.registered = True
+            registration.registered_at = dt.now()
+        
+        registration.verified_weight = int(float(request.form['verified_weight']) * 100)
+
+        db.session.commit()
+
+        return redirect(url_for("mod_weighin.index", event=g.event.slug))
+    
+    return render_template("mod_weighin/for_participant.html", registration=registration)
