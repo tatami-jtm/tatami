@@ -18,7 +18,7 @@ def index():
         flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
         return redirect(url_for('devices.index', event=g.event.slug))
     
-    query = g.event.registrations
+    query = g.event.registrations.filter_by(confirmed=True)
     quarg = None
 
     if "query" in request.values:
