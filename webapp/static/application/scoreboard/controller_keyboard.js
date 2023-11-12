@@ -33,6 +33,8 @@ const KEYBINDS = {
     "b": () => { toggle_osaekomi.click() },
 }
 
+var KEYBIND_OVERRIDES = KEYBIND_OVERRIDES || {};
+
 
 window.addEventListener("keypress", (e) => {
     if(e.target.tagName == "INPUT") {
@@ -41,7 +43,7 @@ window.addEventListener("keypress", (e) => {
 
     let keycode = (e.ctrlKey ? "Ctrl-" : "") + (e.altKey ? "Alt-" : "") + e.key
 
-    if(KEYBIND_OVERRIDES) {
+    if(typeof KEYBIND_OVERRIDES != undefined) {
         if (KEYBIND_OVERRIDES[keycode]) {
             keycode = KEYBIND_OVERRIDES[keycode]
         }
