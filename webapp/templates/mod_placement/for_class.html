@@ -1,0 +1,122 @@
+{% extends "layouts/application.html" %}
+{% set page=event_class %}
+{% block title %}Einteilung - {{ event_class.title }}{% endblock %}
+{% block body %}
+
+{% include "mod_placement/_header.html" %}
+
+<div class="container-fluid">
+    <h1 class="h2 fw-bold mb-4">{{ event_class.title }} &ndash; {{ 'Gewichtsklassen' if not proximity else 'Gewichtsnahe Gruppen' }}</h1>
+
+    <div class="row">
+        <div class="col-12 col-md-3">
+            <h3 class="h4 fw-bold mb-2">Nicht zugewiesene TN</h3>
+
+            {% if registrations.count() %}
+            
+            <div class="mb-3">
+                <a href="" class="btn btn-primary btn-sm">Verbleibende TN zuweisen</a>
+            </div>
+
+            <div class="card">
+                {% for reg in registrations.all() %}
+                <div class="card-body p-2 {{ 'border-top' if not loop.index == 1 }}">
+                    <div class="row">
+                        <div class="col-7">
+                            <strong>{{ reg.first_name }} {{ reg.last_name }}</strong><br>
+                            {{ reg.club }}
+                        </div>
+                        <div class="col-2">{{ reg.verified_weight/100 }} kg</div>
+                        <div class="col-3">
+                            <a href="" class="btn btn-secondary w-100 btn-sm">Zuweisen</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% else %}
+            
+            <p>Keine nicht zugewiesenen Teilnehmenden verbleibend.</p>
+
+            {% endif %}
+        </div>
+        <div class="col-12 col-md-3">
+            <h3 class="h4 fw-bold mb-2">Gruppen</h3>
+            <div class="mb-3">
+                <a href="" class="btn btn-secondary btn-sm">Neue Gruppe</a>
+                <a href="" class="btn btn-secondary btn-sm">Alle Gruppen losen</a>
+            </div>
+
+            {% if groups.count() %}
+
+            <div class="card">
+                {% for group in groups.all() %}
+                <div class="card-body p-2 {{ 'border-top' if not loop.index == 1 }}">
+                    <div class="row">
+                        <div class="col">
+                            <a href="?group={{ group.id }}" class="link-dark {{ 'fw-bold' if group == current_group }}">{{ group.title }}</a>
+                        </div>
+                        <div class="col-auto">{{ group.participants.count() }} TN</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% else %}
+
+            <div class="alert alert-info">
+                <p>Keine Gruppen vorhanden.</p>
+    
+                <p>Es ist empfohlen, die Gruppen über die Zuweisung verbleibender TN (Knopf oben links) automatisch zu erstellen.</p>
+            </div>
+            
+
+            {% endif %}
+        </div>
+        {% if current_group %}
+        <div class="col-12 col-md-3">
+            <h3 class="h4 fw-bold mb-2">TN der Gruppe</h3>
+
+            <div class="mb-3">
+                <a href="" class="btn btn-secondary btn-sm">Weitere TN zuweisen</a>
+                <a href="" class="btn btn-secondary btn-sm">Gruppe bearbeiten</a>
+            </div>
+
+            {% if current_group.participants.count() %}
+            
+
+            <div class="card">
+                {% for part in current_group.participants.all() %}
+                <div class="card-body p-2 {{ 'border-top' if not loop.index == 1 }}">
+                    <div class="row">
+                        <div class="col-9">
+                            <strong>{{ part.full_name }}</strong><br>
+                            {{ part.association_name }}
+                        </div>
+                        <div class="col-3">
+                            <a href="" class="btn btn-secondary w-100 btn-sm">Setzen</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% else %}
+            
+            <p>Dieser Gruppe wurden noch keine Teilnehmenden zugewiesen.</p>
+
+            {% endif %}
+        </div>
+        <div class="col-12 col-md-3">
+            <h3 class="h4 fw-bold mb-2">Setzen und Losen</h3>
+            
+            <div class="mb-3">
+                <a href="" class="btn btn-primary btn-sm">Verbleibende Gruppen-TN losen</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock body %}

@@ -522,7 +522,8 @@ textarea.form-control {
 
 .application .container-full {
     margin: -1rem;
-    margin-bottom: 1rem;
+    margin-right: -0.75rem;
+    margin-bottom: 0;
 }
 
 .application .application-header {

@@ -39,7 +39,11 @@ def for_class(id):
 
     event_class = g.event.classes.filter_by(id=id).one_or_404()
 
-    if event_class.use_proximity_weight_mode:
-        return render_template("mod_placement/for_class-proximity.html", event_class=event_class)
-    else:
-        return render_template("mod_placement/for_class-fixed.html", event_class=event_class)
+    registrations = event_class.registrations.filter_by(confirmed=True, registered=True, weighed_in=True, placed=False).order_by('verified_weight')
+    groups = event_class.groups
+    current_group = None
+
+    if 'group' in request.values:
+        current_group = groups.filter_by(id=request.values['group']).one_or_404()
+
+    return render_template("mod_placement/for_class.html", event_class=event_class, registrations=registrations, groups=groups, proximity=event_class.use_proximity_weight_mode, current_group=current_group)
