@@ -45,6 +45,8 @@ def index():
             DevicePosition.query.filter_by(event=g.event, is_mat=True).count(),
         "classes":
             EventClass.query.filter_by(event=g.event).count(),
+        "started_classes":
+            EventClass.query.filter_by(event=g.event, begin_weigh_in=True).count(),
         "registrations":
             (total_registrations := g.event.total_registrations_count()),
         "confirmed_registrations":

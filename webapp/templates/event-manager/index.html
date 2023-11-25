@@ -57,8 +57,8 @@
     <div class="col-12 col-lg-3">
         <div class="card">
             <div class="card-body p-4">
-                <div class="fs-1 text-center fw-bold">0</div>
-                <div class="text-center fw-bold">Angefangene Klassen</div>
+                <div class="fs-1 text-center fw-bold">{{ stat.started_classes }}</div>
+                <div class="text-center fw-bold">Angefangene {{ 'Klassen' if stat.started_classes != 1 else 'Klasse' }}</div>
             </div>
         </div>
     </div>
