@@ -48,3 +48,41 @@ class Association(db.Model):
 
     short_name = db.Column(db.String(10))
     name = db.Column(db.String(80))
+
+
+class Group(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    title = db.Column(db.String(50))
+
+    event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
+    event = db.relationship('Event', backref=db.backref(
+        'groups', lazy='dynamic'))
+
+    event_class_id = db.Column(db.Integer(), db.ForeignKey('event_class.id'))
+    event_class = db.relationship('EventClass', backref=db.backref(
+        'groups', lazy='dynamic'))
+
+
+class Participant(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    full_name = db.Column(db.String(80))
+    association_name = db.Column(db.String(80))
+
+    final_placement = db.Column(db.Integer)
+    final_points = db.Column(db.Integer) # 1 for each won fight
+    final_score = db.Column(db.Integer) # 1, 7 or 10 pts. depending on the result for each won fight
+
+    removed = db.Column(db.Boolean)
+    disqualified = db.Column(db.Boolean)
+    removal_cause = db.Column(db.Text(250))
+
+    event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
+    event = db.relationship('Event', backref=db.backref(
+        'participants', lazy='dynamic'))
+
+    group_id = db.Column(db.Integer(), db.ForeignKey('group.id'))
+    group = db.relationship('Group', backref=db.backref(
+        'participants', lazy='dynamic'))
+
+    registration_id = db.Column(db.Integer(), db.ForeignKey('registration.id'))
+    registration = db.relationship('Registration')
