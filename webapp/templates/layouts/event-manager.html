@@ -8,7 +8,7 @@
 <body class="admin">
     <nav class="navbar navbar-admin navbar-expand-lg navbar-light bg-white shadow-sm mb-2">
         <div class="container-fluid py-2">
-            <a class="navbar-brand" href="{{ url_for('admin.index') }}">
+            <a class="navbar-brand" href="{{ url_for('event_manager.index', event=g.event.slug) }}">
                 <div class="splash-logo first-part">
                     TATAMI 2023
                 </div>
