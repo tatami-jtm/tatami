@@ -55,6 +55,7 @@
                 {% if reg.weighed_in %}
                 Eingewogen auf:<br>
                 <strong>{{ reg.verified_weight / 100 }} kg</strong>.
+                {% if not reg.registered %}<br><span class="text-danger">TN wurde noch nicht angemeldet.</span>{% endif %}
                 {% elif reg.registered %}
                 <strong>Angemeldet</strong>.<br>
                 Warten auf Wiegedaten.

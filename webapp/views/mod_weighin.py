@@ -47,7 +47,7 @@ def for_participant(id):
         registration.weighed_in = True
         registration.weighed_in_at = dt.now()
 
-        if not registration.registered:
+        if not registration.registered and g.device.event_role.may_use_registration:
             registration.registered = True
             registration.registered_at = dt.now()
         
