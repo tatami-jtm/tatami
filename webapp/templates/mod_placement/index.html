@@ -6,13 +6,49 @@
 {% include "mod_placement/_header.html" %}
 
 <div class="container-fluid">
+
+    <h1 class="h2 fw-bold mb-4">Einteilung in Gruppen und Verlosung</h1>
+
+
     <p>Wählen Sie oben eine Kampfklasse aus, um die Einteilung der Gruppen (Gewichtsklassen bzw. gewichtsnahe Gruppen sowie Verlosung/Platzierung) durchzuführen.</p>
+
+    
+    <h3 class="mt-4 h4 mb-3 fw-bold">Bedeutung der Zeichen</h3>
+    
+    <p>Bei den mit ⚠️ gekennzeichneten Kampfklassen liegen Probleme bzw. Konflikte vor.</p>
 
     <p>Die mit 🔒 gekennzeichneten Kampfklassen sind von der Administration noch nicht freigegeben worden.</p>
 
     <p>Die mit 🏁 gekennzeichneten Kampfklassen haben bereits mit Kämpfen begonnen.</p>
 
-    <p>Bei den mit ⚠️ gekennzeichneten Kampfklassen liegen Probleme bzw. Konflikte vor.</p>
+
+    <h3 class="mt-4 h4 mb-3 fw-bold">Anleitung</h3>
+
+    <p>Zunächst ist in der obenstehenden Liste die Kampfklasse auszuwählen, für welche Einteilung und/oder Verlosung erfolgen sollen.</p>
+
+    <p>Dort finden sich vier Spalten, von denen zunächst nur zwei Spalten sichtbar sind: Nicht zugewiesene TN, Gruppen. Nach Auswahl einer Gruppe sind zudem zu sehen: TN der Gruppe sowie Setzen und Losen.</p>
+
+    <ol>
+        <li>
+            <h5 class="h6 fw-bold mb-1">Zuweisung der TN in Gruppen</h5>
+            <p class="mb-1">Zunächst müssen die Teilnehmenden auf die Gruppen verteilt werden.</p>
+            <p class="mb-1">In der Regel kann dies automatisch erfolgen. Hierzu ist der Knopf <em>Verbleibende TN zuweisen</em> (1. Spalte) zu betätigen.</p>
+            <p class="mb-1">Bei einer Einteilung nach Gewichtsklassen berechnet TATAMI sodann die benötigten Gruppen und weist die noch offenen TN diesen zu.</p>
+            <p class="mb-1">Bei einer Einteilung nach gewichtsnahen Gruppen müssen die Gruppengrenzen manuell festgelegt werden. TATAMI zeigt hierfür einen Vorschlag an, der dann bestätigt oder verändert werden muss.</p>
+            <p class="mb-1">Alternativ können (insbesondere in besonderen Situationen und bei <em>ad hoc</em>-Gruppen, d. h. bspw. Freundschaftskämpfe) manuell Gruppen angelegt und Teilnehmende erstellt oder zugewiesen werden.</p>
+            <p class="mb-1">Der Listenmodus (insb. Pool vs. KO-Liste) wird von TATAMI automatisch ermittelt, kann aber nach Auswahl der Gruppe in der Liste (2. Spalte) bearbeitet werden.</p>
+        </li>
+        <li>
+            <h5 class="h6 fw-bold mb-1">Losen und Setzen</h5>
+            <p class="mb-1">Wichtig: Es ist empfehlenswert, vor dem Losen und Setzen alle Zuweisungen abgeschlossen und dies überprüft zu haben!</p>
+            <p class="mb-1">Werden keine TN gesetzt und muss das Losen nicht überprüft werden, kann durch Betätigung des Knopfes <em>Alle Gruppen losen</em> (2. Spalte) alle Gruppen gleichzeitig gelost werden.</p>
+            <p class="mb-1">Andernfalls ist die Gruppe aus der Liste (2. Spalte) auszuwählen.</p>
+            <p class="mb-1">Sodann öffnet sich in der dritten Spalte eine Liste aller dieser Gruppe zugewiesenen Teilnehmenden.</p>
+            <p class="mb-1">In dieser können einzelne Teilnehmende ausgewählt und über den Knopf <em>Setzen</em> an bestimmte Positionen der Liste gesetzt werden.</p>
+            <p class="mb-1">Anschließend kann der Knopf <em>Verbleibende Gruppen-TN losen</em> (4. Spalte) betätigt werden. Dieser lost nacheinander alle Teilnehmenden der Gruppe auf einen der verbleibenden Startplätze.</p>
+        </li>
+    </ol>
+
 </div>
 
 {% endblock body %}
