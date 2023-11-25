@@ -1,16 +1,16 @@
-<div class="container-full pb-3">
+<div class="container-full">
     <ul class="nav nav-tabs nav-fullsize">
-        <li class="nav-item">
-            <a class="nav-link {{ 'active' if page=='index' }}" {{ 'aria-current' if page=='index' }} href="{{ url_for('mod_placement.index', event=g.event.slug) }}">Übersicht</a>
+        <li class="nav-item nav-item-title">
+            <a class="nav-link {{ 'active' if page=='index' }}" {{ 'aria-current' if page=='index' }} href="{{ url_for('mod_placement.index', event=g.event.slug) }}">🎲 Einteilung</a>
         </li>
         {% for ec in classes_query %}
         {% if ec.begin_fighting %}
         <li class="nav-item">
-            <a class="nav-link opacity-50 {{ 'active' if page==ec }}" {{ 'aria-current' if page==ec }} href="#" title="Kampfklasse hat bereits mit Kämpfen begonnen.">🏁 {{ ec.title }}</a>
+            <a class="nav-link opacity-50 {{ 'active' if page==ec }}" {{ 'aria-current' if page==ec }} href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=ec.id) }}" title="Kampfklasse hat bereits mit Kämpfen begonnen.">🏁 {{ ec.title }}</a>
         </li>
         {% elif ec.begin_placement %}
         <li class="nav-item">
-            <a class="nav-link {{ 'active' if page==ec }}" {{ 'aria-current' if page==ec }} href="#">{{ ec.title }}</a>
+            <a class="nav-link {{ 'active' if page==ec }}" {{ 'aria-current' if page==ec }} href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=ec.id) }}">{{ ec.title }}</a>
         </li>
         {% else %}
         <li class="nav-item">

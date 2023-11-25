@@ -382,12 +382,13 @@ body.application {
 .nav.nav-tabs .nav-item {
     border: none;
     margin: 0 0.25rem;
+    line-height: 1;
 }
 .nav.nav-tabs .nav-item .nav-link {
     border: 1px solid transparent;
     border-bottom: none;
     margin: 0;
-    padding: 0.5rem 1rem;
+    padding: 0.8rem 1rem;
     color: inherit;
     font-weight: bold;
     border-radius: 0;
@@ -421,7 +422,7 @@ body.application {
 }
 .nav.nav-tabs.nav-fullsize .nav-item .nav-link {
     text-align: center;
-    padding: 1rem 0.25rem;
+    padding: 1.2rem 0.25rem;
     border: none;
     border-radius: 0;
     font-weight: normal;
@@ -432,6 +433,11 @@ body.application {
 .nav.nav-tabs.nav-fullsize .nav-item .nav-link:hover,
 .nav.nav-tabs.nav-fullsize .nav-item .nav-link.active {
     background-color: rgba(0, 0, 0, 0.15);
+}
+
+.nav.nav-tabs.nav-fullsize .nav-item.nav-item-title .nav-link {
+    padding: 1.1rem 0.25rem;
+    font-size: 1.2rem;
 }
 
 [data-bs-theme="dark"] body.admin::before {

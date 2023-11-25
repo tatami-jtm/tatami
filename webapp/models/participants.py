@@ -85,4 +85,5 @@ class Participant(db.Model):
         'participants', lazy='dynamic'))
 
     registration_id = db.Column(db.Integer(), db.ForeignKey('registration.id'))
-    registration = db.relationship('Registration')
+    registration = db.relationship('Registration', backref=db.backref(
+        'participants', lazy='dynamic'))
