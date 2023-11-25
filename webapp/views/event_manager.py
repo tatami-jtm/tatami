@@ -88,6 +88,7 @@ def update_class(id):
     event_class = EventClass.query.filter_by(id=id).one_or_404()
 
     event_class.title = request.form['name']
+    event_class.short_title = request.form['short_name']
     event_class.use_proximity_weight_mode = request.form['weight_mode'] == 'proximity'
     event_class.weight_generator = request.form['weight_generator']
 
@@ -125,6 +126,7 @@ def create_class():
 
     if request.method == "POST":
         event_class.title = request.form['name']
+        event_class.short_title = request.form['short_name']
         event_class.use_proximity_weight_mode = request.form['weight_mode'] == 'proximity'
         event_class.weight_generator = request.form['weight_generator']
 

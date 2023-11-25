@@ -56,6 +56,11 @@ class Group(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     title = db.Column(db.String(50))
 
+    created_manually = db.Column(db.Boolean)
+    assign_by_logic = db.Column(db.Boolean)
+    min_weight = db.Column(db.Integer()) # in 1g
+    max_weight = db.Column(db.Integer()) # in 1g
+
     event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
     event = db.relationship('Event', backref=db.backref(
         'groups', lazy='dynamic'))

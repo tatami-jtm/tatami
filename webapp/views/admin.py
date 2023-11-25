@@ -303,6 +303,7 @@ def event_class_template(id):
 
     return jsonify({
         "title": event_class.template_name,
+        "short_title": event_class.short_title,
         "fighting_time": event_class.fighting_time,
         "golden_score_time": event_class.golden_score_time,
         "between_fights_time": event_class.between_fights_time,

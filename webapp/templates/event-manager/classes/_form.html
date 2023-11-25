@@ -49,6 +49,11 @@
                 <label for="name" class="form-label">Bezeichnung</label>
                 <input name="name" id="name" value="{{ event_class.title or '' }}" class="form-control">
             </div>
+            <div class="mb-3">
+                <label for="short_name" class="form-label">Kurzbezeichnung</label>
+                <input name="short_name" id="short_name" value="{{ event_class.short_title or '' }}" class="form-control">
+                <div class="form-text">Diese Kurzbezeichnung wird u. a. für die Benennung der einzelnen Kampfgruppen verwendet und sollte nur wenige Zeichen lang sein, z. B. U13m für die Kampfklasse der männlichen U13.</div>
+            </div>
 
             <h3 class="fw-bold mt-5 mb-3">Voreinstellungen</h3>
 

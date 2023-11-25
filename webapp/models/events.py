@@ -65,6 +65,7 @@ class Event(db.Model):
 class EventClass(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     title = db.Column(db.String(150))
+    short_title = db.Column(db.String(30))
 
     begin_weigh_in = db.Column(db.Boolean())
     begin_weigh_in_at = db.Column(db.DateTime())
