@@ -402,6 +402,38 @@ body.application {
     border-color: #aaa;
 }
 
+.nav.nav-tabs.nav-fullsize {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #666666;
+}
+.nav.nav-tabs.nav-fullsize .nav-item {
+    width: 0;
+    flex-grow: 1;
+    min-width: 100px;
+    max-width: 300px;
+}
+.nav.nav-tabs.nav-fullsize .nav-item {
+    margin: 0;
+}
+.nav.nav-tabs.nav-fullsize .nav-item .nav-link {
+    text-align: center;
+    padding: 1rem 0.25rem;
+    border: none;
+    border-radius: 0;
+    font-weight: normal;
+}
+.nav.nav-tabs.nav-fullsize .nav-item .nav-link.active {
+    font-weight: bold;
+}
+.nav.nav-tabs.nav-fullsize .nav-item .nav-link:hover,
+.nav.nav-tabs.nav-fullsize .nav-item .nav-link.active {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
 [data-bs-theme="dark"] body.admin::before {
     filter: saturate(0.5) brightness(0.15);
 }
@@ -480,6 +512,11 @@ textarea.form-control {
 .application .h-full {
     margin-top: -1rem;
     height: calc(100vh - 3.45rem);
+}
+
+.application .container-full {
+    margin: -1rem;
+    margin-bottom: 1rem;
 }
 
 .application .application-header {
