@@ -57,8 +57,12 @@ def index():
             g.event.weighed_registrations_count(),
     }
 
-    stats
-    return render_template("event-manager/index.html", stat=stats)
+    invalid_registration_state_query = g.event.registrations.filter_by(registered=False, weighed_in=True).order_by('last_name', 'first_name', 'club')
+
+    any_notice = False
+    any_notice = any_notice or invalid_registration_state_query.count()
+
+    return render_template("event-manager/index.html", stat=stats, invalid_registration_state_query=invalid_registration_state_query, any_notice=any_notice)
 
 
 @eventmgr_view.route('/classes')
