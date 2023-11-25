@@ -74,7 +74,7 @@ def classes():
 def edit_class(id):
     event_class = EventClass.query.filter_by(id=id).one_or_404()
     templates = EventClass.query.filter_by(is_template=True).order_by(EventClass.template_name).all()
-    return render_template("event-manager/classes/edit.html", event_class=event_class, templates=templates)
+    return render_template("event-manager/classes/edit.html", event_class=event_class, templates=templates, new=False)
 
 
 
@@ -155,7 +155,60 @@ def create_class():
     
     templates = EventClass.query.filter_by(is_template=True).order_by(EventClass.template_name).all()
 
-    return render_template("event-manager/classes/new.html", event_class=event_class, templates=templates)
+    return render_template("event-manager/classes/new.html", event_class=event_class, templates=templates, new=True)
+
+
+@eventmgr_view.route('/classes/<id>/progress/next', methods=['GET', 'POST'])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def class_step_forward(id):
+    event_class = EventClass.query.filter_by(id=id).one_or_404()
+
+    if not event_class.begin_weigh_in:
+        event_class.begin_weigh_in = True
+        event_class.begin_weigh_in_at = datetime.now()
+    elif not event_class.begin_placement:
+        event_class.begin_placement = True
+        event_class.begin_placement_at = datetime.now()
+    elif not event_class.begin_fighting:
+        event_class.begin_fighting = True
+        event_class.begin_fighting_at = datetime.now()
+    elif not event_class.ended_fighting:
+        event_class.ended_fighting = True
+        event_class.ended_fighting_at = datetime.now()
+
+    db.session.commit()
+
+    if request.values.get('to', '') == 'index':
+        flash(f"Kampfklasse {event_class.title} wurde erfolgreich in den nächsten Zustand gesetzt.", 'success')
+        return redirect(url_for('event_manager.classes', event=g.event.slug))
+    
+    return redirect(url_for('event_manager.edit_class', event=g.event.slug, id=event_class.id))
+
+
+@eventmgr_view.route('/classes/<id>/progress/back', methods=['GET', 'POST'])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def class_step_back(id):
+    event_class = EventClass.query.filter_by(id=id).one_or_404()
+
+    if event_class.ended_fighting:
+        event_class.ended_fighting = False
+        event_class.ended_fighting_at = None
+    elif event_class.begin_fighting:
+        event_class.begin_fighting = False
+        event_class.begin_fighting_at = None
+    elif event_class.begin_placement:
+        event_class.begin_placement = False
+        event_class.begin_placement_at = None
+    elif event_class.begin_weigh_in:
+        event_class.begin_weigh_in = False
+        event_class.begin_weigh_in_at = None
+
+    db.session.commit()
+    return redirect(url_for('event_manager.edit_class', event=g.event.slug, id=event_class.id))
 
 
 @eventmgr_view.route('/registrations')

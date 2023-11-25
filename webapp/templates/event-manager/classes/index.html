@@ -20,13 +20,13 @@
             <td>{{ cl.title }}</td>
             <td>
                 {% if not cl.begin_weigh_in %}
-                <span class="badge text-bg-secondary">Ausstehend</span>
+                <a href="{{ url_for('event_manager.class_step_forward', event=g.event.slug, id=cl.id, to='index') }}" class="badge text-bg-secondary" title="Hier klicken, um zum nächsten Zustand zu gehen.">Ausstehend</a>
                 {% elif not cl.begin_placement %}
-                <span class="badge text-bg-warning">In Waage</span>
+                <a href="{{ url_for('event_manager.class_step_forward', event=g.event.slug, id=cl.id, to='index') }}" class="badge text-bg-warning" title="Hier klicken, um zum nächsten Zustand zu gehen.">In Waage</a>
                 {% elif not cl.begin_fighting %}
-                <span class="badge text-bg-secondary">Wiegen beendet</span>
+                <a href="{{ url_for('event_manager.class_step_forward', event=g.event.slug, id=cl.id, to='index') }}" class="badge text-bg-secondary" title="Hier klicken, um zum nächsten Zustand zu gehen.">Wiegen beendet</a>
                 {% elif not cl.ended_fighting %}
-                <span class="badge text-bg-danger">Kämpft</span>
+                <a href="{{ url_for('event_manager.class_step_forward', event=g.event.slug, id=cl.id, to='index') }}" class="badge text-bg-danger" title="Hier klicken, um zum nächsten Zustand zu gehen.">Kämpft</a>
                 {% else %}
                 <span class="badge text-bg-success">Beendet</span>
                 {% endif %}

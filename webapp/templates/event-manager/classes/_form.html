@@ -29,6 +29,7 @@
                 Verhalten
             </button>
         </div>
+        {% if not new %}
         <div class="nav-item">
             <button class="nav-link" id="class-progress-tab"
                     data-bs-toggle="tab" type="button" role="tab"
@@ -37,6 +38,7 @@
                 Fortschritt
         </button>
         </div>
+        {% endif %}
     </div>
     <div class="tab-content" id="classform-tabContent">
         <div class="tab-pane show active" role="tabpanel" tabindex="0"
@@ -164,11 +166,52 @@
             </div>
 
         </div>
+        {% if not new %}
         <div class="tab-pane" role="tabpanel" tabindex="0"
              id="class-progress" aria-labelledby="class-progress-tab">
 
             <h3 class="fw-bold mt-4 mb-3">Fortschritt</h3>
 
+            <div class="alert alert-warning">
+                <p>Die folgenden Optionen führen dazu, dass die aktuelle Seite neu geladen wird. Nicht gespeicherte Änderungen können daher verloren gehen.</p>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p>Diese Kampfklasse ist zurzeit in folgendem Status:</p>
+        
+                    {% if not event_class.begin_weigh_in %}
+                    <p class="mb-0"><strong>Ausstehend</strong> &ndash; Die Waage wurde noch nicht eröffnet.</p>
+                    {% elif not event_class.begin_placement %}
+                    <p class="mb-0"><strong>In Waage</strong> &ndash; Die Waage wurde eröffnet. TN können jetzt eingewogen werden.</p>
+                    {% elif not event_class.begin_fighting %}
+                    <p class="mb-0"><strong>Wiegen beendet</strong> &ndash; Die Waage wurde wieder geschlossen. Die Listen können jetzt erstellt werden.</p>
+                    {% elif not event_class.ended_fighting %}
+                    <p class="mb-0"><strong>Kämpft</strong> &ndash; Die Listen wurden erstellt und die Kämpfe haben begonnen.</p>
+                    {% else %}
+                    <p class="mb-0"><strong>Beendet</strong> &ndash; Alle Kämpfe wurden durchgeführt.</p>
+                    {% endif %}
+                </div>
+                <div class="card-body border-top">
+                    {% if not event_class.begin_weigh_in %}
+                    <a href="{{ url_for('event_manager.class_step_forward', event=g.event.slug, id=event_class.id) }}" class="btn btn-dark">Waage eröffnen</a>
+                    {% elif not event_class.begin_placement %}
+                    <a href="{{ url_for('event_manager.class_step_back', event=g.event.slug, id=event_class.id) }}" class="btn btn-light">Waage abbrechen</a>
+                    <a href="{{ url_for('event_manager.class_step_forward', event=g.event.slug, id=event_class.id) }}" class="btn btn-dark">Waage schließen</a>
+                    {% elif not event_class.begin_fighting %}
+                    <a href="{{ url_for('event_manager.class_step_back', event=g.event.slug, id=event_class.id) }}" class="btn btn-light">Waage wieder eröffnen</a>
+                    <a href="{{ url_for('event_manager.class_step_forward', event=g.event.slug, id=event_class.id) }}" class="btn btn-dark">Kämpfe starten</a>
+                    {% elif not event_class.ended_fighting %}
+                    <a href="{{ url_for('event_manager.class_step_back', event=g.event.slug, id=event_class.id) }}" class="btn btn-light">Kämpfe abbrechen</a>
+                    <a href="{{ url_for('event_manager.class_step_forward', event=g.event.slug, id=event_class.id) }}" class="btn btn-dark">Kämpfe beenden</a>
+                    {% else %}
+                    <a href="{{ url_for('event_manager.class_step_back', event=g.event.slug, id=event_class.id) }}" class="btn btn-light">Kämpfe wieder eröffnen</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            
         </div>
+        {% endif %}
     </div>
 </form>
