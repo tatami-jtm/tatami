@@ -1,31 +1,11 @@
 {% extends "layouts/application.html" %}
+{% set page="index" %}
 {% block title %}Einteilung{% endblock %}
 {% block body %}
 
-<div class="container-full pb-3">
-    <ul class="nav nav-tabs nav-fullsize">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="">Übersicht</a>
-        </li>
-        {% for ec in classes_query %}
-        {% if ec.begin_fighting %}
-        <li class="nav-item">
-            <a class="nav-link opacity-50" href="#" title="Kampfklasse hat bereits mit Kämpfen begonnen.">🏁 {{ ec.title }}</a>
-        </li>
-        {% elif ec.begin_placement %}
-        <li class="nav-item">
-            <a class="nav-link" href="#">{{ ec.title }}</a>
-        </li>
-        {% else %}
-        <li class="nav-item">
-            <a class="nav-link disabled opacity-50" disabled aria-disabled="true" href="#" title="Kampfklasse ist noch nicht bereit.">🔒 {{ ec.title }}</a>
-        </li>
-        {% endif %}
-        {% endfor %}
-    </ul>
-</div>
+{% include "mod_placement/_header.html" %}
 
-<div class="container-fluid">
+<div class="container-fluid px-5">
     <h1 class="h2 fw-bold mb-3">🎲 Einteilung</h1>
 
     <p>Wählen Sie oben eine Kampfklasse aus, um die Einteilung der Gruppen (Gewichtsklassen bzw. gewichtsnahe Gruppen sowie Verlosung/Platzierung) durchzuführen.</p>

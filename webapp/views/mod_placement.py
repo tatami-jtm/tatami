@@ -20,6 +20,4 @@ def index():
 
     classes_query = g.event.classes.order_by(EventClass.begin_fighting, EventClass.begin_placement.desc(), EventClass.title)
 
-    print(classes_query)
-
     return render_template("mod_placement/index.html", classes_query=classes_query)

@@ -1,0 +1,22 @@
+<div class="container-full pb-3">
+    <ul class="nav nav-tabs nav-fullsize">
+        <li class="nav-item">
+            <a class="nav-link {{ 'active' if page=='index' }}" {{ 'aria-current' if page=='index' }} href="{{ url_for('mod_placement.index', event=g.event.slug) }}">Übersicht</a>
+        </li>
+        {% for ec in classes_query %}
+        {% if ec.begin_fighting %}
+        <li class="nav-item">
+            <a class="nav-link opacity-50 {{ 'active' if page==ec }}" {{ 'aria-current' if page==ec }} href="#" title="Kampfklasse hat bereits mit Kämpfen begonnen.">🏁 {{ ec.title }}</a>
+        </li>
+        {% elif ec.begin_placement %}
+        <li class="nav-item">
+            <a class="nav-link {{ 'active' if page==ec }}" {{ 'aria-current' if page==ec }} href="#">{{ ec.title }}</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+            <a class="nav-link disabled opacity-50" disabled aria-disabled="true" href="" title="Kampfklasse ist noch nicht bereit.">🔒 {{ ec.title }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</div>
