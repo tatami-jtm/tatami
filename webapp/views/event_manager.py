@@ -250,6 +250,7 @@ def update_registration(id):
     registration.confirmed = "confirmed" in request.form
     registration.registered = "registered" in request.form
     registration.weighed_in = "weighed_in" in request.form
+    registration.placed = "placed" in request.form
 
     if len(request.form['association']):
         registration.association_id = int(request.form['association'])

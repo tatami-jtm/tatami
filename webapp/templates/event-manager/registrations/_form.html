@@ -80,4 +80,8 @@
         <input class="form-check-input" type="checkbox" name="weighed_in" id="status-weighed_in" {{ 'checked' if registration.weighed_in }}>
         <label class="form-check-label mb-1" for="status-weighed_in">Eingewogen</label>
     </div>
+    <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" name="placed" id="status-placed" {{ 'checked' if registration.placed }} disabled aria-disabled="true">
+        <label class="form-check-label mb-1" for="status-weighed_in">Platziert</label>
+    </div>
 </form>

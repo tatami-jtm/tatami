@@ -23,10 +23,12 @@ class Registration(db.Model):
     confirmed_at = db.Column(db.DateTime())
     registered_at = db.Column(db.DateTime())
     weighed_in_at = db.Column(db.DateTime())
+    placed_at = db.Column(db.DateTime())
 
     confirmed = db.Column(db.Boolean())
     registered = db.Column(db.Boolean())
     weighed_in = db.Column(db.Boolean())
+    placed = db.Column(db.Boolean())
 
     suggested_group = db.Column(db.String(150))
     verified_weight = db.Column(db.Integer()) # in 1g
@@ -67,6 +69,9 @@ class Participant(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     full_name = db.Column(db.String(80))
     association_name = db.Column(db.String(80))
+
+    placement_index = db.Column(db.Integer)
+    manually_placed = db.Column(db.Boolean)
 
     final_placement = db.Column(db.Integer)
     final_points = db.Column(db.Integer) # 1 for each won fight
