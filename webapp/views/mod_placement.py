@@ -47,3 +47,15 @@ def for_class(id):
         current_group = groups.filter_by(id=request.values['group']).one_or_404()
 
     return render_template("mod_placement/for_class.html", event_class=event_class, registrations=registrations, groups=groups, proximity=event_class.use_proximity_weight_mode, current_group=current_group)
+
+@mod_placement_view.route('/class/<id>/group/new')
+@check_and_apply_event
+@check_is_registered
+def add_group(id):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+
+    return render_template("mod_placement/add_group.html", event_class=event_class)

@@ -613,6 +613,7 @@ textarea.form-control {
     filter: grayscale(0.85);
 }
 
-.container.container-small {
+.container.container-small,
+.card-semidialog {
     max-width: 812px;
 }
