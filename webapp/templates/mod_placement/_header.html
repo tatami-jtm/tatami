@@ -6,15 +6,15 @@
         {% for ec in classes_query %}
         {% if ec.begin_fighting %}
         <li class="nav-item">
-            <a class="nav-link opacity-50 {{ 'active' if page==ec }}" {{ 'aria-current' if page==ec }} href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=ec.id) }}" title="Kampfklasse hat bereits mit Kämpfen begonnen.">🏁 {{ ec.title }}</a>
+            <a class="nav-link deactive {{ 'active' if page==ec }}" {{ 'aria-current' if page==ec }} href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=ec.id) }}" title="Kampfklasse hat bereits mit Kämpfen begonnen.">{{ ec.title }}</a>
         </li>
         {% elif ec.begin_placement %}
         <li class="nav-item">
-            <a class="nav-link {{ 'active' if page==ec }}" {{ 'aria-current' if page==ec }} href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=ec.id) }}">{{ ec.title }}</a>
+            <a class="nav-link {{ 'active' if page==ec }}" {{ 'aria-current' if page==ec }} href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=ec.id) }}">🏁 {{ ec.title }}</a>
         </li>
         {% else %}
         <li class="nav-item">
-            <a class="nav-link disabled opacity-50" disabled aria-disabled="true" href="" title="Kampfklasse ist noch nicht bereit.">🔒 {{ ec.title }}</a>
+            <a class="nav-link disabled deactive" disabled aria-disabled="true" href="" title="Kampfklasse ist noch nicht bereit.">🔒 {{ ec.title }}</a>
         </li>
         {% endif %}
         {% endfor %}
