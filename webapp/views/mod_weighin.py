@@ -51,7 +51,7 @@ def for_participant(id):
             registration.registered = True
             registration.registered_at = dt.now()
         
-        registration.verified_weight = int(float(request.form['verified_weight']) * 100)
+        registration.verified_weight = int(float(request.form['verified_weight']) * 1000)
 
         db.session.commit()
 

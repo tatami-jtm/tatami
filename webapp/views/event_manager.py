@@ -269,7 +269,7 @@ def update_registration(id):
         registration.event_class_id = None
 
     if request.form['verified_weight']:
-        registration.verified_weight = int(float(request.form['verified_weight']) * 100)
+        registration.verified_weight = int(float(request.form['verified_weight']) * 1000)
     else:
         registration.verified_weight = None
 
@@ -307,7 +307,7 @@ def create_registration():
             registration.event_class_id = None
 
         if request.form['verified_weight']:
-            registration.verified_weight = int(float(request.form['verified_weight']) * 100)
+            registration.verified_weight = int(float(request.form['verified_weight']) * 1000)
         else:
             registration.verified_weight = None
 

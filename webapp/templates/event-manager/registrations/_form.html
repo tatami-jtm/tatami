@@ -61,7 +61,7 @@
 
     <div class="mb-3">
         <label for="verified_weight" class="form-label">Kontrolliertes Gewicht (in kg)</label>
-        <input name="verified_weight" id="verified_weight" value="{{ registration.verified_weight / 100 if registration.verified_weight else '' }}" class="form-control" type="number" step="0.01">
+        <input name="verified_weight" id="verified_weight" value="{{ registration.verified_weight / 1000 if registration.verified_weight else '' }}" class="form-control" type="number" step="0.01">
         <div class="form-text">Hier ist das an der Waage kontrollierte Gewicht anzugeben, das für die Einteilung verwendet wird. Dieser Eintrag sollte in der Regel über das Waage-Modul und nicht hier in der Event-Administration gesetzt werden.</div>
     </div>
 
