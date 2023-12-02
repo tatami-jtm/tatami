@@ -40,6 +40,7 @@ def for_class(id):
     event_class = g.event.classes.filter_by(id=id).one_or_404()
 
     if not event_class.begin_placement:
+        flash(f"Die Kampfklasse {event_class.title} wurde noch nicht freigegeben.", 'danger')
         return redirect(url_for('mod_placement.index', event=g.event.slug))
 
     registrations = event_class.registrations.filter_by(confirmed=True, registered=True, weighed_in=True, placed=False).order_by('verified_weight')
@@ -77,6 +78,8 @@ def add_group(id):
         db.session.add(group)
         db.session.commit()
 
+        flash(f"Neue Gruppe {group.title} erfolgreich erstellt.", 'success')
+
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
 
     return render_template("mod_placement/add_group.html", event_class=event_class, group=group, systems=ListSystem.all_enabled())
@@ -106,6 +109,8 @@ def edit_group(id, group_id):
 
         db.session.commit()
 
+        flash(f"Gruppe {group.title} erfolgreich aktualisiert.", 'success')
+
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
 
     return render_template("mod_placement/edit_group.html", event_class=event_class, group=group, systems=ListSystem.all_enabled())
@@ -128,6 +133,8 @@ def delete_group(id, group_id):
 
         db.session.delete(group)
         db.session.commit()
+
+        flash(f"Gruppe {group.title} erfolgreich gelöscht.", 'success')
 
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id))
 

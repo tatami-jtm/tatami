@@ -15,6 +15,7 @@
             </div>
         </div>
     </div>
+    {% block pre_messages %}{% endblock pre_messages %}
     {% with messages = get_flashed_messages(with_categories=True) %}
     {% if messages %}
     <div class="container-fluid mt-3">
