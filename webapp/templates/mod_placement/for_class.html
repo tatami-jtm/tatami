@@ -43,14 +43,22 @@
         </div>
         <div class="col-12 col-md-3">
             <h3 class="h4 fw-bold mb-2">Gruppen</h3>
-            <div class="mb-3">
+            <div class="mb-2">
                 <a href="{{ url_for('mod_placement.add_group', event=g.event.slug, id=event_class.id) }}" class="btn btn-secondary btn-sm">Neue Gruppe</a>
                 <a href="" class="btn btn-secondary btn-sm">Alle Gruppen losen</a>
             </div>
+            {% if current_group %}
+            <div class="row mb-2 bg-light p-1 mx-0">
+                <h4 class="h6 pt-1 m-0 px-1 fw-bold col">Aktuell ausgewählt: {{ current_group.title }}</h4>
+                <div class="col-auto px-0">
+                    <a href="?" class="btn btn-light btn-sm">Schließen</a>
+                </div>
+            </div>
+            {% endif %}
 
             {% if groups.count() %}
 
-            <div class="card">
+            <div class="card mt-3">
                 {% for group in groups.all() %}
                 <div class="card-body p-2 {{ 'border-top' if not loop.index == 1 }}">
                     <div class="row">
@@ -65,7 +73,7 @@
 
             {% else %}
 
-            <div class="alert alert-info">
+            <div class="alert alert-info mt-3">
                 <p>Keine Gruppen vorhanden.</p>
     
                 <p>Es ist empfohlen, die Gruppen über die Zuweisung verbleibender TN (Knopf in 1. Spalte) automatisch zu erstellen.</p>
