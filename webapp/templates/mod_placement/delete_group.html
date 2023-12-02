@@ -1,0 +1,36 @@
+{% extends "layouts/application.html" %}
+{% set page=event_class %}
+{% block title %}Einteilung - {{ event_class.title }}{% endblock %}
+{% block body %}
+
+{% include "mod_placement/_header.html" %}
+
+<div class="container-fluid">
+    <h1 class="h2 fw-bold mb-4">{{ event_class.title }} &ndash; {{ 'Gewichtsklassen' if not proximity else 'Gewichtsnahe Gruppen' }}</h1>
+
+    
+    <h3 class="h4 fw-bold mb-2">Gruppe löschen: {{ group.title }}</h3>
+    
+    <form action="" method="POST">
+        <div class="card card-semidialog">
+            <div class="card-body pb-0">
+                <p>Wollen Sie die Gruppe {{ group.title }} unwiderruflich löschen?</p>
+
+                {% if group.participants.count() != 0 %}
+                <div class="alert alert-warning">
+                    <p class="mb-0">Diese Gruppe kann nicht gelöscht werden, da ihr noch Teilnehmende zugewiesen sind.</p>
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                {% if group.participants.count() == 0 %}
+                <button type="submit" class="btn btn-danger">Gruppe löschen</button>
+                {% endif %}
+                <a href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id) }}" class="btn btn-secondary">Abbrechen</a>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+{% endblock body %}
