@@ -8,6 +8,15 @@
                     <input name="name" id="name" class="form-control" value="{{ group.cut_title() }}">
                 </div>
             </div>
+            <div class="mb-3">
+                <label for="system" class="form-label">Listensystem</label>
+                <select class="form-select" id="system" name="system">
+                    <option value="" {{ 'selected' if not group.system }}>(automatisch bestimmen &ndash; empfohlen)</option>
+                    {% for system in systems %}
+                    <option value="{{ system.id }}" {{ 'selected' if group.system_id == system.id }}>{{ system.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
         <div class="card-body border-top">
             <div class="mb-3">

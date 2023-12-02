@@ -6,7 +6,7 @@ from datetime import datetime as dt
 from .event_manager import check_and_apply_event
 from .devices import check_is_registered
 
-from ..models import db, EventClass, Group
+from ..models import db, EventClass, Group, ListSystem
 
 mod_placement_view = Blueprint('mod_placement', __name__)
 
@@ -69,12 +69,17 @@ def add_group(id):
         group.min_weight = int(float(request.form['min_weight']) * 1000) if request.form['min_weight'] else None
         group.max_weight = int(float(request.form['max_weight']) * 1000) if request.form['max_weight'] else None
 
+        if request.form['system']:
+            group.system_id = int(request.form['system'])
+        else:
+            group.system_id = None
+
         db.session.add(group)
         db.session.commit()
 
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
 
-    return render_template("mod_placement/add_group.html", event_class=event_class, group=group)
+    return render_template("mod_placement/add_group.html", event_class=event_class, group=group, systems=ListSystem.all_enabled())
 
 
 @mod_placement_view.route('/class/<id>/group/edit/<group_id>', methods=['GET', 'POST'])
@@ -94,11 +99,16 @@ def edit_group(id, group_id):
         group.min_weight = int(float(request.form['min_weight']) * 1000) if request.form['min_weight'] else None
         group.max_weight = int(float(request.form['max_weight']) * 1000) if request.form['max_weight'] else None
 
+        if request.form['system']:
+            group.system_id = int(request.form['system'])
+        else:
+            group.system_id = None
+
         db.session.commit()
 
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
 
-    return render_template("mod_placement/edit_group.html", event_class=event_class, group=group)
+    return render_template("mod_placement/edit_group.html", event_class=event_class, group=group, systems=ListSystem.all_enabled())
 
 
 @mod_placement_view.route('/class/<id>/group/delete/<group_id>', methods=['GET', 'POST'])

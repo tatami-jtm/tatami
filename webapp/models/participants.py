@@ -60,6 +60,10 @@ class ListSystem(db.Model):
     mandatory_maximum = db.Column(db.Integer())
     enabled = db.Column(db.Boolean)
 
+    @classmethod
+    def all_enabled(cls):
+        return cls.query.filter_by(enabled=True)
+
 
 class ListSystemRule(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
