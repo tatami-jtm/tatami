@@ -1,0 +1,34 @@
+<form action="" method="POST">
+    <div class="card card-semidialog">
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="name" class="form-label">Bezeichnung</label>
+                <div class="input-group">
+                    <div class="input-group-text">{{ event_class.short_title }}</div>
+                    <input name="name" id="name" class="form-control" value="{{ group.cut_title() }}">
+                </div>
+            </div>
+        </div>
+        <div class="card-body border-top">
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="assign_by_logic" name="assign_by_logic" {{ 'checked' if group.assign_by_logic }}>
+                    <label class="form-check-label fw-bold" for="assign_by_logic">Teilnehmenden anhand ihres Gewichts automatisch zuteilen</label>
+                </div>
+            </div>
+            <p class="mb-3">Wenn ausgewählt:</p>
+            <div class="mb-3">
+                <label for="min_weight" class="form-label">Mindesgewicht (in kg) - nicht mehr enthalten -</label>
+                <input name="min_weight" id="min_weight" type="number" min="0" step="0.1" max="500" class="form-control" value="{{ group.min_weight }}">
+            </div>
+            <div class="mb-3">
+                <label for="max_weight" class="form-label">Höchstgewicht (in kg) - noch enthalten -</label>
+                <input name="max_weight" id="max_weight" type="number" min="0" step="0.1" max="500" class="form-control"value="{{ group.max_weight }}">
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Gruppe erstellen</button>
+            <a href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id) }}" class="btn btn-secondary">Abbrechen</a>
+        </div>
+    </div>
+</form>

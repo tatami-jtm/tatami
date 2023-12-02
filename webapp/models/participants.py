@@ -68,6 +68,12 @@ class Group(db.Model):
     event_class_id = db.Column(db.Integer(), db.ForeignKey('event_class.id'))
     event_class = db.relationship('EventClass', backref=db.backref(
         'groups', lazy='dynamic'))
+    
+    def cut_title(self):
+        if not self.title:
+            return ""
+        
+        return self.title[self.event_class.short_title + 1:]
 
 
 class Participant(db.Model):

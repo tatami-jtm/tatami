@@ -6,7 +6,7 @@ from datetime import datetime as dt
 from .event_manager import check_and_apply_event
 from .devices import check_is_registered
 
-from ..models import db, EventClass
+from ..models import db, EventClass, Group
 
 mod_placement_view = Blueprint('mod_placement', __name__)
 
@@ -48,7 +48,7 @@ def for_class(id):
 
     return render_template("mod_placement/for_class.html", event_class=event_class, registrations=registrations, groups=groups, proximity=event_class.use_proximity_weight_mode, current_group=current_group)
 
-@mod_placement_view.route('/class/<id>/group/new')
+@mod_placement_view.route('/class/<id>/group/new', methods=['GET', 'POST'])
 @check_and_apply_event
 @check_is_registered
 def add_group(id):
@@ -57,5 +57,17 @@ def add_group(id):
         return redirect(url_for('devices.index', event=g.event.slug))
 
     event_class = g.event.classes.filter_by(id=id).one_or_404()
+    group = Group(created_manually=True, event=g.event, event_class=event_class)
 
-    return render_template("mod_placement/add_group.html", event_class=event_class)
+    if request.method == 'POST':
+        group.title = event_class.short_title + ' ' + request.form['name']
+        group.assign_by_logic = 'assign_by_logic' in request.form
+        group.min_weight = int(float(request.form['min_weight']) * 100) if request.form['min_weight'] else None
+        group.max_weight = int(float(request.form['max_weight']) * 100) if request.form['max_weight'] else None
+
+        db.session.add(group)
+        db.session.commit()
+
+        return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id))
+
+    return render_template("mod_placement/add_group.html", event_class=event_class, group=group)
