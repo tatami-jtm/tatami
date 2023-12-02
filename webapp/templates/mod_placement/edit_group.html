@@ -1,0 +1,16 @@
+{% extends "layouts/application.html" %}
+{% set page=event_class %}
+{% block title %}Einteilung - {{ event_class.title }}{% endblock %}
+{% block body %}
+
+{% include "mod_placement/_header.html" %}
+
+<div class="container-fluid">
+    <h1 class="h2 fw-bold mb-4">{{ event_class.title }} &ndash; {{ 'Gewichtsklassen' if not proximity else 'Gewichtsnahe Gruppen' }}</h1>
+
+    
+    <h3 class="h4 fw-bold mb-2">Gruppe bearbeiten: {{ group.title }}</h3>
+    {% include "mod_placement/_group_form.html" %}
+</div>
+
+{% endblock body %}

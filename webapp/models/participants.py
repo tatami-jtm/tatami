@@ -73,7 +73,7 @@ class Group(db.Model):
         if not self.title:
             return ""
         
-        return self.title[self.event_class.short_title + 1:]
+        return self.title[len(self.event_class.short_title) + 1:]
 
 
 class Participant(db.Model):

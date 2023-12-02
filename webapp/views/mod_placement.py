@@ -62,8 +62,8 @@ def add_group(id):
     if request.method == 'POST':
         group.title = event_class.short_title + ' ' + request.form['name']
         group.assign_by_logic = 'assign_by_logic' in request.form
-        group.min_weight = int(float(request.form['min_weight']) * 100) if request.form['min_weight'] else None
-        group.max_weight = int(float(request.form['max_weight']) * 100) if request.form['max_weight'] else None
+        group.min_weight = int(float(request.form['min_weight']) * 1000) if request.form['min_weight'] else None
+        group.max_weight = int(float(request.form['max_weight']) * 1000) if request.form['max_weight'] else None
 
         db.session.add(group)
         db.session.commit()
@@ -71,3 +71,27 @@ def add_group(id):
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id))
 
     return render_template("mod_placement/add_group.html", event_class=event_class, group=group)
+
+
+@mod_placement_view.route('/class/<id>/group/edit/<group_id>', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def edit_group(id, group_id):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+    group = event_class.groups.filter_by(id=group_id).one_or_404()
+
+    if request.method == 'POST':
+        group.title = event_class.short_title + ' ' + request.form['name']
+        group.assign_by_logic = 'assign_by_logic' in request.form
+        group.min_weight = int(float(request.form['min_weight']) * 1000) if request.form['min_weight'] else None
+        group.max_weight = int(float(request.form['max_weight']) * 1000) if request.form['max_weight'] else None
+
+        db.session.commit()
+
+        return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id))
+
+    return render_template("mod_placement/edit_group.html", event_class=event_class, group=group)
