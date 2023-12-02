@@ -52,6 +52,29 @@ class Association(db.Model):
     name = db.Column(db.String(80))
 
 
+class ListSystem(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    title = db.Column(db.String(50))
+    list_file = db.Column(db.String(80))
+    mandatory_minimum = db.Column(db.Integer())
+    mandatory_maximum = db.Column(db.Integer())
+    enabled = db.Column(db.Boolean)
+
+
+class ListSystemRule(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+
+    event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
+    event = db.relationship('Event', backref=db.backref(
+        'list_system_rules', lazy='dynamic'))
+    
+    system_id = db.Column(db.Integer(), db.ForeignKey('list_system.id'))
+    system = db.relationship('ListSystem')
+
+    minimum = db.Column(db.Integer())
+    maximum = db.Column(db.Integer())
+
+
 class Group(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     title = db.Column(db.String(50))
@@ -68,6 +91,9 @@ class Group(db.Model):
     event_class_id = db.Column(db.Integer(), db.ForeignKey('event_class.id'))
     event_class = db.relationship('EventClass', backref=db.backref(
         'groups', lazy='dynamic'))
+    
+    system_id = db.Column(db.Integer(), db.ForeignKey('list_system.id'))
+    system = db.relationship('ListSystem')
     
     def cut_title(self):
         if not self.title:
