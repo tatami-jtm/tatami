@@ -39,6 +39,9 @@ def for_class(id):
 
     event_class = g.event.classes.filter_by(id=id).one_or_404()
 
+    if not event_class.begin_placement:
+        return redirect(url_for('mod_placement.index', event=g.event.slug))
+
     registrations = event_class.registrations.filter_by(confirmed=True, registered=True, weighed_in=True, placed=False).order_by('verified_weight')
     groups = event_class.groups
     current_group = None
