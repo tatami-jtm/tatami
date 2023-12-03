@@ -6,7 +6,7 @@ from datetime import datetime as dt
 from .event_manager import check_and_apply_event
 from .devices import check_is_registered
 
-from ..models import db, EventClass, Group, ListSystem
+from ..models import db, EventClass, Group, ListSystem, Participant
 
 mod_placement_view = Blueprint('mod_placement', __name__)
 
@@ -139,3 +139,56 @@ def delete_group(id, group_id):
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id))
 
     return render_template("mod_placement/delete_group.html", event_class=event_class, group=group)
+
+
+@mod_placement_view.route('/class/<id>/assign', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def assign(id):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+
+    if request.method == 'POST':
+        if 'group' in request.form and 'participant' in request.form and (request.form['participant'] == 'custom' or 'registration' in request.form):
+            participant = Participant(event=g.event)
+            participant.placement_index = None
+            participant.manually_placed = None
+            participant.final_placement = None
+            participant.final_points = None
+            participant.final_score = None
+            participant.removed = False
+            participant.disqualified = False
+            participant.removal_cause = None
+
+            if request.form['participant'] == 'registration':
+                registration = event_class.registrations.filter_by(id=request.form['registration']).one()
+                participant.full_name = f"{registration.first_name} {registration.last_name}"
+                participant.association_name = registration.club
+                participant.registration = registration
+
+                registration.placed = True
+
+            elif request.form['participant'] == 'custom':
+                participant.full_name = request.form['custom-full_name']
+                participant.association_name = request.form['custom-association']
+                participant.registration = None
+            
+            group = event_class.groups.filter_by(id=request.form['group']).one()
+            participant.group = group
+
+            db.session.add(participant)
+            db.session.commit()
+
+            return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
+        
+        flash("Es wurden nicht alle notwendigen Felder ausgefüllt.", 'danger')
+
+    registrations = event_class.registrations.filter_by(confirmed=True, registered=True, weighed_in=True).order_by('last_name', 'first_name', 'verified_weight')
+    
+    group = event_class.groups.filter_by(id=request.values.get('group', None)).one_or_none()
+    registration = g.event.registrations.filter_by(id=request.values.get('registration', None)).one_or_none()
+
+    return render_template("mod_placement/assign.html", event_class=event_class, group=group, registration=registration, registrations=registrations)

@@ -1,0 +1,70 @@
+{% extends "layouts/application.html" %}
+{% set page=event_class %}
+{% block title %}Einteilung - {{ event_class.title }}{% endblock %}
+{% block pre_messages %}{% include "mod_placement/_header.html" %}{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <h1 class="h2 fw-bold mb-4">{{ event_class.title }} &ndash; {{ 'Gewichtsklassen' if not proximity else 'Gewichtsnahe Gruppen' }}</h1>
+
+    
+    <h3 class="h4 fw-bold mb-2">TN zuweisen</h3>
+    <form action="" method="POST">
+        <div class="card card-semidialog">
+            <div class="card-body">
+                <p class="fw-bold">In die Gruppe:</p>
+                <div class="mb-3">
+                    <select class="form-select" name="group">
+                        <option value="" disabled {{ 'selected' if not group }}></option>
+                        {% for gr in event_class.groups.all() %}
+                        <option value="{{ gr.id }}" {{ 'selected' if group and group.id == gr.id }}>
+                            {{ gr.title }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <p class="fw-bold">wird zugewiesen &hellip;</p>
+                <div class="form-check mb-1">
+                    <input class="form-check-input" type="radio" value="registration" name="participant" id="participant-registration" {{ 'checked' if registration }}>
+                    <label class="form-check-label mb-1 fw-bold" for="participant-registration">
+                        folgende/r angemeldete/r und eingewogene/r TN:
+                    </label>
+                </div>
+                <div class="mb-2 ms-5">
+                    <select class="form-select" name="registration">
+                        <option value="" disabled {{ 'selected' if not registration }}></option>
+                        {% for reg in registrations.all() %}
+                        <option value="{{ reg.id }}" {{ 'selected' if registration and registration.id == reg.id }}>
+                            {{ reg.last_name }}, {{ reg.first_name }} &ndash; {{ reg.club }} ({{ reg.verified_weight / 1000 }} kg)
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" value="custom" name="participant" id="participant-custom">
+                    <label class="form-check-label mb-1 fw-bold" for="participant-custom">
+                        folgende/r neu angelegte/r TN:
+                    </label>
+                </div>
+                <div class="mb-3 ms-5">
+                    <label for="custom-full_name" class="form-label fw-normal">Vor- und Nachname</label>
+                    <input name="custom-full_name" id="custom-full_name" class="form-control">
+                </div>
+                <div class="ms-5">
+                    <label for="custom-association" class="form-label fw-normal">Verein/Verband</label>
+                    <input name="custom-association" id="custom-association" class="form-control">
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Zuweisen</button>
+                {% if group %}
+                <a href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id) }}" class="btn btn-secondary">Abbrechen</a>
+                {% else %}
+                <a href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id) }}" class="btn btn-secondary">Abbrechen</a>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock body %}
