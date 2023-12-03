@@ -52,6 +52,25 @@ class Event(db.Model):
             total_weighed += cl.weighed_registrations_count()
         
         return total_weighed
+    
+    def placed_registrations_count(self):
+        total_placed = 0
+        for cl in self.classes:
+            total_placed += cl.placed_registrations_count()
+        
+        return total_placed
+    
+    def total_participants_count(self):
+        return self.participants.count()
+    
+    def placed_participants_count(self):
+        return self.total_participants_count() - self.participants.filter_by(placement_index=None).count()
+    
+    def placed_ratio(self):
+        assigned_ratio = self.placed_registrations_count() / max(1, self.weighed_registrations_count())
+        placed_ratio = self.placed_participants_count() / max(1, self.total_participants_count())
+
+        return (assigned_ratio + placed_ratio) / 2
 
     @classmethod
     def from_slug(cls, slug):
@@ -106,7 +125,9 @@ class EventClass(db.Model):
     
     def weighed_registrations_count(self):
         return self.registrations.filter_by(confirmed=True, registered=True, weighed_in=True).count()
-
+    
+    def placed_registrations_count(self):
+        return self.registrations.filter_by(confirmed=True, registered=True, weighed_in=True, placed=True).count()
 
 class EventRole(db.Model):
     id = db.Column(db.Integer(), primary_key=True)

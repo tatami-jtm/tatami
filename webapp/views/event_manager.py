@@ -55,6 +55,8 @@ def index():
             g.event.registered_registrations_count(),
         "weighed_in_ratio":
             g.event.weighed_registrations_count(),
+        "placed_ratio":
+            int(g.event.placed_ratio() * 1000) / 10
     }
 
     invalid_registration_state_query = g.event.registrations.filter_by(registered=False, weighed_in=True).order_by('last_name', 'first_name', 'club')
