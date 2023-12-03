@@ -1,0 +1,33 @@
+{% extends "layouts/application.html" %}
+{% set page=event_class %}
+{% block title %}Einteilung - {{ event_class.title }}{% endblock %}
+{% block pre_messages %}{% include "mod_placement/_header.html" %}{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <h1 class="h2 fw-bold mb-4">{{ event_class.title }} &ndash; {{ 'Gewichtsklassen' if not proximity else 'Gewichtsnahe Gruppen' }}</h1>
+
+    
+    <h3 class="h4 fw-bold mb-2">TN austragen</h3>
+    <form action="" method="POST">
+        <div class="card card-semidialog">
+            <div class="card-body pb-0">
+                <p>Wollen Sie {{ participant.full_name }} aus der Gruppe {{ participant.group.title }} austragen?</p>
+                {% if registration %}
+                {% if registration.participants.count() == 2 %}
+                <p>TN verbleibt in einer weiteren Gruppe.</p>
+                {% elif registration.participants.count() > 2 %}
+                <p>TN verbleibt in {{ registration.participants.count() }} weiteren Gruppen.</p>
+                {% else %}
+                <p>TN wäre in Folge nicht mehr zugewiesen.</p>
+                {% endif %}
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-danger">Austragen</button>
+                <a href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=participant.group.id) }}" class="btn btn-secondary">Abbrechen</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock body %}

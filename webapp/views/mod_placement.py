@@ -192,3 +192,28 @@ def assign(id):
     registration = g.event.registrations.filter_by(id=request.values.get('registration', None)).one_or_none()
 
     return render_template("mod_placement/assign.html", event_class=event_class, group=group, registration=registration, registrations=registrations)
+
+
+@mod_placement_view.route('/class/<id>/unassign/<participant_id>', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def unassign(id, participant_id):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+    participant = g.event.participants.filter_by(id=participant_id).one_or_404()
+    group = participant.group
+    registration = participant.registration
+
+    if request.method == 'POST':
+        if registration and registration.participants.count() == 1:
+            registration.placed = False
+
+        db.session.delete(participant)
+        db.session.commit()
+
+        return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
+
+    return render_template("mod_placement/unassign.html", event_class=event_class, participant=participant, registration=registration)
