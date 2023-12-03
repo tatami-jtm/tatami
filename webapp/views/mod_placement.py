@@ -170,6 +170,7 @@ def assign(id):
                 participant.registration = registration
 
                 registration.placed = True
+                registration.placed_at = registration.placed_at or dt.now()
 
             elif request.form['participant'] == 'custom':
                 participant.full_name = request.form['custom-full_name']
@@ -210,6 +211,7 @@ def unassign(id, participant_id):
     if request.method == 'POST':
         if registration and registration.participants.count() == 1:
             registration.placed = False
+            registration.placed_at = None
 
         db.session.delete(participant)
         db.session.commit()
@@ -295,6 +297,7 @@ def assign_all_predefined(id):
                 participant.registration = registration
 
                 registration.placed = True
+                registration.placed_at = registration.placed_at or dt.now()
 
                 db.session.add(participant)
                 participants_created += 1
