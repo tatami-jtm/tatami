@@ -217,3 +217,112 @@ def unassign(id, participant_id):
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
 
     return render_template("mod_placement/unassign.html", event_class=event_class, participant=participant, registration=registration)
+
+
+@mod_placement_view.route('/class/<id>/assign/predefined', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def assign_all_predefined(id):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+    weight_classes = _get_weight_classes(event_class)
+
+    if request.method == 'POST':
+        groups_created = participants_created = 0
+
+        registrations = event_class.registrations.filter_by(confirmed=True, registered=True, weighed_in=True, placed=False)
+
+        if request.form['create_new'] == 'yes':
+            for cl in weight_classes:
+                group = Group(created_manually=False, event=g.event, event_class=event_class)
+                group.title = event_class.short_title + ' ' + cl[0]
+                group.assign_by_logic = True
+                group.min_weight = cl[1][0] * 1000 if cl[1][0] else None
+                group.max_weight = cl[1][1] * 1000 if cl[1][1] else None
+                group.system_id = None
+
+                db.session.add(group)
+                groups_created += 1
+
+
+        for registration in registrations:
+            actual_weight = registration.verified_weight - int(float(request.form['tolerance']) * 1000)
+            applicable_groups = event_class.groups.filter(
+                Group.min_weight.is_(None) | (Group.min_weight < actual_weight),
+                Group.max_weight.is_(None) | (Group.max_weight >= actual_weight)
+            )
+
+            if request.form['use_old'] != 'yes':
+                applicable_groups = applicable_groups.filter_by(created_manually=False)
+
+            if not applicable_groups.count():
+                if request.form['create_new'] != 'if-required':
+                    continue
+
+                for cl in weight_classes:
+                    if not cl[1][0] or cl[1][0] * 1000 >= actual_weight or not cl[1][1] or cl[1][1] * 1000 < actual_weight:
+                        continue
+
+                    group = Group(created_manually=False, event=g.event, event_class=event_class)
+                    group.title = event_class.short_title + ' ' + cl[0]
+                    group.assign_by_logic = True
+                    group.min_weight = cl[1][0] * 1000 if cl[1][0] else None
+                    group.max_weight = cl[1][1] * 1000 if cl[1][1] else None
+                    group.system_id = None
+
+                    db.session.add(group)
+                    groups_created += 1
+            
+            applicable_groups = applicable_groups.all()
+
+            for ag in applicable_groups:
+                participant = Participant(event=g.event, group=ag)
+                participant.placement_index = None
+                participant.manually_placed = None
+                participant.final_placement = None
+                participant.final_points = None
+                participant.final_score = None
+                participant.removed = False
+                participant.disqualified = False
+                participant.removal_cause = None
+    
+                registration = registration
+                participant.full_name = f"{registration.first_name} {registration.last_name}"
+                participant.association_name = registration.club
+                participant.registration = registration
+
+                registration.placed = True
+
+                db.session.add(participant)
+                participants_created += 1
+
+        db.session.commit()
+
+        flash(f"Verbleibende TN erfolgreich zugewiesen. Erstellt wurden {groups_created} Gruppe(n) und {participants_created} TN.", 'success')
+
+        return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id))
+
+    defaults_to_all_new_classes = event_class.groups.filter_by(created_manually=False).count() == 0
+
+    return render_template("mod_placement/assign_all-predefined.html", event_class=event_class, weight_classes=weight_classes, defaults_to_all_new_classes=defaults_to_all_new_classes)
+
+
+def _get_weight_classes(event_class):
+    classes = []
+    raw_classes = event_class.weight_generator.strip().split("\n")
+    raw_classes = sorted(raw_classes, key=lambda cl: abs(int(cl)) if not cl.startswith('+') else 9999 + int(cl))
+    
+    current_minimum = None
+
+    for cl in raw_classes:
+        weight = abs(int(cl))
+        if cl.startswith("+"):
+            classes.append((f"+{weight} kg", (weight, None)))
+        else:
+            classes.append((f"-{weight} kg", (current_minimum, weight)))
+            current_minimum = weight
+    
+    return classes

@@ -1,0 +1,62 @@
+{% extends "layouts/application.html" %}
+{% set page=event_class %}
+{% block title %}Einteilung - {{ event_class.title }}{% endblock %}
+{% block pre_messages %}{% include "mod_placement/_header.html" %}{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <h1 class="h2 fw-bold mb-4">{{ event_class.title }} &ndash; Gewichtsklassen</h1>
+
+    
+    <h3 class="h4 fw-bold mb-2">Verbleibende TN zuweisen</h3>
+    <form action="" method="POST">
+        <div class="card card-semidialog mb-3">
+            <div class="card-body">
+                <p class="fw-bold">Die Einteilung erfolgt in die folgenden Gewichtsklassen:</p>
+                <ul>
+                    {% for cl in weight_classes %}
+                    {% if cl[1][0] and cl[1][1] %}
+                    <li><strong>{{ cl[0] }}</strong> (über {{ cl[1][0] }} kg bis {{ cl[1][1] }} kg)</li>
+                    {% elif cl[1][0] %}
+                    <li><strong>{{ cl[0] }}</strong> (über {{ cl[1][0] }} kg)</li>
+                    {% elif cl[1][1] %}
+                    <li><strong>{{ cl[0] }}</strong> (bis {{ cl[1][1] }} kg)</li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+                <div class="mb-3">
+                    <label for="tolerance" class="form-label">mit folgender Toleranz:</label>
+                    <div class="input-group w-50">
+                        <input type="number" class="form-control" step="0.1" min="0" max="3" value="0.1" id="tolerance" name="tolerance">
+                        <div class="input-group-text">kg</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body border-top">
+                <h4 class="h5 mb-3 fw-normal">Fortgeschrittene Einstellungen</h4>
+                <div class="mb-3">
+                    <label for="create_new" class="form-label">Neue Gruppen erstellen</label>
+                    <select class="form-select" id="create_new" name="create_new">
+                        <option value="yes" {{ 'selected' if defaults_to_all_new_classes }}>Für alle Gewichtsklassen neue Gruppen erstellen</option>
+                        <option value="if-required" {{ 'selected' if not defaults_to_all_new_classes }}>Neue Gruppen erstellen, wenn notwendig</option>
+                        <option value="no">Keine neuen Gruppen erstellen</option>
+                    </select>
+                    <div class="form-text">Von der Standardeinstellung sollte nur abgewichen werden, wenn bereits adäquate, sämtliche Gewichtsbereiche abdeckende Gruppen erstellt worden sind. Andernfalls kann es zu Überschneidungen und unerwarteten Ergebnissen kommen.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="use_old" class="form-label">Manuell erstellte Gruppen verwenden</label>
+                    <select class="form-select" id="use_old" name="use_old">
+                        <option value="no" selected>Nein</option>
+                        <option value="yes">Ja</option>
+                    </select>
+                    <div class="form-text">Hinweis: die Einteilung erfolgt, wenn neue Gruppen erstellt werden, nur <em>zusätzlich</em> in die manuell erstellten Gruppen.</div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Zuweisung vornehmen</button>
+                <a href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id) }}" class="btn btn-secondary">Abbrechen</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock body %}
