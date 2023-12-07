@@ -313,6 +313,37 @@ def assign_all_predefined(id):
     return render_template("mod_placement/assign_all-predefined.html", event_class=event_class, weight_classes=weight_classes, defaults_to_all_new_classes=defaults_to_all_new_classes)
 
 
+@mod_placement_view.route('/class/<id>/participant/<participant_id>/place', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def place(id, participant_id):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+    participant = g.event.participants.filter_by(id=participant_id).one_or_404()
+    group = participant.group
+    list_system = group.list_system()
+
+    if not list_system:
+        flash("Setzen in dieser Gruppe nicht möglich, da noch kein Listensystem zugewiesen ist.", 'danger')
+
+        return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
+
+    if request.method == 'POST':
+        participant.placement_index = int(request.values['position'])
+        participant.manually_placed = True
+
+        db.session.commit()
+
+        flash(f"TN {participant.full_name} erfolgreich an Position #{participant.placement_index + 1} gesetzt.", 'success')
+
+        return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
+
+    return render_template("mod_placement/place.html", event_class=event_class, group=group, participant=participant, list_system=list_system)
+
+
 def _get_weight_classes(event_class):
     classes = []
     raw_classes = event_class.weight_generator.strip().split("\n")

@@ -1,0 +1,43 @@
+{% extends "layouts/application.html" %}
+{% set page=event_class %}
+{% block title %}Einteilung - {{ event_class.title }}{% endblock %}
+{% block pre_messages %}{% include "mod_placement/_header.html" %}{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <h1 class="h2 fw-bold mb-4">{{ event_class.title }} &ndash; {{ 'Gewichtsklassen' if not proximity else 'Gewichtsnahe Gruppen' }}</h1>
+
+    
+    <h3 class="h4 fw-bold mb-2">TN setzen</h3>
+    <form action="" method="POST">
+        <div class="card card-semidialog">
+            <div class="card-body">
+                <p class="mb-1">In der Gruppe</p>
+                <p class="mb-1 fw-bold">{{ group.title }}</p>
+                <p class="mb-1">wird</p>
+                <p class="mb-1 fw-bold">{{ participant.full_name }}</p>
+                <p>auf die folgende Position gesetzt:</p>
+
+                {% for i in range(list_system.mandatory_maximum) %}
+                {% set participant = group.participants.filter_by(placement_index=i).first() %}
+                {% if participant %}
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" id="position-{{ i }}" disabled name="position">
+                    <label class="form-check-label" for="position-{{ i }}">Pos. Nr. {{ i + 1 }} &ndash; besetzt mit: {{ participant.full_name }} ({{ participant.association_name }})</label>
+                </div>
+                {% else %}
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" id="position-{{ i }}" name="position" value="{{ i }}">
+                    <label class="form-check-label" for="position-{{ i }}">Pos. Nr. {{ i + 1 }}</label>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Setzen</button>
+                <a href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id) }}" class="btn btn-secondary">Abbrechen</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock body %}
