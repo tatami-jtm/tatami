@@ -98,12 +98,34 @@ class Group(db.Model):
     
     system_id = db.Column(db.Integer(), db.ForeignKey('list_system.id'))
     system = db.relationship('ListSystem')
+
+    _system = (None, None) # for memoizing calculated system
     
     def cut_title(self):
         if not self.title:
             return ""
         
         return self.title[len(self.event_class.short_title) + 1:]
+
+
+    def list_system(self):
+        if self.system_id:
+            return self.system
+        
+        participant_count = self.participants.count()
+
+        if self._system[1] and self._system[0] == participant_count:
+            return self._system[1]
+        
+        systems = ListSystemRule.query.filter_by(event=self.event)
+        query = systems.filter(
+            ListSystemRule.minimum <= participant_count,
+            ListSystemRule.maximum >= participant_count)
+        
+        if query.count():
+            self._system = participant_count, query.one().system
+
+        return self._system[1]
 
 
 class Participant(db.Model):

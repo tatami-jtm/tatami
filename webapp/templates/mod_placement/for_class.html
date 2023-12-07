@@ -137,6 +137,14 @@
             <div class="mb-3">
                 <a href="" class="btn btn-primary btn-sm">Verbleibende Gruppen-TN losen</a>
             </div>
+
+            {% set list_system = current_group.list_system() %}
+
+            {% if list_system %}
+            <p>Verwendetes Listensystem:<br><strong>{{ list_system.title }}</strong> mit {{ list_system.mandatory_maximum }} {{ 'Positionen' if list_system.mandatory_maximum != 1 else 'Position' }}</p>
+            {% else %}
+            <p>Noch kein Listensystem zugewiesen.</p>
+            {% endif %}
         </div>
         {% endif %}
     </div>
