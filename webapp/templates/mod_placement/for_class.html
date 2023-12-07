@@ -138,15 +138,16 @@
         <div class="col-12 col-md-3">
             <h3 class="h4 fw-bold mb-2">Setzen und Losen</h3>
             
-            <div class="mb-3">
-                <a href="" class="btn btn-primary btn-sm">Verbleibende Gruppen-TN losen</a>
-            </div>
-
             {% set list_system = current_group.list_system() %}
-
             {% if not list_system %}
             <p>Noch kein Listensystem zugewiesen.</p>
             {% else %}
+
+            <div class="mb-3">
+                <a href="{{ url_for('mod_placement.place_all', event=g.event.slug, id=event_class.id, group_id=current_group.id) }}" class="btn btn-primary btn-sm">Verbleibende Gruppen-TN losen</a>
+            </div>
+
+
             <div class="card">
                 <div class="card-header">
                     {{ list_system.title }}

@@ -3,6 +3,8 @@ from flask import Blueprint, render_template, flash, g, session, \
 
 from datetime import datetime as dt
 
+import random
+
 from .event_manager import check_and_apply_event
 from .devices import check_is_registered
 
@@ -369,6 +371,33 @@ def unplace(id, participant_id):
     return render_template("mod_placement/unplace.html", event_class=event_class, group=group, participant=participant)
 
 
+@mod_placement_view.route('/class/<id>/group/<group_id>/place_all', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def place_all(id, group_id):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+    group = g.event.groups.filter_by(id=group_id).one_or_404()
+    list_system = group.list_system()
+
+    if not list_system:
+        flash("Setzen in dieser Gruppe nicht möglich, da noch kein Listensystem zugewiesen ist.", 'danger')
+
+        return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
+
+    if request.method == 'POST':
+        _randomly_place_group(group)
+
+        flash(f"Gruppe {group.title} erfolgreich gelost.", 'success')
+
+        return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
+
+    return render_template("mod_placement/place_all.html", event_class=event_class, group=group, list_system=list_system)
+
+
 def _get_weight_classes(event_class):
     classes = []
     raw_classes = event_class.weight_generator.strip().split("\n")
@@ -385,3 +414,27 @@ def _get_weight_classes(event_class):
             current_minimum = weight
     
     return classes
+
+
+def _randomly_place_group(group):
+    participants = group.participants.filter_by(placement_index=None)
+    list_system = group.list_system()
+    list_max_count = list_system.mandatory_maximum
+    current_count = 0
+
+    while current_count < list_max_count:
+        # Is there already a participant at this position
+        if group.participants.filter_by(placement_index=current_count).count():
+            current_count += 1
+            continue
+
+        # If there is no next participant (exhausted)
+        if not participants.count():
+            break
+    
+        next_participant = random.choice(participants.all())
+
+        next_participant.placement_index = current_count
+        db.session.commit()
+
+        current_count += 1
