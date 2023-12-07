@@ -102,10 +102,10 @@
                 <a href="{{ url_for('mod_placement.edit_group', event=g.event.slug, id=event_class.id, group_id=current_group.id) }}" class="btn btn-secondary btn-sm">Gruppe bearbeiten</a>
             </div>
 
-            {% if current_group.participants.count() %}
+            {% if current_group.participants.filter_by(placement_index=None).count() %}
 
             <div class="card">
-                {% for part in current_group.participants.all() %}
+                {% for part in current_group.participants.filter_by(placement_index=None).all() %}
                 <div class="card-body p-2 {{ 'border-top' if not loop.index == 1 }}">
                     <div class="row">
                         <div class="col-7">
@@ -122,6 +122,10 @@
                 </div>
                 {% endfor %}
             </div>
+
+            {% elif current_group.participants.count() %}
+
+            <p>Alle dieser Gruppe zugewiesenen Teilnehmenden wurden gesetzt/gelost.</p>
 
             {% else %}
             
@@ -140,10 +144,46 @@
 
             {% set list_system = current_group.list_system() %}
 
-            {% if list_system %}
-            <p>Verwendetes Listensystem:<br><strong>{{ list_system.title }}</strong> mit {{ list_system.mandatory_maximum }} {{ 'Positionen' if list_system.mandatory_maximum != 1 else 'Position' }}</p>
-            {% else %}
+            {% if not list_system %}
             <p>Noch kein Listensystem zugewiesen.</p>
+            {% else %}
+            <div class="card">
+                <div class="card-header">
+                    {{ list_system.title }}
+                </div>
+                {% for i in range(list_system.mandatory_maximum) %}
+                {% set participant = current_group.participants.filter_by(placement_index=i).first() %}
+                <div class="card-body p-2 py-1 {{ 'border-top' if not loop.index == 1 }}">
+                    {% if not participant %}
+                    <div class="row">
+                        <div class="col-1 align-self-center text-center px-0">
+                            <div class="{{ 'fs-3' if i < 9 else 'fs-5 py-1' }} fw-bold text-secondary">{{ i + 1 }}</div>
+                        </div>
+                        <div class="col-10 align-self-center">n. n.</div>
+                    </div>
+                    {% else %}
+                    <div class="row">
+                        <div class="col-1 align-self-center text-center px-0">
+                            <div class="{{ 'fs-3' if i < 9 else 'fs-5 py-1' }} fw-bold text-dark">{{ i + 1 }}</div>
+                        </div>
+                        <div class="col-8 align-self-center">
+                            
+                            {% if participant.manually_placed %}
+                                <strong title="TN wurde manuell gesetzt.">📌 {{ participant.full_name }}</strong><br>
+                            {% else %}
+                                <strong>{{ participant.full_name }}</strong><br>
+                            {% endif %}
+                            {{ participant.association_name }}
+                        </div>
+                        <div class="col-3 align-self-center">
+                            <a href="" class="btn btn-outline-danger w-100 d-block btn-sm">Löschen</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
             {% endif %}
         </div>
         {% endif %}
