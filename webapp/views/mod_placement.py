@@ -398,6 +398,48 @@ def place_all(id, group_id):
     return render_template("mod_placement/place_all.html", event_class=event_class, group=group, list_system=list_system)
 
 
+@mod_placement_view.route('/class/<id>/place_for_all_groups', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def place_for_all_groups(id):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+    groups = g.event.groups
+
+    unresolved_for_error_of_no_system = []
+    unresolved_for_no_participants = []
+    resolved_successfully = []
+
+    if request.method == 'POST':
+        for group in groups:
+            list_system = group.list_system()
+
+            if group.participants.count() == 0:
+                unresolved_for_no_participants.append(group.title)
+            elif not list_system:
+                unresolved_for_error_of_no_system.append(group.title)
+
+            else:
+                _randomly_place_group(group)
+                resolved_successfully.append(group.title)
+
+        if len(resolved_successfully):
+            flash(f"Die Gruppe(n) {', '.join(resolved_successfully)} wurden erfolgreich gelost.", 'success')
+
+        if len(unresolved_for_no_participants):
+            flash(f"Die Gruppe(n) {', '.join(unresolved_for_no_participants)} wurden nicht gelost, da keine TN zugewiesen sind.", 'info')
+
+        if len(unresolved_for_error_of_no_system):
+            flash(f"Die Gruppe(n) {', '.join(unresolved_for_error_of_no_system)} konnten nicht gelost werden, da kein Listensystem zugewiesen ist.", 'danger')
+
+        return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id))
+
+    return render_template("mod_placement/place_for_all_groups.html", event_class=event_class, groups=groups)
+
+
 def _get_weight_classes(event_class):
     classes = []
     raw_classes = event_class.weight_generator.strip().split("\n")

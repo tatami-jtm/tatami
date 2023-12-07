@@ -64,7 +64,7 @@
             <h3 class="h4 fw-bold mb-2">Gruppen</h3>
             <div class="mb-2">
                 <a href="{{ url_for('mod_placement.add_group', event=g.event.slug, id=event_class.id) }}" class="btn btn-secondary btn-sm">Neue Gruppe</a>
-                <a href="" class="btn btn-secondary btn-sm">Alle Gruppen losen</a>
+                <a href="{{ url_for('mod_placement.place_for_all_groups', event=g.event.slug, id=event_class.id) }}" class="btn btn-secondary btn-sm">Alle Gruppen losen</a>
             </div>
 
             {% if groups.count() %}
