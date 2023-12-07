@@ -176,7 +176,7 @@
                             {{ participant.association_name }}
                         </div>
                         <div class="col-3 align-self-center">
-                            <a href="" class="btn btn-outline-danger w-100 d-block btn-sm">Löschen</a>
+                            <a href="{{ url_for('mod_placement.unplace', event=g.event.slug, id=event_class.id, participant_id=participant.id) }}" class="btn btn-outline-danger w-100 d-block btn-sm">Löschen</a>
                         </div>
                     </div>
                     {% endif %}

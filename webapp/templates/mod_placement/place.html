@@ -14,7 +14,7 @@
                 <p class="mb-1">In der Gruppe</p>
                 <p class="mb-1 fw-bold">{{ group.title }}</p>
                 <p class="mb-1">wird</p>
-                <p class="mb-1 fw-bold">{{ participant.full_name }}</p>
+                <p class="mb-1 fw-bold">{{ participant.full_name }} ({{ participant.association_name }})</p>
                 <p>auf die folgende Position gesetzt:</p>
 
                 {% for i in range(list_system.mandatory_maximum) %}

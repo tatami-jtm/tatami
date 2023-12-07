@@ -344,6 +344,31 @@ def place(id, participant_id):
     return render_template("mod_placement/place.html", event_class=event_class, group=group, participant=participant, list_system=list_system)
 
 
+@mod_placement_view.route('/class/<id>/participant/<participant_id>/unplace', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def unplace(id, participant_id):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+    participant = g.event.participants.filter_by(id=participant_id).one_or_404()
+    group = participant.group
+
+    if request.method == 'POST':
+        participant.placement_index = None
+        participant.manually_placed = False
+
+        db.session.commit()
+
+        flash(f"TN {participant.full_name} erfolgreich abgesetzt.", 'success')
+
+        return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
+
+    return render_template("mod_placement/unplace.html", event_class=event_class, group=group, participant=participant)
+
+
 def _get_weight_classes(event_class):
     classes = []
     raw_classes = event_class.weight_generator.strip().split("\n")
