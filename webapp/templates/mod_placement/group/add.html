@@ -7,8 +7,8 @@
     <h1 class="h2 fw-bold mb-4">{{ event_class.title }} &ndash; {{ 'Gewichtsklassen' if not proximity else 'Gewichtsnahe Gruppen' }}</h1>
 
     
-    <h3 class="h4 fw-bold mb-2">Gruppe bearbeiten: {{ group.title }}</h3>
-    {% include "mod_placement/_group_form.html" %}
+    <h3 class="h4 fw-bold mb-2">Gruppe erstellen</h3>
+    {% include "mod_placement/group/_form.html" %}
 </div>
 
 {% endblock body %}

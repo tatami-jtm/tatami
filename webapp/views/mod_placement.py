@@ -84,7 +84,7 @@ def add_group(id):
 
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
 
-    return render_template("mod_placement/add_group.html", event_class=event_class, group=group, systems=ListSystem.all_enabled())
+    return render_template("mod_placement/group/add.html", event_class=event_class, group=group, systems=ListSystem.all_enabled())
 
 
 @mod_placement_view.route('/class/<id>/group/edit/<group_id>', methods=['GET', 'POST'])
@@ -115,7 +115,7 @@ def edit_group(id, group_id):
 
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
 
-    return render_template("mod_placement/edit_group.html", event_class=event_class, group=group, systems=ListSystem.all_enabled())
+    return render_template("mod_placement/group/edit.html", event_class=event_class, group=group, systems=ListSystem.all_enabled())
 
 
 @mod_placement_view.route('/class/<id>/group/delete/<group_id>', methods=['GET', 'POST'])
@@ -140,7 +140,7 @@ def delete_group(id, group_id):
 
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id))
 
-    return render_template("mod_placement/delete_group.html", event_class=event_class, group=group)
+    return render_template("mod_placement/group/delete.html", event_class=event_class, group=group)
 
 
 @mod_placement_view.route('/class/<id>/assign', methods=['GET', 'POST'])
@@ -194,7 +194,7 @@ def assign(id):
     group = event_class.groups.filter_by(id=request.values.get('group', None)).one_or_none()
     registration = g.event.registrations.filter_by(id=request.values.get('registration', None)).one_or_none()
 
-    return render_template("mod_placement/assign.html", event_class=event_class, group=group, registration=registration, registrations=registrations)
+    return render_template("mod_placement/registration/assign.html", event_class=event_class, group=group, registration=registration, registrations=registrations)
 
 
 @mod_placement_view.route('/class/<id>/unassign/<participant_id>', methods=['GET', 'POST'])
@@ -220,7 +220,7 @@ def unassign(id, participant_id):
 
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
 
-    return render_template("mod_placement/unassign.html", event_class=event_class, participant=participant, registration=registration)
+    return render_template("mod_placement/registration/unassign.html", event_class=event_class, participant=participant, registration=registration)
 
 
 @mod_placement_view.route('/class/<id>/assign/predefined', methods=['GET', 'POST'])
@@ -312,7 +312,7 @@ def assign_all_predefined(id):
 
     defaults_to_all_new_classes = event_class.groups.filter_by(created_manually=False).count() == 0
 
-    return render_template("mod_placement/assign_all-predefined.html", event_class=event_class, weight_classes=weight_classes, defaults_to_all_new_classes=defaults_to_all_new_classes)
+    return render_template("mod_placement/registration/assign_all-predefined.html", event_class=event_class, weight_classes=weight_classes, defaults_to_all_new_classes=defaults_to_all_new_classes)
 
 
 @mod_placement_view.route('/class/<id>/participant/<participant_id>/place', methods=['GET', 'POST'])
@@ -343,7 +343,7 @@ def place(id, participant_id):
 
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
 
-    return render_template("mod_placement/place.html", event_class=event_class, group=group, participant=participant, list_system=list_system)
+    return render_template("mod_placement/participant/place.html", event_class=event_class, group=group, participant=participant, list_system=list_system)
 
 
 @mod_placement_view.route('/class/<id>/participant/<participant_id>/unplace', methods=['GET', 'POST'])
@@ -368,7 +368,7 @@ def unplace(id, participant_id):
 
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
 
-    return render_template("mod_placement/unplace.html", event_class=event_class, group=group, participant=participant)
+    return render_template("mod_placement/participant/unplace.html", event_class=event_class, group=group, participant=participant)
 
 
 @mod_placement_view.route('/class/<id>/group/<group_id>/place_all', methods=['GET', 'POST'])
@@ -395,7 +395,7 @@ def place_all(id, group_id):
 
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
 
-    return render_template("mod_placement/place_all.html", event_class=event_class, group=group, list_system=list_system)
+    return render_template("mod_placement/participant/place_all.html", event_class=event_class, group=group, list_system=list_system)
 
 
 @mod_placement_view.route('/class/<id>/place_for_all_groups', methods=['GET', 'POST'])
@@ -437,7 +437,7 @@ def place_for_all_groups(id):
 
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id))
 
-    return render_template("mod_placement/place_for_all_groups.html", event_class=event_class, groups=groups)
+    return render_template("mod_placement/participant/place_for_all_groups.html", event_class=event_class, groups=groups)
 
 
 def _get_weight_classes(event_class):
