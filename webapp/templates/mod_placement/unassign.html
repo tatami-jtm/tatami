@@ -23,7 +23,7 @@
                 {% endif %}
             </div>
             <div class="card-footer">
-                <button type="submit" class="btn btn-danger btn-3d">Austragen</button>
+                <button type="submit" class="btn btn-danger btn-3d" autofocus="true">Austragen</button>
                 <a href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=participant.group.id) }}" class="btn btn-secondary">Abbrechen</a>
             </div>
         </div>

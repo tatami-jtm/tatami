@@ -22,7 +22,7 @@
             </div>
             <div class="card-footer">
                 {% if group.participants.count() == 0 %}
-                <button type="submit" class="btn btn-danger btn-3d">Gruppe löschen</button>
+                <button type="submit" class="btn btn-danger btn-3d" autofocus="true">Gruppe löschen</button>
                 {% endif %}
                 <a href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id) }}" class="btn btn-secondary">Abbrechen</a>
             </div>
