@@ -560,6 +560,8 @@ def _randomly_place_group(group):
     list_max_count = list_system.mandatory_maximum
     current_count = 0
 
+    group.system = list_system
+
     while current_count < list_max_count:
         # Is there already a participant at this position
         if group.participants.filter_by(placement_index=current_count).count():
