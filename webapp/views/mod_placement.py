@@ -293,7 +293,6 @@ def assign_all_predefined(id):
                 participant.disqualified = False
                 participant.removal_cause = None
     
-                registration = registration
                 participant.full_name = f"{registration.first_name} {registration.last_name}"
                 participant.association_name = registration.club
                 participant.registration = registration
@@ -313,6 +312,103 @@ def assign_all_predefined(id):
     defaults_to_all_new_classes = event_class.groups.filter_by(created_manually=False).count() == 0
 
     return render_template("mod_placement/registration/assign_all-predefined.html", event_class=event_class, weight_classes=weight_classes, defaults_to_all_new_classes=defaults_to_all_new_classes)
+
+
+@mod_placement_view.route('/class/<id>/assign/proximity', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def assign_all_proximity(id):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+    registrations = event_class.registrations.filter_by(confirmed=True, registered=True, weighed_in=True, placed=False).order_by('verified_weight')
+
+    if request.method == 'POST':
+        segmentation = list(map(int, request.values.getlist('before')))
+        group = None
+        current_initial = None
+        groups_created = 0
+        participants_created = 0
+
+        for registration in registrations.all():
+            if registration.id in segmentation or not group:
+                current_initial = registration
+
+                group = Group(created_manually=False, event=g.event, event_class=event_class)
+                group.assign_by_logic = True
+                group.min_weight = current_initial.verified_weight
+                group.system_id = None
+
+                db.session.add(group)
+                groups_created += 1
+
+            group.max_weight = registration.verified_weight
+            group.title = f"{event_class.short_title} -{group.max_weight / 1000}kg"
+
+            participant = Participant(event=g.event, group=group)
+            participant.placement_index = None
+            participant.manually_placed = None
+            participant.final_placement = None
+            participant.final_points = None
+            participant.final_score = None
+            participant.removed = False
+            participant.disqualified = False
+            participant.removal_cause = None
+
+            participant.full_name = f"{registration.first_name} {registration.last_name}"
+            participant.association_name = registration.club
+            participant.registration = registration
+
+            registration.placed = True
+            registration.placed_at = registration.placed_at or dt.now()
+
+            db.session.add(participant)
+            participants_created += 1
+
+        db.session.commit()
+
+        flash(f"Verbleibende TN erfolgreich zugewiesen. Erstellt wurden {groups_created} Gruppe(n) und {participants_created} TN.", 'success')
+
+        return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id))
+    
+    else:
+        default_segmentation = {}
+        max_proximity = event_class.default_maximal_proximity
+        max_size = event_class.default_maximal_size
+        current_max_weight = None
+        group_size = 0
+        past_registration = None
+
+        for registration in registrations.all()[::-1]:
+            actual_weight = registration.verified_weight
+            default_segmentation[registration.id] = False
+
+            if current_max_weight is None:
+                current_max_weight = actual_weight
+                group_size += 1
+                
+                past_registration = registration
+
+            elif actual_weight + max_proximity >= current_max_weight:
+                group_size += 1
+
+                if group_size == max_size:
+                    default_segmentation[registration.id] = True
+                    current_max_weight = None
+                    group_size = 0
+
+                past_registration = registration
+
+            else:
+                default_segmentation[past_registration.id] = True
+                current_max_weight = actual_weight
+                group_size = 1
+
+                past_registration = registration
+
+        return render_template("mod_placement/registration/assign_all-proximity.html", event_class=event_class, registrations=registrations, default_segmentation=default_segmentation)
 
 
 @mod_placement_view.route('/class/<id>/participant/<participant_id>/place', methods=['GET', 'POST'])

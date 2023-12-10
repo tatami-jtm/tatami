@@ -1,0 +1,44 @@
+{% extends "layouts/application.html" %}
+{% set page=event_class %}
+{% block title %}Einteilung - {{ event_class.title }}{% endblock %}
+{% block pre_messages %}{% include "mod_placement/_header.html" %}{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <h1 class="h2 fw-bold mb-4">{{ event_class.title }} &ndash; Gewichtsnahe Gruppen</h1>
+
+    
+    <h3 class="h4 fw-bold mb-2">Verbleibende TN zuweisen</h3>
+    <form action="" method="POST">
+        <div class="card card-semidialog mb-3">
+            <div class="card-body">
+                <p class="fw-bold">Die Einteilung erfolgt nach gewichtsnahen Gruppen.</p>
+                <p>Es wird die folgende Einteilung</p>
+                <ul>
+                    <li>mit einem Höchstabstand von {{ event_class.default_maximal_proximity / 1000 }}kg und</li>
+                    <li>mit einer Gruppengröße von höchstens {{ event_class.default_maximal_size }} TN</li>
+                </ul>
+                <p>TN vorgeschlagen. Die schwarzen Balken zeigen an, wo Gruppengrenzen gezogen werden.</p>
+                <p>Durch Klick auf den schwarzen bzw. grauen Balken kann geändert werden, ob an dieser Stelle eine Gruppengrenze gezogen werden soll.</p>
+                <ol class="segmentation">
+                    {% for reg in registrations.all() %}
+                    {% if not loop.first %}
+                    <li class="segmentation-control">
+                        <input type="checkbox" id="before_{{ reg.id }}" name="before" value="{{ reg.id }}" class="segmentation-checkbox" {{ 'checked' if default_segmentation[reg.id] }}>
+                        <label for="before_{{ reg.id }}" class="segmentation-label">Hier abgrenzen</label>
+                    </li>
+                    {% endif %}
+                    <li class="segmentation-item">
+                        <strong>{{ reg.verified_weight / 1000 }} kg</strong> &ndash; {{ reg.first_name }} {{ reg.last_name }} ({{ reg.club }})
+                    </li>
+                    {% endfor %}
+                </ol>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Zuweisung vornehmen</button>
+                <a href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id) }}" class="btn btn-secondary">Abbrechen</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock body %}

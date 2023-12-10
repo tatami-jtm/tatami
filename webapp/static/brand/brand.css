@@ -626,3 +626,36 @@ textarea.form-control {
 .card-semidialog {
     max-width: 812px;
 }
+
+.segmentation {
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem;
+}
+
+.segmentation .segmentation-item {
+    padding: 0.5rem;
+    margin: 0.25rem 0;
+}
+.segmentation .segmentation-control {
+    display: flex;
+    justify-content: center;
+}
+.segmentation .segmentation-control .segmentation-checkbox {
+    display: none;
+}
+.segmentation .segmentation-control .segmentation-label {
+    display: block;
+    color: transparent;
+    text-align: center;
+    font-size: 4px;
+    width: 100%;
+    border: 6px solid #f0f0f0;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    user-select: none;
+}
+.segmentation .segmentation-control .segmentation-checkbox:checked + .segmentation-label {
+    background-color: #333333;
+    border-color: white;
+}

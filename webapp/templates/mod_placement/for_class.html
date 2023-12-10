@@ -30,7 +30,7 @@
             
             <div class="mb-3">
                 {% if proximity %}
-                <a href="" class="btn btn-primary btn-sm" disabled>Verbleibende TN zuweisen</a>
+                <a href="{{ url_for('mod_placement.assign_all_proximity', event=g.event.slug, id=event_class.id) }}" class="btn btn-primary btn-sm">Verbleibende TN zuweisen</a>
                 {% else %}
                 <a href="{{ url_for('mod_placement.assign_all_predefined', event=g.event.slug, id=event_class.id) }}" class="btn btn-primary btn-sm">Verbleibende TN zuweisen</a>
                 {% endif %}
