@@ -15,6 +15,21 @@ class MatchResult:
 
         self._time = None
 
+    @classmethod
+    def mk(cls, white_pts, white_scr, white_data, blue_pts, blue_scr, blue_data, winner, time):
+        mr = MatchResult()
+        mr.set_points_white(white_pts)
+        mr.set_score_white(white_scr)
+        if white_data:
+            mr.set_data_white(*white_data)
+        mr.set_points_blue(blue_pts)
+        mr.set_score_blue(blue_scr)
+        if blue_data:
+            mr.set_data_blue(*blue_data)
+        mr.set_absolute_winner(winner)
+        mr.set_time(time)
+        return mr
+
     def is_white_winner(self):
         if self._absolute_winner == 'white':
             return True

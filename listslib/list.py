@@ -46,3 +46,9 @@ class List:
     
     def get_fifth(self):
         return self.meta.get_fifth(self)
+    
+    def import_struct(self, struct):
+        return self.meta.import_struct(self, struct)
+    
+    def export_struct(self):
+        return self.meta.export_struct(self)

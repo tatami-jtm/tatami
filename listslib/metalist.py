@@ -143,6 +143,7 @@ class MetaList:
     """
     def __load_matches(self):
         self._matches = {}
+        self._playoff_match_ids = []
 
         for match in self._com.findall('rules/match'):
             match_id = match.attrib['id']
@@ -154,6 +155,7 @@ class MetaList:
             for match in po.findall('./match'):
                 match_id = match.attrib['id']
                 match_data = self.__load_single_match(match, po.attrib['id'])
+                self._playoff_match_ids.append(match_id)
 
                 self._matches[match_id] = match_data
 
@@ -432,6 +434,7 @@ class MetaList:
             'calced': {}
         }
         obj._playoff_data = {}
+        obj._random_seed = random.randint(1, 100000)
 
     """
         alloc(obj, Player)
@@ -520,7 +523,7 @@ class MetaList:
                 if ref['playoff'] not in obj._playoff_data:
                     return None
 
-                return obj._playoff_data[ref['playoff']]['alloc'][ref['fighter']]
+                return obj._playoff_data[ref['playoff']]['alloc'][ref['fighter'] - 1]
             else:
                 return obj._fighters[ref['fighter'] - 1]
 
@@ -873,11 +876,12 @@ class MetaList:
 
                 # realloc fighters
                 if po_val['realloc_random']:
-                    playoff_candidates = random.shuffle(playoff_candidates)
+                    random.seed(obj._random_seed)
+                    random.shuffle(playoff_candidates)
                 
                 for fc, cand in enumerate(playoff_candidates):
                     alloc_id = po_val['realloc'][fc]
-                    pod["alloc"][alloc_id] = cand
+                    pod["alloc"][alloc_id - 1] = cand
 
                 # schedule PO matches
                 obj._match_order += po_val['match_order']
@@ -991,3 +995,66 @@ class MetaList:
             return (BlankFighter, BlankFighter)
 
         return obj._score_deductions['results']['fifth']
+    
+
+    """
+        import_struct(self, obj, struct)
+
+        imports previously exported list via struct into obj
+    """
+    def import_struct(self, obj, struct):
+        self.init(obj)
+        for fighter in struct['fighters']:
+            self.alloc(obj, fighter)
+        
+        if 'random_seed' in struct:
+            obj._random_seed = struct['random_seed']
+
+        for match_id in struct['matches']:
+            match_result = struct['matches'][match_id]
+            match = self.get_match_by_id(obj, match_id)
+            match_result.set_match(match)
+            self.enter_results(obj, match_result)
+
+        self.get_schedule(obj, False)
+        self.score(obj)
+
+        for po_match_id in struct['playoff_matches']:
+            po_match_result = struct['playoff_matches'][po_match_id]
+            po_match = self.get_match_by_id(obj, po_match_id)
+            po_match_result.set_match(po_match)
+            self.enter_results(obj, po_match_result)
+        
+        self.get_schedule(obj, False)
+        self.score(obj)
+    
+    """
+        export_struct(self, obj)
+
+        export list from obj into a dictionary struct suitable for import_struct
+    """
+    def export_struct(self, obj):
+        struct = {
+            'fighters': [],
+            'matches': {},
+            'random_seed': obj._random_seed,
+            'playoff_matches': {}
+        }
+
+        fighters_prep_list = {}
+
+        for pos, fighter in enumerate(obj._fighters):
+            absolute_pos = self._allocation_order.index(pos + 1)
+            fighters_prep_list[absolute_pos] = fighter
+
+        struct['fighters'] = [v for k, v in sorted(fighters_prep_list.items(), key=lambda o: o[0])]
+
+        for match_id in obj._match_results:
+            match_result = obj._match_results[match_id]
+
+            if match_id in self._playoff_match_ids:
+                struct['playoff_matches'][match_id] = match_result
+            else:
+                struct['matches'][match_id] = match_result
+        
+        return struct
