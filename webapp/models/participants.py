@@ -96,8 +96,22 @@ class Group(db.Model):
     event_class = db.relationship('EventClass', backref=db.backref(
         'groups', lazy='dynamic'))
     
+    assigned = db.Column(db.Boolean)
+    assigned_to_position_id = db.Column(db.Integer(), db.ForeignKey('device_position.id'))
+    assigned_to_position = db.relationship('DevicePosition', backref=db.backref(
+        'assigned_groups', lazy='dynamic'))
+    
     system_id = db.Column(db.Integer(), db.ForeignKey('list_system.id'))
     system = db.relationship('ListSystem')
+
+    marked_ready = db.Column(db.Boolean)
+    marked_ready_at = db.Column(db.DateTime())
+
+    opened = db.Column(db.Boolean)
+    opened_at = db.Column(db.DateTime())
+
+    completed = db.Column(db.Boolean)
+    completed_at = db.Column(db.DateTime())
 
     _system = (None, None) # for memoizing calculated system
     
@@ -143,6 +157,8 @@ class Participant(db.Model):
     removed = db.Column(db.Boolean)
     disqualified = db.Column(db.Boolean)
     removal_cause = db.Column(db.Text(250))
+
+    last_fight_at = db.Column(db.DateTime())
 
     event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
     event = db.relationship('Event', backref=db.backref(
