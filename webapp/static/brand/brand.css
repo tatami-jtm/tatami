@@ -114,6 +114,18 @@ html, body {
     border-color: #600;
 }
 
+.btn.btn-sidecta {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: rotate(-90deg) translate(50%, 132.5%);
+    z-index: 1000;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    border: none !important;
+    margin: 0;
+}
+
 .card {
     box-shadow: 0.25em 0.25em 2em -1em #0003;
     border-color: #aaa;
