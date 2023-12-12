@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort, flash, g, \
+from flask import Blueprint, render_template, abort, flash, session, g, \
     request, redirect, url_for
 from flask_security import login_required, current_user
 
@@ -6,7 +6,7 @@ from ..models import db, Event, EventClass, DeviceRegistration, \
     DevicePosition, EventRole, Association, Registration
 
 from datetime import datetime
-import time
+import time, uuid
 
 eventmgr_view = Blueprint('event_manager', __name__)
 
@@ -33,6 +33,15 @@ def check_is_event_supervisor(func):
 
     inner_func.__name__ = func.__name__
     return inner_func
+
+@eventmgr_view.context_processor
+def inject_device_options():
+    device_positions = DevicePosition.query.filter_by(event=g.event).order_by('is_mat', 'position').all()
+    device_roles = EventRole.query.all()
+    return {
+        "device_positions": device_positions,
+        "device_roles": device_roles
+    }
 
 
 @eventmgr_view.route('/')
@@ -377,17 +386,15 @@ def create_association():
 @check_and_apply_event
 @check_is_event_supervisor
 def devices():
-    mat_pos = DevicePosition.query.filter_by(
-        event=g.event, is_mat=True).order_by('position').all()
     admin_pos = DevicePosition.query.filter_by(
         event=g.event, is_mat=False).order_by('position').all()
+    mat_pos = DevicePosition.query.filter_by(
+        event=g.event, is_mat=True).order_by('position').all()
     requests = DeviceRegistration.query.filter_by(
         event=g.event, confirmed=False).all()
-    roles = EventRole.query.all()
     return render_template(
         "event-manager/devices.html",
         mat_pos=mat_pos,
-        roles=roles,
         admin_pos=admin_pos,
         requests=requests)
 
@@ -498,3 +505,42 @@ def device_position_create():
     db.session.commit()
 
     return redirect(url_for('event_manager.devices', event=g.event.slug))
+
+
+@eventmgr_view.route('/quick-sign-in', methods=["POST"])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def quick_sign_in():
+    device = None
+    if 'device_token' in session:
+        device = DeviceRegistration.query.filter_by(
+        event=g.event, token=session['device_token']).one_or_none()
+    
+    if device is None:
+        device = DeviceRegistration(event=g.event)
+        db.session.add(device)
+
+    device.token = str(uuid.uuid4())
+    device.title = f"Admin-Zugang - {current_user.display_name}"
+
+    device.confirmed = True
+    device.confirmed_at = datetime.now()
+
+    device.registered_at = datetime.now()
+    device.registered_by_id = current_user.id
+
+    pos = DevicePosition.query.filter_by(
+        event=g.event, id=request.form['position']).one_or_404()
+    role = EventRole.query.filter_by(id=request.form['role']).one_or_404()
+
+    device.position_id = pos.id
+    device.event_role_id = role.id
+
+    db.session.commit()
+
+    session['device_token'] = device.token
+
+    flash('Willkommen! Die Schnelleinwahl war erfolgreich.', 'success')
+
+    return redirect(url_for('devices.index', event=g.event.slug))

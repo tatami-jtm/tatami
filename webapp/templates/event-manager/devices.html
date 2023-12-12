@@ -9,7 +9,7 @@
 <div class="row">
     {% for mat in mat_pos %}
     <div class="col-12 col-xl-4 p-2">
-        {{ position(mat, roles, mat_pos + admin_pos) }}
+        {{ position(mat, device_roles, device_positions) }}
     </div>
     {% endfor %}
 </div>
@@ -21,7 +21,7 @@
 <div class="row">
     {% for admin in admin_pos %}
     <div class="col-12 col-xl-4 p-2">
-        {{ position(admin, roles, mat_pos + admin_pos) }}
+        {{ position(admin, device_roles, device_positions) }}
     </div>
     {% endfor %}
 </div>
@@ -38,7 +38,7 @@
             <div class="card-body border-bottom">
                 <div class="list-group">
                     {% for dev in requests %}
-                        {{ device(dev, roles, mat_pos + admin_pos)}}
+                        {{ device(dev, device_roles, device_positions)}}
                     {% endfor %}
                 </div>
             </div>
@@ -100,7 +100,7 @@
     <div class="card-body">
         <div class="list-group">
             {% for dev in pos.devices %}
-                {{ device(dev, roles, mat_pos + admin_pos)}}
+                {{ device(dev, device_roles, device_positions)}}
             {% endfor %}
         </div>
     </div>

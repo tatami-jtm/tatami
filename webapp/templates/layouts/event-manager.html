@@ -43,7 +43,7 @@
         <div class="row">
             <div class="col event-sidebar bg-light shadow-sm">
                 <h3>{{ g.event.title }}</h3>
-                <div class="nav flex-column">
+                <div class="nav flex-column mb-4">
                     <div class="nav-item">
                         <a class="nav-link {{ 'active' if event_page=='dashboard' }}" href="{{ url_for('event_manager.index', event=g.event.slug) }}">📊 Übersicht</a>
                     </div>
@@ -57,13 +57,40 @@
                         <a class="nav-link {{ 'active' if event_page=='registrations' }}" href="{{ url_for('event_manager.registrations', event=g.event.slug) }}">📝 Anmeldungen</a>
                     </div>
                     <div class="nav-item">
-                        <a class="nav-link {{ 'active' if event_page=='lists' }}" href="">📜 Hauptliste</a>
-                    </div>
-                    <div class="nav-item">
                         <a class="nav-link {{ 'active' if event_page=='devices' }}" href="{{ url_for('event_manager.devices', event=g.event.slug) }}">💻 Geräte- und Hallenplan</a>
                     </div>
                     <div class="nav-item">
                         <a class="nav-link {{ 'active' if event_page=='stream' }}" href="">📽️ Streaming</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Schnelleinwahl</div>
+                    <div class="card-body">
+                        <form action="{{ url_for('event_manager.quick_sign_in', event=g.event.slug) }}" method="POST" target="_blank">
+                            <p>Für dieses Gerät folgende Freigabe erteilen:</p>
+                            <div class="mb-3">
+                                <label for="quick-dev-role" class="mb-1">Aufgabe</label>
+                                <select name="role" id="quick-dev-role" class="form-select">
+                                    <option disabled selected></option>
+                                    {% for role in device_roles %}
+                                    <option value="{{ role.id }}">{{ role.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+            
+                            <div class="mb-3">
+                                <label for="quick-dev-pos" class="mb-1">Position</label>
+                                <select name="position" id="quick-dev-pos" class="form-select">
+                                    <option disabled selected></option>
+                                    {% for pos in device_positions %}
+                                    <option value="{{ pos.id }}">{{ pos.title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-secondary">In neuem Tab starten</button>
+                        </form>
+
                     </div>
                 </div>
             </div>
