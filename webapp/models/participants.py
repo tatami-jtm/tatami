@@ -155,3 +155,6 @@ class Participant(db.Model):
     registration_id = db.Column(db.Integer(), db.ForeignKey('registration.id'))
     registration = db.relationship('Registration', backref=db.backref(
         'participants', lazy='dynamic'))
+    
+    def matches(self):
+        return self.white_matches + self.blue_matches

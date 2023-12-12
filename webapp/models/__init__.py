@@ -6,4 +6,5 @@ db = SQLAlchemy()
 from .user import *
 from .events import *
 from .participants import *
+from .matches import *
 # autopep8: on
