@@ -26,11 +26,23 @@
         <div class="col-12 col-md-3">
             <h3 class="h4 fw-bold mb-4">Kampfgruppen</h3>
 
+            <div class="nav nav-tabs tabs-sm">
+                <div class="nav-item">
+                    <a href="?group_list=status" class="nav-link {{ 'active' if request.values.get('group_list', 'status') == 'status' }}">
+                        Fortschritt
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="?group_list=participant_count" class="nav-link {{ 'active' if request.values.get('group_list', 'status') == 'participant_count' }}">
+                        TN-Anzahl
+                    </a>
+                </div>
+            </div>
             <div class="card mb-3">
                 <div class="card-header">Nicht zugewiesene Kampfgruppen</div>
                 {% for group in free_groups %}
                 <div class="card-body {{ 'border-top' if not loop.first }} py-2">
-                    {{ group_entry(group, True, False) }}
+                    {{ group_entry(group, request.values.get('group_list', 'status') == 'participant_count', request.values.get('group_list', 'status') == 'status') }}
                 </div>
                 {% else %}
                 <div class="card-body py-1">
@@ -46,7 +58,7 @@
                     {{ mat.title }}</div>
                 {% for group in mat.assigned_groups %}
                 <div class="card-body {{ 'border-top' if not loop.first }} py-2">
-                    {{ group_entry(group) }}
+                    {{ group_entry(group, request.values.get('group_list', 'status') == 'participant_count', request.values.get('group_list', 'status') == 'status') }}
                 </div>
                 {% else %}
                 <div class="card-body py-1">
@@ -114,6 +126,8 @@
                             {% endfor %}
                         </select>
                     </div>
+
+                    <input type="hidden" name="group_list" value="{{ request.values.get('group_list', 'status') }}">
 
                     <div class="mb-3">
                         <div class="form-check form-switch">

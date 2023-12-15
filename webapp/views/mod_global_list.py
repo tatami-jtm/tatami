@@ -62,7 +62,7 @@ def update_group(id):
     
     db.session.commit()
 
-    return redirect(url_for('mod_global_list.index', event=g.event.slug))
+    return redirect(url_for('mod_global_list.index', event=g.event.slug, group_list=request.form['group_list']))
 
 
 @mod_global_list_view.route('/mat/<id>/mark-all-ready', methods=['GET', 'POST'])
