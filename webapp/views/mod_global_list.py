@@ -63,3 +63,23 @@ def update_group(id):
     db.session.commit()
 
     return redirect(url_for('mod_global_list.index', event=g.event.slug))
+
+
+@mod_global_list_view.route('/mat/<id>/mark-all-ready', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def mark_all_at_mat_as_ready(id):
+    if not g.device.event_role.may_use_global_list:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+    
+    mat = g.event.device_positions.filter_by(id=id).one_or_404()
+
+    for group in mat.assigned_groups:
+        if not group.marked_ready:
+            group.marked_ready_at = dt.now()
+            group.marked_ready = True
+    
+    db.session.commit()
+
+    return redirect(url_for('mod_global_list.index', event=g.event.slug))

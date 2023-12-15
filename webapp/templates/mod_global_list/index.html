@@ -41,7 +41,9 @@
 
             {% for mat in mats %}
             <div class="card mb-3">
-                <div class="card-header">{{ mat.title }}</div>
+                <div class="card-header">
+                    <a href="{{ url_for('mod_global_list.mark_all_at_mat_as_ready', event=g.event.slug, id=mat.id) }}" class="btn btn-light btn-sm float-end">Alle freigeben</a>
+                    {{ mat.title }}</div>
                 {% for group in mat.assigned_groups %}
                 <div class="card-body {{ 'border-top' if not loop.first }} py-2">
                     {{ group_entry(group) }}
