@@ -3,6 +3,127 @@
 
 {% block body %}
 
-TBD.
+<div class="container-fluid">
+    {% if current_group %}
+    <div class="row align-items-center mb-3">
+        <div class="col-12 col-md-3">
+            <h1 class="h2 pt-1 py-1 fw-bold">Hauptliste</h1>
+        </div>
+        <div class="col-12 col-md-9">
+            <div class="row mb-2 bg-light p-1 mx-0">
+                <h4 class="h6 pt-1 m-0 px-1 fw-bold col">{{ current_group.title }}</h4>
+                <div class="col-auto px-0">
+                    <a href="?" class="btn btn-light btn-sm">Schließen</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <h1 class="h2 py-2 fw-bold mb-3">Hauptliste</h1>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-12 col-md-3">
+            <h3 class="h4 fw-bold mb-4">Kampfgruppen</h3>
+
+            <div class="card mb-3">
+                <div class="card-header">Nicht zugewiesene Kampfgruppen</div>
+                {% for group in free_groups %}
+                <div class="card-body {{ 'border-top' if not loop.first }} py-2">
+                    {{ group_entry(group, True, False) }}
+                </div>
+                {% else %}
+                <div class="card-body py-1">
+                    <p class="m-0">Keine Kampfgruppen verbleibend.</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% for mat in mats %}
+            <div class="card mb-3">
+                <div class="card-header">{{ mat.title }}</div>
+                {% for group in mat.assigned_groups %}
+                <div class="card-body {{ 'border-top' if not loop.first }} py-2">
+                    {{ group_entry(group) }}
+                </div>
+                {% else %}
+                <div class="card-body py-1">
+                    <p class="m-0">Keine Kampfgruppen zugewiesen.</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="col-12 col-md-3">
+            <h3 class="h4 fw-bold mb-4">Ausstehende Kämpfe</h3>
+        </div>
+        <div class="col-12 col-md-6">
+            <h3 class="h4 fw-bold mb-4">Kampfliste</h3>
+        </div>
+    </div>
+</div>
 
 {% endblock body %}
+
+{% macro group_entry(group, show_participant_count=False, show_status=True) %}
+<div class="row align-items-center g-2">
+    <h4 class="h5 col mb-0 {{ 'fw-bold' if group.id == current_group.id else 'fw-normal' }}">
+        <a href="?group={{ group.id }}" class="link-dark text-decoration-none w-100 d-block">
+            {{ group.title }}
+        </a>
+    </h4>
+    {% if show_participant_count %}
+    <div class="col-auto">
+        <span class="badge text-bg-light border fs-small">{{ group.participants.count() }} TN</span>
+    </div>
+    {% endif %}
+    {% if show_status %}
+    <div class="col-auto">
+        {% if not group.marked_ready %}
+        <span class="badge text-bg-secondary">Nicht freigegeben</span>
+        {% elif not group.opened %}
+        <span class="badge text-bg-warning">Ausstehend</span>
+        {% elif not group.completed %}
+        <span class="badge text-bg-danger">Kämpft</span>
+        {% else %}
+        <span class="badge text-bg-success">Beendet</span>
+        {% endif %}
+    </div>
+    {% endif %}
+    <div class="col-auto">
+        <div class="dropdown">
+            <button
+                class="btn btn-light btn-sm fw-bold"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                data-bs-auto-close="outside">
+                ⋮
+            </button>
+    
+            <div class="dropdown-menu dropdown-wide">
+                <form action="{{ url_for('mod_global_list.update_group', event=g.event.slug, id=group.id) }}" method="POST" class="px-3 py-2">    
+                    <div class="mb-3">
+                        <label for="group-{{ group.id }}-assignment" class="mb-1">Zuweisung</label>
+                        <select name="assignment" id="group-{{ group.id }}-assignment" class="form-select">
+                            <option value="none" {{ 'selected' if not group.assigned }}>nicht zuweisen</option>
+                            {% for mat in mats %}
+                            <option value="{{ mat.id }}" {{ 'selected' if group.assigned and group.assigned_to_position.id == mat.id }}>{{ mat.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="group-{{ group.id }}-marked_ready" name="marked_ready" {{ 'checked' if group.marked_ready }}>
+                            <label class="form-check-label fw-bold" for="group-{{ group.id }}-marked_ready">Gruppe zur Eröffnung freigeben</label>
+                        </div>
+                    </div>
+    
+                    <button type="submit" class="btn btn-primary btn-sm">Speichern</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endmacro %}
