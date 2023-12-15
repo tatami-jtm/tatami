@@ -500,11 +500,30 @@ body.application {
 .nav.nav-tabs.nav-fullsize .nav-item .nav-link.active {
     background-color: rgba(0, 0, 0, 0.15);
 }
-
-
 .nav.nav-tabs.nav-fullsize .nav-item.nav-item-title .nav-link {
     padding: 1.1rem 0.25rem;
     font-size: 1.2rem;
+}
+
+.nav.nav-tabs.tabs-sm {
+    margin: 0;
+    margin-bottom: 0.5rem;
+    border-bottom-width: 2px;
+    width: max-content;
+}
+.nav.nav-tabs.tabs-sm .nav-item {
+    margin: 0;
+    margin-bottom: -2px;
+}
+.nav.nav-tabs.tabs-sm .nav-item .nav-link {
+    border-radius: 0;
+    padding: 0.4rem 0.5rem;
+    font-weight: normal;
+    box-shadow: 0 -3px 0 -1px #c7cac1 inset;
+}
+.nav.nav-tabs.tabs-sm .nav-item .nav-link.active {
+    box-shadow: 0 -3px 0 -1px #7f817b inset;
+    font-weight: bold;
 }
 
 [data-bs-theme="dark"] .alert {
