@@ -12,6 +12,8 @@
             <fighter id="1" />
         </alloc>
 
+        <order></order>
+
         <score>
             <first><fighter id="1" /></first>
         </score>

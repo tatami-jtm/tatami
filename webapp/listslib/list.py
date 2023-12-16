@@ -52,3 +52,6 @@ class List:
     
     def export_struct(self):
         return self.meta.export_struct(self)
+    
+    def is_playoff(self, match_id):
+        return self.meta.is_playoff(self, match_id)

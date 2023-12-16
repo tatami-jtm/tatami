@@ -1058,3 +1058,7 @@ class MetaList:
                 struct['matches'][match_id] = match_result
         
         return struct
+    
+
+    def is_playoff(self, obj, match_id):
+        return match_id in self._playoff_match_ids

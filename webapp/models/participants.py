@@ -113,6 +113,8 @@ class Group(db.Model):
     completed = db.Column(db.Boolean)
     completed_at = db.Column(db.DateTime())
 
+    random_seed = db.Column(db.Integer())
+
     _system = (None, None) # for memoizing calculated system
     
     def cut_title(self):

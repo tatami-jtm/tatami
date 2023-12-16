@@ -8,6 +8,8 @@ from .devices import check_is_registered
 
 from ..models import db, Group
 
+from .. import helpers
+
 mod_global_list_view = Blueprint('mod_global_list', __name__)
 
 @mod_global_list_view.route('/')
@@ -22,7 +24,6 @@ def index():
     for event_class in g.event.classes.filter_by(begin_fighting=True, ended_fighting=False).all():
         free_groups += event_class.groups.filter_by(assigned=None).all()
         free_groups += event_class.groups.filter_by(assigned=False).all()
-        print(free_groups)
 
 
     current_group = None
@@ -56,6 +57,7 @@ def update_group(id):
         if not group.marked_ready:
             group.marked_ready_at = dt.now()
             group.marked_ready = True
+            helpers.force_create_list(group)
     else:
         group.marked_ready = False
         group.marked_ready_at = None
@@ -79,6 +81,7 @@ def mark_all_at_mat_as_ready(id):
         if not group.marked_ready:
             group.marked_ready_at = dt.now()
             group.marked_ready = True
+            helpers.force_create_list(group)
     
     db.session.commit()
 

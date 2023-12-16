@@ -4,38 +4,39 @@ from .fighter import Fighter
 from .match_result import MatchResult
 
 if __name__ == "__main__":
-    list_cls = compile_list('pool3')
-    example_list = list_cls()
-    example_list.import_struct({
-        'random_seed': 2,
-        'fighters': [
-            Fighter('aaa', 'A-Fighter', 'A-Team'),
-            Fighter('bbb', 'B-Fighter', 'B-Team'),
-            Fighter('ccc', 'C-Fighter', 'C-Team')
-        ],
-        'matches': {
-            'AvB': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'BvC': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'AvC': MatchResult.mk(0, 0, None, 1, 10, None, None, 120)
-        },
-        'playoff_matches': {
-            'upXvY': MatchResult.mk(0, 0, None, 1, 10, None, None, 120),
-            'upXYvZ': MatchResult.mk(0, 0, None, 1, 10, None, None, 120)
-        }
-    })
+    pass
+    # list_cls = compile_list('pool3')
+    # example_list = list_cls()
+    # example_list.import_struct({
+    #     'random_seed': 2,
+    #     'fighters': [
+    #         Fighter('aaa', 'A-Fighter', 'A-Team'),
+    #         Fighter('bbb', 'B-Fighter', 'B-Team'),
+    #         Fighter('ccc', 'C-Fighter', 'C-Team')
+    #     ],
+    #     'matches': {
+    #         'AvB': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+    #         'BvC': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+    #         'AvC': MatchResult.mk(0, 0, None, 1, 10, None, None, 120)
+    #     },
+    #     'playoff_matches': {
+    #         'upXvY': MatchResult.mk(0, 0, None, 1, 10, None, None, 120),
+    #         'upXYvZ': MatchResult.mk(0, 0, None, 1, 10, None, None, 120)
+    #     }
+    # })
 
-    print("Schedule:", example_list.get_schedule())
-    print("Completed?", example_list.completed())
-    print(example_list.score())
+    # print("Schedule:", example_list.get_schedule())
+    # print("Completed?", example_list.completed())
+    # print(example_list.score())
 
-    print("Schedule:", example_list.get_schedule())
+    # print("Schedule:", example_list.get_schedule())
 
-    print("FIRST:", example_list.get_first())
-    print("SECOND:", example_list.get_second())
-    print("THIRD:", *example_list.get_third())
-    print("FIFTH:", *example_list.get_fifth())
+    # print("FIRST:", example_list.get_first())
+    # print("SECOND:", example_list.get_second())
+    # print("THIRD:", *example_list.get_third())
+    # print("FIFTH:", *example_list.get_fifth())
 
-    print(example_list.export_struct())
+    # print(example_list.export_struct())
 
     # all_lists = get_all_lists()
     # chosen_list = all_lists[3]
