@@ -25,6 +25,7 @@ class Match(db.Model):
     
     match_schedule_key = db.Column(db.Integer())
     listslib_match_id = db.Column(db.String(35))
+    list_tags = db.Column(db.String(85))
     is_playoff = db.Column(db.Boolean)
     
     scheduled = db.Column(db.Boolean)

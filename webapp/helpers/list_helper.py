@@ -31,7 +31,7 @@ def dump_list(list, group):
     for item in schedule:
         if item['type'] == 'match':
             match_id = item['match'].get_id()
-            # TODO: match_tags = item['match'].get_tags()
+            match_tags = item['match'].get_tags()
 
             if group.matches.filter_by(listslib_match_id=match_id).count() == 0:
                 match = Match(event=group.event, event_class=group.event_class, group=group)
@@ -39,6 +39,7 @@ def dump_list(list, group):
                 match.blue = Participant.query.filter_by(id=item['match'].get_blue().get_id()).one()
                 match.is_playoff = list.is_playoff(match_id)
                 match.listslib_match_id = match_id
+                match.list_tags = ",".join(match_tags)
 
                 match.scheduled = False
                 match.called_up = False
