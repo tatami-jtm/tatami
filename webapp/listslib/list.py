@@ -1,3 +1,5 @@
+from .list_renderer import ListRenderer
+
 class List:
 
     meta = None
@@ -16,6 +18,7 @@ class List:
 
     def __init__(self):
         self.meta.init(self)
+        self.list_renderer = ListRenderer(self)
     
     def alloc(self, player):
         self.meta.alloc(self, player)
@@ -55,3 +58,12 @@ class List:
     
     def is_playoff(self, match_id):
         return self.meta.is_playoff(self, match_id)
+    
+    def make_pdf(self, **params):
+        return self.list_renderer.make_pdf(params)
+    
+    def write_pdf(self, filename, **params):
+        return self.list_renderer.write_pdf(filename, params)
+    
+    def make_image(self, **params):
+        return self.list_renderer.make_image(params)

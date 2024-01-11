@@ -4,7 +4,12 @@ from .fighter import Fighter
 from .match_result import MatchResult
 
 if __name__ == "__main__":
-    pass
+    example_list = compile_list('pool2')()
+    example_list.alloc(Fighter('aaa', 'A-Fighter', 'A-Team'))
+    example_list.alloc(Fighter('bbb', 'A-Fighter', 'A-Team'))
+    example_list.get_schedule()
+    example_list.score()
+    example_list.make_image(title="Testmeisterschaft 2023", event_class='U18m', group='-50kg').show()
     # list_cls = compile_list('pool3')
     # example_list = list_cls()
     # example_list.import_struct({

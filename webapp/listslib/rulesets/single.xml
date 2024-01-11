@@ -19,5 +19,12 @@
         </score>
     </rules>
 
-    <display></display>
+    <display>
+        <template page="1">
+            <write-header x="139" y="20.5" />
+            <write-fighter x="27.5" y="58.15" type="full">
+                <fighter id="1" />
+            </write-fighter>
+        </template>
+    </display>
 </ruleset>
