@@ -37,12 +37,17 @@
                         TN-Anzahl
                     </a>
                 </div>
+                <div class="nav-item">
+                    <a href="?group_list=match_count" class="nav-link {{ 'active' if request.values.get('group_list', 'status') == 'match_count' }}">
+                        Kampfanzahl
+                    </a>
+                </div>
             </div>
             <div class="card mb-3">
                 <div class="card-header">Nicht zugewiesene Kampfgruppen</div>
                 {% for group in free_groups %}
                 <div class="card-body {{ 'border-top' if not loop.first }} py-2">
-                    {{ group_entry(group, request.values.get('group_list', 'status') == 'participant_count', request.values.get('group_list', 'status') == 'status') }}
+                    {{ group_entry(group, request.values.get('group_list', 'status') == 'participant_count', request.values.get('group_list', 'status') == 'status', request.values.get('group_list', 'status') == 'match_count') }}
                 </div>
                 {% else %}
                 <div class="card-body py-1">
@@ -58,7 +63,7 @@
                     {{ mat.title }}</div>
                 {% for group in mat.assigned_groups %}
                 <div class="card-body {{ 'border-top' if not loop.first }} py-2">
-                    {{ group_entry(group, request.values.get('group_list', 'status') == 'participant_count', request.values.get('group_list', 'status') == 'status') }}
+                    {{ group_entry(group, request.values.get('group_list', 'status') == 'participant_count', request.values.get('group_list', 'status') == 'status', request.values.get('group_list', 'status') == 'match_count') }}
                 </div>
                 {% else %}
                 <div class="card-body py-1">
@@ -79,7 +84,7 @@
 
 {% endblock body %}
 
-{% macro group_entry(group, show_participant_count=False, show_status=True) %}
+{% macro group_entry(group, show_participant_count=False, show_status=True, show_fight_count=False) %}
 <div class="row align-items-center g-2">
     <h4 class="h5 col mb-0 {{ 'fw-bold' if group.id == current_group.id else 'fw-normal' }}">
         <a href="?group={{ group.id }}" class="link-dark text-decoration-none w-100 d-block">
@@ -89,6 +94,15 @@
     {% if show_participant_count %}
     <div class="col-auto">
         <span class="badge text-bg-light border fs-small">{{ group.participants.count() }} TN</span>
+    </div>
+    {% endif %}
+    {% if show_fight_count %}
+    <div class="col-auto">
+        {% if group.list_system().estimated_fight_count == 1 %}
+        <span class="badge text-bg-light border fs-small">1 Kampf</span>
+        {% else %}
+        <span class="badge text-bg-light border fs-small">{{ group.list_system().estimated_fight_count }} Kämpfe</span>
+        {% endif %}
     </div>
     {% endif %}
     {% if show_status %}

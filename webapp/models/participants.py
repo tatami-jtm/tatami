@@ -58,6 +58,7 @@ class ListSystem(db.Model):
     list_file = db.Column(db.String(80))
     mandatory_minimum = db.Column(db.Integer())
     mandatory_maximum = db.Column(db.Integer())
+    estimated_fight_count = db.Column(db.Integer())
     enabled = db.Column(db.Boolean)
 
     @classmethod
