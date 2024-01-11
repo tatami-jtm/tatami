@@ -44,7 +44,9 @@
                 </div>
             </div>
             <div class="card mb-3">
-                <div class="card-header">Nicht zugewiesene Kampfgruppen</div>
+                <div class="card-header">
+                    <a href="{{ url_for('mod_global_list.rotate_all_groups', event=g.event.slug) }}" class="btn btn-light btn-sm float-end">Alle verteilen</a>
+                    Nicht zugewiesene Kampfgruppen</div>
                 {% for group in free_groups %}
                 <div class="card-body {{ 'border-top' if not loop.first }} py-2">
                     {{ group_entry(group, request.values.get('group_list', 'status') == 'participant_count', request.values.get('group_list', 'status') == 'status', request.values.get('group_list', 'status') == 'match_count') }}
@@ -101,7 +103,7 @@
         {% if group.list_system().estimated_fight_count == 1 %}
         <span class="badge text-bg-light border fs-small">1 Kampf</span>
         {% else %}
-        <span class="badge text-bg-light border fs-small">{{ group.list_system().estimated_fight_count }} Kämpfe</span>
+        <span class="badge text-bg-light border fs-small">{{ group.estimated_fight_count() }} Kämpfe</span>
         {% endif %}
     </div>
     {% endif %}

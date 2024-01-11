@@ -143,6 +143,9 @@ class Group(db.Model):
             self._system = participant_count, query.one().system
 
         return self._system[1]
+    
+    def estimated_fight_count(self):
+        return self.list_system().estimated_fight_count
 
 
 class Participant(db.Model):

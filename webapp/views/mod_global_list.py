@@ -67,6 +67,49 @@ def update_group(id):
     return redirect(url_for('mod_global_list.index', event=g.event.slug, group_list=request.form['group_list']))
 
 
+@mod_global_list_view.route('/rotate-all', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def rotate_all_groups():
+    if not g.device.event_role.may_use_global_list:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    free_groups = []
+    for event_class in g.event.classes.filter_by(begin_fighting=True, ended_fighting=False).all():
+        free_groups += event_class.groups.filter_by(assigned=None).all()
+        free_groups += event_class.groups.filter_by(assigned=False).all()
+
+    free_groups = sorted(free_groups, key=lambda group: group.estimated_fight_count())[::-1]
+    mats = g.event.device_positions.filter_by(is_mat=True).all()
+
+    if request.method == "POST":
+        if len(request.form.getlist('to')):
+            mat_index = -1
+            used_mats = { m.id: m for m in mats if str(m.id) in request.form.getlist('to')}
+            matlist = { mi: 0 for mi in used_mats.keys() }
+
+            for group in free_groups:
+                emptiest_mat = used_mats[sorted(matlist.items(), key=lambda mi: mi[1])[0][0]]
+                group.assigned = True
+                group.assigned_to_position = emptiest_mat
+                group.marked_ready = False
+                group.marked_ready_at = None
+
+                matlist[emptiest_mat.id] += group.estimated_fight_count()
+            
+            db.session.commit()
+
+            return redirect(url_for('mod_global_list.index', event=g.event.slug))
+        
+        else:
+            flash('Sie müssen wenigstens eine Liste auswählen.', 'danger')
+
+    fight_count = sum([group.estimated_fight_count() for group in free_groups])
+    
+    return render_template('mod_global_list/rotate_all_groups.html', fight_count=fight_count, mats=mats, free_groups=free_groups)
+
+
 @mod_global_list_view.route('/mat/<id>/mark-all-ready', methods=['GET', 'POST'])
 @check_and_apply_event
 @check_is_registered
