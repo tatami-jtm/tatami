@@ -2,3 +2,7 @@ flask
 flask-security-too
 flask-sqlalchemy
 flask-migrate
+
+pypdf
+fpdf2
+pypdfium2
