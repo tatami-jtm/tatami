@@ -23,8 +23,10 @@
         </order>
 
         <score>
-            <first><winner match-id="AvB" /></first>
-            <second><loser match-id="AvB" /></second>
+            <calc-points among="all" />
+
+            <first><placed on="1" /></first>
+            <second><placed on="2" /></second>
         </score>
     </rules>
 
@@ -39,6 +41,20 @@
             </write-fighter>
             <write-score x="60.125" y="48" match-id="AvB" for="white" />
             <write-score x="60.125" y="54" match-id="AvB" for="blue" />
+
+            <write-total x="67.5" y="48" fighter-id="1" option="points" />
+            <write-total x="76.5" y="48" fighter-id="1" option="score" />
+            <write-total x="85.5" y="48" fighter-id="1" option="placement" />
+            <write-total x="67.5" y="54" fighter-id="2" option="points" />
+            <write-total x="76.5" y="54" fighter-id="2" option="score" />
+            <write-total x="85.5" y="54" fighter-id="2" option="placement" />
+
+            <write-fighter x="152" y="230" type="default">
+                <placed on="1" />
+            </write-fighter>
+            <write-fighter x="152" y="236" type="default">
+                <placed on="2" />
+            </write-fighter>
         </template>
     </display>
 </ruleset>

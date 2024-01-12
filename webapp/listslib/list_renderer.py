@@ -35,6 +35,8 @@ class ListRenderer:
                     self._write_header(new, item)
                 elif item['type'] == 'score':
                     self._write_score(new, item)
+                elif item['type'] == 'total':
+                    self._write_total(new, item)
                 elif item['type'] == 'fighter':
                     self._write_fighter(new, item)
                 elif item['type'] == 'full_fighter':
@@ -87,6 +89,49 @@ class ListRenderer:
                 contents.append({'type': 'score',
                                  'x': float(item.attrib['x']), 'y': float(item.attrib['y']),
                                  'score': score})
+            
+            elif item.tag == 'write-total':
+                if not self.lo.completed(): continue
+                if not self.lo.score(): continue
+
+                fighter_id = item.attrib['fighter-id']
+                fighter_ref = {'fighter': int(fighter_id)}
+                fighter = self.lo.meta._evaluate_fighter_ref(self.lo, fighter_ref)
+
+                if item.attrib['option'] == 'placement':
+                    if fighter in self.lo._score_deductions['results']['first']:
+                        fighter_total = '1.'
+                    elif fighter in self.lo._score_deductions['results']['second']:
+                        fighter_total = '2.'
+                    elif fighter in self.lo._score_deductions['results']['third']:
+                        fighter_total = '3.'
+                    elif fighter in self.lo._score_deductions['results']['fifth']:
+                        fighter_total = '5.'
+                    else:
+                        continue
+                else:
+                    if 'scope' in item.attrib:
+                        scope = item.attrib['scope']
+                    else:
+                        scope = 'all'
+
+                    if scope not in self.lo._score_deductions['calced']:
+                        continue
+
+                    base = self.lo._score_deductions['calced'][scope]['base']
+
+                    if fighter not in base:
+                        continue
+
+                    fighter_total = base[fighter]
+                    if item.attrib['option'] == 'score':
+                        fighter_total = fighter_total[1]
+                    else:
+                        fighter_total = fighter_total[0]
+
+                contents.append({'type': 'total',
+                                'x': float(item.attrib['x']), 'y': float(item.attrib['y']),
+                                'score': fighter_total})
 
             elif item.tag == 'write-fighter':
                 reference = item[0]
@@ -103,7 +148,7 @@ class ListRenderer:
                     fighter_ref = {'loser': reference.attrib['match-id']}
 
                 elif reference.tag == 'placed':
-                    fighter_ref = {'placed': reference.attrib['on']}
+                    fighter_ref = {'placed': int(reference.attrib['on'])}
                     if 'group' in reference.attrib:
                         fighter_ref['group'] = reference.attrib['group']
 
@@ -123,35 +168,41 @@ class ListRenderer:
 
         if 'title' in self.params:
             pdf.set_xy(item['x'], item['y'])
-            pdf.cell(53, 5.5, self.params['title'], align='L')
+            pdf.cell(53, 5.5, self.params['title'], align='L', fill=('debug' in self.params))
 
         pdf.set_font("helvetica", "B", 13)
 
         if 'event_class' in self.params:
             pdf.set_xy(item['x'], item['y'] + 6.0)
-            pdf.cell(17.25, 12.75, self.params['event_class'], align='L')
+            pdf.cell(17.25, 12.75, self.params['event_class'], align='L', fill=('debug' in self.params))
 
         if 'group' in self.params:
             pdf.set_xy(item['x'] + 18, item['y'] + 6.0)
-            pdf.cell(35, 12.75, self.params['group'], align='L')
+            pdf.cell(35, 12.75, self.params['group'], align='L', fill=('debug' in self.params))
     
     def _write_score(self, pdf, item):
         pdf.set_font("helvetica", "", 10)
         pdf.set_xy(item['x'], item['y'])
-        pdf.cell(6.5, 5.5, f"{item['score']}", align='C')
+        pdf.cell(6.5, 5.5, f"{item['score']}", align='C', fill=('debug' in self.params))
+    
+    def _write_total(self, pdf, item):
+        pdf.set_font("helvetica", "", 10)
+        pdf.set_xy(item['x'], item['y'])
+        pdf.cell(8.25, 5.5, f"{item['score']}", align='C', fill=('debug' in self.params))
 
-    def _write_fighter(self, pdf, item):  # TODO: cell-ify
+    def _write_fighter(self, pdf, item):
         pdf.set_font("helvetica", "", 8.5)
-        pdf.text(item['x'], item['y'], item['fighter'].get_name())
+        pdf.set_xy(item['x'], item['y'])
+        pdf.cell(37, 5, item['fighter'].get_name(), align='L', fill=('debug' in self.params))
     
     def _write_full_fighter(self, pdf, item):
         pdf.set_font("helvetica", "B", 8.5)
         pdf.set_xy(item['x'], item['y'])
-        pdf.cell(37, 3.5, item['fighter'].get_name(), align='L')
+        pdf.cell(37, 3.5, item['fighter'].get_name(), align='L', fill=('debug' in self.params))
 
         pdf.set_font("helvetica", "", 5.5)
         pdf.set_xy(item['x'], item['y']+3.25)
-        pdf.cell(37, 2, item['fighter'].get_affil(), align='L')
+        pdf.cell(37, 2, item['fighter'].get_affil(), align='L', fill=('debug' in self.params))
 
     def make_pdf(self, params):
         self.params = params

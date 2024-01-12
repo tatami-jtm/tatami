@@ -4,18 +4,18 @@ from .fighter import Fighter
 from .match_result import MatchResult
 
 if __name__ == "__main__":
-    example_list = compile_list('single')()
+    example_list = compile_list('pool2')()
     example_list.alloc(Fighter('aaa', 'A-Fighter', 'A-Team'))
-    #example_list.alloc(Fighter('bbb', 'B-Fighter', 'B-Team'))
+    example_list.alloc(Fighter('bbb', 'B-Fighter', 'B-Team'))
 
-    # first_match = example_list.get_schedule()[0]['match']
-    # fmr = first_match.mk_result()
-    # fmr.set_points_white(1)
-    # fmr.set_score_white(10)
-    # fmr.set_points_blue(0)
-    # fmr.set_score_blue(0)
-    # fmr.set_time(120)
-    # example_list.enter_results(fmr)
+    first_match = example_list.get_schedule()[0]['match']
+    fmr = first_match.mk_result()
+    fmr.set_points_white(1)
+    fmr.set_score_white(10)
+    fmr.set_points_blue(0)
+    fmr.set_score_blue(0)
+    fmr.set_time(120)
+    example_list.enter_results(fmr)
 
     example_list.score()
     example_list.make_image(title="Testmeisterschaft 2023", event_class='U18m', group='-50kg').show()
