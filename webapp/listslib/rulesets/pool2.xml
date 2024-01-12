@@ -28,5 +28,17 @@
         </score>
     </rules>
 
-    <display></display>
+    <display>
+        <template page="3">
+            <write-header x="137.5" y="16.75" />
+            <write-fighter x="22" y="48" type="full">
+                <fighter id="1" />
+            </write-fighter>
+            <write-fighter x="22" y="54" type="full">
+                <fighter id="2" />
+            </write-fighter>
+            <write-score x="60.125" y="48" match-id="AvB" for="white" />
+            <write-score x="60.125" y="54" match-id="AvB" for="blue" />
+        </template>
+    </display>
 </ruleset>
