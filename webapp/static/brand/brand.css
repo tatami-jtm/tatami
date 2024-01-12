@@ -690,3 +690,8 @@ textarea.form-control {
     background-color: #333333;
     border-color: white;
 }
+
+img {
+    max-width: 100%;
+    height: auto;
+}

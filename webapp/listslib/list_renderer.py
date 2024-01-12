@@ -45,8 +45,6 @@ class ListRenderer:
                 elif item['type'] == 'full_fighter':
                     self._write_full_fighter(new, item)
 
-            self._write_qrcode(new)
-
         return pagetable, new # (page index, page obj)
     
     def _get_pages(self):
@@ -238,7 +236,7 @@ class ListRenderer:
             pdf.set_text_color(0, 0, 0)
 
     def _write_qrcode(self, pdf):
-        pdf.code39(f"*{self.params['event_class']}.{self.params['group']}*", x=140, y=8, w=0.75, h=5)
+        pass
 
     def make_pdf(self, params):
         self.params = params
