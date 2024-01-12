@@ -23,7 +23,7 @@
     {% endif %}
 
     <div class="row">
-        <div class="col-12 col-md-3">
+        <div class="col-12 col-md-4">
             <h3 class="h4 fw-bold mb-4">Kampfgruppen</h3>
 
             <div class="nav nav-tabs tabs-sm">
@@ -75,13 +75,21 @@
             </div>
             {% endfor %}
         </div>
-        <div class="col-12 col-md-3">
+        <div class="col-12 col-md-4">
             <h3 class="h4 fw-bold mb-4">Ausstehende Kämpfe</h3>
         </div>
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-4">
             <h3 class="h4 fw-bold mb-4">Kampfliste</h3>
+
+            <div class="mb-3">
+                <a href="{{ url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id) }}" class="btn btn-secondary btn-sm" target="_blank">Als PDF anzeigen</a>
+                <a href="{{ url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id) }}" download="list.pdf" class="btn btn-secondary btn-sm">Als PDF herunterladen</a>
+            </div>
+            
             {% if current_group %}
-            <img src="{{ url_for('mod_list.display_image', event=g.event.slug, id=current_group.id) }}" alt="">
+            <div class="mb-3">
+                <img src="{{ url_for('mod_list.display_image', event=g.event.slug, id=current_group.id) }}" alt="">
+            </div>
             {% endif %}
         </div>
     </div>
