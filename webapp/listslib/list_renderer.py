@@ -1,5 +1,6 @@
 from os import path as osp
 from . import pdftool
+from .fighter import BlankFighter
 
 TEMPLATES_FILE = osp.join(osp.dirname(__file__), 'templates.pdf')
 
@@ -39,8 +40,12 @@ class ListRenderer:
                     self._write_total(new, item)
                 elif item['type'] == 'fighter':
                     self._write_fighter(new, item)
+                elif item['type'] == 'short_fighter':
+                    self._write_short_fighter(new, item)
                 elif item['type'] == 'full_fighter':
                     self._write_full_fighter(new, item)
+
+            self._write_qrcode(new)
 
         return pagetable, new # (page index, page obj)
     
@@ -85,6 +90,9 @@ class ListRenderer:
                         score = 0
                 else:
                     continue
+
+                if result.get_absolute_winner():
+                    score = 'X'
 
                 contents.append({'type': 'score',
                                  'x': float(item.attrib['x']), 'y': float(item.attrib['y']),
@@ -148,12 +156,21 @@ class ListRenderer:
                     fighter_ref = {'loser': reference.attrib['match-id']}
 
                 elif reference.tag == 'placed':
+                    if not self.lo.completed(): continue
+                    if not self.lo.score(): continue
+
                     fighter_ref = {'placed': int(reference.attrib['on'])}
                     if 'group' in reference.attrib:
                         fighter_ref['group'] = reference.attrib['group']
 
                 fighter = self.lo.meta._evaluate_fighter_ref(self.lo, fighter_ref)
-                fighter_type = 'fighter' if item.attrib['type'] != 'full' else 'full_fighter'
+
+                if item.attrib['type'] == 'full':
+                    fighter_type = 'full_fighter'
+                elif item.attrib['type'] == 'short':
+                    fighter_type = 'short_fighter'
+                else:
+                    fighter_type = 'fighter'
 
                 if not fighter: continue  # no result yet, ignore
 
@@ -190,12 +207,21 @@ class ListRenderer:
         pdf.set_xy(item['x'], item['y'])
         pdf.cell(8.25, 5.5, f"{item['score']}", align='C', fill=('debug' in self.params))
 
+    def _write_short_fighter(self, pdf, item):
+        pdf.set_font("helvetica", "", 8.5)
+        pdf.set_xy(item['x'], item['y'])
+        pdf.cell(31, 5, item['fighter'].get_name(), align='L', fill=('debug' in self.params))
+
     def _write_fighter(self, pdf, item):
         pdf.set_font("helvetica", "", 8.5)
         pdf.set_xy(item['x'], item['y'])
+
         pdf.cell(37, 5, item['fighter'].get_name(), align='L', fill=('debug' in self.params))
     
     def _write_full_fighter(self, pdf, item):
+        if item['fighter'].is_disqualified() and not item['fighter'] == BlankFighter:
+            pdf.set_text_color(255, 0, 0)
+
         pdf.set_font("helvetica", "B", 8.5)
         pdf.set_xy(item['x'], item['y'])
         pdf.cell(37, 3.5, item['fighter'].get_name(), align='L', fill=('debug' in self.params))
@@ -203,6 +229,16 @@ class ListRenderer:
         pdf.set_font("helvetica", "", 5.5)
         pdf.set_xy(item['x'], item['y']+3.25)
         pdf.cell(37, 2, item['fighter'].get_affil(), align='L', fill=('debug' in self.params))
+
+        if item['fighter'].is_disqualified() and not item['fighter'] == BlankFighter:
+            pdf.set_font("helvetica", "B", 14)
+            pdf.set_xy(item['x'] + 33, item['y'])
+            pdf.cell(4.25, 5.5, 'H', align='C', fill=('debug' in self.params))
+
+            pdf.set_text_color(0, 0, 0)
+
+    def _write_qrcode(self, pdf):
+        pdf.code39(f"*{self.params['event_class']}.{self.params['group']}*", x=140, y=8, w=0.75, h=5)
 
     def make_pdf(self, params):
         self.params = params

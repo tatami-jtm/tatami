@@ -617,6 +617,10 @@ class MetaList:
 
             if match is None: # unable to calculate so far
                 continue
+
+            result = match.get_result()
+            if result is not None:  # skip matches that have alreay been decided
+                continue
             
             white_disqualified = match.get_white().is_disqualified()
             blue_disqualified = match.get_blue().is_disqualified()
@@ -771,6 +775,10 @@ class MetaList:
             mr = obj._match_results[match_id]
             mobj = mr.get_match()
 
+            # absolute winners do not earn any points
+            if mr.get_absolute_winner() in ['white', 'blue']:
+                continue
+
             white_key = mobj.get_white()
             if white_key in base_data:  # may be false due to scopes
                 wp, ws = base_data[white_key]
@@ -789,7 +797,7 @@ class MetaList:
         }
 
         # Sort base data by points/scores, where equal, order is undefined
-        sorted_data = sorted(base_data.items(), key=lambda i: i[1], reverse=True)
+        sorted_data = sorted(base_data.items(), key=lambda i: (i[1], not i[0].is_disqualified()), reverse=True)
 
         # Store sorted data-duplicate
         obj._score_deductions['calced'][scope]['order'] = sorted_data[::]
@@ -1013,16 +1021,16 @@ class MetaList:
         for match_id in struct['matches']:
             match_result = struct['matches'][match_id]
             match = self.get_match_by_id(obj, match_id)
-            match_result.set_match(match)
+            match.set_result(match_result)
             self.enter_results(obj, match_result)
 
-        self.get_schedule(obj, False)
+        self.get_schedule(obj, True)
         self.score(obj)
 
         for po_match_id in struct['playoff_matches']:
             po_match_result = struct['playoff_matches'][po_match_id]
             po_match = self.get_match_by_id(obj, po_match_id)
-            po_match_result.set_match(po_match)
+            po_match.set_result(po_match_result)
             self.enter_results(obj, po_match_result)
         
         self.get_schedule(obj, False)

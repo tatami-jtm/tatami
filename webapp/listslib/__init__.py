@@ -4,40 +4,43 @@ from .fighter import Fighter
 from .match_result import MatchResult
 
 if __name__ == "__main__":
-    example_list = compile_list('pool2')()
-    example_list.alloc(Fighter('aaa', 'A-Fighter', 'A-Team'))
-    example_list.alloc(Fighter('bbb', 'B-Fighter', 'B-Team'))
+    # example_list = compile_list('pool2')()
+    # example_list.alloc(Fighter('aaa', 'A-Fighter', 'A-Team'))
+    # example_list.alloc(Fighter('bbb', 'B-Fighter', 'B-Team'))
 
-    first_match = example_list.get_schedule()[0]['match']
-    fmr = first_match.mk_result()
-    fmr.set_points_white(1)
-    fmr.set_score_white(10)
-    fmr.set_points_blue(0)
-    fmr.set_score_blue(0)
-    fmr.set_time(120)
-    example_list.enter_results(fmr)
+    # first_match = example_list.get_schedule()[0]['match']
+    # fmr = first_match.mk_result()
+    # fmr.set_points_white(1)
+    # fmr.set_score_white(10)
+    # fmr.set_points_blue(0)
+    # fmr.set_score_blue(0)
+    # fmr.set_time(120)
+    # example_list.enter_results(fmr)
 
-    example_list.score()
+    # example_list.score()
+    list_cls = compile_list('pool3')
+    example_list = list_cls()
+    example_list.import_struct({
+        'random_seed': 4,
+        'fighters': [
+            Fighter('aaa', 'A-Fighter', 'A-Team'),
+            Fighter('bbb', 'B-Fighter', 'B-Team'),
+            Fighter('ccc', 'C-Fighter', 'C-Team')
+        ],
+        'matches': {
+            'AvB': (xo := MatchResult.mk(1, 10, None, 0, 0, None, None, 120)),
+            'BvC': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'AvC': MatchResult.mk(0, 0, None, 1, 10, None, None, 120)
+        },
+        'playoff_matches': {
+            'upXvY': MatchResult.mk(0, 0, None, 1, 10, None, None, 120),
+            'upXYvZ': MatchResult.mk(0, 0, None, 1, 10, None, None, 120)
+        }
+    })
+
+    assert example_list._match_results['AvB'] == xo
+
     example_list.make_image(title="Testmeisterschaft 2023", event_class='U18m', group='-50kg').show()
-    # list_cls = compile_list('pool3')
-    # example_list = list_cls()
-    # example_list.import_struct({
-    #     'random_seed': 2,
-    #     'fighters': [
-    #         Fighter('aaa', 'A-Fighter', 'A-Team'),
-    #         Fighter('bbb', 'B-Fighter', 'B-Team'),
-    #         Fighter('ccc', 'C-Fighter', 'C-Team')
-    #     ],
-    #     'matches': {
-    #         'AvB': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-    #         'BvC': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-    #         'AvC': MatchResult.mk(0, 0, None, 1, 10, None, None, 120)
-    #     },
-    #     'playoff_matches': {
-    #         'upXvY': MatchResult.mk(0, 0, None, 1, 10, None, None, 120),
-    #         'upXYvZ': MatchResult.mk(0, 0, None, 1, 10, None, None, 120)
-    #     }
-    # })
 
     # print("Schedule:", example_list.get_schedule())
     # print("Completed?", example_list.completed())

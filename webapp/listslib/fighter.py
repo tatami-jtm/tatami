@@ -47,6 +47,7 @@ class Fighter:
 
     def disqualify(self):
         self._disqualified = True
+        return self
 
     def is_disqualified(self):
         return self._disqualified
