@@ -919,9 +919,9 @@ class MetaList:
                 return True
 
             else:
-                return True
+                continue
 
-        return False
+        return True
 
     def __is_playoff_required(self, obj, po_id):
         po_val = self._playoff_rules[po_id]
@@ -938,7 +938,7 @@ class MetaList:
                 
                 if len(base_set) == 1:
                     return player_list, cond
-        
+
         return False, None
 
     """

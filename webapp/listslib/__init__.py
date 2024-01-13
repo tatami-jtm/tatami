@@ -18,27 +18,29 @@ if __name__ == "__main__":
     # example_list.enter_results(fmr)
 
     # example_list.score()
-    list_cls = compile_list('pool3')
+    list_cls = compile_list('pool4')
     example_list = list_cls()
     example_list.import_struct({
         'random_seed': 4,
         'fighters': [
             Fighter('aaa', 'A-Fighter', 'A-Team'),
             Fighter('bbb', 'B-Fighter', 'B-Team'),
-            Fighter('ccc', 'C-Fighter', 'C-Team')
+            Fighter('ccc', 'C-Fighter', 'C-Team'),
+            Fighter('ddd', 'D-Fighter', 'D-Team'),
         ],
         'matches': {
-            'AvB': (xo := MatchResult.mk(1, 10, None, 0, 0, None, None, 120)),
+            'AvB': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'CvD': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'AvC': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'BvD': MatchResult.mk(0, 0, None, 1, 10, None, None, 120),
+            'AvD': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
             'BvC': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'AvC': MatchResult.mk(0, 0, None, 1, 10, None, None, 120)
         },
         'playoff_matches': {
-            'upXvY': MatchResult.mk(0, 0, None, 1, 10, None, None, 120),
-            'upXYvZ': MatchResult.mk(0, 0, None, 1, 10, None, None, 120)
+            'downXvY': MatchResult.mk(0, 0, None, 1, 10, None, None, 120),
+            'downXYvZ': MatchResult.mk(0, 0, None, 1, 10, None, None, 120),
         }
     })
-
-    assert example_list._match_results['AvB'] == xo
 
     example_list.make_image(title="Testmeisterschaft 2023", event_class='U18m', group='-50kg').show()
 
