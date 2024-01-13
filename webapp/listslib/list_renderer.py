@@ -222,7 +222,7 @@ class ListRenderer:
 
         pdf.set_font("helvetica", "B", 8.5)
         pdf.set_xy(item['x'], item['y'])
-        pdf.cell(37, 3.5, item['fighter'].get_name(), align='L', fill=('debug' in self.params))
+        pdf.cell(37, 3.5, self._limit(item['fighter'].get_name(), 21), align='L', fill=('debug' in self.params))
 
         pdf.set_font("helvetica", "", 5.5)
         pdf.set_xy(item['x'], item['y']+3.25)
@@ -237,6 +237,12 @@ class ListRenderer:
 
     def _write_qrcode(self, pdf):
         pass
+
+    def _limit(self, text, length):
+        if len(text) <= length:
+            return text
+        
+        return text[:length - 3].strip() + '...'
 
     def make_pdf(self, params):
         self.params = params
