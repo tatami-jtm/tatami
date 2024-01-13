@@ -18,7 +18,7 @@ if __name__ == "__main__":
     # example_list.enter_results(fmr)
 
     # example_list.score()
-    list_cls = compile_list('pool4')
+    list_cls = compile_list('pool5')
     example_list = list_cls()
     example_list.import_struct({
         'random_seed': 4,
@@ -27,18 +27,23 @@ if __name__ == "__main__":
             Fighter('bbb', 'B-Fighter', 'B-Team'),
             Fighter('ccc', 'C-Fighter', 'C-Team'),
             Fighter('ddd', 'D-Fighter', 'D-Team'),
+            Fighter('eee', 'E-Fighter', 'E-Team'),
         ],
         'matches': {
             'AvB': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
             'CvD': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'AvC': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'BvD': MatchResult.mk(0, 0, None, 1, 10, None, None, 120),
-            'AvD': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'AvE': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
             'BvC': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'DvE': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'AvC': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'BvE': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'AvD': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'CvE': MatchResult.mk(1, 7, None, 0, 0, None, None, 120),
+            'BvD': MatchResult.mk(1, 1, None, 0, 0, None, None, 120),
         },
         'playoff_matches': {
-            'downXvY': MatchResult.mk(0, 0, None, 1, 10, None, None, 120),
-            'downXYvZ': MatchResult.mk(0, 0, None, 1, 10, None, None, 120),
+            # 'downXvY': MatchResult.mk(0, 0, None, 1, 10, None, None, 120),
+            # 'downXYvZ': MatchResult.mk(0, 0, None, 1, 10, None, None, 120),
         }
     })
 

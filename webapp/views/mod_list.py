@@ -16,14 +16,29 @@ mod_list_view = Blueprint('mod_list', __name__)
 @check_and_apply_event
 @check_is_registered
 def display_image(id):
-    if not g.device.event_role.may_use_global_list and not g.device.event_role.may_use_assigned_lists:
+    if not (g.device.event_role.may_use_global_list or
+            g.device.event_role.may_use_assigned_lists or
+            g.device.event_role.may_use_placement_tool):
         flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
         return redirect(url_for('devices.index', event=g.event.slug))
     
     group = g.event.groups.filter_by(id=id).one_or_404()
     group_list = helpers.load_list(group)
 
-    image = group_list.make_image(title=g.event.title, event_class=group.event_class.short_title, group=group.cut_title())
+    if 'draft' in request.values:
+        image = group_list.make_image(title=g.event.title,
+                                      event_class=group.event_class.short_title,
+                                      group=group.cut_title(),
+                                      draft=True)
+    elif group.assigned_to_position:
+        image = group_list.make_image(title=g.event.title,
+                                      event_class=group.event_class.short_title,
+                                      group=group.cut_title(),
+                                      mat=group.assigned_to_position.title)
+    else:
+        image = group_list.make_image(title=g.event.title,
+                                      event_class=group.event_class.short_title,
+                                      group=group.cut_title())
     image_io = io.BytesIO()
     image.save(image_io, 'PNG', quality=70)
     image_io.seek(0)
@@ -35,16 +50,30 @@ def display_image(id):
 @check_and_apply_event
 @check_is_registered
 def display_pdf(id):
-    if not g.device.event_role.may_use_global_list and not g.device.event_role.may_use_assigned_lists:
+    if not (g.device.event_role.may_use_global_list or
+            g.device.event_role.may_use_assigned_lists or
+            g.device.event_role.may_use_placement_tool):
         flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
         return redirect(url_for('devices.index', event=g.event.slug))
     
     group = g.event.groups.filter_by(id=id).one_or_404()
     group_list = helpers.load_list(group)
 
-    output = io.BytesIO()
+    if 'draft' in request.values:
+        pdf = group_list.make_pdf(title=g.event.title,
+                                  event_class=group.event_class.short_title,
+                                  group=group.cut_title(),
+                                  draft=True)
+    elif group.assigned_to_position:
+        pdf = group_list.make_pdf(title=g.event.title,
+                                  event_class=group.event_class.short_title,
+                                  group=group.cut_title(),
+                                  mat=group.assigned_to_position.title)
+    else:
+        pdf = group_list.make_pdf(title=g.event.title,
+                                  event_class=group.event_class.short_title,
+                                  group=group.cut_title())
 
-    pdf = group_list.make_pdf(title=g.event.title, event_class=group.event_class.short_title, group=group.cut_title())
     pdf_io = io.BytesIO()
     pdf.write(pdf_io)
     pdf_io.seek(0)

@@ -43,7 +43,12 @@ class ListRenderer:
                 elif item['type'] == 'short_fighter':
                     self._write_short_fighter(new, item)
                 elif item['type'] == 'full_fighter':
-                    self._write_full_fighter(new, item)
+                    self._write_full_fighter(new, item)                
+
+            if 'draft' in self.params:
+                self._write_draft(new)
+            elif 'mat' in self.params:
+                self._write_mat(new)
 
         return pagetable, new # (page index, page obj)
     
@@ -237,6 +242,25 @@ class ListRenderer:
 
     def _write_qrcode(self, pdf):
         pass
+
+    def _write_mat(self, pdf):
+        pdf.set_font("helvetica", "", 10)
+        pdf.set_xy(18, 5)
+        pdf.cell(174, 10, self.params['mat'], align='C')
+
+    def _write_draft(self, pdf):
+        pdf.set_text_color(255, 0, 0)
+        pdf.set_font("helvetica", "B", 50)
+        with pdf.local_context(fill_opacity=0.25):
+            i = 0
+            for y in range(0, 400, 40):
+                pdf.set_xy(10, 15 + y)
+                pdf.cell(190, 20, "Entwurf", align=['L', 'R', 'C'][i])
+                i += 1
+                i %= 3
+
+        pdf.set_text_color(0, 0, 0)
+        pdf.set_xy(0, 0)
 
     def _limit(self, text, length):
         if len(text) <= length:
