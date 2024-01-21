@@ -18,7 +18,7 @@ if __name__ == "__main__":
     # example_list.enter_results(fmr)
 
     # example_list.score()
-    list_cls = compile_list('pool5')
+    list_cls = compile_list('doublepool8')
     example_list = list_cls()
     example_list.import_struct({
         'random_seed': 4,
@@ -28,22 +28,29 @@ if __name__ == "__main__":
             Fighter('ccc', 'C-Fighter', 'C-Team'),
             Fighter('ddd', 'D-Fighter', 'D-Team'),
             Fighter('eee', 'E-Fighter', 'E-Team'),
+            Fighter('fff', 'F-Fighter', 'F-Team'),
+            Fighter('ggg', 'G-Fighter', 'G-Team'),
+            Fighter('hhh', 'H-Fighter', 'H-Team'),
         ],
         'matches': {
-            'AvB': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'CvD': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'AvE': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'BvC': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'DvE': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'AvC': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'BvE': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'AvD': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'CvE': MatchResult.mk(1, 7, None, 0, 0, None, None, 120),
-            'BvD': MatchResult.mk(1, 1, None, 0, 0, None, None, 120),
+            'A13': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'A15': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'A17': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'A35': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'A37': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'A57': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+
+            'B24': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'B26': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'B28': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'B46': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'B48': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'B68': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
         },
         'playoff_matches': {
-            # 'downXvY': MatchResult.mk(0, 0, None, 1, 10, None, None, 120),
-            # 'downXYvZ': MatchResult.mk(0, 0, None, 1, 10, None, None, 120),
+            'F1': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'F2': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'FF': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
         }
     })
 
@@ -52,6 +59,8 @@ if __name__ == "__main__":
     # print("Schedule:", example_list.get_schedule())
     # print("Completed?", example_list.completed())
     # print(example_list.score())
+
+    # print(example_list.get_fifth())
 
     # print("Schedule:", example_list.get_schedule())
 

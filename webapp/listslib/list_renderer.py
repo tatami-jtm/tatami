@@ -102,24 +102,36 @@ class ListRenderer:
                                  'score': score})
             
             elif item.tag == 'write-total':
-                if not self.lo.completed(): continue
-                if not self.lo.score(): continue
+                if 'scope' not in item.attrib:
+                    if not self.lo.completed(): continue
+                    if not self.lo.score(): continue
+                else:
+                    self.lo.score()
+                    if not self.lo._score_deductions['calced']: continue
 
                 fighter_id = item.attrib['fighter-id']
                 fighter_ref = {'fighter': int(fighter_id)}
                 fighter = self.lo.meta._evaluate_fighter_ref(self.lo, fighter_ref)
 
                 if item.attrib['option'] == 'placement':
-                    if fighter in self.lo._score_deductions['results']['first']:
-                        fighter_total = '1.'
-                    elif fighter in self.lo._score_deductions['results']['second']:
-                        fighter_total = '2.'
-                    elif fighter in self.lo._score_deductions['results']['third']:
-                        fighter_total = '3.'
-                    elif fighter in self.lo._score_deductions['results']['fifth']:
-                        fighter_total = '5.'
+                    if 'scope' not in item.attrib:
+                        if fighter in self.lo._score_deductions['results']['first']:
+                            fighter_total = '1.'
+                        elif fighter in self.lo._score_deductions['results']['second']:
+                            fighter_total = '2.'
+                        elif fighter in self.lo._score_deductions['results']['third']:
+                            fighter_total = '3.'
+                        elif fighter in self.lo._score_deductions['results']['fifth']:
+                            fighter_total = '5.'
+                        else:
+                            continue
                     else:
-                        continue
+                        scope = item.attrib['scope']
+                        order_map = [i[0] for i in self.lo._score_deductions['calced'][scope]['order']]
+                        if fighter in order_map:
+                            fighter_total = str(order_map.index(fighter) + 1) + '.'
+                        else:   
+                            continue
                 else:
                     if 'scope' in item.attrib:
                         scope = item.attrib['scope']
@@ -159,12 +171,16 @@ class ListRenderer:
                     fighter_ref = {'loser': reference.attrib['match-id']}
 
                 elif reference.tag == 'placed':
-                    if not self.lo.completed(): continue
-                    if not self.lo.score(): continue
+                    if 'among' not in reference.attrib:
+                        if not self.lo.completed(): continue
+                        if not self.lo.score(): continue
 
-                    fighter_ref = {'placed': int(reference.attrib['on'])}
-                    if 'group' in reference.attrib:
-                        fighter_ref['group'] = reference.attrib['group']
+                        fighter_ref = {'placed': int(reference.attrib['on'])}
+                    else:
+                        self.lo.score()
+                        if not self.lo._score_deductions['calced']: continue
+
+                        fighter_ref = {'placed': int(reference.attrib['on']), 'among': reference.attrib['among']}
 
                 fighter = self.lo.meta._evaluate_fighter_ref(self.lo, fighter_ref)
 
@@ -211,7 +227,7 @@ class ListRenderer:
         pdf.cell(8.25, 5.5, f"{item['score']}", align='C', fill=('debug' in self.params))
 
     def _write_short_fighter(self, pdf, item):
-        pdf.set_font("helvetica", "", 8.5)
+        pdf.set_font("helvetica", "", 8)
         pdf.set_xy(item['x'], item['y'])
         pdf.cell(31, 5, item['fighter'].get_name(), align='L', fill=('debug' in self.params))
 

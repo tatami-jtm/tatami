@@ -186,6 +186,12 @@ class MetaList:
         elif (white_loser := match_xml.find('white/loser')) is not None:
             white = {'loser': white_loser.attrib['match-id']}
 
+        elif (white_placed := match_xml.find('white/placed')) is not None:
+            if 'among' in white_placed.attrib:
+                white = {'placed': int(white_placed.attrib['on']), 'among': white_placed.attrib['among']}
+            else:
+                white = {'placed': int(white_placed.attrib['on'])}
+
         else:
             white = None
 
@@ -200,6 +206,12 @@ class MetaList:
 
         elif (blue_loser := match_xml.find('blue/loser')) is not None:
             blue = {'loser': blue_loser.attrib['match-id']}
+
+        elif (blue_placed := match_xml.find('blue/placed')) is not None:
+            if 'among' in blue_placed.attrib:
+                blue = {'placed': int(blue_placed.attrib['on']), 'among': blue_placed.attrib['among']}
+            else:
+                blue = {'placed': int(blue_placed.attrib['on'])}
 
         else:
             blue = None
@@ -515,7 +527,7 @@ class MetaList:
             - {winner: matchID}
             - {loser: matchID}
             - {placed: position} (but only if placements have been calculated)
-            - {placed: position, group: groupID} (but only if placements have been calculated)
+            - {placed: position, among: groupID} (but only if placements have been calculated)
     """
     def _evaluate_fighter_ref(self, obj, ref):
         if 'fighter' in ref:
