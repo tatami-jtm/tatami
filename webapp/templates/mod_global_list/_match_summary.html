@@ -26,10 +26,10 @@
         {% endif %}
         <div class="match-actions">
             {% if not match.scheduled %}
-            <button class="btn btn-secondary">Ansetzen</button>
+            <a href="{{ url_for('mod_list.schedule_match', event=g.event.slug, id=match.group.id, match_id=match.id, origin_url=request.url) }}" class="btn btn-secondary">Ansetzen</a>
             <button class="btn btn-secondary">Ergebnis eintragen</button>
             {% elif not match.called_up %}
-            <button class="btn btn-danger btn-3d">Absetzen</button>
+            <a href="{{ url_for('mod_list.unschedule_match', event=g.event.slug, id=match.group.id, match_id=match.id, origin_url=request.url) }}" class="btn btn-danger btn-3d">Absetzen</a>
             <button class="btn btn-secondary">Ergebnis eintragen</button>
             {% elif not match.completed %}
             <button class="btn btn-secondary">Ergebnis eintragen</button>
