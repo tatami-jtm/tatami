@@ -35,7 +35,7 @@ def index():
         if current_group.marked_ready:
             helpers.force_create_list(current_group)
             scheduled_matches = current_group.matches.filter_by(scheduled=True, completed=False).order_by('match_schedule_key')
-            not_scheduled_matches = current_group.matches.filter_by(scheduled=False)
+            not_scheduled_matches = current_group.matches.filter_by(scheduled=False, completed=False)
             completed_matches = current_group.matches.filter_by(completed=True)
 
     mats = g.event.device_positions.filter_by(is_mat=True).all()

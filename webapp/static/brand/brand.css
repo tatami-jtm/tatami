@@ -734,7 +734,8 @@ img {
     justify-content: flex-end;
     align-items: center;
 }
-.match-summary .match-header .match-actions .btn {
+.match-summary .match-header .match-actions>.btn,
+.match-summary .match-header .match-actions>.dropdown>.btn {
     font-size: inherit;
     padding: 0 0.25rem;
     margin-left: 0.15rem;

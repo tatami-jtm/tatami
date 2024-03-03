@@ -25,16 +25,16 @@
         <div class="match-tag">Entscheidungskampf</div>
         {% endif %}
         <div class="match-actions">
-            {% if not match.scheduled %}
+            {% if match.completed %}
+            {{ _results_dropdown(match, 'Ergebnis ändern') }}
+            {% elif not match.scheduled %}
             <a href="{{ url_for('mod_list.schedule_match', event=g.event.slug, id=match.group.id, match_id=match.id, origin_url=request.url) }}" class="btn btn-secondary">Ansetzen</a>
-            <button class="btn btn-secondary">Ergebnis eintragen</button>
+            {{ _results_dropdown(match, 'Ergebnis eintragen') }}
             {% elif not match.called_up %}
             <a href="{{ url_for('mod_list.unschedule_match', event=g.event.slug, id=match.group.id, match_id=match.id, origin_url=request.url) }}" class="btn btn-danger btn-3d">Absetzen</a>
-            <button class="btn btn-secondary">Ergebnis eintragen</button>
+            {{ _results_dropdown(match, 'Ergebnis eintragen') }}
             {% elif not match.completed %}
-            <button class="btn btn-secondary">Ergebnis eintragen</button>
-            {% else %}
-            <button class="btn btn-secondary">Ergebnis ändern</button>
+            {{ _results_dropdown(match, 'Ergebnis eintragen') }}
             {% endif %}
         </div>
     </div>
@@ -48,5 +48,65 @@
     </div>
     {% if match.results.count() == 1 %}
     {% endif %}
+</div>
+{% endmacro %}
+
+{% macro _results_dropdown(match, label) %}
+{% set result = match.get_result()[1] %}
+<div class="dropdown">
+    <button
+        class="btn btn-secondary"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+        data-bs-auto-close="outside">
+        {{ label }}
+    </button>
+
+    <div class="dropdown-menu dropdown-wide">
+        <form action="{{ url_for('mod_list.write_match_result', event=g.event.slug, id=match.group.id, match_id=match.id) }}" method="POST" class="px-3 py-2">
+            <div class="mb-3">
+                <label for="match-{{ match.id }}-winner">Gewinner/in ist:</label>
+                <select class="form-select" id="match-{{ match.id }}-winner" name="winner">
+                    <option disabled {{ 'selected' if not result.winner() }}></option>
+                    <option value="white" {{ 'selected' if result.winner() == 'white' }}>
+                        Weiß ({{ match.white.full_name }})
+                    </option>
+                    <option value="blue" {{ 'selected' if result.winner() == 'blue' }}>
+                        Blau ({{ match.blue.full_name }})
+                    </option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="match-{{ match.id }}-score">Unterpunkte:</label>
+                <select class="form-select" id="match-{{ match.id }}-score" name="score">
+                    <option disabled {{ 'selected' if not result.score() }}></option>
+                    <option value="1" {{ 'selected' if result.score() == 1 }}>
+                        1 UP (Shido oder Hantei)
+                    </option>
+                    <option value="7" {{ 'selected' if result.score() == 7 }}>
+                        7 UP (Waza-ari)
+                    </option>
+                    <option value="10" {{ 'selected' if result.score() == 10 }}>
+                        10 UP (Ippon, Hansokumake oder Waza-ari-awasete)
+                    </option>
+                </select>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" value="yes" name="loser_disqualified" id="match-{{ match.id }}-loser-disqualified" {{ 'checked' if result.loser_disqualified() }}>
+                <label class="form-check-label mb-1" for="match-{{ match.id }}-loser-disqualified">
+                    Verlierer/in disqualifiziert (direkter Hansoku-make)
+                </label>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" value="yes" name="loser_removed" id="match-{{ match.id }}-loser-removed" {{ 'checked' if result.loser_removed() }}>
+                <label class="form-check-label mb-1" for="match-{{ match.id }}-loser-removed">
+                    Verlierer/in scheidet aus (bspw. Verletzung oder eigener Wunsch)
+                </label>
+            </div>
+            <input type="hidden" name="origin_url" value="{{ request.url }}">
+            <button type="submit" class="btn btn-primary btn-sm">Speichern</button>
+        </form>
+    </div>
 </div>
 {% endmacro %}

@@ -40,6 +40,13 @@ class Match(db.Model):
     completed = db.Column(db.Boolean)
     completed_at = db.Column(db.DateTime())
 
+    def get_result(self):
+        if self.results.count() != 1:
+            return True, MatchResult(match=self)
+        
+        else:
+            return False, self.results.first()
+
 
 class MatchResult(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
@@ -62,4 +69,30 @@ class MatchResult(db.Model):
 
     scoreboard_data = db.Column(db.Text())
     full_time = db.Column(db.Integer())
+
+    def winner(self):
+        if self.is_white_winner:
+            return 'white'
+        elif self.is_blue_winner:
+            return 'blue'
     
+    def score(self):
+        winner = self.winner()
+        if winner == 'white':
+            return self.white_score
+        elif winner == 'blue':
+            return self.blue_score
+        
+    def loser_disqualified(self):
+        winner = self.winner()
+        if winner == 'white':
+            return self.is_blue_disqualified
+        elif winner == 'blue':
+            return self.is_white_disqualified
+
+    def loser_removed(self):
+        winner = self.winner()
+        if winner == 'white':
+            return self.is_blue_removed
+        elif winner == 'blue':
+            return self.is_white_removed

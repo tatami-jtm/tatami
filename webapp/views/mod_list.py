@@ -131,3 +131,66 @@ def unschedule_match(id, match_id):
         flash("Kampf erfolgreich abgesetzt.", 'success')
 
     return redirect(request.values['origin_url'])
+
+@mod_list_view.route('/group/<id>/match/<match_id>/write-result', methods=['POSt'])
+@check_and_apply_event
+@check_is_registered
+def write_match_result(id, match_id):
+    if not (g.device.event_role.may_use_global_list or
+            g.device.event_role.may_use_assigned_lists):
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+    
+    group = g.event.groups.filter_by(id=id).one_or_404()
+    group_list = helpers.load_list(group)
+
+    match = group.matches.filter_by(id=match_id).one_or_404()
+    if not match.completed:
+        match.completed = True
+        match.completed_at = datetime.now()
+        
+    is_new, match_result = match.get_result()
+
+    if request.form['winner'] == 'white':
+        match_result.is_white_winner = True
+        match_result.is_blue_winner = False
+
+        match_result.white_points = 1
+        match_result.blue_points = 0
+
+        match_result.white_score = int(request.form['score'])
+        match_result.blue_score = 0
+
+        match_result.is_white_disqualified = False
+        match_result.is_blue_disqualified = 'loser_disqualified' in request.form
+
+        match_result.is_white_removed = False
+        match_result.is_blue_removed = 'loser_removed' in request.form
+    elif request.form['winner'] == 'blue':
+        print(request.form)
+        match_result.is_white_winner = False
+        match_result.is_blue_winner = True
+
+        match_result.white_points = 0
+        match_result.blue_points = 1
+
+        match_result.white_score = 0
+        match_result.blue_score = int(request.form['score'])
+
+        match_result.is_white_disqualified = 'loser_disqualified' in request.form
+        match_result.is_blue_disqualified = False
+
+        match_result.is_white_removed = 'loser_removed' in request.form
+        match_result.is_blue_removed = False
+    else:
+        flash("Es wurde kein Ergebnis eingetragen, da nicht genügend Informationen übermittelt wurden.", 'danger')
+        return redirect(request.form['origin_url'])
+
+    if is_new:
+        db.session.add(match_result)
+
+    db.session.commit()
+
+    flash("Ergebnis wurde erfolgreich eingetragen.", 'success')
+
+    return redirect(request.form['origin_url'])
