@@ -1,4 +1,5 @@
 from . import db
+from ..listslib.match_result import MatchResult as ListMatchResult
 
 class Match(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
@@ -46,6 +47,9 @@ class Match(db.Model):
         
         else:
             return False, self.results.first()
+        
+    def has_result(self):
+        return self.results.count() == 1
 
 
 class MatchResult(db.Model):
@@ -96,3 +100,8 @@ class MatchResult(db.Model):
             return self.is_blue_removed
         elif winner == 'blue':
             return self.is_white_removed
+    
+    def _make_list_result(self):
+        return ListMatchResult.mk(self.white_points, self.white_score, None,
+                                  self.blue_points, self.blue_score, None,
+                                  None, None)

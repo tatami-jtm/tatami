@@ -21,6 +21,13 @@ def load_list(group):
 
         struct['fighters'].append(Fighter(participant.id, participant.full_name, participant.association_name))
 
+    for match in group.matches.all():
+        if match.has_result():
+            if not match.is_playoff:
+                struct['matches'][match.listslib_match_id] = match.get_result()[1]._make_list_result()
+            else:
+                struct['playoff_matches'][match.listslib_match_id] = match.get_result()[1]._make_list_result()
+
     list.import_struct(struct)
 
     return list
