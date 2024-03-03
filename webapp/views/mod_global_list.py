@@ -27,12 +27,20 @@ def index():
 
 
     current_group = None
+    scheduled_matches = None
+    not_scheduled_matches = None
+    completed_matches = None
     if 'group' in request.values:
         current_group = g.event.groups.filter_by(id=request.values['group']).one_or_404()
+        if current_group.marked_ready:
+            helpers.force_create_list(current_group)
+            scheduled_matches = current_group.matches.filter_by(scheduled=True, completed=False).order_by('match_schedule_key')
+            not_scheduled_matches = current_group.matches.filter_by(scheduled=False)
+            completed_matches = current_group.matches.filter_by(completed=True)
 
     mats = g.event.device_positions.filter_by(is_mat=True).all()
     
-    return render_template("mod_global_list/index.html", mats=mats, current_group=current_group, free_groups=free_groups)
+    return render_template("mod_global_list/index.html", mats=mats, current_group=current_group, free_groups=free_groups, scheduled_matches=scheduled_matches, not_scheduled_matches=not_scheduled_matches,completed_matches=completed_matches)
 
 
 @mod_global_list_view.route('/group/<id>/edit', methods=['POST'])

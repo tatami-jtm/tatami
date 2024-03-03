@@ -695,3 +695,55 @@ img {
     max-width: 100%;
     height: auto;
 }
+
+
+.match-summary {
+    display: flex;
+    flex-direction: column;
+}
+.match-summary .match-header {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    padding: 0.125rem 0;
+}
+.match-summary .match-header .match-group {
+    margin-right: 1rem;
+}
+.match-summary .match-header .match-status {
+    margin-right: 1rem;
+    border-radius: 0.25rem;
+    padding: 0 0.25rem;
+}
+.match-summary .match-header .match-status.match-status-called-up {
+    background-color: #ff6;
+}
+.match-summary .match-header .match-status.match-status-running {
+    background-color: #faa;
+}
+.match-summary .match-header .match-status.match-status-completed {
+    background-color: #afa;
+}
+.match-summary .match-header .match-tag {
+    margin-right: 0.5rem;
+    font-variant: small-caps;
+}
+.match-summary .match-header .match-actions {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.match-summary .match-header .match-actions .btn {
+    font-size: inherit;
+    padding: 0 0.25rem;
+    margin-left: 0.15rem;
+}
+.match-summary .match-white {
+    border-left: 0.35rem solid #eeeeee;
+    padding: 0 0.35rem;
+}
+.match-summary .match-blue {
+    border-left: 0.35rem solid #3333dd;
+    padding: 0 0.35rem;
+}

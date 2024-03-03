@@ -1,4 +1,5 @@
 {% extends "layouts/application.html" %}
+{% from "mod_global_list/_match_summary.html" import match_summary %}
 {% block title %}Hauptliste{% endblock %}
 
 {% block body %}
@@ -77,6 +78,39 @@
         </div>
         <div class="col-12 col-md-4">
             <h3 class="h4 fw-bold mb-4">Ausstehende Kämpfe</h3>
+            
+            {% if scheduled_matches.count() %}
+            <div class="card mb-3">
+                <div class="card-header">Angesetze Kämpfe</div>
+                {% for match in scheduled_matches %}
+                <div class="card-body {{ 'border-top' if loop.index != 1 }} p-2 pt-1">
+                    {{ match_summary(match) }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if not_scheduled_matches.count() %}
+            <div class="card mb-3">
+                <div class="card-header">Zukünftige Kämpfe</div>
+                {% for match in not_scheduled_matches %}
+                <div class="card-body {{ 'border-top' if loop.index != 1 }} p-2 pt-1">
+                    {{ match_summary(match) }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if completed_matches.count() %}
+            <div class="card mb-3">
+                <div class="card-header">Erledigte Kämpfe</div>
+                {% for match in completed_matches %}
+                <div class="card-body {{ 'border-top' if loop.index != 1 }} p-2 pt-1">
+                    {{ match_summary(match) }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
         <div class="col-12 col-md-4">
             <h3 class="h4 fw-bold mb-4">Kampfliste</h3>

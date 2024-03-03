@@ -1,0 +1,52 @@
+{% macro match_summary(match) %}
+<div class="match-summary">
+    <div class="match-header">
+        <div class="match-group">{{ match.group.title }}</div>
+        {% if match.completed %}
+        <div class="match-status match-status-completed">Erledigt</div>
+        {% elif match.running %}
+        <div class="match-status match-status-running">Aktueller Kampf</div>
+        {% elif match.called_up %}
+        <div class="match-status match-status-called-up">Vorbereitung</div>
+        {% endif %}
+        {% if match.list_tags %}
+            {% for tag in match.list_tags.split(",") %}
+            <div class="match-tag">
+                {% if tag == "final" %}Finale
+                {% elif tag == "semifinal" %}Halbfinale
+                {% elif tag == "repechage" %}Trostrunde
+                {% elif tag == "thirdplace" %}Kampf um Platz 3
+                {% else %}{{ tag }}
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% if match.is_playoff %}
+        <div class="match-tag">Entscheidungskampf</div>
+        {% endif %}
+        <div class="match-actions">
+            {% if not match.scheduled %}
+            <button class="btn btn-secondary">Ansetzen</button>
+            <button class="btn btn-secondary">Ergebnis eintragen</button>
+            {% elif not match.called_up %}
+            <button class="btn btn-danger btn-3d">Absetzen</button>
+            <button class="btn btn-secondary">Ergebnis eintragen</button>
+            {% elif not match.completed %}
+            <button class="btn btn-secondary">Ergebnis eintragen</button>
+            {% else %}
+            <button class="btn btn-secondary">Ergebnis ändern</button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="match-white">
+        <strong>{{ match.white.full_name }}</strong>
+        ({{ match.white.association_name }})
+    </div>
+    <div class="match-blue">
+        <strong>{{ match.blue.full_name }}</strong>
+        ({{ match.blue.association_name }})
+    </div>
+    {% if match.results.count() == 1 %}
+    {% endif %}
+</div>
+{% endmacro %}
