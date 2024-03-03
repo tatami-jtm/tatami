@@ -700,6 +700,7 @@ img {
 .match-summary {
     display: flex;
     flex-direction: column;
+    line-height: 1;
 }
 .match-summary .match-header {
     display: flex;
@@ -742,9 +743,45 @@ img {
 }
 .match-summary .match-white {
     border-left: 0.35rem solid #eeeeee;
-    padding: 0 0.35rem;
+    padding: 0.25rem 0.35rem;
 }
 .match-summary .match-blue {
     border-left: 0.35rem solid #3333dd;
-    padding: 0 0.35rem;
+    padding: 0.25rem 0.35rem;
+}
+.match-summary .match-result {
+    margin: 0.25rem 0;
+    padding: 0.15rem;
+    font-size: 0.95rem;
+    background-color: #fffada;
+    display: flex;
+    align-items: center;
+}
+.match-summary .match-result .match-result-title {
+    margin-right: 0.75rem;
+    text-decoration: underline;
+
+}
+.match-summary .match-result .match-result-winner {
+    margin-right: 0.25rem;
+    font-weight: bold;
+    color: black;
+    display: flex;
+    align-items: center;
+}
+
+.match-summary .match-result .match-result-winner::before {
+    content: '';
+    height: 0.85rem;
+    width: 0.85rem;
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 0.35rem;
+}
+.match-summary .match-result .match-result-winner.match-result-winner-white::before {
+    background-color: #eeeeee;
+    border: 1px solid #aaaaaa;
+}
+.match-summary .match-result .match-result-winner.match-result-winner-blue::before {
+    background-color: #3333dd;
 }

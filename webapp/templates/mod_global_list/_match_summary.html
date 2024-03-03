@@ -1,4 +1,5 @@
 {% macro match_summary(match) %}
+{% set result = match.get_result()[1] %}
 <div class="match-summary">
     <div class="match-header">
         <div class="match-group">{{ match.group.title }}</div>
@@ -27,15 +28,15 @@
         <div class="match-actions">
             {% if match.completed %}
             <a href="{{ url_for('mod_list.clear_match_result', event=g.event.slug, id=match.group.id, match_id=match.id, origin_url=request.url) }}" class="btn btn-outline-danger">Ergebnis löschen</a>
-            {{ _results_dropdown(match, 'Ergebnis ändern') }}
+            {{ _results_dropdown(match, result, 'Ergebnis ändern') }}
             {% elif not match.scheduled %}
             <a href="{{ url_for('mod_list.schedule_match', event=g.event.slug, id=match.group.id, match_id=match.id, origin_url=request.url) }}" class="btn btn-secondary">Ansetzen</a>
-            {{ _results_dropdown(match, 'Ergebnis eintragen') }}
+            {{ _results_dropdown(match, result, 'Ergebnis eintragen') }}
             {% elif not match.called_up %}
             <a href="{{ url_for('mod_list.unschedule_match', event=g.event.slug, id=match.group.id, match_id=match.id, origin_url=request.url) }}" class="btn btn-danger btn-3d">Absetzen</a>
-            {{ _results_dropdown(match, 'Ergebnis eintragen') }}
+            {{ _results_dropdown(match, result, 'Ergebnis eintragen') }}
             {% elif not match.completed %}
-            {{ _results_dropdown(match, 'Ergebnis eintragen') }}
+            {{ _results_dropdown(match, result, 'Ergebnis eintragen') }}
             {% endif %}
         </div>
     </div>
@@ -47,13 +48,25 @@
         <strong>{{ match.blue.full_name }}</strong>
         ({{ match.blue.association_name }})
     </div>
-    {% if match.results.count() == 1 %}
+    {% if match.has_result() %}
+    {% if result.winner() == 'white' %}
+    <div class="match-result">
+        <div class="match-result-title">Ergebnis:</div>
+        <div class="match-result-winner match-result-winner-white">{{ match.white.full_name }}</div>
+        <div class="match-result-winner-score">hat gewonnen ({{ result.score() }} WP).</div>
+    </div>
+    {% elif result.winner() == 'blue' %}
+    <div class="match-result">
+        <div class="match-result-title">Ergebnis:</div>
+        <div class="match-result-winner match-result-winner-blue">{{ match.white.full_name }}</div>
+        <div class="match-result-winner-score">hat gewonnen ({{ result.score() }} WP).</div>
+    </div>
+    {% endif %}
     {% endif %}
 </div>
 {% endmacro %}
 
-{% macro _results_dropdown(match, label) %}
-{% set result = match.get_result()[1] %}
+{% macro _results_dropdown(match, result, label) %}
 <div class="dropdown">
     <button
         class="btn btn-secondary"
@@ -83,13 +96,13 @@
                 <select class="form-select" id="match-{{ match.id }}-score" name="score">
                     <option disabled {{ 'selected' if not result.score() }}></option>
                     <option value="1" {{ 'selected' if result.score() == 1 }}>
-                        1 UP (Shido oder Hantei)
+                        1 WP (Shido oder Hantei)
                     </option>
                     <option value="7" {{ 'selected' if result.score() == 7 }}>
-                        7 UP (Waza-ari)
+                        7 WP (Waza-ari)
                     </option>
                     <option value="10" {{ 'selected' if result.score() == 10 }}>
-                        10 UP (Ippon, Hansokumake oder Waza-ari-awasete)
+                        10 WP (Ippon, Hansokumake oder Waza-ari-awasete)
                     </option>
                 </select>
             </div>
