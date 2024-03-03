@@ -26,6 +26,7 @@
         {% endif %}
         <div class="match-actions">
             {% if match.completed %}
+            <a href="{{ url_for('mod_list.clear_match_result', event=g.event.slug, id=match.group.id, match_id=match.id, origin_url=request.url) }}" class="btn btn-outline-danger">Ergebnis löschen</a>
             {{ _results_dropdown(match, 'Ergebnis ändern') }}
             {% elif not match.scheduled %}
             <a href="{{ url_for('mod_list.schedule_match', event=g.event.slug, id=match.group.id, match_id=match.id, origin_url=request.url) }}" class="btn btn-secondary">Ansetzen</a>

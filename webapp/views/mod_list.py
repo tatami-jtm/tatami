@@ -142,7 +142,6 @@ def write_match_result(id, match_id):
         return redirect(url_for('devices.index', event=g.event.slug))
     
     group = g.event.groups.filter_by(id=id).one_or_404()
-    group_list = helpers.load_list(group)
 
     match = group.matches.filter_by(id=match_id).one_or_404()
     if not match.completed:
@@ -194,3 +193,32 @@ def write_match_result(id, match_id):
     flash("Ergebnis wurde erfolgreich eingetragen.", 'success')
 
     return redirect(request.form['origin_url'])
+
+
+
+
+@mod_list_view.route('/group/<id>/match/<match_id>/clear-result')
+@check_and_apply_event
+@check_is_registered
+def clear_match_result(id, match_id):
+    if not (g.device.event_role.may_use_global_list or
+            g.device.event_role.may_use_assigned_lists):
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+    
+    group = g.event.groups.filter_by(id=id).one_or_404()
+
+    match = group.matches.filter_by(id=match_id).one_or_404()
+    if match.completed:
+        match.completed = False
+        match.completed_at = None
+        is_new, match_result = match.get_result()
+
+        if not is_new:
+            db.session.delete(match_result)
+        
+    db.session.commit()
+
+    flash("Ergebnis wurde erfolgreich ausgetragen.", 'success')
+
+    return redirect(request.values['origin_url'])
