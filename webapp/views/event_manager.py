@@ -438,6 +438,21 @@ def device_delete(id):
     return redirect(url_for('event_manager.devices', event=g.event.slug))
 
 
+@eventmgr_view.route('/devices/<id>/inspect')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def device_inspect(id):
+    device = DeviceRegistration.query.filter_by(
+        event=g.event, id=id).one_or_404()
+
+    session['device_token'] = device.token
+
+    flash(f"Willkommen! Beitritt zur Sitzung von {device.title} war erfolgreich.", 'success')
+
+    return redirect(url_for('devices.index', event=g.event.slug))
+
+
 @eventmgr_view.route('/devices/allow-registration', methods=["POST"])
 @login_required
 @check_and_apply_event
