@@ -137,3 +137,24 @@ def mark_all_at_mat_as_ready(id):
     db.session.commit()
 
     return redirect(url_for('mod_global_list.index', event=g.event.slug))
+
+
+
+@mod_global_list_view.route('/preview/mat/<id>')
+@check_and_apply_event
+@check_is_registered
+def preview_mat(id):
+    if not g.device.event_role.may_use_global_list:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+    
+    mat = g.event.device_positions.filter_by(id=id).one_or_404()
+    matches = []
+
+    for group in mat.assigned_groups:
+        if group.marked_ready:
+            matches += group.matches.filter_by(scheduled=True, completed=False).all()
+    
+    matches = sorted(matches, key=lambda f: f.match_schedule_key)
+    
+    return render_template('mod_global_list/preview_mat.html', mat=mat, matches=matches)
