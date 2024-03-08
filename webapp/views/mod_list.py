@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, flash, g, session, \
-    request, redirect, url_for, send_file
+    request, redirect, url_for, send_file, Response
 
-import io
+import io, zipfile
 from datetime import datetime
 
 from .event_manager import check_and_apply_event
@@ -80,6 +80,55 @@ def display_pdf(id):
     pdf_io.seek(0)
 
     return send_file(pdf_io, mimetype='application/pdf')
+
+
+@mod_list_view.route('/display/all_lists.zip')
+@check_and_apply_event
+@check_is_registered
+def display_all():
+    if not g.device.event_role.may_use_global_list:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+    
+    collected_groups = []
+    for event_class in g.event.classes.filter_by(begin_fighting=True, ended_fighting=False).all():
+        for group in event_class.groups.all():
+            collected_groups.append([
+                group,
+                helpers.load_list(group)
+            ])
+
+    zip_io = io.BytesIO()
+    zip_file = zipfile.ZipFile(zip_io, mode='w')
+
+    for group, group_list in collected_groups:
+        if group.assigned_to_position:
+            pdf = group_list.make_pdf(title=g.event.title,
+                                    event_class=group.event_class.short_title,
+                                    group=group.cut_title(),
+                                    mat=group.assigned_to_position.title)
+        else:
+            pdf = group_list.make_pdf(title=g.event.title,
+                                    event_class=group.event_class.short_title,
+                                    group=group.cut_title())
+
+        pdf_io = io.BytesIO()
+        pdf.write(pdf_io)
+        pdf_io.seek(0)
+
+        title = group.title
+        title = title.replace(":", "_").replace(".", "").replace(",", "").replace(" ", "_")
+        title = title.replace("+", "_plus_")
+
+        print(title)
+
+        zip_file.writestr(f"{title}.pdf", pdf_io.getbuffer())
+    
+    zip_file.close()
+
+    return Response(zip_io.getvalue(), mimetype='application/zip', headers={
+        'Content-Disposition': 'attachment;filename=all_lists.zip'
+    })
 
 
 @mod_list_view.route('/group/<id>/match/<match_id>/schedule')
