@@ -33,6 +33,26 @@ class Event(db.Model):
                 return json.loads(item.value)
             else:
                 return item.value
+            
+    def save_setting(self, key, value, is_json=True):
+        item = self.settings.filter_by(key=key).one_or_none()
+        
+        if item is None:
+            item = EventSetting(event=self, key=key)
+            db.session.add(item)
+        
+        if is_json:
+            item.value = json.dumps(value)
+        else:
+            item.value = value
+
+        db.session.commit()
+
+    def reset_setting(self, key):
+        item = self.settings.filter_by(key=key).one_or_none()
+        if item is not None:
+            db.session.delete(item)
+        db.session.commit()
 
     def is_supervisor(self, user):
         return user == self.supervising_user or any(

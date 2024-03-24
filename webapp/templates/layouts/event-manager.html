@@ -48,7 +48,7 @@
                         <a class="nav-link {{ 'active' if event_page=='dashboard' }}" href="{{ url_for('event_manager.index', event=g.event.slug) }}">📊 Übersicht</a>
                     </div>
                     <div class="nav-item">
-                        <a class="nav-link {{ 'active' if event_page=='settings' }}" href="">⚙️ Einstellungen</a>
+                        <a class="nav-link {{ 'active' if event_page=='config' }}" href="{{ url_for('event_manager.config', event=g.event.slug) }}">⚙️ Einstellungen</a>
                     </div>
                     <div class="nav-item">
                         <a class="nav-link {{ 'active' if event_page=='classes' }}" href="{{ url_for('event_manager.classes', event=g.event.slug) }}">👪 Kampfklassen</a>

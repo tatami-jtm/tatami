@@ -1,0 +1,38 @@
+{% set event_page="config" %}
+{% extends "layouts/event-manager.html" %}
+{% block title %}{{ g.event.title }} | Einstellungen{% endblock %}
+{% block body %}
+<h1>Einstellungen</h1>
+
+<form action="" method="POST">
+<div class="card my-3">
+    <div class="card-header">Vollautomatische Listenführung</div>
+    <div class="card-body">
+        <input type="hidden" name="form" value="scheduling">
+        <p>TATAMI kann die Listen vollautomatisch führen, sodass ohne weiteres Zutun ausgewählt wird, welche der einer Matte zugewiesenen Listen eröffnet werden und welcher Kampf der eröffneten Listen stattfinden soll.</p>
+
+        <div class="form-check form-switch fw-bold">
+            <input class="form-check-input" type="checkbox" role="switch" id="use-scheduling" name="use-scheduling" {{ 'checked' if g.event.setting('scheduling.use', True) }}>
+            <label class="form-check-label" for="use-scheduling">Die Listen werden automatisch geführt.</label>
+        </div>
+    </div>
+    <div class="card-body border-top">
+        <p>Wenn die Listen automatisch geführt werden, muss angegeben werden, wie viele Listen (auf einer Matte( gleichzeitig eröffnet sein dürfen und wie viele Teilnehmende gleichzeitig (auf einer Matte) in eröffneten Listen sein dürfen. Diese Einstellung beeinflusst, ob und wie viele Pausen ggf. notwendig werden und wie lange das Auskämpfen einer Liste dauert.</p>
+
+        <div class="mb-3">
+            <label for="scheduling-max-group" class="mb-1">Höchstzahl der Listen</label>
+            <input name="scheduling-max-group" id="scheduling-max-group" class="form-control" type="number" min="1" max="16" value="{{ g.event.setting('scheduling.max_concurrent_groups', 3) }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="scheduling-max-participant" class="mb-1">Höchstzahl der Teilnehmenden</label>
+            <input name="scheduling-max-participant" id="scheduling-max-participant" class="form-control" type="number" min="1" max="128" value="{{ g.event.setting('scheduling.max_concurrent_participants', 30) }}">
+        </div>
+    </div>
+    <div class="card-footer">
+        <button type="submit" class="btn btn-secondary">Speichern</button>
+    </div>
+</div>
+</form>
+
+{% endblock body %}

@@ -76,6 +76,40 @@ def index():
     return render_template("event-manager/index.html", stat=stats, invalid_registration_state_query=invalid_registration_state_query, any_notice=any_notice)
 
 
+@eventmgr_view.route('/config')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def config():
+    return render_template("event-manager/config.html")
+
+
+@eventmgr_view.route('/config', methods=['POST'])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def save_config():
+    if request.form['form'] == 'scheduling':
+        g.event.save_setting('scheduling.use', 'use-scheduling' in request.form)
+
+        if request.form['scheduling-max-group']:
+            g.event.save_setting('scheduling.max_concurrent_groups', int(request.form['scheduling-max-group']))
+        else:
+            g.event.reset_setting('scheduling.max_concurrent_groups')
+
+        if request.form['scheduling-max-participant']:
+            g.event.save_setting('scheduling.max_concurrent_participants', int(request.form['scheduling-max-participant']))
+        else:
+            g.event.reset_setting('scheduling.max_concurrent_participants')
+
+        flash("Einstellungen erfolgreich gespeichert", 'success')
+    
+    else:
+        flash("Ungültige Einstellungsgruppe ausgewählt", 'danger')
+    
+    return redirect(url_for('event_manager.config', event=g.event.slug))
+
+
 @eventmgr_view.route('/classes')
 @login_required
 @check_and_apply_event
