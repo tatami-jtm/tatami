@@ -1,5 +1,6 @@
 from . import db
 
+import json
 import hashlib
 
 
@@ -20,6 +21,18 @@ class Event(db.Model):
     supervising_role_id = db.Column(db.Integer(), db.ForeignKey('role.id'))
     supervising_role = db.relationship(
         'Role', backref=db.backref('supervised_events', lazy='dynamic'))
+
+    def setting(self, key, default_value=None, is_json=True):
+        item = self.settings.filter_by(key=key).one_or_none()
+        
+        if item is None:
+            return default_value
+        
+        else:
+            if is_json:
+                return json.loads(item.value)
+            else:
+                return item.value
 
     def is_supervisor(self, user):
         return user == self.supervising_user or any(
@@ -184,3 +197,14 @@ class DevicePosition(db.Model):
     event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
     event = db.relationship('Event', backref=db.backref(
         'device_positions', lazy='dynamic'))
+
+
+class EventSetting(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    key = db.Column(db.String(50))
+
+    value = db.Column(db.Text())
+
+    event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
+    event = db.relationship('Event', backref=db.backref(
+        'settings', lazy='dynamic'))
