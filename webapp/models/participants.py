@@ -59,6 +59,7 @@ class ListSystem(db.Model):
     mandatory_minimum = db.Column(db.Integer())
     mandatory_maximum = db.Column(db.Integer())
     estimated_fight_count = db.Column(db.Integer())
+    break_count = db.Column(db.Integer())
     enabled = db.Column(db.Boolean)
 
     @classmethod
@@ -115,6 +116,7 @@ class Group(db.Model):
     completed_at = db.Column(db.DateTime())
 
     random_seed = db.Column(db.Integer())
+    last_used_at = db.Column(db.DateTime())
 
     _system = (None, None) # for memoizing calculated system
     
