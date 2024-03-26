@@ -1,8 +1,43 @@
 from ..models import db
+from .list_helper import load_list
 from datetime import datetime as dt
 
 def make_config(max_concurrent_groups, max_concurrent_participants):
     return (max_concurrent_groups, max_concurrent_participants)
+
+
+def get_next_match(group):
+    list_system = load_list(group)
+    open_matches = group.matches.filter_by(scheduled=False)
+    schedule = list_system.get_schedule()
+
+    for item in schedule:
+        if item['type'] == 'clip':
+            return None
+
+        elif item['type'] == 'match':
+            match = item['match']
+            match_object = open_matches.filter_by(listslib_match_id=match.get_id()).one_or_none()
+
+            if match_object is None:
+                continue
+
+            white = match_object.white
+            blue = match_object.blue
+            now = dt.now()
+            break_time = group.event_class.between_fights_time
+
+            if white.last_fight_at is not None:
+                if (now - white.last_fight_at).total_seconds() < break_time:
+                    continue
+            
+            if blue.last_fight_at is not None:
+                if (now - blue.last_fight_at).total_seconds() < break_time:
+                    continue
+            
+            return match
+
+    return None
 
 
 def get_next_list(groups, config):
