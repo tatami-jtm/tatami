@@ -116,6 +116,8 @@ class Group(db.Model):
     completed_at = db.Column(db.DateTime())
 
     random_seed = db.Column(db.Integer())
+
+    currently_used = db.Column(db.Boolean)
     last_used_at = db.Column(db.DateTime())
 
     _system = (None, None) # for memoizing calculated system
