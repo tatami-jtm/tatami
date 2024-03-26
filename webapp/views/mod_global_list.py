@@ -154,8 +154,6 @@ def preview_mat(id):
     for group in mat.assigned_groups:
         if group.marked_ready:
             matches += group.matches.filter_by(scheduled=True, completed=False).all()
-
-        print(group, helpers.get_next_match(group))
     
     matches = sorted(matches, key=lambda f: f.match_schedule_key)
     
