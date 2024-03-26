@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, flash, g, session, \
     request, redirect, url_for, send_file, Response
 
-import io, zipfile
+import io, zipfile, random, time
 from datetime import datetime
 
 from .event_manager import check_and_apply_event
@@ -12,6 +12,20 @@ from ..models import db, Match
 from .. import helpers
 
 mod_list_view = Blueprint('mod_list', __name__)
+
+
+@mod_list_view.route('/')
+@check_and_apply_event
+@check_is_registered
+def index():
+    if not g.device.event_role.may_use_assigned_lists:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    assigned_lists = g.device.position.assigned_groups.filter_by(marked_ready=True).all()
+
+    return render_template("mod_list/index.html", assigned_lists=assigned_lists)
+
 
 @mod_list_view.route('/display/<id>/list.png')
 @check_and_apply_event
@@ -25,6 +39,9 @@ def display_image(id):
     
     group = g.event.groups.filter_by(id=id).one_or_404()
     group_list = helpers.load_list(group)
+
+    if 'cumult' in request.values:
+        time.sleep(random.random())
 
     if 'draft' in request.values:
         image = group_list.make_image(title=g.event.title,

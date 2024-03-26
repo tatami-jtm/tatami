@@ -1,0 +1,17 @@
+<div class="p-3">
+    <h2 class="h4 mb-3 fw-bold">Kampflisten</h2>
+    <div class="nav nav-tabs tabs-sm w-100" id="listViewTabs" role="tablist">
+        {% for list in assigned_lists %}
+        <div class="nav-item" role="presentation">
+            <button class="nav-link {{ 'active' if loop.first }}" id="list-{{ list.id }}-tab" data-bs-toggle="tab" data-bs-target="#list-{{ list.id }}-pane" type="button" role="tab" aria-controls="list-{{ list.id }}-pane" {{ 'aria-selected="true"' if loop.first }}>{{ list.title }}</button>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="tab-content" id="listViewTabContent">
+        {% for list in assigned_lists %}
+        <div class="tab-pane {{ 'show active' if loop.first }}" id="list-{{ list.id }}-pane" role="tabpanel" aria-labelledby="list-{{ list.id }}-tab" tabindex="0">
+            <img src="{{ url_for('mod_list.display_image', event=g.event.slug, id=list.id, cumult=1) }}" alt="">
+        </div>
+        {% endfor %}
+    </div>
+</div>

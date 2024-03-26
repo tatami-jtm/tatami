@@ -1,0 +1,15 @@
+{% extends "layouts/application.html" %}
+{% block title %}Listen {{ g.device.position.title }}{% endblock %}
+{% block body %}
+<div class="row h-full">
+    <div class="col-12 col-xl-3 p-3 border-end shadow-sm bg-light overflow-y-auto">
+        {% include "mod_list/_schedule_controller.html" %}
+    </div>
+    <div class="col-12 col-xl-4">
+        {% include "mod_list/_results_controller.html" %}
+    </div>
+    <div class="col-12 col-xl-5">
+        {% include "mod_list/_list_view.html" %}
+    </div>
+</div>
+{% endblock body %}
