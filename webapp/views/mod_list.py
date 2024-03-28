@@ -26,9 +26,11 @@ def index():
     assigned_lists = g.mat.assigned_groups.filter_by(marked_ready=True).all()
     shown_list = assigned_lists[0]
 
+    if g.event.setting('scheduling.use', True):
+        helpers.do_match_schedule(g.mat)
+
     if 'shown_list' in request.values:
         shown_list = g.mat.assigned_groups.filter_by(marked_ready=True, id=request.values['shown_list']).one_or_404()
-
 
     return render_template("mod_list/index.html", assigned_lists=assigned_lists, shown_list=shown_list)
 
@@ -170,7 +172,7 @@ def schedule_match(id, match_id):
     if not match.scheduled:
         match.scheduled = True
         match.scheduled_at = datetime.now()
-        max_schedule_key = group.event_class.matches.filter_by(scheduled=True).order_by(Match.match_schedule_key.desc()).first().match_schedule_key
+        max_schedule_key = group.event_class.matches.filter_by(scheduled=True).order_by(Match.match_schedule_key.desc()).first()
         match.match_schedule_key = (max_schedule_key or 0) + 1
 
         db.session.commit()

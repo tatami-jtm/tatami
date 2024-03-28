@@ -64,7 +64,8 @@ def add_group(id):
         return redirect(url_for('devices.index', event=g.event.slug))
 
     event_class = g.event.classes.filter_by(id=id).one_or_404()
-    group = Group(created_manually=True, event=g.event, event_class=event_class)
+    group = Group(created_manually=True, event=g.event, event_class=event_class,
+                  assigned=False, marked_ready=False, opened=False, completed=False)
 
     if request.method == 'POST':
         group.title = event_class.short_title + ' ' + request.form['name']
@@ -241,7 +242,8 @@ def assign_all_predefined(id):
 
         if request.form['create_new'] == 'yes':
             for cl in weight_classes:
-                group = Group(created_manually=False, event=g.event, event_class=event_class)
+                group = Group(created_manually=False, event=g.event, event_class=event_class,
+                              assigned=False, marked_ready=False, opened=False, completed=False)
                 group.title = event_class.short_title + ' ' + cl[0]
                 group.assign_by_logic = True
                 group.min_weight = cl[1][0] * 1000 if cl[1][0] else None
@@ -270,7 +272,8 @@ def assign_all_predefined(id):
                     if not cl[1][0] or cl[1][0] * 1000 >= actual_weight or not cl[1][1] or cl[1][1] * 1000 < actual_weight:
                         continue
 
-                    group = Group(created_manually=False, event=g.event, event_class=event_class)
+                    group = Group(created_manually=False, event=g.event, event_class=event_class,
+                                  assigned=False, marked_ready=False, opened=False, completed=False)
                     group.title = event_class.short_title + ' ' + cl[0]
                     group.assign_by_logic = True
                     group.min_weight = cl[1][0] * 1000 if cl[1][0] else None
@@ -336,7 +339,8 @@ def assign_all_proximity(id):
             if registration.id in segmentation or not group:
                 current_initial = registration
 
-                group = Group(created_manually=False, event=g.event, event_class=event_class)
+                group = Group(created_manually=False, event=g.event, event_class=event_class,
+                              assigned=False, marked_ready=False, opened=False, completed=False)
                 group.assign_by_logic = True
                 group.min_weight = current_initial.verified_weight
                 group.system_id = None
