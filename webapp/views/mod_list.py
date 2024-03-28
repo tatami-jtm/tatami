@@ -24,13 +24,18 @@ def index():
 
     g.mat = g.device.position
     assigned_lists = g.mat.assigned_groups.filter_by(marked_ready=True).all()
-    shown_list = assigned_lists[0]
 
     if g.event.setting('scheduling.use', True):
         helpers.do_match_schedule(g.mat)
 
     if 'shown_list' in request.values:
         shown_list = g.mat.assigned_groups.filter_by(marked_ready=True, id=request.values['shown_list']).one_or_404()
+    else:
+        current_match = g.mat.current_match()
+        if current_match:
+            shown_list = current_match.group
+        else:
+            shown_list = assigned_lists[0]
 
     return render_template("mod_list/index.html", assigned_lists=assigned_lists, shown_list=shown_list)
 

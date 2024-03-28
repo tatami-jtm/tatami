@@ -24,7 +24,7 @@ def do_match_schedule(mat):
         selected_group = mat.assigned_groups.filter_by(currently_used=True).one_or_none()
 
         if selected_group is None:
-            selected_group = get_next_list(mat.assigned_groups, config)
+            selected_group = get_next_list(mat.assigned_groups.filter_by(completed=False), config)
 
             if selected_group is None:
                 continue
@@ -62,17 +62,18 @@ def do_match_schedule(mat):
     
     scheduled_matches = mat.scheduled_matches(include_called_up=False)
     if current_match is None:
-        if waiting_match is None:
+        if waiting_match is not None:
+            # promote waiting match
+            waiting_match.running = True
+            waiting_match.running_since = dt.now()
+
+        elif len(scheduled_matches):
             # choose current match
             oldest_scheduled_match = scheduled_matches[0]
             oldest_scheduled_match.called_up = True
             oldest_scheduled_match.called_up_at = dt.now()
             oldest_scheduled_match.running = True
             oldest_scheduled_match.running_since = dt.now()
-        elif len(scheduled_matches):
-            # promote waiting match
-            waiting_match.running = True
-            waiting_match.running_since = dt.now()
 
     scheduled_matches = mat.scheduled_matches(include_called_up=False)
     if mat.waiting_match() is None:

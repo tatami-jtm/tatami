@@ -231,7 +231,7 @@ class DevicePosition(db.Model):
             .filter(DevicePosition.id==self.id).one_or_none()
     
     def scheduled_matches(self, include_called_up=True):
-        query = Match.query.filter_by(scheduled=True).join(Match.group) \
+        query = Match.query.filter_by(scheduled=True, completed=False).join(Match.group) \
             .join(Group.assigned_to_position) \
             .filter(DevicePosition.id==self.id).order_by(Match.match_schedule_key.asc())
         

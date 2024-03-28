@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, flash, g, session, \
 
 from .event_manager import check_and_apply_event
 from .devices import check_is_registered
+from .. import helpers
 
 mod_scoreboard_view = Blueprint('mod_scoreboard', __name__)
 
@@ -28,5 +29,8 @@ def managed():
 
     g.mat = g.device.position
     assigned_lists = g.mat.assigned_groups.filter_by(marked_ready=True).all()
+
+    if g.event.setting('scheduling.use', True):
+        helpers.do_match_schedule(g.mat)
 
     return render_template("mod_scoreboard/managed.html", assigned_lists=assigned_lists)
