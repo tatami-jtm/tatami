@@ -129,11 +129,14 @@ def get_next_list(groups, config):
 
         if next_list is not None:
             open_list(next_list)
+            return next_list
+
+        else:
+            return least_recently_used_list(groups)
+        
 
     else:
-        next_list = least_recently_used_list(groups)
-
-    return next_list
+        return least_recently_used_list(groups)
 
 
 # greedy algorithm that will always recommend to open a list if
