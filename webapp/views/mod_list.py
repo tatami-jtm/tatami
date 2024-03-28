@@ -22,11 +22,13 @@ def index():
         flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
         return redirect(url_for('devices.index', event=g.event.slug))
 
-    assigned_lists = g.device.position.assigned_groups.filter_by(marked_ready=True).all()
+    g.mat = g.device.position
+    assigned_lists = g.mat.assigned_groups.filter_by(marked_ready=True).all()
     shown_list = assigned_lists[0]
 
     if 'shown_list' in request.values:
-        shown_list = g.device.position.assigned_groups.filter_by(marked_ready=True, id=request.values['shown_list']).one_or_404()
+        shown_list = g.mat.assigned_groups.filter_by(marked_ready=True, id=request.values['shown_list']).one_or_404()
+
 
     return render_template("mod_list/index.html", assigned_lists=assigned_lists, shown_list=shown_list)
 

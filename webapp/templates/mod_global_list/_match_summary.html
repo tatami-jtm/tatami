@@ -1,4 +1,5 @@
 {% macro match_summary(match) %}
+{% if match != None %}
 {% set result = match.get_result()[1] %}
 <div class="match-summary">
     <div class="match-header">
@@ -64,6 +65,7 @@
     {% endif %}
     {% endif %}
 </div>
+{% endif %}
 {% endmacro %}
 
 {% macro _results_dropdown(match, result, label) %}
@@ -127,6 +129,7 @@
 
 
 {% macro small_match_summary(match) %}
+{% if match != None %}
 <div class="match-summary">
     <div class="match-header">
         <div class="match-group">{{ match.group.title }}</div>
@@ -162,4 +165,5 @@
         ({{ match.blue.association_name }})
     </div>
 </div>
+{% endif %}
 {% endmacro %}

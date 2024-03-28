@@ -7,7 +7,7 @@
 
     
     <h3 class="h4 fw-bold mb-2">Kampfvorschau für {{ mat.title }}</h3>
-    {% for match in matches %}
+    {% for match in mat.scheduled_matches() %}
     <div class="card card-semidialog mb-2 shadow">
         <div class="card-body p-2">
             {{ small_match_summary(match) }}

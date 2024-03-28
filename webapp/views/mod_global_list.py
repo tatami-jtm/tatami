@@ -148,13 +148,5 @@ def preview_mat(id):
         flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
         return redirect(url_for('devices.index', event=g.event.slug))
     
-    mat = g.event.device_positions.filter_by(id=id).one_or_404()
-    matches = []
-
-    for group in mat.assigned_groups:
-        if group.marked_ready:
-            matches += group.matches.filter_by(scheduled=True, completed=False).all()
-    
-    matches = sorted(matches, key=lambda f: f.match_schedule_key)
-    
-    return render_template('mod_global_list/preview_mat.html', mat=mat, matches=matches)
+    mat = g.event.device_positions.filter_by(id=id).one_or_404()    
+    return render_template('mod_global_list/preview_mat.html', mat=mat)

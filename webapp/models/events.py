@@ -1,4 +1,6 @@
 from . import db
+from .matches import Match
+from .participants import Group
 
 import json
 import hashlib
@@ -217,6 +219,26 @@ class DevicePosition(db.Model):
     event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
     event = db.relationship('Event', backref=db.backref(
         'device_positions', lazy='dynamic'))
+    
+    def current_match(self):
+        return Match.query.filter_by(running=True, completed=False).join(Match.group) \
+            .join(Group.assigned_to_position) \
+            .filter(DevicePosition.id==self.id).one_or_none()
+    
+    def waiting_match(self):
+        return Match.query.filter_by(called_up=True, running=False).join(Match.group) \
+            .join(Group.assigned_to_position) \
+            .filter(DevicePosition.id==self.id).one_or_none()
+    
+    def scheduled_matches(self, include_called_up=True):
+        query = Match.query.filter_by(scheduled=True).join(Match.group) \
+            .join(Group.assigned_to_position) \
+            .filter(DevicePosition.id==self.id).order_by(Match.match_schedule_key.asc())
+        
+        if not include_called_up:
+            query = query.filter(Match.called_up!=True)
+        
+        return query.all()
 
 
 class EventSetting(db.Model):
