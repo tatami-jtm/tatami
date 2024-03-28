@@ -1,0 +1,20 @@
+{% extends "layouts/application.html" %}
+{% block title %}Scoreboard (mit Liste){% endblock %}
+{% block body %}
+<div class="row h-full">
+    <div class="col-12 col-xl-3 p-3 border-end shadow-sm bg-light overflow-y-auto h-100">
+        {% include "mod_list/_schedule.html" %}
+    </div>
+    <div class="col-12 col-xl-9">
+        {% include "mod_scoreboard/_controller.html" %}
+    </div>
+</div>
+{% endblock body %}
+{% block custom_header %}
+<script src="{{ url_for('static', filename='application/scoreboard/controller_action.js') }}" defer></script>
+<script src="{{ url_for('static', filename='application/scoreboard/controller_state.js') }}" defer></script>
+<script src="{{ url_for('static', filename='application/scoreboard/controller_view.js') }}" defer></script>
+<script src="{{ url_for('static', filename='application/scoreboard/controller_keyboard.js') }}" defer></script>
+
+<script src="{{ url_for('static', filename='application/scoreboard/controller_standalone.js') }}" defer></script>
+{% endblock custom_header %}
