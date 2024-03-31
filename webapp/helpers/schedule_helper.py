@@ -47,11 +47,11 @@ def do_match_schedule(mat):
             continue  # possibly enter break
 
         max_schedule_key = next_match.group.event_class.matches.filter_by(scheduled=True) \
-            .order_by(Match.match_schedule_key.desc()).first().match_schedule_key
+            .order_by(Match.match_schedule_key.desc()).first()
         
         next_match.scheduled = True
         next_match.scheduled_at = dt.now()
-        next_match.match_schedule_key = (max_schedule_key or 0) + 1
+        next_match.match_schedule_key = (max_schedule_key.match_schedule_key if max_schedule_key is not None else 0) + 1
         next_match.white.last_fight_at = dt.now()
         next_match.blue.last_fight_at = dt.now()
 

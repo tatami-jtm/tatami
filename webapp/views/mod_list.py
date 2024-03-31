@@ -25,6 +25,10 @@ def index():
     g.mat = g.device.position
     assigned_lists = g.mat.assigned_groups.filter_by(marked_ready=True).all()
 
+    # Make sure all assigned lists are created (if not already)
+    for assigned_list in assigned_lists:
+        helpers.force_create_list(assigned_list)
+
     if g.event.setting('scheduling.use', True):
         helpers.do_match_schedule(g.mat)
 
@@ -178,7 +182,7 @@ def schedule_match(id, match_id):
         match.scheduled = True
         match.scheduled_at = datetime.now()
         max_schedule_key = group.event_class.matches.filter_by(scheduled=True).order_by(Match.match_schedule_key.desc()).first()
-        match.match_schedule_key = (max_schedule_key or 0) + 1
+        match.match_schedule_key = (max_schedule_key.match_schedule_key if max_schedule_key is not None else 0) + 1
 
         db.session.commit()
 
