@@ -1,3 +1,4 @@
 scheduling.use: True
 scheduling.max_concurrent_groups: 3
 scheduling.max_concurrent_participants: 30
+scheduling.plan_ahead: 5

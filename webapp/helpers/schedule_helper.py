@@ -2,8 +2,6 @@ from ..models import db, Match
 from .list_helper import load_list
 from datetime import datetime as dt
 
-LIMIT_OF_FORECAST_FOR_SCHEDULE = 5
-
 def do_match_schedule(mat):
     config = make_config(
         mat.event.setting('scheduling.max_concurrent_groups', 3),
@@ -12,6 +10,8 @@ def do_match_schedule(mat):
 
     # Attempt to schedule up to LIMIT_OF_FORECAST_FOR_SCHEDULE matches
     # from all the groups
+
+    LIMIT_OF_FORECAST_FOR_SCHEDULE = mat.event.setting('scheduling.plan_ahead', 5)
 
     attempts = 2 * LIMIT_OF_FORECAST_FOR_SCHEDULE
 

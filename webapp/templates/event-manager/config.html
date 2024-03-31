@@ -17,7 +17,7 @@
         </div>
     </div>
     <div class="card-body border-top">
-        <p>Wenn die Listen automatisch geführt werden, muss angegeben werden, wie viele Listen (auf einer Matte( gleichzeitig eröffnet sein dürfen und wie viele Teilnehmende gleichzeitig (auf einer Matte) in eröffneten Listen sein dürfen. Diese Einstellung beeinflusst, ob und wie viele Pausen ggf. notwendig werden und wie lange das Auskämpfen einer Liste dauert.</p>
+        <p>Wenn die Listen automatisch geführt werden, muss angegeben werden, wie viele Listen (auf einer Matte) gleichzeitig eröffnet sein dürfen und wie viele Teilnehmende gleichzeitig (auf einer Matte) in eröffneten Listen sein dürfen. Diese Einstellung beeinflusst, ob und wie viele Pausen ggf. notwendig werden und wie lange das Auskämpfen einer Liste dauert.</p>
 
         <div class="mb-3">
             <label for="scheduling-max-group" class="mb-1">Höchstzahl der Listen</label>
@@ -27,6 +27,14 @@
         <div class="mb-3">
             <label for="scheduling-max-participant" class="mb-1">Höchstzahl der Teilnehmenden</label>
             <input name="scheduling-max-participant" id="scheduling-max-participant" class="form-control" type="number" min="1" max="128" value="{{ g.event.setting('scheduling.max_concurrent_participants', 30) }}">
+        </div>
+    </div>
+    <div class="card-body border-top">
+        <p>Zudem muss bestimmt werden, wie viele Kämpfe (höchstens) im Voraus geplant werden sollen. Mehr geplante Kämpfe ermöglicht eine genauere Voraussage (z. B. für Fragen von Trainer/innen), aber verringern die Flexibilität, sodass ggf. mehr Pausen notwendig werden.</p>
+
+        <div class="mb-3">
+            <label for="scheduling-plan-ahead" class="mb-1">Im Voraus geplante Kämpfe</label>
+            <input name="scheduling-plan-ahead" id="scheduling-plan-ahead" class="form-control" type="number" min="1" max="128" value="{{ g.event.setting('scheduling.plan_ahead', 5) }}">
         </div>
     </div>
     <div class="card-footer">

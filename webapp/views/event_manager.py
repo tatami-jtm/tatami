@@ -102,6 +102,11 @@ def save_config():
         else:
             g.event.reset_setting('scheduling.max_concurrent_participants')
 
+        if request.form['scheduling-plan-ahead']:
+            g.event.save_setting('scheduling.plan_ahead', int(request.form['scheduling-plan-ahead']))
+        else:
+            g.event.reset_setting('scheduling.plan_ahead')
+
         flash("Einstellungen erfolgreich gespeichert", 'success')
     
     else:
