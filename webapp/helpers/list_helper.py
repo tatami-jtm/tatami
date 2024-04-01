@@ -1,6 +1,8 @@
 from ..listslib import compile_list, Fighter, MatchResult, get_all_lists
 from ..models import db, Match, Participant
 
+from datetime import datetime as dt
+
 def load_list(group):
     list_type = group.list_system()
     list_cls = compile_list(list_type.list_file)
@@ -34,6 +36,12 @@ def load_list(group):
 
 def dump_list(list, group):
     schedule = list.get_schedule()
+
+    if list.completed():
+        group.completed = True
+        group.completed_at = dt.now()
+
+    print(group, list.completed())
 
     for item in schedule:
         if item['type'] == 'match':

@@ -1,6 +1,7 @@
 <h2 class="h4 mb-3 fw-bold">Ergebnisse eintragen</h2>
 
 {% set current_match = g.mat.current_match() %}
+{% if current_match %}
 
 <form action="{{ url_for('mod_list.write_match_result', event=g.event.slug, id=current_match.group.id, match_id=current_match.id) }}" method="POST">
     <h3 class="h5 mb-2">Ergebnis</h3>
@@ -125,3 +126,15 @@
 
     <button type="submit" class="btn btn-primary w-100 btn-lg">Ergebnis eintragen</button>
 </form>
+
+{% else %}
+
+<p>Zurzeit läuft auf {{ g.mat.title }} kein Kampf.</p>
+{% if g.event.setting('scheduling.use', True) %}
+<p>Die Listen werden auf dieser Matte automatisch geführt. Folglich sind entweder noch keine Listen freigegeben, alle Kämpf erledigt oder es muss zurzeit eine Pause stattfinden.</p>
+
+<a href="?" class="btn btn-dark">Seite aktualisieren</a>
+{% else %}
+<p>Links können ggf. Kämpfe ausgewählt werden, die jetzt stattfinden können.</p>
+{% endif %}
+{% endif %}
