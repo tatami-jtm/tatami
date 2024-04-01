@@ -285,12 +285,19 @@ def write_match_result(id, match_id):
     }
 
     for side in ['white', 'blue']:
-        for field in ['ippon', 'wazaari', 'shido', 'hansokumake']:
+        for field, limit in [('ippon', 1), ('wazaari', 2), ('shido', 3), ('hansokumake', 1)]:
             key = f"sb-{side}-{field}"
 
             if key in request.form:
-                sb_data[side][field] = int(request.form[key])
                 has_sb_data = True
+
+                value = int(request.form[key])
+                if 0 <= value <= limit:
+                    sb_data[side][field] = value
+                elif value < 0:
+                    sb_data[side][field] = 0
+                elif value > limit:
+                    sb_data[side][field] = limit
 
     if has_sb_data:
         match_result.scoreboard_data = json.dumps(sb_data)
@@ -303,7 +310,8 @@ def write_match_result(id, match_id):
 
     db.session.commit()
 
-    flash("Ergebnis wurde erfolgreich eingetragen.", 'success')
+    if not 'do_not_add_flash_message' in request.form:
+        flash("Ergebnis wurde erfolgreich eingetragen.", 'success')
 
     return redirect(request.form['origin_url'])
 
