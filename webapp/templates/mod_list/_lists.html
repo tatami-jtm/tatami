@@ -1,5 +1,8 @@
 <h2 class="h4 mb-3 fw-bold">Kampflisten</h2>
 <div class="nav nav-tabs tabs-sm w-100">
+    <div class="nav-item">
+        <a class="nav-link" role="tab" href="?" title="Ansicht zurücksetzen (aktuelle Liste anzeigen)">&boxbox;</a>
+    </div>
     {% for list in assigned_lists %}
     <div class="nav-item">
         <a class="nav-link {{ 'active' if list.id == shown_list.id }}" role="tab" href="?shown_list={{ list.id }}">{{ list.title }}</a>
