@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, flash, g, session, \
     request, redirect, url_for, send_file, Response
 
-import io, zipfile, random, time
+import io, zipfile, random, time, json
 from datetime import datetime
 
 from .event_manager import check_and_apply_event
@@ -267,6 +267,36 @@ def write_match_result(id, match_id):
     else:
         flash("Es wurde kein Ergebnis eingetragen, da nicht genügend Informationen übermittelt wurden.", 'danger')
         return redirect(request.form['origin_url'])
+    
+    has_sb_data = False
+    sb_data = {
+        "white": {
+            "ippon": None,
+            "wazaari": None,
+            "shido": None,
+            "hansokumake": None
+        },
+        "blue": {
+            "ippon": None,
+            "wazaari": None,
+            "shido": None,
+            "hansokumake": None
+        }
+    }
+
+    for side in ['white', 'blue']:
+        for field in ['ippon', 'wazaari', 'shido', 'hansokumake']:
+            key = f"sb-{side}-{field}"
+
+            if key in request.form:
+                sb_data[side][field] = int(request.form[key])
+                has_sb_data = True
+
+    if has_sb_data:
+        match_result.scoreboard_data = json.dumps(sb_data)
+
+    if 'ft-minutes' in request.form and 'ft-seconds' in request.form:
+        match_result.full_time = 60 * int(request.form['ft-minutes']) + int(request.form['ft-seconds'])
 
     if is_new:
         db.session.add(match_result)

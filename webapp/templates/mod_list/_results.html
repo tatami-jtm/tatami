@@ -1,1 +1,126 @@
 <h2 class="h4 mb-3 fw-bold">Ergebnisse eintragen</h2>
+
+{% set current_match = g.mat.current_match() %}
+
+<form action="{{ url_for('mod_list.write_match_result', event=g.event.slug, id=current_match.group.id, match_id=current_match.id) }}" method="POST">
+    <h3 class="h5 mb-2">Ergebnis</h3>
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="match-{{ current_match.id }}-winner">Gewinner/in ist:</label>
+                <select class="form-select" id="match-{{ current_match.id }}-winner" name="winner">
+                    <option disabled selected></option>
+                    <option value="white">
+                        Weiß ({{ current_match.white.full_name }})
+                    </option>
+                    <option value="blue">
+                        Blau ({{ current_match.blue.full_name }})
+                    </option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="match-{{ current_match.id }}-score">Unterpunkte:</label>
+                <select class="form-select" id="match-{{ current_match.id }}-score" name="score">
+                    <option disabled selected></option>
+                    <option value="1">
+                        1 WP (Shido oder Hantei)
+                    </option>
+                    <option value="7">
+                        7 WP (Waza-ari)
+                    </option>
+                    <option value="10">
+                        10 WP (Ippon, Hansokumake oder Waza-ari-awasete)
+                    </option>
+                </select>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" value="yes" name="loser_disqualified" id="match-{{ current_match.id }}-loser-disqualified">
+                <label class="form-check-label mb-1" for="match-{{ current_match.id }}-loser-disqualified">
+                    Verlierer/in disqualifiziert (direkter Hansoku-make)
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="yes" name="loser_removed" id="match-{{ current_match.id }}-loser-removed">
+                <label class="form-check-label mb-1" for="match-{{ current_match.id }}-loser-removed">
+                    Verlierer/in scheidet aus (bspw. Verletzung oder eigener Wunsch)
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="h5 mt-4 mb-2">Weitere Informationen (optional)</h3>
+
+    <table class="table-scoreboard mb-3">
+        <tr class="row-fighters">
+            <th colspan="4" class="col-white">{{ current_match.white.full_name }}</th>
+            <th colspan="4" class="col-blue">{{ current_match.blue.full_name }}</th>
+        </tr>
+        <tr class="row-labels">
+            <th class="col-white col-ippon">
+                <label for="sb-white-ippon">Ippon</label>
+            </th>
+            <th class="col-white col-wazaari">
+                <label for="sb-white-wazaari">Wazaari</label>
+            </th>
+            <th class="col-white col-shido">
+                <label for="sb-white-shido">Shido</label>
+            </th>
+            <th class="col-white col-hansokumake">
+                <label for="sb-white-hansokumake">HM</label>
+            </th>
+
+            <th class="col-blue col-ippon">
+                <label for="sb-blue-ippon">Ippon</label>
+            </th>
+            <th class="col-blue col-wazaari">
+                <label for="sb-blue-wazaari">Wazaari</label>
+            </th>
+            <th class="col-blue col-shido">
+                <label for="sb-blue-shido">Shido</label>
+            </th>
+            <th class="col-blue col-hansokumake">
+                <label for="sb-blue-hansokumake">HM</label>
+            </th>
+        </tr>
+
+        <tr class="row-inputs">
+            <td class="col-white col-ippon">
+                <input type="numeric" id="sb-white-ippon" name="sb-white-ippon" value="0" min="0" max="1">
+            </td>
+            <td class="col-white col-wazaari">
+                <input type="numeric" id="sb-white-wazaari" name="sb-white-wazaari" value="0" min="0" max="2">
+            </td>
+            <td class="col-white col-shido">
+                <input type="numeric" id="sb-white-shido" name="sb-white-shido" value="0" min="0" max="3">
+            </td>
+            <td class="col-white col-hansokumake">
+                <input type="numeric" id="sb-white-hansokumake" name="sb-white-hansokumake" value="0" min="0" max="1">
+            </td>
+
+            <td class="col-blue col-ippon">
+                <input type="numeric" id="sb-blue-ippon" name="sb-blue-ippon" value="0" min="0" max="1">
+            </td>
+            <td class="col-blue col-wazaari">
+                <input type="numeric" id="sb-blue-wazaari" name="sb-blue-wazaari" value="0" min="0" max="2">
+            </td>
+            <td class="col-blue col-shido">
+                <input type="numeric" id="sb-blue-shido" name="sb-blue-shido" value="0" min="0" max="3">
+            </td>
+            <td class="col-blue col-hansokumake">
+                <input type="numeric" id="sb-blue-hansokumake" name="sb-blue-hansokumake" value="0" min="0" max="1">
+            </td>
+        </tr>
+    </table>
+
+    <div class="d-flex mb-3 align-items-center">
+        <label class="fw-bold me-3">Kampfzeit</label>
+        <input type="number" id="ft-minutes" name="ft-minutes" class="form-control w-min me-1" min="0" max="60" value="0">
+        min
+        <input type="number" id="ft-seconds" name="ft-seconds" class="form-control w-min ms-2 me-1" min="0" max="60" value="0">
+        s
+    </div>
+
+    <input type="hidden" name="origin_url" value="{{ request.url }}">
+
+    <button type="submit" class="btn btn-primary w-100 btn-lg">Ergebnis eintragen</button>
+</form>
