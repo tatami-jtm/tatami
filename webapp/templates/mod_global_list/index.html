@@ -83,6 +83,7 @@
             <h3 class="h4 fw-bold mb-4">Ausstehende Kämpfe</h3>
             
             {% if current_group %}
+            {% if current_group.marked_ready %}
             {% if scheduled_matches.count() %}
             <div class="card mb-3">
                 <div class="card-header">Angesetze Kämpfe</div>
@@ -114,6 +115,9 @@
                 </div>
                 {% endfor %}
             </div>
+            {% endif %}
+            {% else %}
+            <p>Diese Liste ist noch nicht freigegeben. Die Kämpfe können erst berechnet werden, wenn die Gruppeneinteilung abschließend geprüft und freigegeben wurde.</p>
             {% endif %}
             {% endif %}
         </div>
