@@ -1,5 +1,7 @@
 __pycache__
 notes.txt
+config.py
 webapp/config.py
+tatami.db
 webapp/tatami.db
 venv
