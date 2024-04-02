@@ -1,5 +1,6 @@
 flask
 flask-security-too
+flask-login>=0.6.3
 flask-sqlalchemy
 flask-migrate
 
