@@ -38,8 +38,10 @@ def index():
         current_match = g.mat.current_match()
         if current_match:
             shown_list = current_match.group
-        else:
+        elif len(assigned_lists):
             shown_list = assigned_lists[0]
+        else:
+            shown_list = None
 
     return render_template("mod_list/index.html", assigned_lists=assigned_lists, shown_list=shown_list)
 

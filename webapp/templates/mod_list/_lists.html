@@ -1,4 +1,5 @@
 <h2 class="h4 mb-3 fw-bold">Kampflisten</h2>
+{% if assigned_lists %}
 <div class="nav nav-tabs tabs-sm w-100">
     <div class="nav-item">
         <a class="nav-link" role="tab" href="?" title="Ansicht zurücksetzen (aktuelle Liste anzeigen)">&boxbox;</a>
@@ -12,3 +13,6 @@
 <div class="p-1">
     <img src="{{ url_for('mod_list.display_image', event=g.event.slug, id=shown_list.id) }}" alt="">
 </div>
+{% else %}
+<p>Dieser Matte wurden noch keine Listen zugewiesen, die Listen wurden noch nicht freigegeben oder alle Kämpfe sind beendet.</p>
+{% endif %}
