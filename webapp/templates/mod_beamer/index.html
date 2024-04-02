@@ -5,9 +5,34 @@
 <meta http-equiv="refresh" content="5">
 {% endblock %}
 {% block body %}
+<div class="dropdown float-end">
+    <button
+        class="btn btn-outline-light"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+        data-bs-auto-close="outside">
+        ⋮
+    </button>
+
+    <div class="dropdown-menu dropdown-wide">
+        <form action="" method="GET" class="px-3 py-2">
+            <div class="mb-3">
+                <label for="mats" class="form-label">Angezeigte Matten</label>
+                <select name="mats" id="mats" multiple class="form-select">
+                    {% for mat in assigned_mats %}
+                    <option value="{{ mat.id }}" {{ 'selected' if mat.id in shown_mat_ids }}>{{ mat.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Speichern</button>
+        </form>
+    </div>
+</div>
+
 <div class="p-3">
     <div class="row">
-        {% for mat in assigned_mats %}
+        {% for mat in assigned_mats if mat.id in shown_mat_ids %}
         <div class="col">
             <h2 class="fw-bold display-3 text-center mb-3">{{ mat.title }}</h2>
 

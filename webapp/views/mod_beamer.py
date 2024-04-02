@@ -22,5 +22,10 @@ def index():
         assigned_mats = [g.device.position]
     else:
         assigned_mats = g.event.device_positions.filter_by(is_mat=True).all()
+
+    if 'mats' in request.values:
+        shown_mat_ids = list(map(int, request.values.getlist('mats')))
+    else:
+        shown_mat_ids = [mat.id for mat in assigned_mats]
     
-    return render_template("mod_beamer/index.html", assigned_mats=assigned_mats)
+    return render_template("mod_beamer/index.html", assigned_mats=assigned_mats, shown_mat_ids=shown_mat_ids)
