@@ -21,12 +21,20 @@
 
         <div class="list-group">
             {% for ec in event_classes %}
-                <a href="{{ url_for('event_manager.edit_class', event=ec.event.slug, id=ec.id) }}" class="list-group-item list-group-item-action" target="_blank">
-                    <div>
-                        <strong>{{ ec.template_name }}</strong>
-                    </div>
-                    <div>bei <span class="font-monospace small">{{ ec.event.slug }}</span></div>
-                </a>
+            {% if ec.event %}
+            <a href="{{ url_for('event_manager.edit_class', event=ec.event.slug, id=ec.id) }}" class="list-group-item list-group-item-action" target="_blank">
+                <div>
+                    <strong>{{ ec.template_name }}</strong>
+                </div>
+                <div>bei <span class="font-monospace small">{{ ec.event.slug }}</span></div>
+            </a>
+            {% else %}
+            <div class="list-group-item">
+                <div>
+                    <strong>{{ ec.template_name }}</strong>
+                </div>
+            </div>
+            {% endif %}
             {% endfor %}
         </div>
     </div>
