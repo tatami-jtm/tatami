@@ -9,9 +9,10 @@ from .models import db, User, Role, Event
 from .views import admin_view, eventmgr_view, devices_view, mod_scoreboard_view, mod_registrations_view, mod_weighin_view, mod_placement_view, mod_global_list_view, mod_list_view, mod_beamer_view
 
 app = Flask(__name__, instance_path=SETTINGS['INSTANCE_PATH'])
-app.config['SQLALCHEMY_DATABASE_URI'] = SETTINGS['SQL_URL']
+app.config['BRAND_NAME'] = "TATAMI 2024"
 
 # SQLAlchemy and Migrate
+app.config['SQLALCHEMY_DATABASE_URI'] = SETTINGS['SQL_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 migrate = Migrate(app, db)

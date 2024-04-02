@@ -10,7 +10,7 @@
         <div class="container-fluid py-2">
             <a class="navbar-brand" href="{{ url_for('event_manager.index', event=g.event.slug) }}">
                 <div class="splash-logo first-part">
-                    TATAMI 2023
+                    {{ config.BRAND_NAME }}
                 </div>
                 <div class="splash-logo second-part">
                     Event Administration

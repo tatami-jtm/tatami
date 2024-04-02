@@ -8,7 +8,7 @@
 <body class="application">
     <div class="border-bottom application-header bg-white shadow-sm">
         <div class="container-fluid py-2 d-flex justify-content-between align-items-center">
-            <a href="{{ url_for('devices.index', event=g.event.slug) }}" class="splash-logo">TATAMI 2023</a>
+            <a href="{{ url_for('devices.index', event=g.event.slug) }}" class="splash-logo">{{ config.BRAND_NAME }}</a>
             <div class="fw-bold">{{ g.event.title }}</div>
             <div class="menu">
                 <a href="{{ url_for('devices.exit', event=g.event.slug) }}" class="btn btn-sm btn-dark">Abmelden</a>
