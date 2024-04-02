@@ -23,7 +23,7 @@ def index():
         return redirect(url_for('devices.index', event=g.event.slug))
 
     g.mat = g.device.position
-    assigned_lists = g.mat.assigned_groups.filter_by(marked_ready=True).all()
+    assigned_lists = g.mat.assigned_groups.filter_by(marked_ready=True, completed=False).all()
 
     # Make sure all assigned lists are created (if not already)
     for assigned_list in assigned_lists:
