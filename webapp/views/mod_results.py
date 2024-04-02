@@ -24,3 +24,16 @@ def index():
             helpers.force_create_list(group)
     
     return render_template("mod_results/index.html")
+
+
+@mod_results_view.route('/print/<id>')
+@check_and_apply_event
+@check_is_registered
+def print_class(id):
+    if not g.device.event_role.may_use_results:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+    
+    evcl = g.event.classes.filter_by(id=id).one_or_404()
+    
+    return render_template("mod_results/print_class.html", evcl=evcl)

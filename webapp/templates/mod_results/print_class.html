@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ g.event.title }} | {{ evcl.title }} | Ergebnisse</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        html {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            max-width: 1024px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 23px;
+            margin: 0;
+            margin-bottom: 6px;
+            font-weight: normal;
+        }
+
+        h2 {
+            font-size: 27px;
+            margin: 0;
+        }
+
+        section {
+            break-inside: avoid;
+        }
+
+        h3 {
+            font-size: 21px;
+            margin-top: 31px;
+            margin-bottom: 6px;
+            break-after: avoid;
+        }
+
+        table {
+            border-top: 1px solid;
+            border-bottom: 1px solid;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table thead th {
+            border-bottom: 1px solid;
+        }
+
+
+        table th {
+            padding: 4px;
+        }
+        table td {
+            padding: 8px 4px;
+            vertical-align: middle;
+        }
+
+        table th {
+            text-align: left;
+        }
+
+        table tbody tr:nth-child(2n+1) {
+            background-color: #eeeeee;
+        }
+
+        table .placement {
+            width: 60px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        table .full-name {
+            font-size: 18px;
+            width: calc(70% - 20px);
+        }
+
+        table .association {
+            width: 30%;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ g.event.title }} &ndash; Ergebnisse</h1>
+    <h2>{{ evcl.title }}</h2>
+    
+    {% for group in evcl.groups.filter_by(completed=True) %}
+    <section>
+        <h3>{{ group.title }}</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Teilnehmer/in</th>
+                    <th>Verband</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for participant in group.placements() %}
+                <tr>
+                    <td class="placement place{{ participant.final_placement }}">{{ participant.final_placement }}.</td>
+                    <td class="full-name">{{ participant.full_name }}</td>
+                    <td class="association">{{ participant.association_name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    {% endfor %}
+
+    <script>print();</script>
+</body>
+</html>

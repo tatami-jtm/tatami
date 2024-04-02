@@ -4,28 +4,30 @@
 {% block body %}
 <h1 class="fw-bold h2">Ergebnisse</h1>
 
-    {% for evcl in g.event.classes if evcl.groups.filter_by(completed=True).count() > 0 %}
-        <h2 class="h4 mt-4">{{ evcl.title }}</h2>
-                {% for group in evcl.groups.filter_by(completed=True) %}
-                <div class="card card-semidialog mb-3">
-                    <div class="card-header">
-                        {{ group.title }}
-                    </div>
-                    {% for participant in group.placements() %}
-                    <div class="card-body p-2 py-1 {{ 'border-top' if not loop.index == 1 }}">
-                        <div class="row">
-                            <div class="col-1 align-self-center text-center px-0">
-                                <div class="{{ 'fs-3' if participant.final_placement < 9 else 'fs-5 py-1' }} place{{ participant.final_placement }} fw-bold">{{ participant.final_placement }}.</div>
-                            </div>
-                            <div class="col-11 align-self-center">
-                                <strong>{{ participant.full_name }}</strong><br>
-                                {{ participant.association_name }}
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endfor %}
+{% for evcl in g.event.classes if evcl.groups.filter_by(completed=True).count() > 0 %}
+<h2 class="h4 mt-4">{{ evcl.title }}</h2>
+<a href="{{ url_for('mod_results.print_class', event=g.event.slug, id=evcl.id) }}" class="btn btn-secondary mb-3 btn-sm" target="_blank">Ergebnisse ausdrucken</a>
+
+
+{% for group in evcl.groups.filter_by(completed=True) %}
+<div class="card card-semidialog mb-3">
+    <div class="card-header">
+        {{ group.title }}
+    </div>
+    {% for participant in group.placements() %}
+    <div class="card-body p-2 py-1 {{ 'border-top' if not loop.index == 1 }}">
+        <div class="row">
+            <div class="col-1 align-self-center text-center px-0">
+                <div class="{{ 'fs-3' if participant.final_placement < 9 else 'fs-5 py-1' }} place{{ participant.final_placement }} fw-bold">{{ participant.final_placement }}.</div>
+            </div>
+            <div class="col-11 align-self-center">
+                <strong>{{ participant.full_name }}</strong><br>
+                {{ participant.association_name }}
+            </div>
+        </div>
+    </div>
     {% endfor %}
 </div>
+{% endfor %}
+{% endfor %}
 {% endblock body %}
