@@ -131,7 +131,7 @@
     <div class="col-12 col-lg-3">
         <div class="card">
             <div class="card-body p-4">
-                <div class="fs-1 text-center fw-bold">&ndash;</div>
+                <div class="fs-1 text-center fw-bold">{{ stat.open_matches }}</div>
                 <div class="text-center fw-bold">Offene Kämpfe</div>
             </div>
         </div>
@@ -139,15 +139,15 @@
     <div class="col-12 col-lg-3">
         <div class="card">
             <div class="card-body p-4">
-                <div class="fs-1 text-center fw-bold">&ndash;</div>
-                <div class="text-center fw-bold">Eingeplante Kämpfe</div>
+                <div class="fs-1 text-center fw-bold">{{ stat.scheduled_matches }}</div>
+                <div class="text-center fw-bold">Angesetzte Kämpfe</div>
             </div>
         </div>
     </div>
     <div class="col-12 col-lg-3">
         <div class="card">
             <div class="card-body p-4">
-                <div class="fs-1 text-center fw-bold">&ndash;</div>
+                <div class="fs-1 text-center fw-bold">{{ stat.completed_matches }}</div>
                 <div class="text-center fw-bold">Erledigte Kämpfe</div>
             </div>
         </div>

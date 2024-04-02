@@ -65,7 +65,13 @@ def index():
         "weighed_in_ratio":
             g.event.weighed_registrations_count(),
         "placed_ratio":
-            int(g.event.placed_ratio() * 1000) / 10
+            int(g.event.placed_ratio() * 1000) / 10,
+        "open_matches":
+            g.event.matches.filter_by(completed=False).count(),
+        "scheduled_matches":
+            g.event.matches.filter_by(scheduled=True, completed=False).count(),
+        "completed_matches":
+            g.event.matches.filter_by(completed=True).count()
     }
 
     invalid_registration_state_query = g.event.registrations.filter_by(registered=False, weighed_in=True).order_by('last_name', 'first_name', 'club')
