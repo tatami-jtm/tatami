@@ -37,7 +37,7 @@
             <h2 class="fw-bold display-3 text-center mb-3">{{ mat.title }}</h2>
 
             {% for match in mat.scheduled_matches()[:5] %}
-            <div class="card mb-2 shadow">
+            <div class="card mb-3 shadow">
                 <div class="card-body p-2">
                     {{ small_match_summary(match, large_fs=True) }}
                 </div>
