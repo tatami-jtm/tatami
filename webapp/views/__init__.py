@@ -9,3 +9,4 @@ from .mod_placement import *
 from .mod_global_list import *
 from .mod_list import *
 from .mod_beamer import *
+from .mod_results import *

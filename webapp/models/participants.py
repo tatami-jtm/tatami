@@ -149,7 +149,10 @@ class Group(db.Model):
         return self._system[1]
     
     def estimated_fight_count(self):
-        return self.list_system().estimated_fight_count
+        return max(self.matches.count(), self.list_system().estimated_fight_count)
+    
+    def placements(self):
+        return self.participants.filter(Participant.final_placement != None).order_by(Participant.final_placement).all()
 
 
 class Participant(db.Model):

@@ -841,3 +841,13 @@ input.w-min {
     width: 80px;
     max-width: 80px;
 }
+
+.place1 {
+    color: goldenrod;
+}
+.place2 {
+    color: darkslategray;
+}
+.place3 {
+    color: maroon;
+}

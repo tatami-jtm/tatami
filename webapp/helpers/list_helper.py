@@ -1,4 +1,4 @@
-from ..listslib import compile_list, Fighter, MatchResult, get_all_lists
+from ..listslib import compile_list, Fighter, MatchResult, get_all_lists, BlankFighter
 from ..models import db, Match, Participant
 
 from datetime import datetime as dt
@@ -38,9 +38,21 @@ def load_list(group):
 def dump_list(list, group):
     schedule = list.get_schedule()
 
-    if list.completed() and not group.completed:
-        group.completed = True
-        group.completed_at = dt.now()
+    if list.completed():
+        if not group.completed:
+            group.completed = True
+            group.completed_at = dt.now()
+
+        for plm, func in [(1, list.get_first), (2, list.get_second), (3, list.get_third), (5, list.get_fifth)]:
+            data = func()
+            if type(data) == Fighter:
+                data = [data]
+
+            for fighter in data:
+                if fighter == BlankFighter: continue
+
+                participant = Participant.query.filter_by(id=fighter.get_id()).one()
+                participant.final_placement = plm
 
     if group.random_seed is None:
         group.random_seed = list._random_seed
