@@ -1,4 +1,4 @@
-from .models import db, Role, EventClass
+from .models import db, Role, EventClass, EventRole
 
 def _get_or_create(cls, **options):
     gotten = cls.query.filter_by(**options).one_or_none()
@@ -63,3 +63,26 @@ def setup_class_templates():
                    title="Männer", short_title="M",
                    fighting_time=240, golden_score_time=-1, between_fights_time=600,
                    use_proximity_weight_mode=False, weight_generator="-60\n-66\n-73\n-81\n90\n-100\n+100")
+
+def setup_event_roles():
+    _get_or_create(EventRole, name="Anmeldung",
+                   may_use_registration=True)
+    _get_or_create(EventRole, name="Waage",
+                   may_use_weigh_in=True)
+    _get_or_create(EventRole, name="Anmeldung und Waage",
+                   may_use_registration=True, may_use_weigh_in=True)
+    _get_or_create(EventRole, name="Hauptliste",
+                   may_use_registration=True, may_use_placement_tool=True, may_use_global_list=True,
+                   may_use_results=True)
+    _get_or_create(EventRole, name="Listentisch",
+                   may_use_assigned_lists=True)
+    _get_or_create(EventRole, name="Tischbesetzung",
+                   may_use_scoreboard=True)
+    _get_or_create(EventRole, name="Liste + Tischbesetzung",
+                   may_use_assigned_lists=True, may_use_scoreboard=True)
+    _get_or_create(EventRole, name="Listenanzeige",
+                   may_use_beamer=True)
+    _get_or_create(EventRole, name="Demonstration",
+                   may_use_registration=True, may_use_weigh_in=True, may_use_placement_tool=True,
+                   may_use_global_list=True, may_use_results=True, may_use_assigned_lists=True,
+                   may_use_scoreboard=True, may_use_beamer=True)
