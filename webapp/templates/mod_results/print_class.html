@@ -85,8 +85,8 @@
     </style>
 </head>
 <body>
-    <h1>{{ g.event.title }} &ndash; Ergebnisse</h1>
-    <h2>{{ evcl.title }}</h2>
+    <h1>{{ g.event.title }}</h1>
+    <h2>Ergebnisse {{ evcl.title }}</h2>
     
     {% for group in evcl.groups.filter_by(completed=True) %}
     <section>
