@@ -1,0 +1,44 @@
+{% extends "layouts/splash.html" %}
+{% block title %}Installation{% endblock %}
+{% block body %}
+<h1>Installation</h1>
+<p>Willkommen zu TATAMI. Mit diesem Installationsskript können Sie die Einrichtung von TATAMI abschließen.</p>
+
+
+<form action="" method="POST">
+    <h2 class="h4 fw-bold mt-5">1. Admin-Konto erstellen</h2>
+
+    <p><a href="{{ url_for('security.register') }}">Erstellen Sie ein neues Konto</a> und wählen Sie dann unten das Konto oder die Konten aus, die Admin-Berechtigungen erhalten sollen:</p>
+
+
+    <div class="mb-3">
+        <label for="admin-accts" class="form-label">Aktivieren und zum Admin machen:</label>
+        <select name="admin-accts" id="admin-accts" multiple class="form-select">
+            {% for u in user %}
+            <option value="{{ u.id }}">{{ u.qualified_name() }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <h2 class="h4 fw-bold mt-5">2. Voreinstellungen laden</h2>
+
+    <p>Das Installationsskript wird automatisch verschiedene Voreinstellungen laden, die unbedingt notwendig sind, um TATAMI zu installieren (bspw. eine Administrator-Rolle und die Listensysteme).</p>
+
+    <p>Zusätzlich können die folgenden Voreinstellungen geladen werden, wenn dies gewünscht ist.</p>
+
+    <div class="mb-3">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="1" id="install-class-templates" name="install-class-templates" selected>
+            <label class="form-check-label" for="install-class-templates">
+                Vorlagen für Kampfklassen (inkl. Kampfzeit und Gewichtsklassen nach DJB-Regeln)
+            </label>
+        </div>          
+    </div>
+
+    <h2 class="h4 fw-bold mt-5">3. Einrichtung abschließen</h2>
+
+    <p>Überprüfen sie die oben ausgewählten Einstellungen und bestätigen Sie dann die Einrichtung:</p>
+
+    <button type="submit" class="btn btn-primary">Jetzt installieren!</button>
+</form>
+{% endblock body %}
