@@ -558,13 +558,13 @@ def device_position_delete(id):
 def device_position_create():
     device_position = DevicePosition(event=g.event)
     device_position.title = "Neue Position"
-    device_position.is_mat = request.values.get("mat", '0') == '1'
+    device_position.is_mat = "mat" in request.values
     device_position.position = int(time.time())
 
     if device_position.is_mat:
         mat_count = DevicePosition.query.filter_by(
             event=g.event, is_mat=True).count()
-        device_position.title = f"Matte {mat_count}"
+        device_position.title = f"Matte {mat_count + 1}"
 
     db.session.add(device_position)
     db.session.commit()
