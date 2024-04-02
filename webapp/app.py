@@ -69,8 +69,9 @@ if SETTINGS['ALLOW_SETUP']:
             
             db.session.commit()
 
-            # Install event roles
+            # Install event roles and list systems
             setup_data.setup_event_roles()
+            setup_data.setup_list_systems()
 
             # Possibly install template classes
             if "install-class-templates" in request.form:
