@@ -175,7 +175,7 @@ class EventRole(db.Model):
     may_use_global_list = db.Column(db.Boolean)
     may_use_assigned_lists = db.Column(db.Boolean)
     may_use_scoreboard = db.Column(db.Boolean)
-    may_use_display = db.Column(db.Boolean)
+    may_use_beamer = db.Column(db.Boolean)
     may_use_results = db.Column(db.Boolean)
 
 
