@@ -128,9 +128,9 @@
 {% endmacro %}
 
 
-{% macro small_match_summary(match) %}
+{% macro small_match_summary(match, large_fs=False) %}
 {% if match != None %}
-<div class="match-summary">
+<div class="match-summary {{ 'match-summary-large-fs' if large_fs }}">
     <div class="match-header">
         <div class="match-group">{{ match.group.title }}</div>
         {% if match.completed %}

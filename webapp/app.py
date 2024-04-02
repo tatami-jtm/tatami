@@ -5,7 +5,7 @@ from flask_security import Security, SQLAlchemyUserDatastore
 from .config_base import SETTINGS
 
 from .models import db, User, Role, Event
-from .views import admin_view, eventmgr_view, devices_view, mod_scoreboard_view, mod_registrations_view, mod_weighin_view, mod_placement_view, mod_global_list_view, mod_list_view
+from .views import admin_view, eventmgr_view, devices_view, mod_scoreboard_view, mod_registrations_view, mod_weighin_view, mod_placement_view, mod_global_list_view, mod_list_view, mod_beamer_view
 
 app = Flask(__name__, instance_path=SETTINGS['INSTANCE_PATH'])
 app.config['SQLALCHEMY_DATABASE_URI'] = SETTINGS['SQL_URL']
@@ -61,3 +61,4 @@ app.register_blueprint(mod_weighin_view, url_prefix="/go/<event>/mod_weighin")
 app.register_blueprint(mod_placement_view, url_prefix="/go/<event>/mod_placement")
 app.register_blueprint(mod_global_list_view, url_prefix="/go/<event>/mod_global_list")
 app.register_blueprint(mod_list_view, url_prefix="/go/<event>/mod_list")
+app.register_blueprint(mod_beamer_view, url_prefix='/go/<event>/mod_beamer')

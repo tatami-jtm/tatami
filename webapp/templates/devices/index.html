@@ -80,7 +80,7 @@
         {% endif %}
         {% if g.device.event_role.may_use_beamer %}
         <div class="col-12 col-md-6 col-lg-3">
-            <a href="#" class="card card-link">
+            <a href="{{ url_for('mod_beamer.index', event=g.event.slug) }}" class="card card-link">
                 <div class="card-body p-3">
                     <div class="cll-icon">📽️</div>
                     <h3>Listenanzeige</h3>

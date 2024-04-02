@@ -771,6 +771,17 @@ img {
     background-color: #3333dd;
 }
 
+.match-summary.match-summary-large-fs .match-header {
+    font-size: 1.1rem;
+    padding: 0.35rem 0;
+}
+
+.match-summary.match-summary-large-fs .match-white,
+.match-summary.match-summary-large-fs .match-blue {
+    font-size: 1.4rem;
+    padding: 0.35rem;
+}
+
 .table-scoreboard {
     width: 100%;
     border: 1px solid rgba(0, 0, 0, 0.5);
