@@ -2,6 +2,7 @@ from ..listslib import compile_list, Fighter, MatchResult, get_all_lists
 from ..models import db, Match, Participant
 
 from datetime import datetime as dt
+import random
 
 def load_list(group):
     list_type = group.list_system()
@@ -37,11 +38,12 @@ def load_list(group):
 def dump_list(list, group):
     schedule = list.get_schedule()
 
-    if list.completed():
+    if list.completed() and not group.completed:
         group.completed = True
         group.completed_at = dt.now()
 
-    print(group, list.completed())
+    if group.random_seed is None:
+        group.random_seed = list._random_seed
 
     for item in schedule:
         if item['type'] == 'match':
