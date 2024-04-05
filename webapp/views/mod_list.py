@@ -179,7 +179,6 @@ def schedule_match(id, match_id):
         return redirect(url_for('devices.index', event=g.event.slug))
     
     group = g.event.groups.filter_by(id=id).one_or_404()
-    group_list = helpers.load_list(group)
 
     match = group.matches.filter_by(id=match_id).one_or_404()
     if not match.scheduled:
