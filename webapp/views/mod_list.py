@@ -32,6 +32,8 @@ def index():
     if g.event.setting('scheduling.use', True):
         helpers.do_match_schedule(g.mat)
 
+    helpers.do_promote_scheduled_fights(g.mat)
+
     if 'shown_list' in request.values:
         shown_list = g.mat.assigned_groups.filter_by(marked_ready=True, id=request.values['shown_list']).one_or_404()
     else:

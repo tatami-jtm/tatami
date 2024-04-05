@@ -2,6 +2,36 @@ from ..models import db, Match
 from .list_helper import load_list
 from datetime import datetime as dt
 
+def do_promote_scheduled_fights(mat):
+    # Promote/Choose current and waiting match from scheduled
+
+    current_match = mat.current_match()
+    waiting_match = mat.waiting_match()
+    
+    scheduled_matches = mat.scheduled_matches(include_called_up=False)
+    if current_match is None:
+        if waiting_match is not None:
+            # promote waiting match
+            waiting_match.running = True
+            waiting_match.running_since = dt.now()
+
+        elif len(scheduled_matches):
+            # choose current match
+            oldest_scheduled_match = scheduled_matches[0]
+            oldest_scheduled_match.called_up = True
+            oldest_scheduled_match.called_up_at = dt.now()
+            oldest_scheduled_match.running = True
+            oldest_scheduled_match.running_since = dt.now()
+
+    scheduled_matches = mat.scheduled_matches(include_called_up=False)
+    if mat.waiting_match() is None:
+        if len(scheduled_matches):
+            oldest_scheduled_match = scheduled_matches[0]
+            oldest_scheduled_match.called_up = True
+            oldest_scheduled_match.called_up_at = dt.now()
+    
+    db.session.commit()
+
 def do_match_schedule(mat):
     config = make_config(
         mat.event.setting('scheduling.max_concurrent_groups', 3),
@@ -54,33 +84,6 @@ def do_match_schedule(mat):
         next_match.match_schedule_key = (max_schedule_key.match_schedule_key if max_schedule_key is not None else 0) + 1
         next_match.white.last_fight_at = dt.now()
         next_match.blue.last_fight_at = dt.now()
-
-    # Promote/Choose current and waiting match from scheduled
-
-    current_match = mat.current_match()
-    waiting_match = mat.waiting_match()
-    
-    scheduled_matches = mat.scheduled_matches(include_called_up=False)
-    if current_match is None:
-        if waiting_match is not None:
-            # promote waiting match
-            waiting_match.running = True
-            waiting_match.running_since = dt.now()
-
-        elif len(scheduled_matches):
-            # choose current match
-            oldest_scheduled_match = scheduled_matches[0]
-            oldest_scheduled_match.called_up = True
-            oldest_scheduled_match.called_up_at = dt.now()
-            oldest_scheduled_match.running = True
-            oldest_scheduled_match.running_since = dt.now()
-
-    scheduled_matches = mat.scheduled_matches(include_called_up=False)
-    if mat.waiting_match() is None:
-        if len(scheduled_matches):
-            oldest_scheduled_match = scheduled_matches[0]
-            oldest_scheduled_match.called_up = True
-            oldest_scheduled_match.called_up_at = dt.now()
     
     db.session.commit()
 
