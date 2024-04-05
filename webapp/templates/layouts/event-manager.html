@@ -5,7 +5,7 @@
     <title>TATAMI | {% block title %}{% endblock title %}</title>
     {% block custom_header %}{% endblock custom_header %}
 </head>
-<body class="admin">
+<body class="admin" data-tatami-event="{{ g.event.slug }}">
     <nav class="navbar navbar-admin navbar-expand-lg navbar-light bg-white shadow-sm mb-2">
         <div class="container-fluid py-2">
             <a class="navbar-brand" href="{{ url_for('event_manager.index', event=g.event.slug) }}">

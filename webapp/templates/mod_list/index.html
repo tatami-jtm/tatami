@@ -13,3 +13,6 @@
     </div>
 </div>
 {% endblock body %}
+{% block custom_header %}
+<script src="{{ url_for('static', filename='application/match_schedule_view.js') }}" defer></script>
+{% endblock custom_header %}

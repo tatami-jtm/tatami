@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, flash, g, session, \
-    request, redirect, url_for, send_file, Response
+    request, redirect, url_for, send_file, Response, jsonify
 
 import io, zipfile, random, time, json
 from datetime import datetime
@@ -322,8 +322,6 @@ def write_match_result(id, match_id):
     return redirect(request.form['origin_url'])
 
 
-
-
 @mod_list_view.route('/group/<id>/match/<match_id>/clear-result')
 @check_and_apply_event
 @check_is_registered
@@ -349,3 +347,62 @@ def clear_match_result(id, match_id):
     flash("Ergebnis wurde erfolgreich ausgetragen.", 'success')
 
     return redirect(request.values['origin_url'])
+
+
+
+@mod_list_view.route('/api/schedule/<match_id>')
+@check_and_apply_event
+@check_is_registered
+def api_schedule_match(match_id):
+    if not (g.device.event_role.may_use_global_list or g.device.event_role.may_use_assigned_lists):
+        return jsonify({
+            'status': 'error',
+            'message': 'Sie haben keine Berechtigung, hierauf zuzugreifen.'
+        }), 401
+    
+    match = g.event.matches.filter_by(id=match_id).one_or_404()
+
+    if not match.scheduled:
+        match.scheduled = True
+        match.scheduled_at = datetime.now()
+        max_schedule_key = match.group.event_class.matches.filter_by(scheduled=True) \
+            .order_by(Match.match_schedule_key.desc()).first()
+        match.match_schedule_key = (max_schedule_key.match_schedule_key \
+                                    if max_schedule_key is not None else 0) + 1
+
+        db.session.commit()
+
+        return jsonify({
+            'status': 'success'
+        })
+    
+    else:
+        return jsonify({
+            'status': 'error',
+            'message': 'Der Kampf wurde bereits angesetzt.'
+        }), 400
+    
+
+@mod_list_view.route('/api/reload')
+@check_and_apply_event
+@check_is_registered
+def api_reload():
+    if not (g.device.event_role.may_use_global_list or g.device.event_role.may_use_assigned_lists):
+        return jsonify({
+            'status': 'error',
+            'message': 'Sie haben keine Berechtigung, hierauf zuzugreifen.'
+        }), 401
+    
+    g.mat = g.device.position
+    assigned_lists = g.mat.assigned_groups.filter_by(marked_ready=True, completed=False).all()
+
+    # Make sure all assigned lists are created (if not already)
+    for assigned_list in assigned_lists:
+        helpers.force_create_list(assigned_list)
+
+    if g.event.setting('scheduling.use', True):
+        helpers.do_match_schedule(g.mat)
+
+    helpers.do_promote_scheduled_fights(g.mat)
+
+    return render_template("mod_list/_schedule.html", assigned_lists=assigned_lists)
