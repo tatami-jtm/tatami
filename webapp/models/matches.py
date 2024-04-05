@@ -55,7 +55,6 @@ class Match(db.Model):
     def schedulable(self):
         now = dt.now()
         break_time = self.group.event_class.between_fights_time
-        print(now, self.white.last_fight_at, self.blue.last_fight_at)
 
         if self.white.last_fight_at is not None:
             if (now - self.white.last_fight_at).total_seconds() < break_time:

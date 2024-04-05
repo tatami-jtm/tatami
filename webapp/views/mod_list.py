@@ -183,14 +183,19 @@ def schedule_match(id, match_id):
 
     match = group.matches.filter_by(id=match_id).one_or_404()
     if not match.scheduled:
-        match.scheduled = True
-        match.scheduled_at = datetime.now()
-        max_schedule_key = group.event_class.matches.filter_by(scheduled=True).order_by(Match.match_schedule_key.desc()).first()
-        match.match_schedule_key = (max_schedule_key.match_schedule_key if max_schedule_key is not None else 0) + 1
+        if match.schedulable():
+            match.scheduled = True
+            match.scheduled_at = datetime.now()
+            max_schedule_key = group.event_class.matches.filter_by(scheduled=True).order_by(Match.match_schedule_key.desc()).first()
+            match.match_schedule_key = (max_schedule_key.match_schedule_key if max_schedule_key is not None else 0) + 1
+            match.white.last_fight_at = datetime.now()
+            match.blue.last_fight_at = datetime.now()
 
-        db.session.commit()
+            db.session.commit()
 
-        flash("Kampf erfolgreich angesetzt.", 'success')
+            flash("Kampf erfolgreich angesetzt.", 'success')
+        else:
+            flash("Auszeit notwendig -- Kampf kann zurzeit nicht stattfinden.", 'danger')
 
     return redirect(request.values['origin_url'])
 
@@ -363,18 +368,26 @@ def api_schedule_match(match_id):
     match = g.event.matches.filter_by(id=match_id).one_or_404()
 
     if not match.scheduled:
-        match.scheduled = True
-        match.scheduled_at = datetime.now()
-        max_schedule_key = match.group.event_class.matches.filter_by(scheduled=True) \
-            .order_by(Match.match_schedule_key.desc()).first()
-        match.match_schedule_key = (max_schedule_key.match_schedule_key \
-                                    if max_schedule_key is not None else 0) + 1
+        if match.schedulable():
+            match.scheduled = True
+            match.scheduled_at = datetime.now()
+            max_schedule_key = match.group.event_class.matches.filter_by(scheduled=True) \
+                .order_by(Match.match_schedule_key.desc()).first()
+            match.match_schedule_key = (max_schedule_key.match_schedule_key \
+                                        if max_schedule_key is not None else 0) + 1
+            match.white.last_fight_at = datetime.now()
+            match.blue.last_fight_at = datetime.now()
 
-        db.session.commit()
+            db.session.commit()
 
-        return jsonify({
-            'status': 'success'
-        })
+            return jsonify({
+                'status': 'success'
+            })
+        else:
+            return jsonify({
+                'status': 'error',
+                'message': 'Auszeit notwendig -- Kampf kann zurzeit nicht stattfinden.'
+            }), 400
     
     else:
         return jsonify({
