@@ -12,7 +12,11 @@ scheduledArea.addEventListener('click', async (e) => {
         if(reply.status == 'error') {
             alert(`Fehler: ${reply.message}`)
         } else if (reply.status == 'success') {
-            await update_schedule();
+            if ((typeof forceLocalUpdate == 'undefined') || !forceLocalUpdate) {
+                location.reload()
+            } else {
+                await update_schedule()
+            }
         }
     }
 })
