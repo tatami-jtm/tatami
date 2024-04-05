@@ -108,18 +108,8 @@ def get_next_match(group):
             if match_object is None:
                 continue
 
-            white = match_object.white
-            blue = match_object.blue
-            now = dt.now()
-            break_time = group.event_class.between_fights_time
-
-            if white.last_fight_at is not None:
-                if (now - white.last_fight_at).total_seconds() < break_time:
-                    continue
-            
-            if blue.last_fight_at is not None:
-                if (now - blue.last_fight_at).total_seconds() < break_time:
-                    continue
+            if not match_object.schedulable():
+                continue
             
             return match_object
 

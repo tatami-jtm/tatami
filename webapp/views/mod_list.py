@@ -253,7 +253,6 @@ def write_match_result(id, match_id):
         match_result.is_white_removed = False
         match_result.is_blue_removed = 'loser_removed' in request.form
     elif request.form['winner'] == 'blue':
-        print(request.form)
         match_result.is_white_winner = False
         match_result.is_blue_winner = True
 
@@ -305,6 +304,9 @@ def write_match_result(id, match_id):
 
     if has_sb_data:
         match_result.scoreboard_data = json.dumps(sb_data)
+
+    match.white.last_fight_at = datetime.now()
+    match.blue.last_fight_at = datetime.now()
 
     if 'ft-minutes' in request.form and 'ft-seconds' in request.form:
         match_result.full_time = 60 * int(request.form['ft-minutes']) + int(request.form['ft-seconds'])

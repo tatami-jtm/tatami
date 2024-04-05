@@ -1,5 +1,6 @@
 from . import db
 from ..listslib.match_result import MatchResult as ListMatchResult
+from datetime import datetime as dt
 
 class Match(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
@@ -50,6 +51,21 @@ class Match(db.Model):
         
     def has_result(self):
         return self.results.count() == 1
+    
+    def schedulable(self):
+        now = dt.now()
+        break_time = self.group.event_class.between_fights_time
+        print(now, self.white.last_fight_at, self.blue.last_fight_at)
+
+        if self.white.last_fight_at is not None:
+            if (now - self.white.last_fight_at).total_seconds() < break_time:
+                return False
+        
+        if self.blue.last_fight_at is not None:
+            if (now - self.blue.last_fight_at).total_seconds() < break_time:
+                return False
+        
+        return True
 
 
 class MatchResult(db.Model):

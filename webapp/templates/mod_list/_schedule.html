@@ -56,6 +56,10 @@
                 {% for match in list.matches.filter_by(scheduled=False, completed=False) %}
                     <div class="p-2 {{ 'border-bottom' if not loop.last}}">
                         {{ small_match_summary(match) }}
+                        {% if not match.schedulable() %}
+                        <p class="mb-0 fs-small text-danger">Auszeit notwendig &ndash; Kampf kann zurzeit nicht stattfinden.</p>
+                        {% elif not g.event.setting('scheduling.use') %}
+                        {% endif %}
                     </div>
                     {% else %}
                     <p class="p-3 mb-0">In dieser Gruppe stehen keine Kämpfe mehr aus.</p>
