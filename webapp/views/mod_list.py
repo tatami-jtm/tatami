@@ -192,7 +192,8 @@ def schedule_match(id, match_id):
 
             db.session.commit()
 
-            flash("Kampf erfolgreich angesetzt.", 'success')
+            if not 'do_not_add_flash_message' in request.values:
+                flash("Kampf erfolgreich angesetzt.", 'success')
         else:
             flash("Auszeit notwendig -- Kampf kann zurzeit nicht stattfinden.", 'danger')
 
