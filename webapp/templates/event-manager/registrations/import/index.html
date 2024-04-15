@@ -1,0 +1,23 @@
+{% set event_page="registrations" %}
+{% extends "layouts/event-manager.html" %}
+{% block title %}{{ g.event.title }}{% endblock %}
+{% block body %}
+<h1>TN importieren</h1>
+
+<p>Sie können Teilnehmende aus einer Tabellendatei importieren.</p>
+
+<p>Für den Import muss die Tabellendatei in das Format CSV überführt werden.</p>
+
+<p>Alle üblichen Tabellenkalkulationsprogramme bieten die Möglichkeit, eine Tabellendatei im Format .CSV abzuspeichern. Sie können die Warnungen, dass einige Funktionen ggf. nicht übertragen werden, für die Zwecke des Imports ignorieren.</p>
+
+<form action="" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="csvfile" class="form-label">CSV-Datei</label>
+        <input type="file" name="csvfile" id="csvfile" class="form-control">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Weiter &raquo;</button>
+</form>
+
+
+{% endblock body %}

@@ -1,12 +1,13 @@
 from flask import Blueprint, render_template, abort, flash, session, g, \
     request, redirect, url_for
 from flask_security import login_required, current_user
+from werkzeug.utils import secure_filename
 
 from ..models import db, Event, EventClass, DeviceRegistration, \
     DevicePosition, EventRole, Association, Registration
 
 from datetime import datetime
-import time, uuid
+import time, uuid, os, csv
 
 eventmgr_view = Blueprint('event_manager', __name__)
 
@@ -379,6 +380,60 @@ def create_registration():
         return redirect(url_for('event_manager.edit_registration', event=g.event.slug, id=registration.id))
 
     return render_template("event-manager/registrations/new.html", registration=registration)
+
+
+@eventmgr_view.route('/registrations/import', methods=['GET', 'POST'])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def import_registrations_index():
+    if request.method == 'POST':
+        if 'csvfile' in request.files:
+            csvfile = request.files['csvfile']
+
+            if csvfile and csvfile.filename != '':
+                fn = str(uuid.uuid4())
+                csvfile.save(f"temp/{fn}.csv")
+
+                return redirect(url_for('event_manager.import_registrations_inspector', event=g.event.slug, fn=fn))
+
+            else:
+                flash("Keine Datei hochgeladen.", 'danger')
+
+        else:
+            flash("Keine Datei hochgeladen.", 'danger')
+
+    return render_template("event-manager/registrations/import/index.html")
+
+
+@eventmgr_view.route('/registrations/import/<fn>')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def import_registrations_inspector(fn):
+    # Make sure we only have safe filenames
+    fn = secure_filename(fn)
+    fn = f"temp/{fn}.csv"
+
+    if not os.path.isfile(fn):
+        abort(404)
+
+    data = []
+
+    with open(fn, 'r', newline='') as csvfile:
+        csvreader = csv.reader(csvfile)
+
+        for row in csvreader:
+            data.append(row)
+
+    rowcount = len(data)
+    if rowcount == 0:
+        abort(400)
+
+    colcount = len(data[0])
+
+
+    return render_template("event-manager/registrations/import/inspect.html", data=data, rowcount=rowcount, colcount=colcount)
 
 
 @eventmgr_view.route('/associations')

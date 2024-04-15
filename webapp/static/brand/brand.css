@@ -851,3 +851,45 @@ input.w-min {
 .place3 {
     color: maroon;
 }
+
+
+.csv-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
+.csv-table th,
+.csv-table td {
+    border: 1px solid #eee;
+    padding: 0.15rem;
+    font-size: 0.9rem;
+}
+
+.csv-table td {
+    word-break: break-all;
+    font-family: monospace;
+}
+
+.csv-table th.csv-table-firstcol {
+    width: 60px;
+    max-width: 60px;
+    border-color: #ccc;
+    color: #888;
+    text-align: center;
+    background-color: #eee;
+}
+
+.csv-table tr.csv-table-firstrow th {
+    border-color: #ccc;
+    color: #888;
+    text-align: center;
+    background-color: #eee;
+}
+
+.csv-table td.csv-table-abbreviated {
+    font-weight: bold;
+    text-align: center;
+    color: #666;
+}
