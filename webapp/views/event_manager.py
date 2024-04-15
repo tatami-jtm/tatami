@@ -411,29 +411,80 @@ def import_registrations_index():
 @check_and_apply_event
 @check_is_event_supervisor
 def import_registrations_inspector(fn):
-    # Make sure we only have safe filenames
-    fn = secure_filename(fn)
-    fn = f"temp/{fn}.csv"
-
-    if not os.path.isfile(fn):
-        abort(404)
-
-    data = []
-
-    with open(fn, 'r', newline='') as csvfile:
-        csvreader = csv.reader(csvfile)
-
-        for row in csvreader:
-            data.append(row)
-
-    rowcount = len(data)
-    if rowcount == 0:
-        abort(400)
-
-    colcount = len(data[0])
-
-
+    data, rowcount, colcount = _load_csv(fn)
     return render_template("event-manager/registrations/import/inspect.html", data=data, rowcount=rowcount, colcount=colcount)
+
+
+@eventmgr_view.route('/registrations/import/<fn>', methods=['POST'])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def import_registrations_do(fn):
+    data, _, _ = _load_csv(fn)
+
+    relevant_data = data[int(request.form['start-row']):]
+
+    if len(relevant_data) == 0:
+        flash("Es muss wenigstens eine Zeile ausgewählt werden.", 'error')
+        return redirect(url_for('event_manager.import_registrations_inspector', event=g.event.slug, fn=fn))
+    
+    first_name_offset = int(request.form['first_name'])
+    last_name_offset = int(request.form['last_name'])
+    contact_details_offset = int(request.form['contact_details'])
+    club_offset = int(request.form['club'])
+    association_offset = int(request.form['association'])
+    event_class_offset = int(request.form['event_class'])
+    suggested_group_offset = int(request.form['suggested_group'])
+
+    successful = 0
+
+    for row in relevant_data:
+        association = row[association_offset]
+        event_class = row[event_class_offset]
+
+        registration = Registration(event=g.event)
+
+        registration.first_name = row[first_name_offset]
+        registration.last_name = row[last_name_offset]
+        registration.club = row[club_offset]
+        registration.contact_details = row[contact_details_offset]
+        registration.suggested_group = row[suggested_group_offset]
+
+        registration.confirmed = request.form['confirm_all'] == 'yes'
+        registration.registered = False
+        registration.weighed_in = False
+        registration.placed = False
+
+        if len(association):
+            assoc = g.event.associations.filter(
+                Association.short_name.ilike(f"%{association}%") |
+                Association.name.ilike(f"%{association}%")
+            ).one_or_none()
+
+            registration.association_id = assoc.id if assoc is not None else None
+        else:
+            registration.association_id = None
+
+        if len(event_class):
+            evcl = g.event.classes.filter(
+                EventClass.short_title.ilike(f"%{event_class}%") |
+                EventClass.title.ilike(f"%{event_class}%") |
+                EventClass.template_name.ilike(f"%{event_class}%")
+            ).one_or_none()
+
+            registration.event_class_id = evcl.id if evcl is not None else None
+        else:
+            registration.event_class_id = None
+
+        db.session.add(registration)
+        db.session.commit()
+
+        successful += 1
+    
+    flash(f"Erfolgreich importiert: {successful} TN", 'success')
+
+    os.remove(f"temp/{fn}.csv")
+    return redirect(url_for('event_manager.registrations', event=g.event.slug))
 
 
 @eventmgr_view.route('/associations')
@@ -664,3 +715,28 @@ def quick_sign_in():
     flash('Willkommen! Die Schnelleinwahl war erfolgreich.', 'success')
 
     return redirect(url_for('devices.index', event=g.event.slug))
+
+
+def _load_csv(fn):
+    # Make sure we only have safe filenames
+    fn = secure_filename(fn)
+    fn = f"temp/{fn}.csv"
+
+    if not os.path.isfile(fn):
+        abort(404)
+
+    data = []
+
+    with open(fn, 'r', newline='') as csvfile:
+        csvreader = csv.reader(csvfile)
+
+        for row in csvreader:
+            data.append(row)
+
+    rowcount = len(data)
+    if rowcount == 0:
+        abort(400)
+
+    colcount = len(data[0])
+
+    return data, rowcount, colcount
