@@ -2,7 +2,9 @@ from flask import Blueprint, render_template, abort, redirect,\
     url_for, request, flash, jsonify
 from flask_security import login_required, current_user
 
-from ..models import db, User, Role, Event, EventClass
+from ..models import db, User, Role, Event, EventClass, ListSystem, ListSystemRule
+
+from ..helpers import _get_or_create
 
 from datetime import datetime
 
@@ -277,6 +279,18 @@ def create_event():
 
     db.session.add(event)
     db.session.commit()
+
+    for rng, system in [
+        ((1, 1), 'single'),
+        ((2, 2), 'bestof3'),
+        ((3, 3), 'pool3'),
+        ((4, 4), 'pool4'),
+        ((5, 5), 'pool5'),
+        ((6, 8), 'doublepool8'),
+    ]:
+        system = ListSystem.all_enabled().filter_by(list_file=system).one_or_none()
+
+        _get_or_create(ListSystemRule, event=event, minimum=rng[0], maximum=rng[1], system=system)
 
     flash(f'Erfolg: Veranstaltung {event.slug} wurde erstellt!', 'success')
 
