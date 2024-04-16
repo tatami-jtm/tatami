@@ -1,0 +1,122 @@
+<div class="modal" id="results-modal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title h4 fw-bold">Ergebnisse eintragen</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Dialog schließen"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="match-winner">Gewinner/in ist:</label>
+                    <select class="form-select" id="match-winner">
+                        <option disabled selected></option>
+                        <option value="white">
+                            Weiß (<span data-tatami-field="results.white.name">xxx</span>)
+                        </option>
+                        <option value="blue">
+                            Blau (<span data-tatami-field="results.blue.name">xxx</span>)
+                        </option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="match-score">Unterpunkte:</label>
+                    <select class="form-select" id="match-score">
+                        <option disabled selected></option>
+                        <option value="1">
+                            1 WP (Shido oder Hantei)
+                        </option>
+                        <option value="7">
+                            7 WP (Waza-ari)
+                        </option>
+                        <option value="10">
+                            10 WP (Ippon, Hansokumake oder Waza-ari-awasete)
+                        </option>
+                    </select>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" value="yes" name="loser_disqualified" id="match-loser-disqualified">
+                    <label class="form-check-label mb-1" for="match-loser-disqualified">
+                        Verlierer/in disqualifiziert (direkter Hansoku-make)
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="yes" name="loser_removed" id="match-loser-removed">
+                    <label class="form-check-label mb-1" for="match-loser-removed">
+                        Verlierer/in scheidet aus (bspw. Verletzung oder eigener Wunsch)
+                    </label>
+                </div>
+            </div>
+            <div class="modal-body border-top">
+                <table class="table-scoreboard mb-3">
+                    <tr class="row-fighters">
+                        <th colspan="4" class="col-white" data-tatami-field="results.white.name">xxx</th>
+                        <th colspan="4" class="col-blue" data-tatami-field="results.blue.name">xxx</th>
+                    </tr>
+                    <tr class="row-labels">
+                        <th class="col-white col-ippon">
+                            <label for="sb-white-ippon">Ippon</label>
+                        </th>
+                        <th class="col-white col-wazaari">
+                            <label for="sb-white-wazaari">Wazaari</label>
+                        </th>
+                        <th class="col-white col-shido">
+                            <label for="sb-white-shido">Shido</label>
+                        </th>
+                        <th class="col-white col-hansokumake">
+                            <label for="sb-white-hansokumake">HM</label>
+                        </th>
+            
+                        <th class="col-blue col-ippon">
+                            <label for="sb-blue-ippon">Ippon</label>
+                        </th>
+                        <th class="col-blue col-wazaari">
+                            <label for="sb-blue-wazaari">Wazaari</label>
+                        </th>
+                        <th class="col-blue col-shido">
+                            <label for="sb-blue-shido">Shido</label>
+                        </th>
+                        <th class="col-blue col-hansokumake">
+                            <label for="sb-blue-hansokumake">HM</label>
+                        </th>
+                    </tr>
+            
+                    <tr class="row-inputs">
+                        <td class="col-white col-ippon">
+                            <output data-tatami-field="results.white.ippon">0</output>
+                        </td>
+                        <td class="col-white col-wazaari">
+                            <output data-tatami-field="results.white.wazaari">0</output>
+                        </td>
+                        <td class="col-white col-shido">
+                            <output data-tatami-field="results.white.shido">0</output>
+                        </td>
+                        <td class="col-white col-hansokumake">
+                            <output data-tatami-field="results.white.hansokumake">0</output>
+                        </td>
+            
+                        <td class="col-blue col-ippon">
+                            <output data-tatami-field="results.blue.ippon">0</output>
+                        </td>
+                        <td class="col-blue col-wazaari">
+                            <output data-tatami-field="results.blue.wazaari">0</output>
+                        </td>
+                        <td class="col-blue col-shido">
+                            <output data-tatami-field="results.blue.shido">0</output>
+                        </td>
+                        <td class="col-blue col-hansokumake">
+                            <output data-tatami-field="results.blue.hansokumake">0</output>
+                        </td>
+                    </tr>
+                </table>
+            
+                <div class="d-flex mb-3 align-items-center">
+                    <label class="fw-bold me-3">Kampfzeit:</label>
+                    <output data-tatami-field="results.full_time">0min 0s</output>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary w-100 btn-lg">Ergebnis eintragen</button>
+            </div>
+        </div>
+    </div>
+</div>

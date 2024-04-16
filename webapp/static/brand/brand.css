@@ -815,15 +815,21 @@ img {
 .table-scoreboard tr.row-inputs td {
     padding: 0.25rem;
 }
-.table-scoreboard tr.row-inputs td input {
+.table-scoreboard tr.row-inputs td input,
+.table-scoreboard tr.row-inputs td output {
     font-size: 2rem;
     padding: 0;
     width: 100%;
-    border: 1px dashed rgba(0, 0, 0, 0.25);
     background-color: transparent;
     color: inherit;
     text-align: center;
     font-weight: bold;
+}
+.table-scoreboard tr.row-inputs td input {
+    border: 1px dashed rgba(0, 0, 0, 0.25);
+}
+.table-scoreboard tr.row-inputs td output {
+    margin: 0;
 }
 .table-scoreboard tr.row-inputs td.col-white {
     background-color: #fff;
@@ -833,7 +839,9 @@ img {
     color: white;
 }
 .table-scoreboard tr.row-inputs td.col-shido input,
-.table-scoreboard tr.row-inputs td.col-hansokumake input {
+.table-scoreboard tr.row-inputs td.col-shido output,
+.table-scoreboard tr.row-inputs td.col-hansokumake input,
+.table-scoreboard tr.row-inputs td.col-hansokumake output {
     color: red;
 }
 

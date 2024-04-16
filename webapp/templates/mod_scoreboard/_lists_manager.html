@@ -1,7 +1,9 @@
 <div class="clearfix mb-3">
-    <button type="button" class="btn btn-dark float-end" data-control="prepare.goto">Ergebnis eintragen</button>
+    <button type="button" class="btn btn-dark float-end" data-bs-toggle="modal" data-bs-target="#results-modal">Ergebnis eintragen</button>
 </div>
 
 <div data-scheduled-area>
     {% include "mod_scoreboard/_schedule.html" %}
 </div>
+
+{% include "mod_scoreboard/_results_modal.html" %}
