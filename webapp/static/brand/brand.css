@@ -858,6 +858,7 @@ input.w-min {
     table-layout: fixed;
     border-collapse: collapse;
     margin-bottom: 1rem;
+    position: relative;
 }
 
 .csv-table th,
@@ -886,6 +887,11 @@ input.w-min {
     color: #888;
     text-align: center;
     background-color: #eee;
+}
+
+.csv-table thead th {
+    position: sticky;
+    top: 3rem;
 }
 
 .csv-table td.csv-table-abbreviated {
