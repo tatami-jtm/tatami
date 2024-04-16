@@ -30,8 +30,14 @@ def managed():
     g.mat = g.device.position
     assigned_lists = g.mat.assigned_groups.filter_by(marked_ready=True).all()
 
+    # Make sure all assigned lists are created (if not already)
+    for assigned_list in assigned_lists:
+        helpers.force_create_list(assigned_list)
+
     if g.event.setting('scheduling.use', True):
         helpers.do_match_schedule(g.mat)
+
+    helpers.do_promote_scheduled_fights(g.mat)
 
     return render_template("mod_scoreboard/managed.html", assigned_lists=assigned_lists)
 

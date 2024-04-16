@@ -310,18 +310,23 @@ def write_match_result(id, match_id):
     if has_sb_data:
         match_result.scoreboard_data = json.dumps(sb_data)
 
-    match.white.last_fight_at = datetime.now()
-    match.blue.last_fight_at = datetime.now()
-
     if 'ft-minutes' in request.form and 'ft-seconds' in request.form:
         match_result.full_time = 60 * int(request.form['ft-minutes']) + int(request.form['ft-seconds'])
 
     if is_new:
         db.session.add(match_result)
 
+    match.white.last_fight_at = datetime.now()
+    match.blue.last_fight_at = datetime.now()
+
     db.session.commit()
 
-    if not 'do_not_add_flash_message' in request.form:
+    if 'is_api' in request.form:
+        return jsonify({
+            'status': 'success'
+        })
+
+    elif not 'do_not_add_flash_message' in request.form:
         flash("Ergebnis wurde erfolgreich eingetragen.", 'success')
 
     return redirect(request.form['origin_url'])

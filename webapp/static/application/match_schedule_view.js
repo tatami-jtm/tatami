@@ -9,6 +9,7 @@ const enter_results = document.querySelector("[data-control=\"enter-results\"]")
 const transactional_end_fight = enter_results
 
 const scheduledArea = document.querySelector('[data-scheduled-area]')
+const resultsModal = new bootstrap.Modal('#results-modal')
 const callupModal = new bootstrap.Modal('#callup-modal')
 
 scheduledArea.addEventListener('click', async (e) => {
@@ -34,11 +35,12 @@ scheduledArea.addEventListener('click', async (e) => {
 
 let update_schedule = async (e) => {
     let event = document.body.getAttribute("data-tatami-event")
-    let response = await fetch(`/go/${event}/mod_scoreboard/api/reload`)
+    let response = await fetch(`/go/${event}/mod_scoreboard/managed/api/reload`)
     let reply = await response.text()
 
     scheduledArea.outerHTML = reply
     updateLocalConfig()
+    updateFromSource()
 }
 
 const updateField = (field, value) => {
@@ -47,40 +49,49 @@ const updateField = (field, value) => {
     })
 }
 
+const updateFromSource = () => {
+    if (document.querySelector("[data-tatami-source=\"current_match.any\"]").value == '1') {
+        updateField("results.white.entry", "Weiß (" + document.querySelector("[data-tatami-source=\"current_match.white.name\"]").value + ")")
+        updateField("results.blue.entry", "Blau (" + document.querySelector("[data-tatami-source=\"current_match.blue.name\"]").value + ")")
+
+        updateField("current.white.name", document.querySelector("[data-tatami-source=\"current_match.white.name\"]").value)
+        updateField("current.white.club", document.querySelector("[data-tatami-source=\"current_match.white.association\"]").value)
+        updateField("current.blue.name", document.querySelector("[data-tatami-source=\"current_match.blue.name\"]").value)
+        updateField("current.blue.club", document.querySelector("[data-tatami-source=\"current_match.blue.association\"]").value)
+        updateField("current.group", document.querySelector("[data-tatami-source=\"current_match.group\"]").value)
+        updateField("current.progress", document.querySelector("[data-tatami-source=\"current_match.progress\"]").value)
+    }
+    
+    if (document.querySelector("[data-tatami-source=\"waiting_match.any\"]").value == '1') {
+        updateField("waiting.white.name", document.querySelector("[data-tatami-source=\"waiting_match.white.name\"]").value)
+        updateField("waiting.white.club", document.querySelector("[data-tatami-source=\"waiting_match.white.association\"]").value)
+        updateField("waiting.blue.name", document.querySelector("[data-tatami-source=\"waiting_match.blue.name\"]").value)
+        updateField("waiting.blue.club", document.querySelector("[data-tatami-source=\"waiting_match.blue.association\"]").value)
+        updateField("waiting.group", document.querySelector("[data-tatami-source=\"waiting_match.group\"]").value)
+        updateField("waiting.progress", document.querySelector("[data-tatami-source=\"waiting_match.progress\"]").value)
+    }
+
+}
 
 const managedTick = () => {
-    setOption("class", document.querySelector("[data-tatami-source=\"current_match.group\"]").value)
-    setOption("progress", document.querySelector("[data-tatami-source=\"current_match.progress\"]").value)
-    setOption("white:name", document.querySelector("[data-tatami-source=\"current_match.white.name\"]").value)
-    setOption("white:club", document.querySelector("[data-tatami-source=\"current_match.white.association\"]").value)
-    setOption("blue:name", document.querySelector("[data-tatami-source=\"current_match.blue.name\"]").value)
-    setOption("blue:club", document.querySelector("[data-tatami-source=\"current_match.blue.association\"]").value)
+    if (document.querySelector("[data-tatami-source=\"current_match.any\"]").value == '1') {
+        setOption("class", document.querySelector("[data-tatami-source=\"current_match.group\"]").value)
+        setOption("progress", document.querySelector("[data-tatami-source=\"current_match.progress\"]").value)
+        setOption("white:name", document.querySelector("[data-tatami-source=\"current_match.white.name\"]").value)
+        setOption("white:club", document.querySelector("[data-tatami-source=\"current_match.white.association\"]").value)
+        setOption("blue:name", document.querySelector("[data-tatami-source=\"current_match.blue.name\"]").value)
+        setOption("blue:club", document.querySelector("[data-tatami-source=\"current_match.blue.association\"]").value)
+    }
 
 
-    setOption("prepare:class", document.querySelector("[data-tatami-source=\"waiting_match.group\"]").value)
-    setOption("prepare:progress", document.querySelector("[data-tatami-source=\"waiting_match.progress\"]").value)
-    setOption("prepare:white:name", document.querySelector("[data-tatami-source=\"waiting_match.white.name\"]").value)
-    setOption("prepare:white:club", document.querySelector("[data-tatami-source=\"waiting_match.white.association\"]").value)
-    setOption("prepare:blue:name", document.querySelector("[data-tatami-source=\"waiting_match.blue.name\"]").value)
-    setOption("prepare:blue:club", document.querySelector("[data-tatami-source=\"waiting_match.blue.association\"]").value)
-
-    updateField("results.white.entry", "Weiß (" + document.querySelector("[data-tatami-source=\"current_match.white.name\"]").value + ")")
-    updateField("results.blue.entry", "Weiß (" + document.querySelector("[data-tatami-source=\"current_match.blue.name\"]").value + ")")
-
-    updateField("current.white.name", document.querySelector("[data-tatami-source=\"current_match.white.name\"]").value)
-    updateField("current.white.club", document.querySelector("[data-tatami-source=\"current_match.white.association\"]").value)
-    updateField("current.blue.name", document.querySelector("[data-tatami-source=\"current_match.blue.name\"]").value)
-    updateField("current.blue.club", document.querySelector("[data-tatami-source=\"current_match.blue.association\"]").value)
-
-    updateField("waiting.white.name", document.querySelector("[data-tatami-source=\"waiting_match.white.name\"]").value)
-    updateField("waiting.white.club", document.querySelector("[data-tatami-source=\"waiting_match.white.association\"]").value)
-    updateField("waiting.blue.name", document.querySelector("[data-tatami-source=\"waiting_match.blue.name\"]").value)
-    updateField("waiting.blue.club", document.querySelector("[data-tatami-source=\"waiting_match.blue.association\"]").value)
-
-    updateField("current.group", document.querySelector("[data-tatami-source=\"current_match.group\"]").value)
-    updateField("current.progress", document.querySelector("[data-tatami-source=\"current_match.progress\"]").value)
-    updateField("waiting.group", document.querySelector("[data-tatami-source=\"waiting_match.group\"]").value)
-    updateField("waiting.progress", document.querySelector("[data-tatami-source=\"waiting_match.progress\"]").value)
+    if (document.querySelector("[data-tatami-source=\"waiting_match.any\"]").value == '1') {
+        setOption("prepare:class", document.querySelector("[data-tatami-source=\"waiting_match.group\"]").value)
+        setOption("prepare:progress", document.querySelector("[data-tatami-source=\"waiting_match.progress\"]").value)
+        setOption("prepare:white:name", document.querySelector("[data-tatami-source=\"waiting_match.white.name\"]").value)
+        setOption("prepare:white:club", document.querySelector("[data-tatami-source=\"waiting_match.white.association\"]").value)
+        setOption("prepare:blue:name", document.querySelector("[data-tatami-source=\"waiting_match.blue.name\"]").value)
+        setOption("prepare:blue:club", document.querySelector("[data-tatami-source=\"waiting_match.blue.association\"]").value)
+    }
 
     updateField("results.white.ippon", (sbState.white.ippon) ? 1 : 0)
     updateField("results.white.wazaari", (sbState.white.wazaari) ? 1 : 0)
@@ -99,7 +110,7 @@ window.addEventListener("load", () => {
     setInterval(managedTick, 50)
 })
 
-const printFullTime = (sbState) => {
+const getFullTime = (sbState) => {
     let displayTime = Math.ceil(sbState.time.displayTime/1000)
 
     if (sbState.time.goldenScore) {
@@ -108,28 +119,91 @@ const printFullTime = (sbState) => {
         displayTime = sbState.config.fightDuration - displayTime
     }
 
-    mins = Math.floor(displayTime / 60)
-    secs = displayTime % 60
+    return displayTime
+}
+
+const printFullTime = (sbState) => {
+    let displayTime = getFullTime(sbState)
+    let mins = Math.floor(displayTime / 60)
+    let secs = displayTime % 60
 
     return `${mins}min ${secs}s`
 }
 
 const updateLocalConfig = () => {
-    let fighting_time = parseInt(document.querySelector("[data-tatami-source=\"current_match.fighting_time\"]").value)
-    let golden_score_time = parseInt(document.querySelector("[data-tatami-source=\"current_match.golden_score_time\"]").value)
+    if (document.querySelector("[data-tatami-source=\"current_match.any\"]").value == '1') {
+        let fighting_time = parseInt(document.querySelector("[data-tatami-source=\"current_match.fighting_time\"]").value)
+        let golden_score_time = parseInt(document.querySelector("[data-tatami-source=\"current_match.golden_score_time\"]").value)
 
-    local_config.fightDuration = fighting_time
-    local_config.hasGoldenScore = golden_score_time != 0
-    local_config.maxGoldenScore = (golden_score_time <= 0) ? null : golden_score_time
+        local_config.fightDuration = fighting_time
+        local_config.hasGoldenScore = golden_score_time != 0
+        local_config.maxGoldenScore = (golden_score_time <= 0) ? null : golden_score_time
+    }
 }
 
 const startNewMatch = () => {
-    callupModal.show()
     updateLocalConfig()
+    updateFromSource()
     resetState(local_config)
+
+    if (document.querySelector("[data-tatami-source=\"current_match.any\"]").value == '1') {
+        callupModal.show()
+        document.querySelector("[data-tatami-end-callup]").focus()
+    } else {
+        sbState.view.screen = 'break'
+    }
 }
 
 document.querySelector("[data-tatami-end-callup]").addEventListener("click", () => {
     sbState.view.screen = 'main'
     callupModal.hide()
+})
+
+document.querySelector("[data-tatami-enter-results]").addEventListener("click", async () => {
+    resultsModal.hide()
+
+    let formData = new FormData()
+    
+    formData.append('is_api', 'yup')
+    formData.append('winner', document.getElementById('match-winner').value)
+    formData.append('score', document.getElementById('match-score').value)
+
+    document.getElementById('match-winner').options.selectedIndex = 0;
+    document.getElementById('match-score').options.selectedIndex = 0;
+
+    if (document.getElementById('match-loser-disqualified').checked)
+        formData.append('loser_disqualified', 1)
+
+    if (document.getElementById('match-loser-removed').checked)
+        formData.append('loser_removed', 1)
+
+    formData.append('sb-white-ippon', (sbState.white.ippon) ? 1 : 0)
+    formData.append('sb-white-wazaari', (sbState.white.wazaari) ? 1 : 0)
+    formData.append('sb-white-shido', sbState.white.shido)
+    formData.append('sb-white-hansokumake', (sbState.white.hansokumake) ? 1 : 0)
+
+    formData.append('sb-blue-ippon', (sbState.blue.ippon) ? 1 : 0)
+    formData.append('sb-blue-wazaari', (sbState.blue.wazaari) ? 1 : 0)
+    formData.append('sb-blue-shido', sbState.blue.shido)
+    formData.append('sb-blue-hansokumake', (sbState.blue.hansokumake) ? 1 : 0)
+
+    let displayTime = getFullTime(sbState)
+    let mins = Math.floor(displayTime / 60)
+    let secs = displayTime % 60
+
+    formData.append('ft-minutes', mins)
+    formData.append('ft-seconds', secs)
+
+    let response = await fetch(document.querySelector("[data-tatami-source=\"current_match.results_link\"]").value, {
+        method: 'POST',
+        body: formData
+    })
+    let reply = await response.json()
+
+    if (reply.status == 'error') {
+        alert(`Fehler: ${reply.message}`)
+    } else if (reply.status == 'success') {
+        await update_schedule()
+        startNewMatch()
+    }
 })
