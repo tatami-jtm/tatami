@@ -7,6 +7,7 @@
 {% for evcl in g.event.classes if evcl.groups.filter_by(completed=True).count() > 0 %}
 <h2 class="h4 mt-4">{{ evcl.title }}</h2>
 <a href="{{ url_for('mod_results.print_class', event=g.event.slug, id=evcl.id) }}" class="btn btn-secondary mb-3 btn-sm" target="_blank">Ergebnisse ausdrucken</a>
+<a href="{{ url_for('mod_results.class_as_csv', event=g.event.slug, id=evcl.id) }}" class="btn btn-secondary mb-3 btn-sm" target="_blank">Als CSV herunterladen</a>
 
 
 {% for group in evcl.groups.filter_by(completed=True) %}
