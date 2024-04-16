@@ -1,3 +1,13 @@
+var local_config = {
+    fightDuration: 240,
+    hasGoldenScore: true,
+    maxGoldenScore: null,
+    defaultScreen: 'callup'
+}
+
+const enter_results = document.querySelector("[data-control=\"enter-results\"]")
+const transactional_end_fight = enter_results
+
 const scheduledArea = document.querySelector('[data-scheduled-area]')
 
 scheduledArea.addEventListener('click', async (e) => {
@@ -9,7 +19,7 @@ scheduledArea.addEventListener('click', async (e) => {
         let response = await fetch(`/go/${event}/mod_list/api/schedule/${matchToSchedule}`)
         let reply = await response.json()
 
-        if(reply.status == 'error') {
+        if (reply.status == 'error') {
             alert(`Fehler: ${reply.message}`)
         } else if (reply.status == 'success') {
             if ((typeof forceLocalUpdate == 'undefined') || !forceLocalUpdate) {
@@ -27,4 +37,74 @@ let update_schedule = async (e) => {
     let reply = await response.text()
 
     scheduledArea.outerHTML = reply
+    updateLocalConfig()
 }
+
+const updateField = (field, value) => {
+    document.querySelectorAll(`[data-tatami-field="${field}"]`).forEach((f) => {
+        f.innerText = value
+    })
+}
+
+
+const managedTick = () => {
+    setOption("class", document.querySelector("[data-tatami-source=\"current_match.group\"]").value)
+    setOption("progress", document.querySelector("[data-tatami-source=\"current_match.progress\"]").value)
+    setOption("white:name", document.querySelector("[data-tatami-source=\"current_match.white.name\"]").value)
+    setOption("white:club", document.querySelector("[data-tatami-source=\"current_match.white.association\"]").value)
+    setOption("blue:name", document.querySelector("[data-tatami-source=\"current_match.blue.name\"]").value)
+    setOption("blue:club", document.querySelector("[data-tatami-source=\"current_match.blue.association\"]").value)
+
+
+    setOption("prepare:class", document.querySelector("[data-tatami-source=\"waiting_match.group\"]").value)
+    setOption("prepare:progress", document.querySelector("[data-tatami-source=\"waiting_match.progress\"]").value)
+    setOption("prepare:white:name", document.querySelector("[data-tatami-source=\"waiting_match.white.name\"]").value)
+    setOption("prepare:white:club", document.querySelector("[data-tatami-source=\"waiting_match.white.association\"]").value)
+    setOption("prepare:blue:name", document.querySelector("[data-tatami-source=\"waiting_match.blue.name\"]").value)
+    setOption("prepare:blue:club", document.querySelector("[data-tatami-source=\"waiting_match.blue.association\"]").value)
+
+    updateField("results.white.entry", "Weiß (" + document.querySelector("[data-tatami-source=\"current_match.white.name\"]").value + ")")
+    updateField("results.white.name", document.querySelector("[data-tatami-source=\"current_match.white.name\"]").value + ")")
+    updateField("results.blue.entry", "Weiß (" + document.querySelector("[data-tatami-source=\"current_match.blue.name\"]").value + ")")
+    updateField("results.blue.name", document.querySelector("[data-tatami-source=\"current_match.blue.name\"]").value)
+
+    updateField("results.white.ippon", (sbState.white.ippon) ? 1 : 0)
+    updateField("results.white.wazaari", (sbState.white.wazaari) ? 1 : 0)
+    updateField("results.white.shido", sbState.white.shido)
+    updateField("results.white.hansokumake", (sbState.white.hansokumake) ? 1 : 0)
+
+    updateField("results.blue.ippon", (sbState.blue.ippon) ? 1 : 0)
+    updateField("results.blue.wazaari", (sbState.blue.wazaari) ? 1 : 0)
+    updateField("results.blue.shido", sbState.blue.shido)
+    updateField("results.blue.hansokumake", (sbState.blue.hansokumake) ? 1 : 0)
+    updateField("results.full_time", printFullTime(sbState))
+}
+
+window.addEventListener("load", () => {
+    setInterval(managedTick, 50)
+})
+
+const printFullTime = (sbState) => {
+    let displayTime = Math.ceil(sbState.time.displayTime/1000)
+
+    if (sbState.time.goldenScore) {
+        displayTime += sbState.config.fightDuration
+    } else {
+        displayTime = sbState.config.fightDuration - displayTime
+    }
+
+    mins = Math.floor(displayTime / 60)
+    secs = displayTime % 60
+
+    return `${mins}min ${secs}s`
+}
+
+const updateLocalConfig = () => {
+    let fighting_time = parseInt(document.querySelector("[data-tatami-source=\"current_match.fighting_time\"]").value)
+    let golden_score_time = parseInt(document.querySelector("[data-tatami-source=\"current_match.golden_score_time\"]").value)
+
+    local_config.fightDuration = fighting_time
+    local_config.hasGoldenScore = golden_score_time != 0
+    local_config.maxGoldenScore = (golden_score_time <= 0) ? null : golden_score_time
+}
+updateLocalConfig()

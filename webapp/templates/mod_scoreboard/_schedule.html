@@ -9,8 +9,32 @@
         {{ small_match_summary(current_match) }}
     </div>
 </div>
+
+<input type="hidden" data-tatami-source="current_match.any" value="1">
+<input type="hidden" data-tatami-source="current_match.group" value="{{ current_match.group.title }}">
+<input type="hidden" data-tatami-source="current_match.white.name" value="{{ current_match.white.full_name }}">
+<input type="hidden" data-tatami-source="current_match.white.association" value="{{ current_match.white.association_name }}">
+<input type="hidden" data-tatami-source="current_match.blue.name" value="{{ current_match.blue.full_name }}">
+<input type="hidden" data-tatami-source="current_match.blue.association" value="{{ current_match.blue.association_name }}">
+
+<input type="hidden" data-tatami-source="current_match.fighting_time" value="{{ current_match.group.event_class.fighting_time }}">
+<input type="hidden" data-tatami-source="current_match.golden_score_time" value="{{ current_match.group.event_class.golden_score_time }}">
+
+{% set list_tags = current_match.list_tags.split(",") %}
+{% if 'final' in list_tags %}
+<input type="hidden" data-tatami-source="current_match.progress" value="Finale">
+{% elif 'semifinal' in list_tags %}
+<input type="hidden" data-tatami-source="current_match.progress" value="Halbfinale">
+{% elif 'repechage' in list_tags %}
+<input type="hidden" data-tatami-source="current_match.progress" value="Trostrunde">
+{% elif 'thirdplace' in list_tags %}
+<input type="hidden" data-tatami-source="current_match.progress" value="Kampf um Platz 3">
+{% else %}
+<input type="hidden" data-tatami-source="current_match.progress" value="Hauptrunde">
+{% endif %}
 {% else %}
 <p class="mb-3">Zurzeit findet kein Kampf statt.</p>
+<input type="hidden" data-tatami-source="current_match.any" value="0">
 {% endif %}
 
 <h3 class="h5 mb-2">Nächster Kampf</h3>
@@ -22,8 +46,27 @@
         {{ small_match_summary(waiting_match) }}
     </div>
 </div>
+<input type="hidden" data-tatami-source="waiting_match.any" value="1">
+<input type="hidden" data-tatami-source="waiting_match.group" value="{{ waiting_match.group.title }}">
+<input type="hidden" data-tatami-source="waiting_match.white.name" value="{{ waiting_match.white.full_name }}">
+<input type="hidden" data-tatami-source="waiting_match.white.association" value="{{ waiting_match.white.association_name }}">
+<input type="hidden" data-tatami-source="waiting_match.blue.name" value="{{ waiting_match.blue.full_name }}">
+<input type="hidden" data-tatami-source="waiting_match.blue.association" value="{{ waiting_match.blue.association_name }}">
+{% set list_tags = waiting_match.list_tags.split(",") %}
+{% if 'final' in list_tags %}
+<input type="hidden" data-tatami-source="waiting_match.progress" value="Finale">
+{% elif 'semifinal' in list_tags %}
+<input type="hidden" data-tatami-source="waiting_match.progress" value="Halbfinale">
+{% elif 'repechage' in list_tags %}
+<input type="hidden" data-tatami-source="waiting_match.progress" value="Trostrunde">
+{% elif 'thirdplace' in list_tags %}
+<input type="hidden" data-tatami-source="waiting_match.progress" value="Kampf um Platz 3">
+{% else %}
+<input type="hidden" data-tatami-source="waiting_match.progress" value="Hauptrunde">
+{% endif %}
 {% else %}
 <p class="mb-3">Zurzeit wurde kein nächster Kampf aufgerufen.</p>
+<input type="hidden" data-tatami-source="waiting_match.any" value="0">
 {% endif %}
 
 <div class="accordion" id="listScheduleAccordion">
