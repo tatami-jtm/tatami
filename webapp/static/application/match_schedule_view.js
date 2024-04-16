@@ -23,7 +23,7 @@ scheduledArea.addEventListener('click', async (e) => {
 
 let update_schedule = async (e) => {
     let event = document.body.getAttribute("data-tatami-event")
-    let response = await fetch(`/go/${event}/mod_list/api/reload`)
+    let response = await fetch(`/go/${event}/mod_scoreboard/api/reload`)
     let reply = await response.text()
 
     scheduledArea.outerHTML = reply

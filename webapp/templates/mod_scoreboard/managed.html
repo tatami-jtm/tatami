@@ -3,7 +3,7 @@
 {% block body %}
 <div class="row h-full">
     <div class="col-12 col-xl-3 p-3 border-end shadow-sm bg-light overflow-y-auto h-100">
-        {% include "mod_list/_schedule.html" %}
+        {% include "mod_scoreboard/_lists_manager.html" %}
     </div>
     <div class="col-12 col-xl-9">
         {% include "mod_scoreboard/_controller.html" %}
@@ -16,5 +16,5 @@
 <script src="{{ url_for('static', filename='application/scoreboard/controller_view.js') }}" defer></script>
 <script src="{{ url_for('static', filename='application/scoreboard/controller_keyboard.js') }}" defer></script>
 
-<script src="{{ url_for('static', filename='application/scoreboard/controller_standalone.js') }}" defer></script>
+<script src="{{ url_for('static', filename='application/match_schedule_view.js') }}" defer></script>
 {% endblock custom_header %}

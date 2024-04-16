@@ -1,7 +1,5 @@
 {% from "mod_global_list/_match_summary.html" import match_summary, small_match_summary %}
 
-<h2 class="h4 mb-3 fw-bold">Kämpfe auf {{ g.mat.title }}</h2>
-
 <h3 class="h5 mb-2">Laufender Kampf</h3>
 
 {% set current_match = g.mat.current_match() %}
@@ -60,7 +58,7 @@
                         <p class="mb-0 fs-small text-danger">Auszeit notwendig &ndash; Kampf kann zurzeit nicht stattfinden.</p>
                         {% elif not g.event.setting('scheduling.use', True) %}
                         <div class="mt-1">
-                            <a href="{{ url_for('mod_list.schedule_match', event=g.event.slug, id=match.group.id, match_id=match.id, origin_url=request.url, do_not_add_flash_message=1) }}" class="btn btn-sm btn-dark" data-schedule-match="{{ match.id }}">Ansetzen</a>
+                            <button type="button" class="btn btn-sm btn-dark" data-schedule-match="{{ match.id }}">Ansetzen</button>
                         </div>
                         {% endif %}
                     </div>
