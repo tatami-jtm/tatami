@@ -4,7 +4,10 @@ from flask_security import login_required, current_user
 from werkzeug.utils import secure_filename
 
 from ..models import db, Event, EventClass, DeviceRegistration, \
-    DevicePosition, EventRole, Association, Registration
+    DevicePosition, EventRole, Association, Registration, ListSystemRule, \
+    ListSystem
+
+from ..helpers import _get_or_create
 
 from datetime import datetime
 import time, uuid, os, csv
@@ -88,7 +91,12 @@ def index():
 @check_and_apply_event
 @check_is_event_supervisor
 def config():
-    return render_template("event-manager/config.html")
+    system_rules = ListSystemRule.query.filter_by(event=g.event)
+    
+    ranges = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 8)]
+
+    return render_template("event-manager/config.html", ranges=ranges,
+                           ListSystem=ListSystem, system_rules=system_rules)
 
 
 @eventmgr_view.route('/config', methods=['POST'])
@@ -113,6 +121,21 @@ def save_config():
             g.event.save_setting('scheduling.plan_ahead', int(request.form['scheduling-plan-ahead']))
         else:
             g.event.reset_setting('scheduling.plan_ahead')
+
+        flash("Einstellungen erfolgreich gespeichert", 'success')
+
+    elif request.form['form'] == 'list_system_rules':
+        ranges = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 8)]
+
+        for rng in ranges:
+            rng_rule = _get_or_create(ListSystemRule, event=g.event,
+                                      minimum=rng[0], maximum=rng[1])
+            
+            form_key = f"list_system-{ rng[0] }-{ rng[1] }"
+            system = ListSystem.all_enabled().filter_by(id=request.values[form_key]).one_or_none()
+            rng_rule.system = system
+
+        db.session.commit()
 
         flash("Einstellungen erfolgreich gespeichert", 'success')
     

@@ -65,6 +65,12 @@ class ListSystem(db.Model):
     @classmethod
     def all_enabled(cls):
         return cls.query.filter_by(enabled=True)
+    
+    @classmethod
+    def for_range(cls, min, max):
+        return cls.all_enabled().filter(
+            (cls.mandatory_minimum <= min) & (cls.mandatory_maximum >= max)
+        )
 
 
 class ListSystemRule(db.Model):

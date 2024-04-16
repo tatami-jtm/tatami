@@ -5,42 +5,87 @@
 <h1>Einstellungen</h1>
 
 <form action="" method="POST">
-<div class="card my-3">
-    <div class="card-header">Vollautomatische Listenführung</div>
-    <div class="card-body">
-        <input type="hidden" name="form" value="scheduling">
-        <p>TATAMI kann die Listen vollautomatisch führen, sodass ohne weiteres Zutun ausgewählt wird, welche der einer Matte zugewiesenen Listen eröffnet werden und welcher Kampf der eröffneten Listen stattfinden soll.</p>
+    <div class="card my-3">
+        <div class="card-header">Vollautomatische Listenführung</div>
+        <div class="card-body">
+            <input type="hidden" name="form" value="scheduling">
+            <p>TATAMI kann die Listen vollautomatisch führen, sodass ohne weiteres Zutun ausgewählt wird, welche der einer Matte zugewiesenen Listen eröffnet werden und welcher Kampf der eröffneten Listen stattfinden soll.</p>
 
-        <div class="form-check form-switch fw-bold">
-            <input class="form-check-input" type="checkbox" role="switch" id="use-scheduling" name="use-scheduling" {{ 'checked' if g.event.setting('scheduling.use', True) }}>
-            <label class="form-check-label" for="use-scheduling">Die Listen werden automatisch geführt.</label>
+            <div class="form-check form-switch fw-bold">
+                <input class="form-check-input" type="checkbox" role="switch" id="use-scheduling" name="use-scheduling" {{ 'checked' if g.event.setting('scheduling.use', True) }}>
+                <label class="form-check-label" for="use-scheduling">Die Listen werden automatisch geführt.</label>
+            </div>
+        </div>
+        <div class="card-body border-top">
+            <p>Wenn die Listen automatisch geführt werden, muss angegeben werden, wie viele Listen (auf einer Matte) gleichzeitig eröffnet sein dürfen und wie viele Teilnehmende gleichzeitig (auf einer Matte) in eröffneten Listen sein dürfen. Diese Einstellung beeinflusst, ob und wie viele Pausen ggf. notwendig werden und wie lange das Auskämpfen einer Liste dauert.</p>
+
+            <div class="mb-3">
+                <label for="scheduling-max-group" class="mb-1">Höchstzahl der Listen</label>
+                <input name="scheduling-max-group" id="scheduling-max-group" class="form-control" type="number" min="1" max="16" value="{{ g.event.setting('scheduling.max_concurrent_groups', 3) }}">
+            </div>
+
+            <div class="mb-3">
+                <label for="scheduling-max-participant" class="mb-1">Höchstzahl der Teilnehmenden</label>
+                <input name="scheduling-max-participant" id="scheduling-max-participant" class="form-control" type="number" min="1" max="128" value="{{ g.event.setting('scheduling.max_concurrent_participants', 30) }}">
+            </div>
+        </div>
+        <div class="card-body border-top">
+            <p>Zudem muss bestimmt werden, wie viele Kämpfe (höchstens) im Voraus geplant werden sollen. Mehr geplante Kämpfe ermöglicht eine genauere Voraussage (z. B. für Fragen von Trainer/innen), aber verringern die Flexibilität, sodass ggf. mehr Pausen notwendig werden.</p>
+
+            <div class="mb-3">
+                <label for="scheduling-plan-ahead" class="mb-1">Im Voraus geplante Kämpfe</label>
+                <input name="scheduling-plan-ahead" id="scheduling-plan-ahead" class="form-control" type="number" min="1" max="128" value="{{ g.event.setting('scheduling.plan_ahead', 5) }}">
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-secondary">Speichern</button>
         </div>
     </div>
-    <div class="card-body border-top">
-        <p>Wenn die Listen automatisch geführt werden, muss angegeben werden, wie viele Listen (auf einer Matte) gleichzeitig eröffnet sein dürfen und wie viele Teilnehmende gleichzeitig (auf einer Matte) in eröffneten Listen sein dürfen. Diese Einstellung beeinflusst, ob und wie viele Pausen ggf. notwendig werden und wie lange das Auskämpfen einer Liste dauert.</p>
+</form>
 
-        <div class="mb-3">
-            <label for="scheduling-max-group" class="mb-1">Höchstzahl der Listen</label>
-            <input name="scheduling-max-group" id="scheduling-max-group" class="form-control" type="number" min="1" max="16" value="{{ g.event.setting('scheduling.max_concurrent_groups', 3) }}">
+
+<form action="" method="POST">
+    <div class="card my-3">
+        <div class="card-header">Zuweisung der Listensysteme</div>
+        <div class="card-body">
+            <input type="hidden" name="form" value="list_system_rules">
+            <p>Damit TATAMI den einzelnen Kampfgruppen das richtige Listensystem zuweist, müssen die Zuweisungsregeln hier angegeben werden:</p>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>TN-Anzahl</th>
+                        <th>Listensystem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for range in ranges %}
+                    <tr>
+                        <th>{% if range[0] == range[1] %}{{ range[0] }}{% else %}{{ range[0] }} - {{ range[1] }}{% endif %} TN</th>
+                        {% set possible_systems = ListSystem.for_range(*range) %}
+                        {% set current_rule = system_rules.filter_by(minimum=range[0], maximum=range[1]).one_or_none() %}
+                        
+                        {% if possible_systems.count() == 1 %}
+                        <td>{{ possible_systems.first().title }}</td>
+                        <input type="hidden" name="list_system-{{ range[0] }}-{{ range[1] }}" value="{{ possible_systems.first().id }}">
+                        {% else %}
+                        <td>
+                            <select name="list_system-{{ range[0] }}-{{ range[1] }}" class="form-select">
+                                {% for opt in possible_systems.all() %}
+                                <option value="{{ opt.id }}" {{ 'selected' if current_rule and current_rule.system.id == opt.id }}>{{ opt.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-
-        <div class="mb-3">
-            <label for="scheduling-max-participant" class="mb-1">Höchstzahl der Teilnehmenden</label>
-            <input name="scheduling-max-participant" id="scheduling-max-participant" class="form-control" type="number" min="1" max="128" value="{{ g.event.setting('scheduling.max_concurrent_participants', 30) }}">
+        <div class="card-footer">
+            <button type="submit" class="btn btn-secondary">Speichern</button>
         </div>
     </div>
-    <div class="card-body border-top">
-        <p>Zudem muss bestimmt werden, wie viele Kämpfe (höchstens) im Voraus geplant werden sollen. Mehr geplante Kämpfe ermöglicht eine genauere Voraussage (z. B. für Fragen von Trainer/innen), aber verringern die Flexibilität, sodass ggf. mehr Pausen notwendig werden.</p>
-
-        <div class="mb-3">
-            <label for="scheduling-plan-ahead" class="mb-1">Im Voraus geplante Kämpfe</label>
-            <input name="scheduling-plan-ahead" id="scheduling-plan-ahead" class="form-control" type="number" min="1" max="128" value="{{ g.event.setting('scheduling.plan_ahead', 5) }}">
-        </div>
-    </div>
-    <div class="card-footer">
-        <button type="submit" class="btn btn-secondary">Speichern</button>
-    </div>
-</div>
 </form>
 
 {% endblock body %}

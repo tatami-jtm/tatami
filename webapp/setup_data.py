@@ -1,14 +1,5 @@
 from .models import db, Role, EventClass, EventRole, ListSystem
-
-def _get_or_create(cls, **options):
-    gotten = cls.query.filter_by(**options).one_or_none()
-
-    if gotten is None:
-        gotten = cls(**options)
-        db.session.add(gotten)
-        db.session.commit()
-    
-    return gotten
+from .helpers import _get_or_create
 
 def setup_roles():
     _get_or_create(Role, name="platform_admin", is_admin=True)
