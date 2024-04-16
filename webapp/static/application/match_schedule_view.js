@@ -69,6 +69,12 @@ const updateFromSource = () => {
         updateField("waiting.blue.club", document.querySelector("[data-tatami-source=\"waiting_match.blue.association\"]").value)
         updateField("waiting.group", document.querySelector("[data-tatami-source=\"waiting_match.group\"]").value)
         updateField("waiting.progress", document.querySelector("[data-tatami-source=\"waiting_match.progress\"]").value)
+
+        document.querySelector('.callup-next-hasnot').classList.add('d-none')
+        document.querySelector('.callup-next-has').classList.remove('d-none')
+    } else {
+        document.querySelector('.callup-next-hasnot').classList.remove('d-none')
+        document.querySelector('.callup-next-has').classList.add('d-none')
     }
 
 }
