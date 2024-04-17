@@ -76,5 +76,5 @@ prepare_goto.addEventListener("click", () => {
 })
 
 window.addEventListener("load", () => {
-    setInterval(managedTick, 50)
+    setInterval(standaloneTick, 50)
 })
