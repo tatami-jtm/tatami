@@ -7,3 +7,6 @@ flask-migrate
 pypdf
 fpdf2
 pypdfium2
+
+pytest
+pytest-flask-sqlalchemy
