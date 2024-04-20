@@ -27,15 +27,17 @@ const renderControls = () => {
     if (sbState.time.running) {
         disable_btn(start_time, "btn-success")
         enable_btn(stop_time, "btn-danger")
+        global_time.parentNode.classList.add('running')
     } else {
         disable_btn(stop_time, "btn-danger")
         enable_btn(start_time, "btn-success")
+        global_time.parentNode.classList.remove('running')
     }
 
     if (sbState.time.goldenScore) {
-        global_time.classList.add("text-bg-warning")
+        global_time.parentNode.classList.add("goldenscore")
     } else {
-        global_time.classList.remove("text-bg-warning")
+        global_time.parentNode.classList.remove("goldenscore")
     }
 
     if (sbState.view.screen == 'main') {
@@ -68,7 +70,7 @@ const renderControls = () => {
     } else {
         disable_btn(white_stop_osaekomi, "btn-secondary")
         enable_btn(white_start_osaekomi, "btn-secondary")
-        white_osaekomi.innerText = "---"
+        white_osaekomi.innerText = ""
     }
 
     if (sbState.blue.osaekomi.running) {
@@ -78,7 +80,7 @@ const renderControls = () => {
     } else {
         disable_btn(blue_stop_osaekomi, "btn-secondary")
         enable_btn(blue_start_osaekomi, "btn-secondary")
-        blue_osaekomi.innerText = "---"
+        blue_osaekomi.innerText = ""
     }
 
     if (sbState.white.osaekomi.running) {
@@ -145,54 +147,48 @@ const renderControls = () => {
 
     if (sbState.white.shido == 3) {
         white_expand_shido.innerText = 3
-        white_reduce_shido.innerText = 2
         disable_btn(white_expand_shido, "btn-secondary")
         enable_btn(white_reduce_shido, "btn-secondary")
     } else if (sbState.white.shido == 0) {
-        white_expand_shido.innerText = 1
-        white_reduce_shido.innerText = 0
+        white_expand_shido.innerText = 0
         disable_btn(white_reduce_shido, "btn-secondary")
         enable_btn(white_expand_shido, "btn-secondary")
     } else {
-        white_expand_shido.innerText = sbState.white.shido + 1
-        white_reduce_shido.innerText = sbState.white.shido - 1
+        white_expand_shido.innerText = sbState.white.shido
         enable_btn(white_expand_shido, "btn-secondary")
         enable_btn(white_reduce_shido, "btn-secondary")
     }
 
     if (sbState.blue.shido == 3) {
         blue_expand_shido.innerText = 3
-        blue_reduce_shido.innerText = 2
         disable_btn(blue_expand_shido, "btn-secondary")
         enable_btn(blue_reduce_shido, "btn-secondary")
     } else if (sbState.blue.shido == 0) {
-        blue_expand_shido.innerText = 1
-        blue_reduce_shido.innerText = 0
+        blue_expand_shido.innerText = 0
         disable_btn(blue_reduce_shido, "btn-secondary")
         enable_btn(blue_expand_shido, "btn-secondary")
     } else {
-        blue_expand_shido.innerText = sbState.blue.shido + 1
-        blue_reduce_shido.innerText = sbState.blue.shido - 1
+        blue_expand_shido.innerText = sbState.blue.shido
         enable_btn(blue_expand_shido, "btn-secondary")
         enable_btn(blue_reduce_shido, "btn-secondary")
     }
 
     if (sbState.white.hansokumake) {
-        hansokumake_white.innerText = "H"
+        hansokumake_white.innerText = "1"
         disable_btn(white_expand_hansokumake, "btn-secondary")
         enable_btn(white_reduce_hansokumake, "btn-secondary")
     } else {
-        hansokumake_white.innerText = "-"
+        hansokumake_white.innerText = "0"
         disable_btn(white_reduce_hansokumake, "btn-secondary")
         enable_btn(white_expand_hansokumake, "btn-secondary")
     }
 
     if (sbState.blue.hansokumake) {
-        hansokumake_blue.innerText = "H"
+        hansokumake_blue.innerText = "1"
         disable_btn(blue_expand_hansokumake, "btn-secondary")
         enable_btn(blue_reduce_hansokumake, "btn-secondary")
     } else {
-        hansokumake_blue.innerText = "-"
+        hansokumake_blue.innerText = "0"
         disable_btn(blue_reduce_hansokumake, "btn-secondary")
         enable_btn(blue_expand_hansokumake, "btn-secondary")
     }
