@@ -26,6 +26,7 @@ const makeState = (config) => {
             ippon: false,
             wazaari: false,
             wazaari_pending: false,
+            wazaari_awasete_ippon: false,
             shido: 0,
             hansokumake: false
         },
@@ -38,6 +39,7 @@ const makeState = (config) => {
             ippon: false,
             wazaari: false,
             wazaari_pending: false,
+            wazaari_awasete_ippon: false,
             shido: 0,
             hansokumake: false
         }
@@ -102,7 +104,7 @@ const osaekomiCheck = () => {
         } else if (white_osaekomi_time >= 10 && !sbState.white.osaekomi.wazaari_given) {
             if (sbState.white.wazaari) {
                 sbState.white.osaekomi.running = false
-                sbState.white.ippon = true
+                sbState.white.wazaari_awasete_ippon = true
                 sbState.white.wazaari_pending = false
                 endOfTime(true)
             } else {
@@ -123,7 +125,7 @@ const osaekomiCheck = () => {
         } else if (blue_osaekomi_time >= 10 && !sbState.blue.osaekomi.wazaari_given) {
             if (sbState.blue.wazaari) {
                 sbState.blue.osaekomi.running = false
-                sbState.blue.ippon = true
+                sbState.blue.wazaari_awasete_ippon = true
                 sbState.blue.wazaari_pending = false
                 endOfTime(true)
             } else {
@@ -150,6 +152,14 @@ const determineWinner = (always) => {
     } else if (sbState.white.ippon) {
         return ['white', 10]
     } else if (sbState.blue.ippon) {
+        return ['blue', 10]
+    }
+
+    if (sbState.white.wazaari_awasete_ippon && sbState.blue.wazaari_awasete_ippon) {
+        return false;
+    } else if (sbState.white.wazaari_awasete_ippon) {
+        return ['white', 10]
+    } else if (sbState.blue.wazaari_awasete_ippon) {
         return ['blue', 10]
     }
 

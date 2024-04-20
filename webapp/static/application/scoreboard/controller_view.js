@@ -114,9 +114,13 @@ const renderControls = () => {
         enable_btn(blue_expand_ippon, "btn-secondary")
     }
 
-    if (sbState.white.wazaari) {
-        wazaari_white.innerText = "1"
+    if (sbState.white.wazaari_awasete_ippon) {
+        wazaari_white.innerText = "2"
         disable_btn(white_expand_wazaari, "btn-secondary")
+        enable_btn(white_reduce_wazaari, "btn-secondary")
+    } else if (sbState.white.wazaari) {
+        wazaari_white.innerText = "1"
+        enable_btn(white_expand_wazaari, "btn-secondary")
         enable_btn(white_reduce_wazaari, "btn-secondary")
     } else if (sbState.white.wazaari_pending) {
         wazaari_white.innerText = "(1)"
@@ -128,9 +132,13 @@ const renderControls = () => {
         enable_btn(white_expand_wazaari, "btn-secondary")
     }
 
-    if (sbState.blue.wazaari) {
-        wazaari_blue.innerText = "1"
+    if (sbState.blue.wazaari_awasete_ippon) {
+        wazaari_blue.innerText = "2"
         disable_btn(blue_expand_wazaari, "btn-secondary")
+        enable_btn(blue_reduce_wazaari, "btn-secondary")
+    } else if (sbState.blue.wazaari) {
+        wazaari_blue.innerText = "1"
+        enable_btn(blue_expand_wazaari, "btn-secondary")
         enable_btn(blue_reduce_wazaari, "btn-secondary")
     } else if (sbState.blue.wazaari_pending) {
         wazaari_blue.innerText = "(1)"
@@ -243,7 +251,10 @@ const renderBoard = () => {
         setOption("blue:ippon", 0)
     }
 
-    if (sbState.white.wazaari) {
+    if (sbState.white.wazaari_awasete_ippon) {
+        setOption("white:wazaari", '')
+        setOption("white:ippon", 1)
+    } else if (sbState.white.wazaari) {
         setOption("white:wazaari", 'active')
     } else if (sbState.white.wazaari_pending) {
         setOption("white:wazaari", 'pending')
@@ -251,7 +262,10 @@ const renderBoard = () => {
         setOption("white:wazaari", '')
     }
 
-    if (sbState.blue.wazaari) {
+    if (sbState.blue.wazaari_awasete_ippon) {
+        setOption("blue:ippon", 1)
+        setOption("blue:wazaari", '')
+    } else if (sbState.blue.wazaari) {
         setOption("blue:wazaari", 'active')
     } else if (sbState.blue.wazaari_pending) {
         setOption("blue:wazaari", 'pending')

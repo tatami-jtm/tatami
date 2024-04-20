@@ -2,7 +2,6 @@ const KEYBINDS = {
     /* Main Time and Misc */
     " ": () => { if (sbState.time.running) { stop_time.click() } else { start_time.click() } },
     ".": () => { flash_medical.click() },
-    "Enter": () => { transactional_end_fight.click() },
     /* Views */
     "1": () => { main_view.click() },
     "2": () => { callup_view.click() },
