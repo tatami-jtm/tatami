@@ -1,41 +1,94 @@
-<div class="row mb-3 p-3 text-bg-dark align-items-center">
-    <div class="col-12 col-md-4">
-        <div class="btn-group w-100" role="group" aria-label="Ansicht">
-            <button type="button" data-control="view.main" class="btn btn-light fs-5">Kampf</button>
-            <button type="button" data-control="view.callup" class="btn btn-light fs-5">Aufruf</button>
-            <button type="button" data-control="view.break" class="btn active btn-light fs-5">Pause</button>
-        </div>
-    </div>
-    <div class="col-12 col-md-4">
-        <h1 class="h3 text-center m-0" data-static="mat-number">{{ g.device.position.title }}</h1>
-    </div>
-    <div class="col-12 col-md-4 text-end">
-        <a href="{{ url_for('scoreboard') }}" target="_new" type="button" class="btn btn-light fs-5">Scoreboard öffnen</a>
-    </div>
-</div>
-
-<div class="text-center mb-2 fw-bold fs-2" id="current-screen">Kampf</div>
-
-<div class="row mt-3">
-    <div class="col-12 offset-lg-3 col-lg-6">
-        <div class="card">
-            <div class="card-body p-2">
-                <div class="global-time text-center fw-bold" id="global-time">4:00</div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-6">
-                        <button class="btn btn-success fs-3 fw-bold btn-lg w-100" data-control="time.main.start">Starten</button>
-                    </div>
-                    <div class="col-6">
-                        <button class="btn btn-outline-secondary fs-3 fw-bold btn-lg w-100" disabled data-control="time.main.stop">Stoppen</button>
-                    </div>
+<div class="sb">
+    <div class="sb-header sb-dark">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-4">
+                <div class="btn-group w-100" role="group" aria-label="Ansicht">
+                    <button type="button" data-control="view.main" class="btn btn-light fs-5">Kampf</button>
+                    <button type="button" data-control="view.callup" class="btn btn-light fs-5">Aufruf</button>
+                    <button type="button" data-control="view.break" class="btn active btn-light fs-5">Pause</button>
                 </div>
             </div>
+            <div class="col-12 col-md-4">
+                <h1 class="h3 text-center m-0" data-static="mat-number">{{ g.device.position.title }}</h1>
+            </div>
+            <div class="col-12 col-md-4 text-end">
+                <a href="{{ url_for('scoreboard') }}" target="_new" type="button" class="btn btn-light fs-5">Scoreboard öffnen</a>
+            </div>
+        </div>    
+    </div>
+    <div class="sb-time-header sb-light">
+        <div id="current-screen">Kampf</div>
+        <button type="button" data-control="flash.medical" class="btn btn-danger fw-bold">Arzt rufen</button>
+    </div>
+    <div class="sb-time sb-dark">
+        <div class="sb-time-global" id="global-time">4:00</div>
+        <div class="sb-time-control">
+            <button class="sb-btn" data-control="time.main.start">Starten</button>
+            <button class="sb-btn" disabled data-control="time.main.stop">Stoppen</button>
+        </div>
+    </div>
+    <div class="sb-side sb-white">
+        <div class="sb-cell sb-twobtncell">
+            <button type="button" data-control="ippon.white.reduce" disabled class="sb-btn">&ndash;</button>
+            <button type="button" data-control="ippon.white.expand" id="ippon-white" class="sb-btn sb-btn-large">0</button>
+        </div>
+        <div class="sb-cell sb-twobtncell">
+            <button type="button" data-control="wazaari.white.reduce" disabled class="sb-btn">&ndash;</button>
+            <button type="button" data-control="wazaari.white.expand" id="wazaari-white" class="sb-btn sb-btn-large">0</button>
+        </div>
+        <div class="sb-cell sb-twobtncell sb-penalty">
+            <button type="button" data-control="shido.white.reduce" disabled class="sb-btn">&ndash;</button>
+            <button type="button" data-control="shido.white.expand" id="shido-white" class="sb-btn sb-btn-large">0</button>
+        </div>
+        <div class="sb-cell sb-twobtncell sb-penalty">
+            <button type="button" data-control="hansokumake.white.reduce" disabled class="sb-btn">&ndash;</button>
+            <button type="button" data-control="hansokumake.white.expand" id="hansokumake-white" class="sb-btn sb-btn-large">0</button>
+        </div>
+        <div class="sb-cell sb-osaekomi">
+            <div id="osaekomi-white" class="sb-osaekomi-item"></div>
+        </div>
+        <div class="sb-cell sb-twobtncell sb-osaekomi-btns">
+            <button type="button" data-control="osaekomi.white.stop" disabled class="sb-btn">Toketa</button>
+            <button type="button" data-control="osaekomi.white.start" class="sb-btn sb-btn-large">OSAE-KOMI</button>
+        </div>
+    </div>
+    <div class="sb-side-labels sb-dark">
+        <div class="sb-cell sb-label">IPPON</div>
+        <div class="sb-cell sb-label">WAZAARI</div>
+        <div class="sb-cell sb-label">SHIDO</div>
+        <div class="sb-cell sb-label">HANSOKU-MAKE</div>
+        <div class="sb-cell sb-cellskip"></div>
+        <div class="sb-cell sb-btncell">
+            <button type="button" data-control="osaekomi.toggle" disabled class="sb-btn">&laquo; Tauschen &raquo;</button>
+        </div>
+    </div>
+    <div class="sb-side sb-blue">
+        <div class="sb-cell sb-twobtncell">
+            <button type="button" data-control="ippon.blue.expand" id="ippon-blue" class="sb-btn sb-btn-large">0</button>
+            <button type="button" data-control="ippon.blue.reduce" disabled class="sb-btn">&ndash;</button>
+        </div>
+        <div class="sb-cell sb-twobtncell">
+            <button type="button" data-control="wazaari.blue.expand" id="wazaari-blue" class="sb-btn sb-btn-large">0</button>
+            <button type="button" data-control="wazaari.blue.reduce" disabled class="sb-btn">&ndash;</button>
+        </div>
+        <div class="sb-cell sb-twobtncell sb-penalty">
+            <button type="button" data-control="shido.blue.expand" id="shido-blue" class="sb-btn sb-btn-large">0</button>
+            <button type="button" data-control="shido.blue.reduce" disabled class="sb-btn">&ndash;</button>
+        </div>
+        <div class="sb-cell sb-twobtncell sb-penalty">
+            <button type="button" data-control="hansokumake.blue.expand" id="hansokumake-blue" class="sb-btn sb-btn-large">0</button>
+            <button type="button" data-control="hansokumake.blue.reduce" disabled class="sb-btn">&ndash;</button>
+        </div>
+        <div class="sb-cell sb-osaekomi">
+            <div id="osaekomi-blue" class="sb-osaekomi-item"></div>
+        </div>
+        <div class="sb-cell sb-twobtncell sb-osaekomi-btns">
+            <button type="button" data-control="osaekomi.blue.start" class="sb-btn sb-btn-large">OSAE-KOMI</button>
+            <button type="button" data-control="osaekomi.blue.stop" disabled class="sb-btn">Toketa</button>
         </div>
     </div>
 </div>
-
+<!--
 <div class="row mt-5 px-3 px-xl-5">
     <div class="col-12 col-xl-5 col-xl-5">
         <div class="card card-of-white">
@@ -210,3 +263,4 @@
         <button type="button" data-control="flash.medical" class="btn btn-danger fw-bold w-100">Arzt rufen</button>
     </div>
 </div>
+-->

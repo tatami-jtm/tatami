@@ -599,38 +599,6 @@ textarea.form-control {
     position: relative;
 }
 
-.global-time {
-    font-size: 6rem;
-}
-
-.card.card-of-blue,
-.card.card-of-white,
-.card.card-of-none {
-    border: none;
-    border-radius: 0;
-    background-color: transparent;
-    box-shadow: none;
-}
-.card.card-of-white .card-header {
-    background-color: var(--white);
-    padding: 1rem;
-    border: none;
-    border-radius: 0;
-    font-size: 0;
-}
-.card.card-of-blue .card-header {
-    background-color: var(--blue);
-    color: white;
-    padding: 1rem;
-    border: none;
-    border-radius: 0;
-    font-size: 0;
-}
-
-.card.card-of-none {
-    margin-top: 2.6em;
-}
-
 .ignorable {
     transition: opacity 0.5s ease, filter 0.5s ease;
 }
@@ -908,4 +876,191 @@ input.w-min {
     font-weight: bold;
     text-align: center;
     color: #666;
+}
+
+.sb {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    min-height: 100%;
+}
+
+.sb .sb-dark {
+    background-color: #222222;
+    color: white;
+}
+.sb .sb-light {
+    background-color: #eeeeee;
+}
+.sb .sb-white {
+    background-color: #ffffff;
+}
+.sb .sb-blue {
+    background-color: #0000ff;
+    color: white;
+}
+
+.sb .sb-header {
+    padding: 0.75rem;
+}
+
+.sb .sb-btn {
+    padding: 0;
+    font: inherit;
+    border: 1px solid;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: inherit;
+    cursor: pointer;
+    border-radius: 0.2rem;
+    box-shadow: 0 -4px 0 -1px #0004 inset;
+}
+.sb .sb-btn[disabled] {
+    opacity: 0.25;
+    pointer-events: none;
+    box-shadow: none;
+}
+
+
+.sb .sb-time-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.sb .sb-time {
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.sb .sb-time .sb-time-global {
+    background-color: #dd6;
+    font-size: 6rem;
+    font-weight: bold;
+    color: #000;
+    text-align: center;
+    max-width: 600px;
+    margin: 0.25rem;
+    border-radius: 0.2rem;
+    width: 100%;
+    border: 0.75rem solid transparent;
+}
+
+.sb .sb-time.running .sb-time-global {
+    background-color: #6d6;
+}
+.sb .sb-time.goldenscore .sb-time-global {
+    border-color: #fa2;
+}
+
+.sb .sb-time-control {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+}
+
+.sb .sb-time-control .sb-btn {
+    margin: 0.125rem;
+    padding: 0.75rem 0.25rem;
+    font-size: 1.5rem;
+    width: 0;
+    flex-grow: 1;
+    color: white;
+    border-color: #666;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.sb .sb-side {
+    flex-grow: 1;
+}
+
+.sb .sb-side,
+.sb .sb-side-labels {
+    display: flex;
+    padding: 0.75rem;
+}
+
+.sb .sb-side-labels {
+    align-items: center;
+}
+
+.sb .sb-side .sb-cell,
+.sb .sb-side-labels .sb-cell {
+    width: 0;
+    flex-grow: 1;
+    padding: 0.15rem;
+}
+
+.sb .sb-side .sb-cell.sb-twobtncell {
+    display: flex;
+    flex-direction: column;
+}
+.sb .sb-side-labels .sb-cell.sb-btncell .sb-btn,
+.sb .sb-side .sb-cell.sb-twobtncell .sb-btn {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0.15rem;
+    border-width: 2px;
+    border-color: rgba(0, 0, 0, 0.25);
+    width: 100%;
+}
+.sb .sb-side.sb-blue .sb-cell.sb-twobtncell .sb-btn {
+    border-color: rgba(255, 255, 255, 0.45);
+}
+.sb .sb-side .sb-cell.sb-twobtncell .sb-btn.sb-btn-large {
+    font-size: 3rem;
+    padding: 1rem;
+    flex-grow: 1;
+}
+.sb .sb-side .sb-cell.sb-twobtncell .sb-btn.sb-btn-large[disabled] {
+    border-color: rgba(0, 0, 0, 0.15);
+    opacity: 1;
+}
+.sb .sb-side .sb-cell.sb-twobtncell.sb-osaekomi-btns .sb-btn.sb-btn-large {
+    font-size: 2rem;
+}
+
+.sb .sb-side .sb-cell.sb-twobtncell.sb-penalty .sb-btn.sb-btn-large {
+    color: #f00;
+}
+.sb .sb-side.sb-blue .sb-cell.sb-twobtncell.sb-penalty .sb-btn.sb-btn-large {
+    color: #f66;
+}
+
+.sb .sb-side-labels .sb-cell.sb-label {
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.sb .sb-side .sb-cell.sb-osaekomi {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.sb .sb-side .sb-cell.sb-osaekomi .sb-osaekomi-item {
+    background-color: rgba(0, 0, 0, 0.1);
+    height: 6rem;
+    width: 6rem;
+    line-height: 1;
+    padding: 1.5rem 0;
+    text-align: center;
+    border-radius: 50%;
+}
+.sb .sb-side .sb-cell.sb-osaekomi .sb-osaekomi-item:empty {
+    display: none;
+}
+
+.sb .sb-side.sb-white .sb-cell.sb-osaekomi .sb-osaekomi-item {
+    margin-top: 2.75rem;
+}
+.sb .sb-side.sb-blue .sb-cell.sb-osaekomi .sb-osaekomi-item {
+    margin-bottom: 2.75rem;
 }
