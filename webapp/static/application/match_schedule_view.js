@@ -100,12 +100,12 @@ const managedTick = () => {
     }
 
     updateField("results.white.ippon", (sbState.white.ippon) ? 1 : 0)
-    updateField("results.white.wazaari", (sbState.white.wazaari) ? 1 : 0)
+    updateField("results.white.wazaari", (sbState.white.wazaari_awasete_ippon) ? 2 : (sbState.white.wazaari) ? 1 : 0)
     updateField("results.white.shido", sbState.white.shido)
     updateField("results.white.hansokumake", (sbState.white.hansokumake) ? 1 : 0)
 
     updateField("results.blue.ippon", (sbState.blue.ippon) ? 1 : 0)
-    updateField("results.blue.wazaari", (sbState.blue.wazaari) ? 1 : 0)
+    updateField("results.blue.wazaari", (sbState.blue.wazaari_awasete_ippon) ? 2 : (sbState.blue.wazaari) ? 1 : 0)
     updateField("results.blue.shido", sbState.blue.shido)
     updateField("results.blue.hansokumake", (sbState.blue.hansokumake) ? 1 : 0)
     updateField("results.full_time", printFullTime(sbState))
@@ -184,12 +184,12 @@ document.querySelector("[data-tatami-enter-results]").addEventListener("click", 
         formData.append('loser_removed', 1)
 
     formData.append('sb-white-ippon', (sbState.white.ippon) ? 1 : 0)
-    formData.append('sb-white-wazaari', (sbState.white.wazaari) ? 1 : 0)
+    formData.append('sb-white-wazaari', (sbState.white.wazaari_awasete_ippon) ? 2 : (sbState.white.wazaari) ? 1 : 0)
     formData.append('sb-white-shido', sbState.white.shido)
     formData.append('sb-white-hansokumake', (sbState.white.hansokumake) ? 1 : 0)
 
     formData.append('sb-blue-ippon', (sbState.blue.ippon) ? 1 : 0)
-    formData.append('sb-blue-wazaari', (sbState.blue.wazaari) ? 1 : 0)
+    formData.append('sb-blue-wazaari', (sbState.blue.wazaari_awasete_ippon) ? 2 : (sbState.blue.wazaari) ? 1 : 0)
     formData.append('sb-blue-shido', sbState.blue.shido)
     formData.append('sb-blue-hansokumake', (sbState.blue.hansokumake) ? 1 : 0)
 

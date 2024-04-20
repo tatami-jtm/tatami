@@ -160,7 +160,11 @@ blue_reduce_ippon.addEventListener("click", () => {
 /* Control: Wazaari */
 
 white_expand_wazaari.addEventListener("click", () => {
-    sbState.white.wazaari = true
+    if (sbState.white.wazaari)
+        sbState.white.wazaari_awasete_ippon = true
+    else
+        sbState.white.wazaari = true
+
     sbState.white.wazaari_pending = false
 
     if (sbState.time.goldenScore) {
@@ -169,12 +173,20 @@ white_expand_wazaari.addEventListener("click", () => {
 })
 
 white_reduce_wazaari.addEventListener("click", () => {
-    sbState.white.wazaari = false
+    if (sbState.white.wazaari_awasete_ippon)
+        sbState.white.wazaari_awasete_ippon = false
+    else
+        sbState.white.wazaari = false
+
     sbState.white.wazaari_pending = false
 })
 
 blue_expand_wazaari.addEventListener("click", () => {
-    sbState.blue.wazaari = true
+    if (sbState.blue.wazaari)
+        sbState.blue.wazaari_awasete_ippon = true
+    else
+        sbState.blue.wazaari = true
+
     sbState.blue.wazaari_pending = false
 
     if (sbState.time.goldenScore) {
@@ -183,7 +195,11 @@ blue_expand_wazaari.addEventListener("click", () => {
 })
 
 blue_reduce_wazaari.addEventListener("click", () => {
-    sbState.blue.wazaari = false
+    if (sbState.blue.wazaari_awasete_ippon)
+        sbState.blue.wazaari_awasete_ippon = false
+    else
+        sbState.blue.wazaari = false
+
     sbState.blue.wazaari_pending = false
 })
 
