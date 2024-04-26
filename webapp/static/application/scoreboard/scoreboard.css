@@ -304,7 +304,7 @@ body {
     color: black;
     font-size: 200px;
     font-weight: 900;
-    font-family: 'Reddit Mono'
+    font-family: 'Reddit Mono';
 }
 .time-grid .time-main.running .time-main-box {
     background-color: #6d6;
