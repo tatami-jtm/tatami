@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ g.event.title }} | Teilnehmende</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        html {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            max-width: 1024px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 23px;
+            margin: 0;
+            margin-bottom: 6px;
+            font-weight: normal;
+        }
+
+        h2 {
+            font-size: 27px;
+            margin: 0;
+        }
+
+        h3 {
+            font-size: 21px;
+            margin-top: 31px;
+            margin-bottom: 6px;
+            break-after: avoid;
+        }
+
+        table {
+            border-top: 1px solid;
+            border-bottom: 1px solid;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table thead th {
+            border-bottom: 1px solid;
+        }
+
+
+        table th {
+            padding: 4px;
+        }
+        table td {
+            padding: 8px 4px;
+            vertical-align: middle;
+        }
+
+        table th {
+            text-align: left;
+        }
+
+        table tbody tr:nth-child(2n+1) {
+            background-color: #eeeeee;
+        }
+
+        table .club {
+            width: 25%;
+            max-width: 25%;
+            min-width: 25%;
+        }
+
+        table .status,
+        table .weighed_in {
+            width: 12.5%;
+            max-width: 12.5%;
+            min-width: 12.5%;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ g.event.title }}</h1>
+    <h2>Teilnehmende</h2>
+
+    {% if filtered_class %}
+    {% set classes = [filtered_class] %}
+    {% else %}
+    {% set classes = g.event.classes %}
+    {% endif %}
+
+    {% for evcl in classes %}
+    {% set query = evcl.registrations %}
+    <section>
+        <h3>{{ evcl.title }}</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th class="full-name">Name</th>
+                    <th class="club">Verein</th>
+                    <th class="status">Gewicht</th>
+                    <th class="weighed_in">Waage</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reg in query.order_by('last_name', 'first_name', 'club') %}
+                <tr>
+                    <td class="full-name">{{ reg.last_name.upper() }}, {{ reg.first_name }}</td>
+                    <td class="club">{{ reg.club }}</td>
+                    <td class="status">{{ reg.suggested_group or '-' }}</td>
+                    <td class="weighed_in">{% if reg.weighed_in %}<strong>{{ reg.verified_weight / 1000 }} kg</strong>{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    {% endfor %}
+
+    <script>print();</script>
+</body>
+</html>
