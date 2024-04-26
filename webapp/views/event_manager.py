@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, abort, flash, session, g, \
-    request, redirect, url_for
+    request, redirect, url_for, send_file
 from flask_security import login_required, current_user
 from werkzeug.utils import secure_filename
 
@@ -10,7 +10,7 @@ from ..models import db, Event, EventClass, DeviceRegistration, \
 from ..helpers import _get_or_create
 
 from datetime import datetime
-import time, uuid, os, csv
+import time, uuid, os, csv, io
 
 eventmgr_view = Blueprint('event_manager', __name__)
 
@@ -315,6 +315,62 @@ def registrations():
         filtered_class = EventClass.query.filter_by(id=request.values['class_filter']).one_or_404()
 
     return render_template("event-manager/registrations/index.html", filtered_class=filtered_class)
+
+
+@eventmgr_view.route('/registrations/print')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def print_registrations():
+    filtered_class = None
+
+    if request.values.get('id', None):
+        filtered_class = EventClass.query.filter_by(id=request.values['id']).one_or_404()
+
+    return render_template("event-manager/registrations/print_all.html", filtered_class=filtered_class)
+
+
+@eventmgr_view.route('/registrations/class_<id>_registrations.csv')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def class_registrations_as_csv(id):
+    evcl = g.event.classes.filter_by(id=id).one_or_404()
+
+    data = [()]
+    field_names = (
+        'Nachname',
+        'Vorname',
+        'Verein',
+        'Verband',
+        'Gewicht (gemeldet)',
+        'Gewicht (Waage)'
+    )
+
+    for registration in evcl.registrations.order_by('last_name', 'first_name', 'club'):
+        data.append((
+            registration.last_name,
+            registration.first_name,
+            registration.club,
+            registration.association.short_name if registration.association else None,
+            registration.suggested_group,
+            registration.verified_weight / 1000
+        ))
+    
+    
+    csv_io = io.StringIO()
+    csvwriter = csv.writer(csv_io, delimiter=',', quotechar='\"')
+    csvwriter.writerow(field_names)
+    csvwriter.writerows(data)
+
+    # Flask is stupid and only accepts BytesIO,
+    # however csv is stupid too and only works with StringIO
+    # so we need to convert the csv_io to mem_io
+    mem_io = io.BytesIO()
+    mem_io.write(csv_io.getvalue().encode())
+    mem_io.seek(0)
+
+    return send_file(mem_io, mimetype='text/csv')
 
 
 @eventmgr_view.route('/registrations/<id>/edit')

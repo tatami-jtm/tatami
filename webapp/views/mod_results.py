@@ -41,7 +41,7 @@ def print_class(id):
     return render_template("mod_results/print_class.html", evcl=evcl)
 
 
-@mod_results_view.route('/class_<id>.csv')
+@mod_results_view.route('/class_<id>_results.csv')
 @check_and_apply_event
 @check_is_registered
 def class_as_csv(id):
