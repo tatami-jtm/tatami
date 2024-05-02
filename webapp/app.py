@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
 from flask_migrate import Migrate
-from flask_security import Security, SQLAlchemyUserDatastore
+from flask_security import Security, SQLAlchemyUserDatastore, user_registered
 
 from .config_base import SETTINGS
 from . import setup_data
@@ -96,3 +96,10 @@ app.register_blueprint(mod_global_list_view, url_prefix="/go/<event>/mod_global_
 app.register_blueprint(mod_list_view, url_prefix="/go/<event>/mod_list")
 app.register_blueprint(mod_beamer_view, url_prefix='/go/<event>/mod_beamer')
 app.register_blueprint(mod_results_view, url_prefix='/go/<event>/mod_results')
+
+
+# Make sure that registered users are deactivated by default
+@user_registered.connect_via(app)
+def when_user_registered(sender, **kwargs):
+    kwargs['user'].active = False
+    flash("Ihr Konto wurde erfolgreich angelegt. Beachten Sie, dass es von einer Person mit Admin-Rechten bestätigt werden muss.", 'success')
