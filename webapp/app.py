@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
 from flask_migrate import Migrate
 from flask_security import Security, SQLAlchemyUserDatastore, user_registered
+from flask_babel import Babel
 
 from .config_base import SETTINGS
 from . import setup_data
@@ -33,8 +34,10 @@ app.config['SECURITY_EMAIL_VALIDATOR_ARGS'] = {
     'check_deliverability': (not app.debug and not SETTINGS['NEVER_VALIDATE_EMAIL_DNS'])
 }
 
-app.config['SECURITY_MSG_UNAUTHORIZED'] = (
-    "Du hast nicht die Berechtigung, diese Funktion auszuführen.", 0)
+app.config['SECURITY_MSG_UNAUTHENTICATED'] = ("Du musst dich anmelden, um auf diesen Bereich zugreifen zu können.", 'danger')
+app.config['SECURITY_MSG_UNAUTHORIZED'] = ("Du hast nicht die Berechtigung, diese Funktion auszuführen.", 'danger')
+
+babel = Babel(app, locale_selector=lambda: 'de')
 
 
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)

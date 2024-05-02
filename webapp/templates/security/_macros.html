@@ -1,0 +1,46 @@
+{% macro render_field_with_errors(field) %}
+<div class="mb-3">
+    {{ field.label(class_='form-label', for=field.id) }} {{ field(id=field.id, class_='form-control', **kwargs)|safe }}
+</div>
+{% if field.errors %}
+<ul>
+    {% for error in field.errors %}<li class="fs-error-msg">{{ error }}</li>{% endfor %}
+</ul>
+{% endif %}
+{% endmacro %}
+
+{% macro render_field_with_errors_check(field) %}
+<div class="mb-3 form-check">
+    {{ field.label(class_='form-check-label', for=field.id) }}
+    {{ field(class_='form-check-input', id=field.id)|safe }}
+</div>
+{% endmacro %}
+
+{% macro render_field(field) %}
+{{ field(**kwargs)|safe }}
+{% endmacro %}
+
+{% macro render_field_errors(field) %}
+  <div class="mb-3">
+    {% if field and field.errors %}
+      <ul>
+        {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{# render WTForms (>3.0) form level errors #}
+{% macro render_form_errors(form) %}
+  {% if form.form_errors %}
+    <div class="mb-3" id="fs-form-errors">
+      <ul>
+        {% for error in form.form_errors %}<li>{{ error }}</li>{% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+{% endmacro %}
+
+{% macro prop_next() -%}
+  {% if 'next' in request.args %}?next={{ request.args.next|urlencode }}{% endif %}
+{%- endmacro %}

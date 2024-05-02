@@ -1,0 +1,18 @@
+{% extends "security/base.html" %}
+{% from "security/_macros.html" import render_field_with_errors, render_field_with_errors_check, render_field, render_field_errors, render_form_errors, prop_next %}
+
+{% block content %}
+<h1>Anmelden</h1>
+<form action="{{ url_for_security('login') }}{{ prop_next() }}" method="post" name="login_user_form">
+    {{ login_user_form.hidden_tag() }}
+    {{ render_form_errors(login_user_form) }}
+    {{ render_field_with_errors(login_user_form.email) }}
+    {{ render_field_with_errors(login_user_form.password) }}
+    {{ render_field_with_errors_check(login_user_form.remember) }}
+    {{ render_field_errors(login_user_form.csrf_token) }}
+    <div class="d-flex">
+        {{ render_field(login_user_form.submit, class_='btn btn-primary m-1') }}
+        <a href="{{ url_for_security('register') }}{%- if 'next' in request.args -%}?next={{ request.args.next|urlencode }}{%- endif -%}" class="btn btn-secondary m-1">Noch kein Konto?</a>
+    </div>
+</form>
+{% endblock content %}

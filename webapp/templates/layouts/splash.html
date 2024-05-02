@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     {% include "layouts/_header.html" %}
-    <title>TATAMI | {% block title %}{% endblock title %}</title>
+    <title>TATAMI</title>
     {% block custom_header %}{% endblock custom_header %}
 </head>
 <body class="splash">
@@ -14,7 +14,8 @@
         {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}
         {% for category, message in messages %}
-            <div class="alert alert-{{ category or 'light' }} alert-dismissible fade show" role="alert">
+            {% set category = 'danger' if category == 'error' else category %}
+            <div class="alert alert-{{ category or 'dark' }} alert-dismissible fade show" role="alert">
                 {% if ":" in message %}
                 <p class="mb-0"><strong>{{ message.split(":", 1)[0] }}:</strong> {{ message.split(":", 1)[1] }}</p>
                 {% else %}
