@@ -344,7 +344,10 @@ def class_registrations_as_csv(id):
         'Verein',
         'Verband',
         'Gewicht (gemeldet)',
-        'Gewicht (Waage)'
+        'Gewicht (Waage)',
+        'Bestätigt?',
+        'Angemeldet?',
+        'Eingewogen?'
     )
 
     for registration in evcl.registrations.order_by('last_name', 'first_name', 'club'):
@@ -354,7 +357,10 @@ def class_registrations_as_csv(id):
             registration.club,
             registration.association.short_name if registration.association else None,
             registration.suggested_group,
-            registration.verified_weight / 1000
+            registration.verified_weight / 1000,
+            'x' if registration.confirmed else '',
+            'x' if registration.registered else '',
+            'x' if registration.weighed_in else ''
         ))
     
     
