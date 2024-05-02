@@ -489,7 +489,7 @@ def place_all(id, group_id):
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
 
     if request.method == 'POST':
-        _randomly_place_group(group)
+        _randomly_place_group(group, method=request.form.get('method', 'random'))
 
         flash(f"Gruppe {group.title} erfolgreich gelost.", 'success')
 
@@ -523,7 +523,7 @@ def place_for_all_groups(id):
                 unresolved_for_error_of_no_system.append(group.title)
 
             else:
-                _randomly_place_group(group)
+                _randomly_place_group(group, method=request.form.get('method', 'random'))
                 resolved_successfully.append(group.title)
 
         if len(resolved_successfully):
@@ -558,7 +558,7 @@ def _get_weight_classes(event_class):
     return classes
 
 
-def _randomly_place_group(group):
+def _randomly_place_group(group, method='random'):
     participants = group.participants.filter_by(placement_index=None)
     list_system = group.list_system()
     list_max_count = list_system.mandatory_maximum
@@ -575,8 +575,24 @@ def _randomly_place_group(group):
         # If there is no next participant (exhausted)
         if not participants.count():
             break
+
+        if method == 'smallest_weight' or method == 'largest_weight':
+            all_participants = participants.all()
+            data_pairs = []
+
+            for participant in all_participants:
+                if participant.registration is None: continue
+                data_pairs.append([participant, participant.registration.verified_weight])
+            
+            data_pairs = sorted(data_pairs, key=lambda p: p[1])
     
-        next_participant = random.choice(participants.all())
+        if method == 'random':
+            next_participant = random.choice(participants.all())
+        elif method == 'smallest_weight':
+            next_participant = data_pairs[0][0]
+        elif method == 'largest_weight':
+            next_participant = data_pairs[-1][0]
+
 
         next_participant.placement_index = current_count
         db.session.commit()

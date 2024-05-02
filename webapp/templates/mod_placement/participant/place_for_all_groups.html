@@ -19,6 +19,16 @@
                 </ul>
                 <p>Bereits manuell gesetzte Personen bleiben unberührt.</p>
                 <p>Diese Aktion wird für alle Gruppen das verwendete Listensystem festsetzen, wenn noch kein Listensystem bestimmt ist. Die Festsetzung kann in den Gruppeneinstellungen bearbeitet werden.</p>
+
+                <div class="mb-3">
+                    <label for="method" class="form-label">Losverfahren</label>
+                    <select class="form-select" id="method" name="method">
+                        <option value="random" selected>Zufällig</option>
+                        <option value="smallest_weight">Nach Gewicht (niedrigstes zuerst)</option>
+                        <option value="largest_weight">Nach Gewicht (höchstes zuerst)</option>
+                    </select>
+                    <div class="form-text">Erfolgt die Losung nach Gewicht, werden TN, für die kein Gewicht eingetragen ist, nicht gelost.</div>
+                </div>
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary" autofocus="true">Alle losen</button>
