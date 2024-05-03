@@ -806,6 +806,53 @@ img {
     background-color: #3333dd;
 }
 
+.match-summary .match-sb {
+    display: flex;
+    max-width: 250px;
+    width: 100%;
+    align-items: center;
+}
+.match-summary .match-sb .match-sb-white,
+.match-summary .match-sb .match-sb-blue {
+    padding: 0.25rem;
+    flex-grow: 1;
+    width: 0;
+    display: flex;
+}
+.match-summary .match-sb .match-sb-white {
+    order: 0;
+    background-color: #eee;
+}
+.match-summary .match-sb .match-sb-blue {
+    order: 2;
+    background-color: #00a;
+    color: white;
+}
+.match-summary .match-sb .match-sb-white .match-sb-field,
+.match-summary .match-sb .match-sb-blue .match-sb-field {
+    width: 0;
+    flex-grow: 1;
+    padding: 0.1rem;
+    border: 1px solid;
+    text-align: center;
+}
+.match-summary .match-sb .match-sb-white .match-sb-field:not(:last-child),
+.match-summary .match-sb .match-sb-blue .match-sb-field:not(:last-child) {
+    border-right: none;
+}
+.match-summary .match-sb .match-sb-white .match-sb-field.match-sb-field-bad {
+    color: #f00;
+    border-color: black;
+}
+.match-summary .match-sb .match-sb-blue .match-sb-field.match-sb-field-bad {
+    color: #f66;
+    border-color: white;
+}
+.match-summary .match-sb .match-sb-time {
+    padding: 0.25rem 0.5rem;
+    font-weight: bold;
+}
+
 .match-summary.match-summary-large-fs .match-header {
     font-size: 1.1rem;
     padding: 0.35rem 0;

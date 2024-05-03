@@ -1,6 +1,7 @@
 from . import db
 from ..listslib.match_result import MatchResult as ListMatchResult
 from datetime import datetime as dt
+import json
 
 class Match(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
@@ -87,7 +88,7 @@ class MatchResult(db.Model):
     is_blue_removed = db.Column(db.Boolean()) # e. g. injury
 
     scoreboard_data = db.Column(db.Text())
-    full_time = db.Column(db.Integer())
+    full_time = db.Column(db.Integer())    
 
     def winner(self):
         if self.is_white_winner:
@@ -120,3 +121,17 @@ class MatchResult(db.Model):
         return ListMatchResult.mk(self.white_points, self.white_score, None,
                                   self.blue_points, self.blue_score, None,
                                   None, None)
+    
+    def data(self):
+        data = {}
+
+        if self.scoreboard_data:
+            data.update(json.loads(self.scoreboard_data))
+        
+        if self.full_time is not None:
+            data['full_time'] = f"{self.full_time // 60}:" + f"00{self.full_time % 60}"[-2:]
+
+        if len(data.keys()) == 0:
+            return None
+        
+        return data

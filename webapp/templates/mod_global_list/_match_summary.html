@@ -63,6 +63,46 @@
         <div class="match-result-winner-score">hat gewonnen ({{ result.score() }} WP).</div>
     </div>
     {% endif %}
+    {% set result_data = result.data() %}
+    {% if result_data %}
+    <div class="match-sb">
+        {% if "white" in result_data %}
+        <div class="match-sb-white">
+            <div class="match-sb-field">
+                {{ result_data.white.ippon }}
+            </div>
+            <div class="match-sb-field">
+                {{ result_data.white.wazaari }}
+            </div>
+            <div class="match-sb-field match-sb-field-bad">
+                {{ result_data.white.shido }}
+            </div>
+            <div class="match-sb-field match-sb-field-bad">
+                {{ result_data.white.hansokumake }}
+            </div>
+        </div>
+        {% endif %}
+        {% if "full_time" in result_data %}
+        <div class="match-sb-time">{{ result_data.full_time }}</div>
+        {% endif %}
+        {% if "blue" in result_data %}
+        <div class="match-sb-blue">
+            <div class="match-sb-field">
+                {{ result_data.blue.ippon }}
+            </div>
+            <div class="match-sb-field">
+                {{ result_data.blue.wazaari }}
+            </div>
+            <div class="match-sb-field match-sb-field-bad">
+                {{ result_data.blue.shido }}
+            </div>
+            <div class="match-sb-field match-sb-field-bad">
+                {{ result_data.blue.hansokumake }}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
     {% endif %}
 </div>
 {% endif %}
