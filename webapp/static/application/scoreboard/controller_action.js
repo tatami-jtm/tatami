@@ -167,7 +167,7 @@ white_expand_wazaari.addEventListener("click", () => {
 
     sbState.white.wazaari_pending = false
 
-    if (sbState.time.goldenScore) {
+    if (sbState.time.goldenScore || sbState.white.wazaari_awasete_ippon) {
         sbState.time.running = false
     }
 })
@@ -189,7 +189,7 @@ blue_expand_wazaari.addEventListener("click", () => {
 
     sbState.blue.wazaari_pending = false
 
-    if (sbState.time.goldenScore) {
+    if (sbState.time.goldenScore || sbState.blue.wazaari_awasete_ippon) {
         sbState.time.running = false
     }
 })
@@ -229,6 +229,7 @@ blue_reduce_shido.addEventListener("click", () => {
 
 white_expand_hansokumake.addEventListener("click", () => {
     sbState.white.hansokumake = true
+    sbState.time.running = false
 })
 
 white_reduce_hansokumake.addEventListener("click", () => {
@@ -237,6 +238,7 @@ white_reduce_hansokumake.addEventListener("click", () => {
 
 blue_expand_hansokumake.addEventListener("click", () => {
     sbState.blue.hansokumake = true
+    sbState.time.running = false
 })
 
 blue_reduce_hansokumake.addEventListener("click", () => {
