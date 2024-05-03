@@ -98,6 +98,7 @@ correct_time.addEventListener("click", () => {
 
         new_time = new_time.trimEnd('G')
     } else {
+        sbState.time.goldenScore = false
         sbState.time.displayTimeDirection = -1
     }
 
