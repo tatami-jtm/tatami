@@ -87,6 +87,13 @@ const managedTick = () => {
         setOption("white:club", document.querySelector("[data-tatami-source=\"current_match.white.association\"]").value)
         setOption("blue:name", document.querySelector("[data-tatami-source=\"current_match.blue.name\"]").value)
         setOption("blue:club", document.querySelector("[data-tatami-source=\"current_match.blue.association\"]").value)
+    } else {
+        setOption("class", '')
+        setOption("progress", '')
+        setOption("white:name", '')
+        setOption("white:club", '')
+        setOption("blue:name", '')
+        setOption("blue:club", '')
     }
 
 
@@ -97,6 +104,13 @@ const managedTick = () => {
         setOption("prepare:white:club", document.querySelector("[data-tatami-source=\"waiting_match.white.association\"]").value)
         setOption("prepare:blue:name", document.querySelector("[data-tatami-source=\"waiting_match.blue.name\"]").value)
         setOption("prepare:blue:club", document.querySelector("[data-tatami-source=\"waiting_match.blue.association\"]").value)
+    } else {
+        setOption("prepare:class", '')
+        setOption("prepare:progress", '')
+        setOption("prepare:white:name", '')
+        setOption("prepare:white:club", '')
+        setOption("prepare:blue:name", '')
+        setOption("prepare:blue:club", '')
     }
 
     updateField("results.white.ippon", (sbState.white.ippon) ? 1 : 0)
