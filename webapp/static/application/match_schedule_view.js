@@ -7,6 +7,7 @@ var local_config = {
 
 const enter_results = document.querySelector("[data-control=\"enter-results\"]")
 const transactional_end_fight = enter_results
+const callup_again = document.querySelector("[data-control=\"callup-again\"]")
 
 const scheduledArea = document.querySelector('[data-scheduled-area]')
 const resultsModal = new bootstrap.Modal('#results-modal')
@@ -242,4 +243,8 @@ enter_results.addEventListener('click', () => {
         document.getElementById('match-winner').value = winner
     }
 
+})
+
+callup_again.addEventListener('click', () => {
+    startNewMatch()
 })
