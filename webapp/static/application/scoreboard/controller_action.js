@@ -16,6 +16,7 @@ const break_view = document.querySelector("[data-control=\"view.break\"]")
 
 const start_time = document.querySelector("[data-control=\"time.main.start\"]")
 const stop_time = document.querySelector("[data-control=\"time.main.stop\"]")
+const correct_time = document.querySelector("[data-control=\"time.main.correct\"]")
 const flash_medical = document.querySelector("[data-control=\"flash.medical\"]")
 
 const toggle_osaekomi = document.querySelector("[data-control=\"osaekomi.toggle\"]")
@@ -80,6 +81,31 @@ start_time.addEventListener("click", () => {
 })
 stop_time.addEventListener("click", () => {
     sbState.time.running = false
+})
+
+correct_time.addEventListener("click", () => {
+    let current_time = new Date(properIntegralConversion(sbState.time.displayTime / 1000) * 1000).toISOString().substr(15, 4)
+
+    if (sbState.time.goldenScore)
+        current_time = current_time + "G"
+
+    let new_time = prompt("Auf welchen Wert soll die Zeit korrigiert werden?\nDie Zeit muss in dem Format 'm:ss' angegeben werden.\n'G' am Ende hinzufügen für Golden Score", current_time)
+    if (new_time == null) return
+
+    if (new_time.endsWith('G')) {
+        sbState.time.goldenScore = true
+        sbState.time.displayTimeDirection = 1
+
+        new_time = new_time.trimEnd('G')
+    } else {
+        sbState.time.displayTimeDirection = -1
+    }
+
+    new_time = new_time.split(":")
+    if (new_time.length != 2) return
+
+    new_time = (parseInt(new_time[0])*60 + parseInt(new_time[1])) * 1000
+    sbState.time.displayTime = new_time;
 })
 
 /* Control: Views */
