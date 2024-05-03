@@ -180,6 +180,8 @@ const determineWinner = (always) => {
     } else if (sbState.blue.wazaari) {
         return ['blue', 7]
     }
+
+    return false;
 }
 
 const properIntegralConversion = (val) => {

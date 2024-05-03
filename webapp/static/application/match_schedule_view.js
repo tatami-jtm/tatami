@@ -213,3 +213,19 @@ document.querySelector("[data-tatami-enter-results]").addEventListener("click", 
         startNewMatch()
     }
 })
+
+enter_results.addEventListener('click', () => {
+    winner = determineWinner(true)
+
+    if (winner == false) {
+        document.getElementById('match-score').value = null
+        document.getElementById('match-winner').value = null
+    } else {
+        let winning_points = winner[1]
+        winner = winner[0]
+    
+        document.getElementById('match-score').value = winning_points
+        document.getElementById('match-winner').value = winner
+    }
+
+})
