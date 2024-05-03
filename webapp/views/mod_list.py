@@ -347,6 +347,14 @@ def clear_match_result(id, match_id):
     if match.completed:
         match.completed = False
         match.completed_at = None
+
+        # Match is considered not scheduled up
+        match.called_up = False
+        match.called_up_at = None
+        match.running = False
+        match.running_since = None
+        match.scheduled = False
+        match.scheduled_at = None
         is_new, match_result = match.get_result()
 
         if not is_new:
