@@ -26,10 +26,10 @@
 <input type="hidden" data-tatami-source="current_match.progress" value="Finale">
 {% elif 'semifinal' in list_tags %}
 <input type="hidden" data-tatami-source="current_match.progress" value="Halbfinale">
-{% elif 'repechage' in list_tags %}
-<input type="hidden" data-tatami-source="current_match.progress" value="Trostrunde">
 {% elif 'thirdplace' in list_tags %}
 <input type="hidden" data-tatami-source="current_match.progress" value="Kampf um Platz 3">
+{% elif 'repechage' in list_tags %}
+<input type="hidden" data-tatami-source="current_match.progress" value="Trostrunde">
 {% else %}
 <input type="hidden" data-tatami-source="current_match.progress" value="Hauptrunde">
 {% endif %}
@@ -58,10 +58,10 @@
 <input type="hidden" data-tatami-source="waiting_match.progress" value="Finale">
 {% elif 'semifinal' in list_tags %}
 <input type="hidden" data-tatami-source="waiting_match.progress" value="Halbfinale">
-{% elif 'repechage' in list_tags %}
-<input type="hidden" data-tatami-source="waiting_match.progress" value="Trostrunde">
 {% elif 'thirdplace' in list_tags %}
 <input type="hidden" data-tatami-source="waiting_match.progress" value="Kampf um Platz 3">
+{% elif 'repechage' in list_tags %}
+<input type="hidden" data-tatami-source="waiting_match.progress" value="Trostrunde">
 {% else %}
 <input type="hidden" data-tatami-source="waiting_match.progress" value="Hauptrunde">
 {% endif %}
