@@ -179,6 +179,7 @@
             <match id="m6" />
             <match id="m7" />
             <match id="m8" />
+            <clip />
             <match id="m9" />
             <match id="m10" />
             <match id="m11" />
@@ -187,18 +188,20 @@
             <match id="m14" />
             <match id="m15" />
             <match id="m16" />
+            <clip />
             <match id="m17" />
             <match id="m18" />
             <match id="m19" />
             <match id="m20" />
+            <clip />
             <match id="m21" />
             <match id="m22" />
             <match id="m23" />
             <match id="m24" />
+            <clip />
             <match id="m25" />
             <match id="m26" />
             <match id="m27" />
-            <clip />
         </order>
 
         <score>

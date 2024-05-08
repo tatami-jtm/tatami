@@ -93,7 +93,7 @@ def index():
 def config():
     system_rules = ListSystemRule.query.filter_by(event=g.event)
     
-    ranges = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 8)]
+    ranges = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 8), (9, 16)]
 
     return render_template("event-manager/config.html", ranges=ranges,
                            ListSystem=ListSystem, system_rules=system_rules)
@@ -125,7 +125,7 @@ def save_config():
         flash("Einstellungen erfolgreich gespeichert", 'success')
 
     elif request.form['form'] == 'list_system_rules':
-        ranges = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 8)]
+        ranges = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 8), (9, 16)]
 
         for rng in ranges:
             rng_rule = _get_or_create(ListSystemRule, event=g.event,

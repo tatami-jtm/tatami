@@ -87,6 +87,10 @@ def setup_list_systems():
     _get_or_create(ListSystem, title="Doppel-KO 8 TN", list_file="ko8",
                    mandatory_minimum=5, mandatory_maximum=8, enabled=True,
                    estimated_fight_count=11, break_count=2)
+    
+    _get_or_create(ListSystem, title="Doppel-KO 16 TN", list_file="ko16",
+                   mandatory_minimum=9, mandatory_maximum=16, enabled=True,
+                   estimated_fight_count=27, break_count=4)
 
 def setup_event_roles():
     _get_or_create(EventRole, name="Anmeldung",
