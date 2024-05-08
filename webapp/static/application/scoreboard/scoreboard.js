@@ -89,24 +89,34 @@ const properties = {
         complex_changed: (props) => {
             let scope = document.querySelector("[data-sbf-id='tatami-scoreboard:white:shido+hansokumake']");
             
+            has_direct_hansokumake = parseInt(props["tatami-scoreboard:white:hansokumake"]) == 1;
             has_shido_1 = parseInt(props["tatami-scoreboard:white:shido"]) >= 1;
             has_shido_2 = parseInt(props["tatami-scoreboard:white:shido"]) >= 2;
-            has_hansokumake = parseInt(props["tatami-scoreboard:white:shido"]) == 3 || parseInt(props["tatami-scoreboard:white:hansokumake"]) == 1;
-            
-            if (has_shido_1)
-                scope.querySelector('.card-shido:nth-of-type(1)').classList.remove('hidden');
-            else
-                scope.querySelector('.card-shido:nth-of-type(1)').classList.add('hidden');
-    
-            if (has_shido_2)
-                scope.querySelector('.card-shido:nth-of-type(2)').classList.remove('hidden');
-            else
-                scope.querySelector('.card-shido:nth-of-type(2)').classList.add('hidden');
-    
-            if (has_hansokumake)
-                scope.querySelector('.card-hansokumake').classList.remove('hidden');
-            else
-                scope.querySelector('.card-hansokumake').classList.add('hidden');
+            has_hansokumake = parseInt(props["tatami-scoreboard:white:shido"]) == 3 || has_direct_hansokumake;
+
+            if (has_direct_hansokumake) {
+                    scope.querySelector('.card-shido:nth-of-type(1)').classList.add('hidden');
+                    scope.querySelector('.card-shido:nth-of-type(2)').classList.add('hidden');
+                    scope.querySelector('.card-hansokumake').classList.remove('hidden');
+                    scope.querySelector('.card-hansokumake').innerText = "Hansoku-Make";
+            } else {
+                scope.querySelector('.card-hansokumake').innerText = "";
+
+                if (has_shido_1)
+                    scope.querySelector('.card-shido:nth-of-type(1)').classList.remove('hidden');
+                else
+                    scope.querySelector('.card-shido:nth-of-type(1)').classList.add('hidden');
+        
+                if (has_shido_2)
+                    scope.querySelector('.card-shido:nth-of-type(2)').classList.remove('hidden');
+                else
+                    scope.querySelector('.card-shido:nth-of-type(2)').classList.add('hidden');
+        
+                if (has_hansokumake)
+                    scope.querySelector('.card-hansokumake').classList.remove('hidden');
+                else
+                    scope.querySelector('.card-hansokumake').classList.add('hidden');
+            }
         }
     },
     "tatami-scoreboard:white:shido": null,
@@ -138,24 +148,34 @@ const properties = {
         complex_changed: (props) => {
             let scope = document.querySelector("[data-sbf-id='tatami-scoreboard:blue:shido+hansokumake']");
             
+            has_direct_hansokumake = parseInt(props["tatami-scoreboard:blue:hansokumake"]) == 1;
             has_shido_1 = parseInt(props["tatami-scoreboard:blue:shido"]) >= 1;
             has_shido_2 = parseInt(props["tatami-scoreboard:blue:shido"]) >= 2;
-            has_hansokumake = parseInt(props["tatami-scoreboard:blue:shido"]) == 3 || parseInt(props["tatami-scoreboard:blue:hansokumake"]) == 1;
-            
-            if (has_shido_1)
-                scope.querySelector('.card-shido:nth-of-type(1)').classList.remove('hidden');
-            else
-                scope.querySelector('.card-shido:nth-of-type(1)').classList.add('hidden');
-    
-            if (has_shido_2)
-                scope.querySelector('.card-shido:nth-of-type(2)').classList.remove('hidden');
-            else
-                scope.querySelector('.card-shido:nth-of-type(2)').classList.add('hidden');
-    
-            if (has_hansokumake)
-                scope.querySelector('.card-hansokumake').classList.remove('hidden');
-            else
-                scope.querySelector('.card-hansokumake').classList.add('hidden');
+            has_hansokumake = parseInt(props["tatami-scoreboard:blue:shido"]) == 3 || has_direct_hansokumake;
+
+            if (has_direct_hansokumake) {
+                    scope.querySelector('.card-shido:nth-of-type(1)').classList.add('hidden');
+                    scope.querySelector('.card-shido:nth-of-type(2)').classList.add('hidden');
+                    scope.querySelector('.card-hansokumake').classList.remove('hidden');
+                    scope.querySelector('.card-hansokumake').innerText = "Hansoku-Make";
+            } else {
+                scope.querySelector('.card-hansokumake').innerText = "";
+
+                if (has_shido_1)
+                    scope.querySelector('.card-shido:nth-of-type(1)').classList.remove('hidden');
+                else
+                    scope.querySelector('.card-shido:nth-of-type(1)').classList.add('hidden');
+        
+                if (has_shido_2)
+                    scope.querySelector('.card-shido:nth-of-type(2)').classList.remove('hidden');
+                else
+                    scope.querySelector('.card-shido:nth-of-type(2)').classList.add('hidden');
+        
+                if (has_hansokumake)
+                    scope.querySelector('.card-hansokumake').classList.remove('hidden');
+                else
+                    scope.querySelector('.card-hansokumake').classList.add('hidden');
+            }
         }
     },
     "tatami-scoreboard:blue:shido": null,

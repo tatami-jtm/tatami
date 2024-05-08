@@ -70,13 +70,13 @@
 html {
     font-family: Inter, Arial, Helvetica, sans-serif;
     background-color: #000;
-    cursor: not-allowed;
+    /* cursor: not-allowed; */
     user-select: none;
     opacity: 0.1;
     transition: opacity 0.1s ease;
 }
 html.active {
-    cursor: none;
+    /* cursor: none; */
     opacity: 1;
 }
 body {
@@ -131,10 +131,9 @@ body {
 .view-main .main-grid .main-row-score {
     grid-column-start: 2;
     grid-column-end: 3;
-    /* padding: 4rem 2rem; */
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
+    align-items: stretch;
+    justify-content: center;
 }
 .view-main .main-grid .main-row-score.row-white {
     grid-row: 2;
@@ -154,12 +153,11 @@ body {
 }
 
 .view-main .main-grid .main-row-score .score-text {
-    font-size: 250px;
+    font-size: 19rem;
     font-weight: bold;
     text-align: center;
     flex-grow: 1;
-    min-height: 256px;
-    padding-top: calc((256px - 1.15em) / 2);
+    align-self: center;
 }
 
 .view-main .main-grid .main-row-score .score-text:empty {
@@ -170,7 +168,7 @@ body {
 .view-main .main-grid .main-row-score .score-grid {
     display: none;
     align-items: center;
-    padding: 0 1rem;
+    justify-content: space-around;
     width: 100%;
 }
 .view-main .main-grid .main-row-score .score-text:empty + .score-grid {
@@ -178,38 +176,50 @@ body {
 }
 
 .view-main .main-grid .main-row-score .score-grid .score-wazaari {
+    width: 25rem;
+    flex-grow: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-main .main-grid .main-row-score .score-grid .score-wazaari .token {
     font-size: 160px;
     font-weight: bold;
-    border: 1rem solid currentColor;
     height: 16rem;
     width: 16rem;
     text-align: center;
-    border-radius: 50%;
-    padding-top: 1.5rem;
-    flex-grow: 0;
+    border-radius: 3rem;
+    padding-top: 2.5rem;
     opacity: 0;
     transition: opacity .5s ease-in-out;
+    background-color: rgba(0, 0, 0, 0.05);
 }
-.view-main .main-grid .main-row-score .score-grid .score-wazaari.active {
+.view-main .main-grid .main-row-score.row-blue .score-grid .score-wazaari .token {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.view-main .main-grid .main-row-score .score-grid .score-wazaari.active .token {
     opacity: 1.0;
     box-shadow: 3px 3px 20px -8px rgba(0, 0, 0, 0.5);
 }
-.view-main .main-grid .main-row-score .score-grid .score-wazaari.pending {
+.view-main .main-grid .main-row-score .score-grid .score-wazaari.pending .token {
+    opacity: 0.3;
+    border: 0.5rem dashed currentColor;
+    padding-top: 1.75rem;
+    background-color: transparent;
+}
+.view-main .main-grid .main-row-score.row-blue .score-grid .score-wazaari.pending .token {
     opacity: 0.45;
-    border-style: dashed;
-    font-weight: normal;
 }
 
 .view-main .main-grid .main-row-score .score-grid .score-osaekomi {
-    flex-grow: 1;
-    padding-right: 2rem;
+    width: 15rem;
+    flex-grow: 0;
 }
 
 
 
 .time-osaekomi {
-    padding: 1rem 1rem;
-    width: 200px;
     text-align: center;
     font-size: 100px;
     font-family: 'Reddit Mono';
@@ -228,39 +238,41 @@ body {
 }
 
 .view-main .main-grid .main-row-score .score-grid .score-shido {
-    flex-grow: 1;
+    flex-grow: 0;
     display: flex;
     align-items: center;
+    width: 24rem;
 }
 .view-main .main-grid .main-row-score .score-grid .score-shido .card-shido,
 .view-main .main-grid .main-row-score .score-grid .score-shido .card-hansokumake {
-    height: 12rem;
-    width: 12rem;
+    height: 14rem;
+    width: 6.5rem;
     display: block;
-    border-radius: 100%;
+    border-radius: 1rem;
     color: #600;
-    font-size: 100px;
+    font-size: 3rem;
     font-weight: bold;
     line-height: 1;
-    padding: 49px 0;
+    padding: 4.5rem 0;
     text-align: center;
     box-shadow: 3px 3px 20px -8px rgba(0, 0, 0, 0.5);
-    margin-left: 2rem;
+    margin-left: 1.5rem;
     transition: opacity .5s ease-in-out;
 }
 
 .view-main .main-grid .main-row-score .score-grid .score-shido .card-shido.hidden,
 .view-main .main-grid .main-row-score .score-grid .score-shido .card-hansokumake.hidden {
-    opacity: 0;
+    display: none;
 }
 .view-main .main-grid .main-row-score .score-grid .score-shido .card-shido {
     background-color: #dd0;
 }
 .view-main .main-grid .main-row-score .score-grid .score-shido .card-hansokumake {
     background-color: #d00;
+    text-transform: uppercase;
 }
-.view-main .main-grid .main-row-score .score-grid .score-shido .card-hansokumake::before {
-    content: 'H'
+.view-main .main-grid .main-row-score .score-grid .score-shido .card-shido.hidden + .card-shido.hidden + .card-hansokumake {
+    width: 22.5rem;
 }
 
 
