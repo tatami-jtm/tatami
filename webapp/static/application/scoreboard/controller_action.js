@@ -78,12 +78,15 @@ window.addEventListener("load", () => {
 /* Control: Main Time */
 start_time.addEventListener("click", () => {
     sbState.time.running = true
+    start_time.blur()
 })
 stop_time.addEventListener("click", () => {
     sbState.time.running = false
+    stop_time.blur()
 })
 
 correct_time.addEventListener("click", () => {
+    correct_time.blur()
     let current_time = new Date(properIntegralConversion(sbState.time.displayTime / 1000) * 1000).toISOString().substr(15, 4)
 
     if (sbState.time.goldenScore)
@@ -112,17 +115,21 @@ correct_time.addEventListener("click", () => {
 /* Control: Views */
 main_view.addEventListener("click", () => {
     sbState.view.screen = 'main'
+    main_view.blur()
 })
 callup_view.addEventListener("click", () => {
     sbState.view.screen = 'callup'
+    callup_view.blur()
 })
 break_view.addEventListener("click", () => {
     sbState.view.screen = 'break'
+    break_view.blur()
 })
 
 /* Control: Medical Alert */
 flash_medical.addEventListener("click", () => {
     sbState.view.medical = !sbState.view.medical
+    flash_medical.blur()
 })
 
 /* Control: Osaekomi */
@@ -131,9 +138,11 @@ white_start_osaekomi.addEventListener("click", () => {
     sbState.white.osaekomi.since = sbState.time.globalTick
     sbState.white.osaekomi.wazaari_given = false
     sbState.blue.osaekomi.running = false
+    white_start_osaekomi.blur()
 })
 white_stop_osaekomi.addEventListener("click", () => {
     sbState.white.osaekomi.running = false
+    white_stop_osaekomi.blur()
 })
 
 blue_start_osaekomi.addEventListener("click", () => {
@@ -141,9 +150,11 @@ blue_start_osaekomi.addEventListener("click", () => {
     sbState.blue.osaekomi.since = sbState.time.globalTick
     sbState.blue.osaekomi.wazaari_given = false
     sbState.white.osaekomi.running = false
+    blue_start_osaekomi.blur()
 })
 blue_stop_osaekomi.addEventListener("click", () => {
     sbState.blue.osaekomi.running = false
+    blue_stop_osaekomi.blur()
 })
 
 toggle_osaekomi.addEventListener("click", () => {
@@ -162,26 +173,30 @@ toggle_osaekomi.addEventListener("click", () => {
         if (sbState.white.osaekomi.wazaari_given)
             sbState.white.wazaari_pending = false;
     }
+
+    toggle_osaekomi.blur()
 })
 
 /* Control: Ippon */
 
 white_expand_ippon.addEventListener("click", () => {
     sbState.white.ippon = true
-    sbState.time.running = false
+    white_expand_ippon.blur()
 })
 
 white_reduce_ippon.addEventListener("click", () => {
     sbState.white.ippon = false
+    white_reduce_ippon.blur()
 })
 
 blue_expand_ippon.addEventListener("click", () => {
     sbState.blue.ippon = true
-    sbState.time.running = false
+    blue_expand_ippon.blur()
 })
 
 blue_reduce_ippon.addEventListener("click", () => {
     sbState.blue.ippon = false
+    blue_reduce_ippon.blur()
 })
 
 /* Control: Wazaari */
@@ -194,9 +209,7 @@ white_expand_wazaari.addEventListener("click", () => {
 
     sbState.white.wazaari_pending = false
 
-    if (sbState.time.goldenScore || sbState.white.wazaari_awasete_ippon) {
-        sbState.time.running = false
-    }
+    white_expand_wazaari.blur()
 })
 
 white_reduce_wazaari.addEventListener("click", () => {
@@ -206,6 +219,8 @@ white_reduce_wazaari.addEventListener("click", () => {
         sbState.white.wazaari = false
 
     sbState.white.wazaari_pending = false
+
+    white_reduce_wazaari.blur()
 })
 
 blue_expand_wazaari.addEventListener("click", () => {
@@ -216,9 +231,7 @@ blue_expand_wazaari.addEventListener("click", () => {
 
     sbState.blue.wazaari_pending = false
 
-    if (sbState.time.goldenScore || sbState.blue.wazaari_awasete_ippon) {
-        sbState.time.running = false
-    }
+    blue_expand_wazaari.blur()
 })
 
 blue_reduce_wazaari.addEventListener("click", () => {
@@ -228,6 +241,8 @@ blue_reduce_wazaari.addEventListener("click", () => {
         sbState.blue.wazaari = false
 
     sbState.blue.wazaari_pending = false
+
+    blue_reduce_wazaari.blur()
 })
 
 /* Control: Shido */
@@ -235,21 +250,29 @@ blue_reduce_wazaari.addEventListener("click", () => {
 white_expand_shido.addEventListener("click", () => {
     if (sbState.white.shido < 3)
         sbState.white.shido += 1
+
+    white_expand_shido.blur()
 })
 
 white_reduce_shido.addEventListener("click", () => {
     if (sbState.white.shido > 0)
         sbState.white.shido -= 1
+
+    white_reduce_shido.blur()
 })
 
 blue_expand_shido.addEventListener("click", () => {
     if (sbState.blue.shido < 3)
         sbState.blue.shido += 1
+
+    blue_expand_shido.blur()
 })
 
 blue_reduce_shido.addEventListener("click", () => {
     if (sbState.blue.shido > 0)
         sbState.blue.shido -= 1
+
+    blue_reduce_shido.blur()
 })
 
 /* Control: Hansoku-Make */
@@ -257,17 +280,21 @@ blue_reduce_shido.addEventListener("click", () => {
 white_expand_hansokumake.addEventListener("click", () => {
     sbState.white.hansokumake = true
     sbState.time.running = false
+    white_expand_hansokumake.blur()
 })
 
 white_reduce_hansokumake.addEventListener("click", () => {
     sbState.white.hansokumake = false
+    white_reduce_hansokumake.blur()
 })
 
 blue_expand_hansokumake.addEventListener("click", () => {
     sbState.blue.hansokumake = true
     sbState.time.running = false
+    blue_expand_hansokumake.blur()
 })
 
 blue_reduce_hansokumake.addEventListener("click", () => {
     sbState.blue.hansokumake = false
+    blue_reduce_hansokumake.blur()
 })
