@@ -224,8 +224,10 @@ document.querySelector("[data-tatami-enter-results]").addEventListener("click", 
     if (reply.status == 'error') {
         alert(`Fehler: ${reply.message}`)
     } else if (reply.status == 'success') {
-        await update_schedule()
-        startNewMatch()
+        window.setTimeout(async () => {
+            await update_schedule()
+            startNewMatch()
+        }, 200)
     }
 })
 
