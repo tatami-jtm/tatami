@@ -287,6 +287,7 @@ def create_event():
         ((4, 4), 'pool4'),
         ((5, 5), 'pool5'),
         ((6, 8), 'doublepool8'),
+        ((9, 16), 'ko16'),
     ]:
         system = ListSystem.all_enabled().filter_by(list_file=system).one_or_none()
 
