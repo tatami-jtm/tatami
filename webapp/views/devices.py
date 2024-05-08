@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, flash, g, session, \
-    request, redirect, url_for
+    request, redirect, url_for, abort
 
 from ..models import db, DeviceRegistration
 from .event_manager import check_and_apply_event
@@ -44,6 +44,9 @@ def register():
                 registration=registration)
         else:
             del session["device_token"]
+
+    if not g.event.allow_device_registration:
+        abort(404)
 
     registration = DeviceRegistration(event=g.event)
     registration.token = str(uuid.uuid4())
