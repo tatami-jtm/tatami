@@ -1031,6 +1031,7 @@ class MetaList:
             obj._random_seed = struct['random_seed']
 
         for match_id in struct['matches']:
+            self.match_cleanup(obj)
             match_result = struct['matches'][match_id]
             match = self.get_match_by_id(obj, match_id)
             match.set_result(match_result)
