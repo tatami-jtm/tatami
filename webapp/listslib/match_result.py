@@ -1,3 +1,5 @@
+from .fighter import BlankFighter
+
 class MatchResult:
 
     def __init__(self):
@@ -108,3 +110,6 @@ class MatchResult:
 
     def clearly_decided(self):
         return self.is_blue_winner() != self.is_white_winner()
+    
+    def is_stub(self):
+        return self._match._white == BlankFighter and self._match._blue == BlankFighter
