@@ -697,6 +697,9 @@ class MetaList:
                 return False
             
             if not obj._match_results[obligatory_match['match']].clearly_decided():
+                if obj._match_results[obligatory_match['match']].is_stub():
+                    continue
+
                 return False
         
         return True
