@@ -39,7 +39,7 @@ let update_schedule = async (e) => {
     let response = await fetch(`/go/${event}/mod_scoreboard/managed/api/reload`)
     let reply = await response.text()
 
-    scheduledArea.outerHTML = reply
+    scheduledArea.innerHTML = reply
     updateLocalConfig()
     updateFromSource()
 }
