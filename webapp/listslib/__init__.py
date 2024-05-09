@@ -18,7 +18,7 @@ if __name__ == "__main__":
     # example_list.enter_results(fmr)
 
     # example_list.score()
-    list_cls = compile_list('ko16')
+    list_cls = compile_list('ko8')
     example_list = list_cls()
     example_list.import_struct({
         'random_seed': 4,
@@ -31,32 +31,26 @@ if __name__ == "__main__":
             Fighter('fff', 'F-Fighter', 'F-Team'),
             Fighter('ggg', 'G-Fighter', 'G-Team'),
             Fighter('hhh', 'H-Fighter', 'H-Team'),
-            Fighter('iii', 'I-Fighter', 'I-Team'),
-            Fighter('jjj', 'J-Fighter', 'J-Team'),
         ],
         'matches': {
-            'm1': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'm5': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'm9': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'm10': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'm11': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'm12': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'm17': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'm19': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'm21': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'm22': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'm23': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'm24': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'm25': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'm26': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'm27': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'AvB': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'CvD': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'EvF': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'GvH': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'ABvCD': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'EFvGH': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'ABCDvEFGH': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'rabvcd': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'refvgh': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'rRABCDvefgh': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            'rREFGHvabcd': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
         },
         'playoff_matches': {
         }
     })
 
     print(example_list.get_schedule())
-    example_list.make_image(title="Testmeisterschaft 2023", event_class='U18m', group='-50kg', debg=True).show()
+    example_list.make_image(title="Testmeisterschaft 2023", event_class='U18m', group='-50kg').show()
 
     # print("Schedule:", example_list.get_schedule())
     # print("Completed?", example_list.completed())
