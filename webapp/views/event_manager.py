@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 
 from ..models import db, Event, EventClass, DeviceRegistration, \
     DevicePosition, EventRole, Association, Registration, ListSystemRule, \
-    ListSystem
+    ListSystem, Role, User
 
 from ..helpers import _get_or_create
 
@@ -95,8 +95,12 @@ def config():
     
     ranges = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 8), (9, 16)]
 
+    roles = Role.query.order_by(Role.is_admin.desc(), Role.name).all()
+    users = User.query.all()
+
     return render_template("event-manager/config.html", ranges=ranges,
-                           ListSystem=ListSystem, system_rules=system_rules)
+                           ListSystem=ListSystem, system_rules=system_rules,
+                           roles=roles, users=users)
 
 
 @eventmgr_view.route('/config', methods=['POST'])
@@ -104,7 +108,23 @@ def config():
 @check_and_apply_event
 @check_is_event_supervisor
 def save_config():
-    if request.form['form'] == 'scheduling':
+    if request.form['form'] == 'general':
+        role = Role.query.get_or_404(request.form['supervising_role'])
+        user = User.query.get_or_404(request.form['supervising_user'])
+        first_day = request.form['event_day_first'] + "T06:00"
+        last_day = request.form['event_day_last'] + "T23:00"
+
+        g.event.title = request.form['title']
+        g.event.first_day = datetime.fromisoformat(first_day)
+        g.event.last_day = datetime.fromisoformat(last_day)
+        g.event.supervising_role = role
+        g.event.supervising_user = user
+
+        db.session.commit()
+
+        flash("Einstellungen erfolgreich gespeichert", 'success')
+
+    elif request.form['form'] == 'scheduling':
         g.event.save_setting('scheduling.use', 'use-scheduling' in request.form)
 
         if request.form['scheduling-max-group']:
