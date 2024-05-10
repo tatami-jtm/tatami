@@ -6,6 +6,51 @@
 
 <form action="" method="POST">
     <div class="card my-3">
+        <div class="card-header">Allgemeine Einstellungen</div>
+        <div class="card-body">
+            <input type="hidden" name="form" value="general">
+
+            <div class="mb-3">
+                <label for="title" class="form-label">Veranstaltungsname</label>
+                <input name="title" id="title" class="form-control" value="{{ g.event.title }}">
+            </div>
+
+            <div class="mb-3">
+                <label for="supervising_role" class="form-label">Zuständige Rolle</label>
+                <select id="supervising_role" name="supervising_role" class="form-select">
+                    {% for role in roles %}
+                    <option value="{{ role.id }}" title="{{ role.description }}" {{ 'selected' if role.id == g.event.supervising_role.id }}>{{ role.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        
+            <div class="mb-3">
+                <label for="supervising_user" class="form-label">Ansprechperson</label>
+                <select id="supervising_user" name="supervising_user" class="form-select">
+                    {% for user in users %}
+                    <option value="{{ user.id }}" {{ 'selected' if user.id == g.event.supervising_user.id }}>{{ user.qualified_name() }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        
+            <div class="mb-3">
+                <label for="event_day" class="form-label">Erster Tag der Veranstaltung</label>
+                <input name="event_day_first" id="event_day_first" class="form-control" type="date" value="{{ g.event.first_day.date() }}">
+            </div>
+        
+            <div class="mb-3">
+                <label for="event_day" class="form-label">Letzter Tag der Veranstaltung</label>
+                <input name="event_day_last" id="event_day_last" class="form-control" type="date" value="{{ g.event.last_day.date() }}">
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-secondary">Speichern</button>
+        </div>
+    </div>
+</form>
+
+<form action="" method="POST">
+    <div class="card my-3">
         <div class="card-header">Vollautomatische Listenführung</div>
         <div class="card-body">
             <input type="hidden" name="form" value="scheduling">
