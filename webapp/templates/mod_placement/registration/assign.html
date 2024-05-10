@@ -33,7 +33,7 @@
                     <select class="form-select" name="registration">
                         <option value="" disabled {{ 'selected' if not registration }}></option>
                         {% for reg in registrations.all() %}
-                        <option value="{{ reg.id }}" {{ 'selected' if registration and registration.id == reg.id }}>
+                        <option value="{{ reg.id }}" {{ 'selected' if registration and registration.id == reg.id  }}>
                             {{ reg.last_name }}, {{ reg.first_name }} &ndash; {{ reg.club }} ({{ reg.verified_weight / 1000 }} kg)
                         </option>
                         {% endfor %}
@@ -48,11 +48,11 @@
                 </div>
                 <div class="mb-3 ms-5">
                     <label for="custom-full_name" class="form-label fw-normal">Vor- und Nachname</label>
-                    <input name="custom-full_name" id="custom-full_name" class="form-control">
+                    <input name="custom-full_name" id="custom-full_name" class="form-control" value="{{ request.form.get('custom-full_name', '') }}">
                 </div>
                 <div class="ms-5">
                     <label for="custom-association" class="form-label fw-normal">Verein/Verband</label>
-                    <input name="custom-association" id="custom-association" class="form-control">
+                    <input name="custom-association" id="custom-association" class="form-control" value="{{ request.form.get('custom-association', '') }}">
                 </div>
             </div>
             <div class="card-footer">
