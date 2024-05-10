@@ -310,11 +310,12 @@ def class_step_back(id):
 @check_is_event_supervisor
 def registrations():
     filtered_class = None
+    status_filter = request.values.get('status_filter', None)
 
     if request.values.get('class_filter', None):
         filtered_class = EventClass.query.filter_by(id=request.values['class_filter']).one_or_404()
 
-    return render_template("event-manager/registrations/index.html", filtered_class=filtered_class)
+    return render_template("event-manager/registrations/index.html", filtered_class=filtered_class, status_filter=status_filter)
 
 
 @eventmgr_view.route('/registrations/print')

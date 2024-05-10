@@ -24,6 +24,18 @@
         </select>
     </div>
     <div class="col-auto">
+        <select name="status_filter" id="status_filter" class="form-select">
+            <option value="">(alle anzeigen)</option>
+            <option value="not_yet_confirmed"{{ ' selected' if status_filter == 'not_yet_confirmed' }}>Voranmeldung noch nicht bestätigt</option>
+            <option value="confirmed"{{ ' selected' if status_filter == 'confirmed' }}>Voranmeldung bestätigt</option>
+            <option value="not_yet_registered"{{ ' selected' if status_filter == 'not_yet_registered' }}>Noch nicht akkreditiert</option>
+            <option value="registered"{{ ' selected' if status_filter == 'registered' }}>Akkreditiert</option>
+            <option value="registered_not_weighed_in"{{ ' selected' if status_filter == 'registered_not_weighed_in' }}>Akkreditiert, noch nicht Eingewogen</option>
+            <option value="weighed_in"{{ ' selected' if status_filter == 'weighed_in' }}>Eingewogen</option>
+            <option value="weighed_in_without_registration"{{ ' selected' if status_filter == 'weighed_in_without_registration' }}>Eingewogen (ohne Akkreditierung)</option>
+        </select>
+    </div>
+    <div class="col-auto">
         <button type="submit" class="btn btn-secondary">Filtern</button>
     </div>
     <div class="col-auto">
@@ -44,7 +56,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for reg in query.order_by('last_name', 'first_name', 'club') %}
+        {% for reg in query.order_by('last_name', 'first_name', 'club') if not status_filter or reg.matches_status(status_filter) %}
         <tr>
             <td>{{ reg.event_class.title }}</td>
             <td>{{ reg.last_name }}</td>
@@ -76,8 +88,8 @@
 <a href="{{ url_for('event_manager.create_registration', event=g.event.slug) }}" class="btn btn-primary">TN hinzufügen</a>
 <a href="{{ url_for('event_manager.import_registrations_index', event=g.event.slug) }}" class="btn btn-secondary">TN importieren</a>
 {% if filtered_class %}
-<a href="{{ url_for('event_manager.print_registrations', event=g.event.slug, id=filtered_class.id) }}" class="btn btn-secondary" target="_blank">TN drucken (in Auswahl)</a>
-<a href="{{ url_for('event_manager.class_registrations_as_csv', event=g.event.slug, id=filtered_class.id) }}" class="btn btn-secondary">CSV exportieren (in Auswahl)</a>
+<a href="{{ url_for('event_manager.print_registrations', event=g.event.slug, id=filtered_class.id) }}" class="btn btn-secondary" target="_blank">TN/Wiegeliste drucken (aktuelle Kampfklasse)</a>
+<a href="{{ url_for('event_manager.class_registrations_as_csv', event=g.event.slug, id=filtered_class.id) }}" class="btn btn-secondary">CSV exportieren (aktuelle Kampfklasse)</a>
 {% else %}
 <a href="{{ url_for('event_manager.print_registrations', event=g.event.slug) }}" class="btn btn-secondary" target="_blank">TN drucken</a>
 {% endif %}

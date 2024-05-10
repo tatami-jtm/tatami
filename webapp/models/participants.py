@@ -39,6 +39,35 @@ class Registration(db.Model):
             assoc_pt = f" ({self.association.short_name})"
 
         return self.first_name[0].upper() + ". " + self.last_name.upper() + assoc_pt
+    
+    def matches_status(self, filter):
+        # All registrations match no filter
+        if filter is None:
+            return True
+        
+        if filter == 'not_yet_confirmed':
+            return not self.confirmed
+        
+        elif filter == 'confirmed':
+            return self.confirmed
+        
+        elif filter == 'not_yet_registered':
+            return not self.registered
+        
+        elif filter == 'registered':
+            return self.registered
+        
+        elif filter == 'registered_not_weighed_in':
+            return self.registered and not self.weighed_in
+        
+        elif filter == 'weighed_in':
+            return self.registered and self.weighed_in
+        
+        elif filter == 'weighed_in_without_registration':
+            return not self.registered and self.weighed_in
+        
+        # No registrations match any other filter
+        return False
 
 
 class Association(db.Model):
