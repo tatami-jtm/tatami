@@ -1,5 +1,7 @@
 from . import db
 
+from datetime import datetime
+
 from flask_security import UserMixin, RoleMixin
 
 roles_users = db.Table(
@@ -68,11 +70,15 @@ class User(db.Model, UserMixin):
         return priv in self._privilege.keys() and (
             self._privilege['admin'] or self._privilege[priv])
 
-    def get_all_supervised_events(self):
+    def get_all_supervised_events(self, in_the_future=False):
         evt_list = self.supervised_events[:]
         for role in self.roles:
             for evt in role.supervised_events:
                 if evt not in evt_list:
                     evt_list.append(evt)
+
+        if in_the_future:
+            now = datetime.now()
+            evt_list = filter(lambda e: now <= e.last_day, evt_list)
 
         return evt_list
