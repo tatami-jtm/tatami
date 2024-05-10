@@ -79,6 +79,6 @@ class User(db.Model, UserMixin):
 
         if in_the_future:
             now = datetime.now()
-            evt_list = filter(lambda e: now <= e.last_day, evt_list)
+            evt_list = [*filter(lambda e: now <= e.last_day, evt_list)]
 
         return evt_list
