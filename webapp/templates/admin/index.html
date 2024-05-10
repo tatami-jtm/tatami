@@ -33,7 +33,7 @@
     <div class="col-12 col-lg-6 mb-4">
         <div class="card">
             <div class="card-header">Deine Veranstaltungen</div>
-            {% if events == [] %}
+            {% if events|length == 0 %}
             <div class="card-body border-bottom">
                 <p>Du hast keine aktuellen Veranstaltungen.</p>
             </div>
