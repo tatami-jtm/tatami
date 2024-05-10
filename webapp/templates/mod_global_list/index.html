@@ -65,7 +65,7 @@
                     <a href="{{ url_for('mod_global_list.mark_all_at_mat_as_ready', event=g.event.slug, id=mat.id) }}" class="btn btn-light btn-sm float-end">Alle freigeben</a>
                     <a href="{{ url_for('mod_global_list.preview_mat', event=g.event.slug, id=mat.id) }}" class="btn btn-light btn-sm float-end">Vorschau</a>
                     {{ mat.title }}</div>
-                {% for group in mat.assigned_groups %}
+                {% for group in mat.assigned_groups if not (group.completed and group.event_class.ended_fighting) %}
                 <div class="card-body {{ 'border-top' if not loop.first }} py-2">
                     {{ group_entry(group, request.values.get('group_list', 'status') == 'participant_count', request.values.get('group_list', 'status') == 'status', request.values.get('group_list', 'status') == 'match_count') }}
                 </div>
