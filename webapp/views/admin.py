@@ -14,7 +14,7 @@ admin_view = Blueprint('admin', __name__)
 @admin_view.route('/')
 @login_required
 def index():
-    events = current_user.get_all_supervised_events()
+    events = current_user.get_all_supervised_events(in_the_future=True)
     return render_template("admin/index.html", events=events)
 
 
