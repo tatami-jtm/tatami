@@ -43,6 +43,11 @@
                         Kampfanzahl
                     </a>
                 </div>
+                <div class="nav-item">
+                    <a href="?group_list=time_remaining" class="nav-link {{ 'active' if request.values.get('group_list', 'status') == 'time_remaining' }}">
+                        Erw. Restdauer
+                    </a>
+                </div>
             </div>
             <div class="card mb-3">
                 <div class="card-header">
@@ -50,7 +55,10 @@
                     Nicht zugewiesene Kampfgruppen</div>
                 {% for group in free_groups %}
                 <div class="card-body {{ 'border-top' if not loop.first }} py-2">
-                    {{ group_entry(group, request.values.get('group_list', 'status') == 'participant_count', request.values.get('group_list', 'status') == 'status', request.values.get('group_list', 'status') == 'match_count') }}
+                    {{ group_entry(group, request.values.get('group_list', 'status') == 'participant_count',
+                                          request.values.get('group_list', 'status') == 'status',
+                                          request.values.get('group_list', 'status') == 'match_count',
+                                          request.values.get('group_list', 'status') == 'time_remaining') }}
                 </div>
                 {% else %}
                 <div class="card-body py-1">
@@ -67,7 +75,10 @@
                     {{ mat.title }}</div>
                 {% for group in mat.assigned_groups if not (group.completed and group.event_class.ended_fighting) %}
                 <div class="card-body {{ 'border-top' if not loop.first }} py-2">
-                    {{ group_entry(group, request.values.get('group_list', 'status') == 'participant_count', request.values.get('group_list', 'status') == 'status', request.values.get('group_list', 'status') == 'match_count') }}
+                    {{ group_entry(group, request.values.get('group_list', 'status') == 'participant_count',
+                                          request.values.get('group_list', 'status') == 'status',
+                                          request.values.get('group_list', 'status') == 'match_count',
+                                          request.values.get('group_list', 'status') == 'time_remaining') }}
                 </div>
                 {% else %}
                 <div class="card-body py-1">
@@ -140,7 +151,7 @@
 
 {% endblock body %}
 
-{% macro group_entry(group, show_participant_count=False, show_status=True, show_fight_count=False) %}
+{% macro group_entry(group, show_participant_count=False, show_status=True, show_fight_count=False, show_estimated_time_remaining=False) %}
 <div class="row align-items-center g-2">
     <h4 class="h5 col mb-0 {{ 'fw-bold' if group.id == current_group.id else 'fw-normal' }}">
         <a href="?group={{ group.id }}" class="link-dark text-decoration-none w-100 d-block">
@@ -172,6 +183,11 @@
         {% else %}
         <span class="badge text-bg-success">Beendet</span>
         {% endif %}
+    </div>
+    {% endif %}
+    {% if show_estimated_time_remaining %}
+    <div class="col-auto">
+        <span class="badge text-bg-light border fs-small">ca. {{ group.estimated_remaining_fight_duration(in_minutes=True) }} min</span>
     </div>
     {% endif %}
     <div class="col-auto">

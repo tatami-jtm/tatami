@@ -186,6 +186,43 @@ class Group(db.Model):
     def estimated_fight_count(self):
         return max(self.matches.count(), self.list_system().estimated_fight_count)
     
+    def estimated_remaining_fight_count(self):
+        completed_matches = self.matches.filter_by(completed=True).count()
+        estimated_total_matches = self.estimated_fight_count()
+
+        return max(0, estimated_total_matches - completed_matches)
+    
+    def estimated_remaining_fight_duration(self, in_minutes = False):
+        # Don't overestimate when we're done already
+        if self.completed:
+            return 0
+
+        estimated_match_count = self.estimated_remaining_fight_count()
+
+        # Presumption:
+        # 1/3rd of all matches will take only 1/2 of the fighting time
+        # 1/3rd of all matches will take exactly the fighting time
+        # 1/3rd of all matches will take 3/2 of the fighting time limited to the max golden score time
+        fighting_time = self.event_class.fighting_time
+        golden_score_time = self.event_class.golden_score_time
+
+        short_match_duration = fighting_time / 2
+
+        middle_match_duration = fighting_time
+
+        if golden_score_time == -1:
+            long_match_duration = fighting_time * 3 / 2
+        
+        else:
+            long_match_duration = fighting_time + min(fighting_time * 1 / 2, golden_score_time)
+        
+        average_match_duration = (short_match_duration + middle_match_duration + long_match_duration) / 3
+
+        if in_minutes:
+            return int(0.5 + (estimated_match_count * average_match_duration) / 60)
+        else:
+            return estimated_match_count * average_match_duration
+    
     def placements(self):
         return self.participants.filter(Participant.final_placement != None).order_by(Participant.final_placement).all()
     
