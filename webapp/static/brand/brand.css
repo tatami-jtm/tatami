@@ -75,9 +75,9 @@ html, body {
 .btn.btn-sm {
     padding: 0.125rem 0.35rem;
 }
-.btn.btn-primary,
-.btn.btn-secondary,
-.btn.btn-dark,
+.btn.btn-primary:not(.btn-no3d),
+.btn.btn-secondary:not(.btn-no3d),
+.btn.btn-dark:not(.btn-no3d),
 .btn.btn-3d {
     box-shadow: 0 3px 0 -1px #fff4 inset,
                 0 -3px 0 -1px #0004 inset;
