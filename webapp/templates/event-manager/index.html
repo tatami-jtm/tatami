@@ -10,35 +10,10 @@
 
 <div class="alert alert-danger mb-4">
     <h4 class="mb-3 h5">Warnung: Ungültige Anmeldungen</h4>
-    <p class="mb-1">Es gibt in dieser Veranstaltung Teilnehmende, die eingewogen, aber <strong>nicht angemeldet</strong> sind.</p>
-    <p>Die folgenden Teilnehmenden werden aus diesem Grund bei der Einteilung der Kampfgruppen <strong>nicht berücksichtigt</strong>, solange das Problem nicht behoben wird.</p>
+    <p class="mb-1">Es gibt in dieser Veranstaltung Teilnehmende, die eingewogen, aber <strong>nicht akkreditiert</strong> sind.</p>
+    <p>Diese Teilnehmenden werden aus diesem Grund bei der Einteilung der Kampfgruppen <strong>nicht berücksichtigt</strong>, solange das Problem nicht behoben wird.</p>
 
-    <table class="table table-hover table-bordered">
-        <thead>
-            <tr>
-                <th>Kampfklasse</th>
-                <th>Nachname</th>
-                <th>Vorname</th>
-                <th>Verein</th>
-                <th>Verband</th>
-                <td></td>
-            </tr>
-        </thead>
-        <tbody>
-            {% for reg in invalid_registration_state_query %}
-            <tr>
-                <td>{{ reg.event_class.title }}</td>
-                <td>{{ reg.last_name }}</td>
-                <td>{{ reg.first_name }}</td>
-                <td>{{ reg.club }}</td>
-                <td>{{ reg.association.short_name if reg.association else "-" }}</td>
-                <td>
-                    <a href="{{ url_for('event_manager.edit_registration', event=g.event.slug, id=reg.id) }}" class="btn btn-sm btn-primary">Bearbeiten</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <a href="{{ url_for('event_manager.registrations', event=g.event.slug, status_filter='weighed_in_without_registration') }}" class="btn btn-dark">Betroffene TN anzeigen</a>
 </div>
 
 {% endif %}
