@@ -29,16 +29,20 @@
             </div>
         </div>
         {% if not registration.registered %}
+        {% if g.event.setting('count_weighin_as_registration', False) %}
+        <div class="card-body border-top">
+            <div class="alert alert-warning m-0">
+                <p>{{ registration.first_name }} {{ registration.last_name }} wurde noch nicht offiziell vor Ort <strong>angemeldet</strong>. Mit der Eintragung der Waageergebnisse gilt die/der TN als angemeldet.</p>
+            </div>
+        </div>
+        {% else %}
         <div class="card-body border-top">
             <div class="alert alert-danger m-0">
                 <p>{{ registration.first_name }} {{ registration.last_name }} wurde noch nicht offiziell vor Ort <strong>angemeldet</strong>.</p>
-                {% if g.event.setting('count_weighin_as_registration', False) %}
-                <p>Mit der Eintragung der Waageergebnisse gilt die/der TN als angemeldet.</p>
-                {% else %}
                 <p>Die Eintragung der Waageergebnisse befreit <strong>nicht</strong> von der Notwendigkeit der Anmeldung.</p>
-                {% endif %}
             </div>
         </div>
+        {% endif %}
         {% endif %}
         <div class="card-body border-top">
             <form action="" method="POST">
