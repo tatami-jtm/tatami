@@ -32,7 +32,7 @@
         <div class="card-body border-top">
             <div class="alert alert-danger m-0">
                 <p>{{ registration.first_name }} {{ registration.last_name }} wurde noch nicht offiziell vor Ort <strong>angemeldet</strong>.</p>
-                {% if g.device.event_role.may_use_registration %}
+                {% if g.event.setting('count_weighin_as_registration', False) %}
                 <p>Mit der Eintragung der Waageergebnisse gilt die/der TN als angemeldet.</p>
                 {% else %}
                 <p>Die Eintragung der Waageergebnisse befreit <strong>nicht</strong> von der Notwendigkeit der Anmeldung.</p>

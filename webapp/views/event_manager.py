@@ -124,6 +124,11 @@ def save_config():
 
         flash("Einstellungen erfolgreich gespeichert", 'success')
 
+    elif request.form['form'] == 'misc':
+        g.event.save_setting('count_weighin_as_registration', 'count_weighin_as_registration' in request.form)
+
+        flash("Einstellungen erfolgreich gespeichert", 'success')
+
     elif request.form['form'] == 'scheduling':
         g.event.save_setting('scheduling.use', 'use-scheduling' in request.form)
 
