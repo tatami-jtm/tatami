@@ -75,7 +75,9 @@ def index():
         "scheduled_matches":
             g.event.matches.filter_by(scheduled=True, completed=False).count(),
         "completed_matches":
-            g.event.matches.filter_by(completed=True).count()
+            g.event.matches.filter_by(completed=True).count(),
+        "estimated_current_end":
+            g.event.estimated_current_end()
     }
 
     invalid_registration_state_query = g.event.registrations.filter_by(registered=False, weighed_in=True).order_by('last_name', 'first_name', 'club')
