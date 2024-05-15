@@ -51,6 +51,24 @@
 
 <form action="" method="POST">
     <div class="card my-3">
+        <div class="card-header">Allgemeine Einstellungen</div>
+        <div class="card-body">
+            <input type="hidden" name="form" value="misc">
+
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="count_weighin_as_registration" name="count_weighin_as_registration" {{ 'checked' if g.event.setting('count_weighin_as_registration', False) }}>
+                <label class="form-check-label fw-bold" for="count_weighin_as_registration">Nicht akkreditierte TN gelten als angemeldet, wenn sie eingewogen wurden.</label>
+                <div class="form-text">Dies ist insb. auszuwählen, wenn keine gesonderte Akkreditierung stattfindet, sondern die TN gleich zur Waage gehen können.</div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-secondary">Speichern</button>
+        </div>
+    </div>
+</form>
+
+<form action="" method="POST">
+    <div class="card my-3">
         <div class="card-header">Vollautomatische Listenführung</div>
         <div class="card-body">
             <input type="hidden" name="form" value="scheduling">
