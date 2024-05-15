@@ -4,6 +4,7 @@ from .participants import Group
 
 import json
 import hashlib
+import datetime
 
 
 class Event(db.Model):
@@ -106,6 +107,23 @@ class Event(db.Model):
         placed_ratio = self.placed_participants_count() / max(1, self.total_participants_count())
 
         return (assigned_ratio + placed_ratio) / 2
+    
+    def estimated_current_end(self):
+        longest_running_mat_time = -1
+
+        for mat in self.device_positions.filter_by(is_mat=True):
+            this_mat_time = 0
+            for group in mat.assigned_groups:
+                this_mat_time += group.estimated_remaining_fight_duration()
+            
+            if this_mat_time > longest_running_mat_time:
+                longest_running_mat_time = this_mat_time
+        
+        now = datetime.datetime.now()
+        then = now + datetime.timedelta(0, longest_running_mat_time)
+
+        return then
+
 
     @classmethod
     def from_slug(cls, slug):
