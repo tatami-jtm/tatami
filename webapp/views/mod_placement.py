@@ -507,10 +507,11 @@ def place_for_all_groups(id):
         return redirect(url_for('devices.index', event=g.event.slug))
 
     event_class = g.event.classes.filter_by(id=id).one_or_404()
-    groups = g.event.groups
+    groups = event_class.groups
 
     unresolved_for_error_of_no_system = []
     unresolved_for_no_participants = []
+    unresolved_for_already_resolved = []
     resolved_successfully = []
 
     if request.method == 'POST':
@@ -521,6 +522,9 @@ def place_for_all_groups(id):
                 unresolved_for_no_participants.append(group.title)
             elif not list_system:
                 unresolved_for_error_of_no_system.append(group.title)
+            
+            elif group.all_participants_have_been_placed():
+                unresolved_for_already_resolved.append(group.title)
 
             else:
                 _randomly_place_group(group, method=request.form.get('method', 'random'))
@@ -532,8 +536,13 @@ def place_for_all_groups(id):
         if len(unresolved_for_no_participants):
             flash(f"Die Gruppe(n) {', '.join(unresolved_for_no_participants)} wurden nicht gelost, da keine TN zugewiesen sind.", 'info')
 
+        if len(unresolved_for_already_resolved):
+            flash(f"Die Gruppe(n) {', '.join(unresolved_for_already_resolved)} wurden nicht gelost, da bereits alle TN gesetzt oder gelost sind.", 'info')
+
         if len(unresolved_for_error_of_no_system):
             flash(f"Die Gruppe(n) {', '.join(unresolved_for_error_of_no_system)} konnten nicht gelost werden, da kein Listensystem zugewiesen ist.", 'danger')
+
+            
 
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id))
 

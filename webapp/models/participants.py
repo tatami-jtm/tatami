@@ -188,6 +188,9 @@ class Group(db.Model):
     
     def placements(self):
         return self.participants.filter(Participant.final_placement != None).order_by(Participant.final_placement).all()
+    
+    def all_participants_have_been_placed(self):
+        return self.participants.filter(Participant.placement_index != None).count() > 0
 
 
 class Participant(db.Model):
