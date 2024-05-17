@@ -88,7 +88,9 @@
             </div>
             {% endfor %}
 
-            <a href="{{ url_for('mod_list.display_all', event=g.event.slug) }}" class="btn btn-secondary">Alle Listen als PDF herunterladen</a>
+            <a href="{{ url_for('mod_list.display_all', event=g.event.slug) }}" class="btn btn-secondary mb-3">Alle Listen als PDF herunterladen</a>
+
+            <a href="{{ url_for('mod_global_list.class_progress', event=g.event.slug) }}" class="btn btn-secondary mb-3">Kampfklassen-Fortschritt</a>
         </div>
         <div class="col-12 col-md-4">
             <h3 class="h4 fw-bold mb-4">Ausstehende Kämpfe</h3>

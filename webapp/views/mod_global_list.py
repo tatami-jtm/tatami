@@ -148,5 +148,73 @@ def preview_mat(id):
         flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
         return redirect(url_for('devices.index', event=g.event.slug))
     
-    mat = g.event.device_positions.filter_by(id=id).one_or_404()    
+    mat = g.event.device_positions.filter_by(id=id).one_or_404()
     return render_template('mod_global_list/preview_mat.html', mat=mat)
+
+
+
+@mod_global_list_view.route('/classes/progress')
+@check_and_apply_event
+@check_is_registered
+def class_progress():
+    if not g.device.event_role.may_use_global_list:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    return render_template('mod_global_list/class_progress.html')
+
+
+
+
+@mod_global_list_view.route('/classes/<id>/progress/next', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def class_step_forward(id):
+    if not g.device.event_role.may_use_global_list:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+
+    if not event_class.begin_weigh_in:
+        event_class.begin_weigh_in = True
+        event_class.begin_weigh_in_at = dt.now()
+    elif not event_class.begin_placement:
+        event_class.begin_placement = True
+        event_class.begin_placement_at = dt.now()
+    elif not event_class.begin_fighting:
+        event_class.begin_fighting = True
+        event_class.begin_fighting_at = dt.now()
+    elif not event_class.ended_fighting:
+        event_class.ended_fighting = True
+        event_class.ended_fighting_at = dt.now()
+
+    db.session.commit()
+    return redirect(url_for('mod_global_list.class_progress', event=g.event.slug))
+
+
+@mod_global_list_view.route('/classes/<id>/progress/back', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def class_step_back(id):
+    if not g.device.event_role.may_use_global_list:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+
+    if event_class.ended_fighting:
+        event_class.ended_fighting = False
+        event_class.ended_fighting_at = None
+    elif event_class.begin_fighting:
+        event_class.begin_fighting = False
+        event_class.begin_fighting_at = None
+    elif event_class.begin_placement:
+        event_class.begin_placement = False
+        event_class.begin_placement_at = None
+    elif event_class.begin_weigh_in:
+        event_class.begin_weigh_in = False
+        event_class.begin_weigh_in_at = None
+
+    db.session.commit()
+    return redirect(url_for('mod_global_list.class_progress', event=g.event.slug))
