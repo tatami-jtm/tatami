@@ -5,7 +5,7 @@
     <h1 class="h2 fw-bold mb-4">Hauptliste</h1>    
     <h3 class="h4 fw-bold mb-4">Kampfklassen-Fortschritt</h3>
 
-    {% for cl in g.event.classes %}
+    {% for cl in g.event.classes.order_by('title') %}
     <ul class="list-group list-group-horizontal mb-1">
         <li class="list-group-item fw-bold w-label">{{ cl.title }}</li>
 
