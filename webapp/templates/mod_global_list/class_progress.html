@@ -1,0 +1,50 @@
+{% extends "layouts/application.html" %}
+{% block title %}Hauptliste | Kampfklassen-Fortschritt{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <h1 class="h2 fw-bold mb-4">Hauptliste</h1>    
+    <h3 class="h4 fw-bold mb-4">Kampfklassen-Fortschritt</h3>
+
+    {% for cl in g.event.classes %}
+    <ul class="list-group list-group-horizontal mb-1">
+        <li class="list-group-item fw-bold w-label">{{ cl.title }}</li>
+
+        {% if not cl.begin_weigh_in %}
+        <li class="list-group-item text-bg-secondary">Ausstehend</li>
+        <a href="{{ url_for('mod_global_list.class_step_forward', event=g.event.slug, id=cl.id) }}" class="list-group-item list-group-item-action">In Waage</a>
+        <li class="list-group-item text-secondary">Wiegen beendet</li>
+        <li class="list-group-item text-secondary">Kämpft</li>
+        <li class="list-group-item text-secondary">Beendet</li>
+        {% elif not cl.begin_placement %}
+        <a href="{{ url_for('mod_global_list.class_step_back', event=g.event.slug, id=cl.id) }}" class="list-group-item list-group-item-action">Ausstehend</a>
+        <li class="list-group-item text-bg-warning">In Waage</li>
+        <a href="{{ url_for('mod_global_list.class_step_forward', event=g.event.slug, id=cl.id) }}" class="list-group-item list-group-item-action">Wiegen beendet</a>
+        <li class="list-group-item text-secondary">Kämpft</li>
+        <li class="list-group-item text-secondary">Beendet</li>
+        {% elif not cl.begin_fighting %}
+        <li class="list-group-item text-secondary">Ausstehend</li>
+        <a href="{{ url_for('mod_global_list.class_step_back', event=g.event.slug, id=cl.id) }}" class="list-group-item list-group-item-action">In Waage</a>
+        <li class="list-group-item text-bg-dark">Wiegen beendet</li>
+        <a href="{{ url_for('mod_global_list.class_step_forward', event=g.event.slug, id=cl.id) }}" class="list-group-item list-group-item-action">Kämpft</a>
+        <li class="list-group-item text-secondary">Beendet</li>
+        {% elif not cl.ended_fighting %}
+        <li class="list-group-item text-secondary">Ausstehend</li>
+        <li class="list-group-item text-secondary">In Waage</li>
+        <a href="{{ url_for('mod_global_list.class_step_back', event=g.event.slug, id=cl.id) }}" class="list-group-item list-group-item-action">Wiegen beendet</a>
+        <li class="list-group-item text-bg-danger">Kämpft</li>
+        <a href="{{ url_for('mod_global_list.class_step_forward', event=g.event.slug, id=cl.id) }}" class="list-group-item list-group-item-action">Beendet</a>
+        {% else %}
+        <li class="list-group-item text-secondary">Ausstehend</li>
+        <li class="list-group-item text-secondary">In Waage</li>
+        <li class="list-group-item text-secondary">Wiegen beendet</li>
+        <a href="{{ url_for('mod_global_list.class_step_back', event=g.event.slug, id=cl.id) }}" class="list-group-item list-group-item-action">Kämpft</a>
+        <li class="list-group-item text-bg-success">Beendet</li>
+        {% endif %}
+    </ul>      
+    {% endfor %}
+
+
+    <a href="{{ url_for('mod_global_list.index', event=g.event.slug) }}" class="btn btn-secondary mt-3">Zurück</a>
+</div>
+
+{% endblock body %}

@@ -1184,3 +1184,10 @@ input.w-min {
 .sb .sb-side.sb-blue .sb-cell.sb-osaekomi .sb-osaekomi-item {
     margin-bottom: 2.75rem;
 }
+
+.list-group-item.w-label {
+    width: 250px;
+}
+.list-group-item.list-group-item-action {
+    width: auto;
+}
