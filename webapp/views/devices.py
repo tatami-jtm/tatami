@@ -60,6 +60,8 @@ def register():
 
     session["device_token"] = registration.token
 
+    g.event.log(registration.title, 'DEBUG', f'Neues Gerät {registration.title} registriert, wartet auf Freigabe.')
+
     return render_template("devices/register.html", registration=registration)
 
 

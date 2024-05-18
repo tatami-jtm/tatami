@@ -125,14 +125,21 @@ class Event(db.Model):
         return then
 
     def log(self, who, type, message):
-        eli = EventLogItem(event=self)
-        eli.log_type = type
-        eli.log_value = message
-        eli.log_creator = who
-        eli.created_at = datetime.datetime.now()
+        try:
+            now = datetime.datetime.now()
+            print(f"TATAMI [{type}] {who} at {now}: {message}")
 
-        db.session.add(eli)
-        db.session.commit()
+            eli = EventLogItem(event=self)
+            eli.log_type = type
+            eli.log_value = message
+            eli.log_creator = who
+            eli.created_at = now
+
+            db.session.add(eli)
+            db.session.commit()
+        except:
+            # Don't raise an error when a log attempt fails
+            pass
 
     @classmethod
     def from_slug(cls, slug):

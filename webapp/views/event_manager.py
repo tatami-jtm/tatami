@@ -125,11 +125,13 @@ def save_config():
         db.session.commit()
 
         flash("Einstellungen erfolgreich gespeichert", 'success')
+        g.event.log(current_user.qualified_name(), 'DEBUG', 'Veranstaltungsdaten wurden geändert.')
 
     elif request.form['form'] == 'misc':
         g.event.save_setting('count_weighin_as_registration', 'count_weighin_as_registration' in request.form)
 
         flash("Einstellungen erfolgreich gespeichert", 'success')
+        g.event.log(current_user.qualified_name(), 'DEBUG', 'Allgemeine Einstellungen wurden aktualisiert.')
 
     elif request.form['form'] == 'scheduling':
         g.event.save_setting('scheduling.use', 'use-scheduling' in request.form)
@@ -150,6 +152,7 @@ def save_config():
             g.event.reset_setting('scheduling.plan_ahead')
 
         flash("Einstellungen erfolgreich gespeichert", 'success')
+        g.event.log(current_user.qualified_name(), 'DEBUG', 'Einstellungen bzgl. Listenführung wurden aktualisiert.')
 
     elif request.form['form'] == 'list_system_rules':
         ranges = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 8), (9, 16)]
@@ -165,6 +168,7 @@ def save_config():
         db.session.commit()
 
         flash("Einstellungen erfolgreich gespeichert", 'success')
+        g.event.log(current_user.qualified_name(), 'DEBUG', 'Einstellungen bzgl. Zuweisung der Listensysteme wurden aktualisiert.')
     
     else:
         flash("Ungültige Einstellungsgruppe ausgewählt", 'danger')
@@ -300,6 +304,8 @@ def class_step_forward(id):
 
     db.session.commit()
 
+    g.event.log(current_user.qualified_name(), 'DEBUG', f'Kampfklasse {event_class.title} wurde in den nächsten Zustand gesetzt.')
+
     if request.values.get('to', '') == 'index':
         flash(f"Kampfklasse {event_class.title} wurde erfolgreich in den nächsten Zustand gesetzt.", 'success')
         return redirect(url_for('event_manager.classes', event=g.event.slug))
@@ -328,6 +334,8 @@ def class_step_back(id):
         event_class.begin_weigh_in_at = None
 
     db.session.commit()
+    g.event.log(current_user.qualified_name(), 'DEBUG', f'Kampfklasse {event_class.title} wurde in den früheren Zustand zurückgesetzt.')
+
     return redirect(url_for('event_manager.edit_class', event=g.event.slug, id=event_class.id))
 
 
@@ -449,6 +457,7 @@ def update_registration(id):
         registration.verified_weight = None
 
     db.session.commit()
+    g.event.log(current_user.qualified_name(), 'DEBUG', f'TN-Anmeldung {registration.short_name()} wurde bearbeitet.')
 
     return redirect(url_for('event_manager.edit_registration', event=g.event.slug, id=registration.id))
 
@@ -489,6 +498,7 @@ def create_registration():
 
         db.session.add(registration)
         db.session.commit()
+        g.event.log(current_user.qualified_name(), 'DEBUG', f'Neue TN-Anmeldung für {registration.short_name()} angelegt.')
 
         return redirect(url_for('event_manager.edit_registration', event=g.event.slug, id=registration.id))
 
@@ -591,10 +601,12 @@ def import_registrations_do(fn):
 
         db.session.add(registration)
         db.session.commit()
+        g.event.log(current_user.qualified_name(), 'DEBUG', f'Neue TN-Anmeldung für {registration.short_name()} angelegt.')
 
         successful += 1
     
     flash(f"Erfolgreich importiert: {successful} TN", 'success')
+    g.event.log(current_user.qualified_name(), 'DEBUG', f'Es wurden {successful} TN-Anmeldungen importiert.')
 
     os.remove(f"temp/{fn}.csv")
     return redirect(url_for('event_manager.registrations', event=g.event.slug))
@@ -627,6 +639,7 @@ def update_association(id):
     association.name = request.form['name']
 
     db.session.commit()
+    g.event.log(current_user.qualified_name(), 'DEBUG', f'Verband {association.short_name} wurde bearbeitet.')
 
     return redirect(url_for('event_manager.edit_association', event=g.event.slug, id=association.id))
 
@@ -644,6 +657,7 @@ def create_association():
 
         db.session.add(association)
         db.session.commit()
+        g.event.log(current_user.qualified_name(), 'DEBUG', f'Neuer Verband {association.short_name} angelegt.')
 
         return redirect(url_for('event_manager.edit_association', event=g.event.slug, id=association.id))
 
@@ -684,12 +698,19 @@ def device_update(id):
     device.title = name
     device.event_role_id = role.id
 
+    newly_confirmed = False
     if not device.confirmed:
         device.confirmed = True
         device.confirmed_at = datetime.now()
         device.registered_by_id = current_user.id
+        newly_confirmed = True
 
     db.session.commit()
+    
+    if newly_confirmed:
+        g.event.log(current_user.qualified_name(), 'DEBUG', f'Gerät {device.title} mit Rolle {device.event_role.name} an {device.position.title} freigegeben.')
+    else:
+        g.event.log(current_user.qualified_name(), 'DEBUG', f'Gerät {device.title} bearbeitet.')
 
     return redirect(url_for('event_manager.devices', event=g.event.slug))
 
@@ -704,6 +725,8 @@ def device_delete(id):
     db.session.delete(device)
     db.session.commit()
 
+    g.event.log(current_user.qualified_name(), 'DEBUG', f'Gerät {device.title} gelöscht.')
+
     return redirect(url_for('event_manager.devices', event=g.event.slug))
 
 
@@ -717,6 +740,8 @@ def device_inspect(id):
 
     session['device_token'] = device.token
 
+    g.event.log(current_user.qualified_name(), 'DEBUG', f'Sitzung von Gerät {device.title} beigetreten.')
+
     flash(f"Willkommen! Beitritt zur Sitzung von {device.title} war erfolgreich.", 'success')
 
     return redirect(url_for('devices.index', event=g.event.slug))
@@ -729,6 +754,11 @@ def device_inspect(id):
 def devices_allow_register():
     g.event.allow_device_registration = 'allow' in request.form
     db.session.commit()
+
+    if g.event.allow_device_registration:
+        g.event.log(current_user.qualified_name(), 'DEBUG', f'Registrierung von Geräten nun: ERLAUBT')
+    else:
+        g.event.log(current_user.qualified_name(), 'DEBUG', f'Registrierung von Geräten nun: VERBOTEN')
 
     return redirect(url_for('event_manager.devices', event=g.event.slug))
 
@@ -747,6 +777,7 @@ def device_position_update(id):
     device_position.is_mat = is_mat
 
     db.session.commit()
+    g.event.log(current_user.qualified_name(), 'DEBUG', f'Hallenposition {device_position.title} bearbeitet.')
 
     return redirect(url_for('event_manager.devices', event=g.event.slug))
 
@@ -766,6 +797,7 @@ def device_position_delete(id):
 
     db.session.delete(device_position)
     db.session.commit()
+    g.event.log(current_user.qualified_name(), 'DEBUG', f'Hallenposition {device_position.title} gelöscht.')
 
     return redirect(url_for('event_manager.devices', event=g.event.slug))
 
@@ -787,6 +819,8 @@ def device_position_create():
 
     db.session.add(device_position)
     db.session.commit()
+
+    g.event.log(current_user.qualified_name(), 'DEBUG', f'Hallenposition {device_position.title} angelegt. Matte={int(device_position.is_mat)}')
 
     return redirect(url_for('event_manager.devices', event=g.event.slug))
 
@@ -826,6 +860,8 @@ def quick_sign_in():
     session['device_token'] = device.token
 
     flash('Willkommen! Die Schnelleinwahl war erfolgreich.', 'success')
+
+    g.event.log(current_user.qualified_name(), 'DEBUG', f'Schnelleinwahl vorgenommen mit Rolle {device.event_role.name} an {device.position.title}')
 
     return redirect(url_for('devices.index', event=g.event.slug))
 

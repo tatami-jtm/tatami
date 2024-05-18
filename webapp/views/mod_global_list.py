@@ -66,11 +66,14 @@ def update_group(id):
             group.marked_ready_at = dt.now()
             group.marked_ready = True
             helpers.force_create_list(group)
+
+            g.event.log(g.device.title, 'DEBUG', f'Die Gruppe {group.title} wird freigegeben')
     else:
         group.marked_ready = False
         group.marked_ready_at = None
     
     db.session.commit()
+    g.event.log(g.device.title, 'DEBUG', f'Die Gruppe {group.title} wurde bearbeitet')
 
     return redirect(url_for('mod_global_list.index', event=g.event.slug, group_list=request.form['group_list']))
 
@@ -107,6 +110,7 @@ def rotate_all_groups():
                 matlist[emptiest_mat.id] += group.estimated_fight_count()
             
             db.session.commit()
+            g.event.log(g.device.title, 'DEBUG', f'Es wurden {len(free_groups)} Gruppen auf {len(used_mats)} Matten verteilt.')
 
             return redirect(url_for('mod_global_list.index', event=g.event.slug))
         
@@ -133,8 +137,10 @@ def mark_all_at_mat_as_ready(id):
             group.marked_ready_at = dt.now()
             group.marked_ready = True
             helpers.force_create_list(group)
+            g.event.log(g.device.title, 'DEBUG', f'Die Gruppe {group.title} wird freigegeben')
     
     db.session.commit()
+    g.event.log(g.device.title, 'DEBUG', f'Es wurden alle Gruppen auf {mat.title} freigegeben.')
 
     return redirect(url_for('mod_global_list.index', event=g.event.slug))
 
@@ -190,6 +196,7 @@ def class_step_forward(id):
         event_class.ended_fighting_at = dt.now()
 
     db.session.commit()
+    g.event.log(g.device.title, 'DEBUG', f'Kampfklasse {event_class.title} wurde in den nächsten Zustand gesetzt.')
     return redirect(url_for('mod_global_list.class_progress', event=g.event.slug))
 
 
@@ -217,4 +224,5 @@ def class_step_back(id):
         event_class.begin_weigh_in_at = None
 
     db.session.commit()
+    g.event.log(g.device.title, 'DEBUG', f'Kampfklasse {event_class.title} wurde in den früheren Zustand zurückgesetzt.')
     return redirect(url_for('mod_global_list.class_progress', event=g.event.slug))

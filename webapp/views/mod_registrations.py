@@ -42,6 +42,7 @@ def confirm(id):
     reg.registered = True
     reg.registered_at = dt.now()
     db.session.commit()
+    g.event.log(g.device.title, 'DEBUG', f'{reg.short_name()} wurde akkreditiert.')
 
     return redirect(url_for('mod_registrations.index', event=g.event.slug))
 
@@ -58,5 +59,6 @@ def unconfirm(id):
     reg.registered = False
     reg.registered_at = None
     db.session.commit()
+    g.event.log(g.device.title, 'DEBUG', f'Akkreditierung von {reg.short_name()} wurde aufgehoben.')
 
     return redirect(url_for('mod_registrations.index', event=g.event.slug))

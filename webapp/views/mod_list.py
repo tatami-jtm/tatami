@@ -191,6 +191,7 @@ def schedule_match(id, match_id):
             match.blue.last_fight_at = datetime.now()
 
             db.session.commit()
+            g.event.log(g.device.title, 'DEBUG', f'Der Kampf {group.title} - {match.white.full_name}/{match.blue.full_name} wurde auf Nr. {match.match_schedule_key} angesetzt.')
 
             if not 'do_not_add_flash_message' in request.values:
                 flash("Kampf erfolgreich angesetzt.", 'success')
@@ -219,6 +220,7 @@ def unschedule_match(id, match_id):
         match.match_schedule_key = None
 
         db.session.commit()
+        g.event.log(g.device.title, 'DEBUG', f'Der Kampf {group.title} - {match.white.full_name}/{match.blue.full_name} wurde abgesetzt.')
 
         flash("Kampf erfolgreich abgesetzt.", 'success')
 
@@ -320,6 +322,7 @@ def write_match_result(id, match_id):
     match.blue.last_fight_at = datetime.now()
 
     db.session.commit()
+    g.event.log(g.device.title, 'DEBUG', f'Für den Kampf {group.title} - {match.white.full_name}/{match.blue.full_name} wurde ein Ergebnis eingetragen.')
 
     if 'is_api' in request.form:
         return jsonify({
@@ -363,6 +366,7 @@ def clear_match_result(id, match_id):
     db.session.commit()
 
     flash("Ergebnis wurde erfolgreich ausgetragen.", 'success')
+    g.event.log(g.device.title, 'DEBUG', f'Für den Kampf {group.title} - {match.white.full_name}/{match.blue.full_name} wurde das Ergebnis gelöscht.')
 
     return redirect(request.values['origin_url'])
 
@@ -392,6 +396,7 @@ def api_schedule_match(match_id):
             match.blue.last_fight_at = datetime.now()
 
             db.session.commit()
+            g.event.log(g.device.title, 'DEBUG', f'Der Kampf {match.group.title} - {match.white.full_name}/{match.blue.full_name} wurde auf Nr. {match.match_schedule_key} angesetzt.')
 
             return jsonify({
                 'status': 'success'

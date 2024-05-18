@@ -5,11 +5,11 @@
 <h1>Protokoll</h1>
 
 <ul class="list-group">
-    {% for item in g.event.log_items.order_by('created_at') %}
+    {% for item in g.event.log_items.order_by('created_at')[::-1] %}
     <li class="list-group-item">
         <p class="fs-small text-body-tertiary mb-0">{{ item.log_creator }} {{ item.created_at.strftime("am %d.%m.%Y um %H:%M") }}:</p>
         <p class="mb-0 {{ 'text-danger' if item.log_type == 'ERROR' }} {{ 'text-warning' if item.log_type == 'WARNING' }} {{ 'text-body-secondary' if item.log_type == 'DEBUG' }}">
-            [{{ item.log_type }}] {{ item.log_value }}</p>
+            {{ item.log_value }}</p>
     </li>
     {% endfor %}
 </ul>

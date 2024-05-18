@@ -294,6 +294,7 @@ def create_event():
         _get_or_create(ListSystemRule, event=event, minimum=rng[0], maximum=rng[1], system=system)
 
     flash(f'Erfolg: Veranstaltung {event.slug} wurde erstellt!', 'success')
+    event.log(current_user.qualified_name(), 'DEBUG', 'Veranstaltung angelegt.')
 
     return redirect(url_for('admin.index'))
 

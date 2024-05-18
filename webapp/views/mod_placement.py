@@ -80,6 +80,7 @@ def add_group(id):
 
         db.session.add(group)
         db.session.commit()
+        g.event.log(g.device.title, 'DEBUG', f'Neue Gruppe {group.title} erstellt.')
 
         flash(f"Neue Gruppe {group.title} erfolgreich erstellt.", 'success')
 
@@ -111,6 +112,7 @@ def edit_group(id, group_id):
             group.system_id = None
 
         db.session.commit()
+        g.event.log(g.device.title, 'DEBUG', f'Gruppe {group.title} bearbeitet.')
 
         flash(f"Gruppe {group.title} erfolgreich aktualisiert.", 'success')
 
@@ -136,6 +138,7 @@ def delete_group(id, group_id):
 
         db.session.delete(group)
         db.session.commit()
+        g.event.log(g.device.title, 'DEBUG', f'Gruppe {group.title} gelöscht.')
 
         flash(f"Gruppe {group.title} erfolgreich gelöscht.", 'success')
 
@@ -186,6 +189,11 @@ def assign(id):
             db.session.add(participant)
             db.session.commit()
 
+            if request.form['participant'] == 'registration':
+                g.event.log(g.device.title, 'DEBUG', f'Angemeldeter TN {participant.full_name} wurde Gruppe {group.title} zugewiesen.')
+            else:
+                g.event.log(g.device.title, 'DEBUG', f'TN {participant.full_name} wurde erstellt und Gruppe {group.title} zugewiesen.')
+
             return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
         
         flash("Es wurden nicht alle notwendigen Felder ausgefüllt.", 'danger')
@@ -218,6 +226,7 @@ def unassign(id, participant_id):
 
         db.session.delete(participant)
         db.session.commit()
+        g.event.log(g.device.title, 'DEBUG', f'TN {participant.full_name} ist nicht der Gruppe {group.title} mehr zugewiesen und ggf. gelöscht.')
 
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
 
@@ -251,6 +260,7 @@ def assign_all_predefined(id):
                 group.system_id = None
 
                 db.session.add(group)
+                g.event.log(g.device.title, 'DEBUG', f'Neue Gruppe {group.title} erstellt.')
                 groups_created += 1
 
 
@@ -281,6 +291,7 @@ def assign_all_predefined(id):
                     group.system_id = None
 
                     db.session.add(group)
+                    g.event.log(g.device.title, 'DEBUG', f'Neue Gruppe {group.title} erstellt.')
                     groups_created += 1
             
             applicable_groups = applicable_groups.all()
@@ -304,9 +315,11 @@ def assign_all_predefined(id):
                 registration.placed_at = registration.placed_at or dt.now()
 
                 db.session.add(participant)
+                g.event.log(g.device.title, 'DEBUG', f'Angemeldeter TN {participant.full_name} wurde Gruppe {group.title} zugewiesen.')
                 participants_created += 1
 
         db.session.commit()
+        g.event.log(g.device.title, 'DEBUG', f'Verbleibende TN wurden zugewiesen. Erstellt wurden {groups_created} Gruppe(n) und {participants_created} TN.')
 
         flash(f"Verbleibende TN erfolgreich zugewiesen. Erstellt wurden {groups_created} Gruppe(n) und {participants_created} TN.", 'success')
 
@@ -346,6 +359,7 @@ def assign_all_proximity(id):
                 group.system_id = None
 
                 db.session.add(group)
+                g.event.log(g.device.title, 'DEBUG', f'Neue Gruppe {group.title} erstellt.')
                 groups_created += 1
 
             group.max_weight = registration.verified_weight
@@ -369,10 +383,12 @@ def assign_all_proximity(id):
             registration.placed_at = registration.placed_at or dt.now()
 
             db.session.add(participant)
+            g.event.log(g.device.title, 'DEBUG', f'Angemeldeter TN {participant.full_name} wurde Gruppe {group.title} zugewiesen.')
             participants_created += 1
 
         db.session.commit()
 
+        g.event.log(g.device.title, 'DEBUG', f'Verbleibende TN wurden zugewiesen. Erstellt wurden {groups_created} Gruppe(n) und {participants_created} TN.')
         flash(f"Verbleibende TN erfolgreich zugewiesen. Erstellt wurden {groups_created} Gruppe(n) und {participants_created} TN.", 'success')
 
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id))
@@ -438,6 +454,7 @@ def place(id, participant_id):
         participant.manually_placed = True
 
         db.session.commit()
+        g.event.log(g.device.title, 'DEBUG', f'TN {participant.full_name} an Position #{participant.placement_index + 1} gesetzt.')
 
         flash(f"TN {participant.full_name} erfolgreich an Position #{participant.placement_index + 1} gesetzt.", 'success')
 
@@ -465,6 +482,7 @@ def unplace(id, participant_id):
         db.session.commit()
 
         flash(f"TN {participant.full_name} erfolgreich abgesetzt.", 'success')
+        g.event.log(g.device.title, 'DEBUG', f'TN {participant.full_name} abgesetzt.')
 
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
 
@@ -490,7 +508,7 @@ def place_all(id, group_id):
 
     if request.method == 'POST':
         _randomly_place_group(group, method=request.form.get('method', 'random'))
-
+        g.event.log(g.device.title, 'DEBUG', f'Gruppe {group.title} gelost.')
         flash(f"Gruppe {group.title} erfolgreich gelost.", 'success')
 
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
@@ -531,6 +549,7 @@ def place_for_all_groups(id):
                 resolved_successfully.append(group.title)
 
         if len(resolved_successfully):
+            g.event.log(g.device.title, 'DEBUG', f'Gruppe(n) {', '.join(resolved_successfully)} wurden gelost.')
             flash(f"Die Gruppe(n) {', '.join(resolved_successfully)} wurden erfolgreich gelost.", 'success')
 
         if len(unresolved_for_no_participants):
