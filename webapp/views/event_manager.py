@@ -129,6 +129,7 @@ def save_config():
 
     elif request.form['form'] == 'misc':
         g.event.save_setting('count_weighin_as_registration', 'count_weighin_as_registration' in request.form)
+        g.event.save_setting('write_activity_log', 'write_activity_log' in request.form)
 
         flash("Einstellungen erfolgreich gespeichert", 'success')
         g.event.log(current_user.qualified_name(), 'DEBUG', 'Allgemeine Einstellungen wurden aktualisiert.')

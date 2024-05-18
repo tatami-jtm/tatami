@@ -8,7 +8,7 @@
 <h3 class="h5 fw-bold mt-4 mb-3">Aktuelle Einträge</h3>
 <ul class="list-group mb-2">
     {% for item in g.event.log_items.order_by('created_at')[::-1] %}
-    {% if not loop.first and (loop.previtem.created_at - item.created_at).seconds > 120 %}
+    {% if not loop.first and (loop.previtem.created_at - item.created_at).seconds > 180 %}
 </ul>
 <h3 class="h5 fw-bold mt-4 mb-3">{{ item.created_at.strftime("%d.%m.%Y %H:%M") }}</h3>
 <ul class="list-group mb-2">
