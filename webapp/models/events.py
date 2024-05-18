@@ -129,6 +129,9 @@ class Event(db.Model):
             now = datetime.datetime.now()
             print(f"TATAMI [{type}] {who} at {now}: {message}")
 
+            if not self.setting('write_activity_log', True):
+                return
+
             eli = EventLogItem(event=self)
             eli.log_type = type
             eli.log_value = message
