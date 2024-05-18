@@ -830,6 +830,14 @@ def quick_sign_in():
     return redirect(url_for('devices.index', event=g.event.slug))
 
 
+@eventmgr_view.route('/log')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def log():
+    return render_template("event-manager/log.html")
+
+
 def _load_csv(fn):
     # Make sure we only have safe filenames
     fn = secure_filename(fn)
