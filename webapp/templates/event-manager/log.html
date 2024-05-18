@@ -4,11 +4,17 @@
 {% block body %}
 <h1>Protokoll</h1>
 
-<ul class="list-group">
+<h2 class="h5 fw-bold mt-4 mb-3">Aktuelle Einträge</h2>
+<ul class="list-group mb-2">
     {% for item in g.event.log_items.order_by('created_at')[::-1] %}
+    {% if not loop.first and (loop.previtem.created_at - item.created_at).seconds > 120 %}
+</ul>
+<h2 class="h5 fw-bold mt-4 mb-3">{{ item.created_at.strftime("%d.%m.%Y %H:%M") }}</h2>
+<ul class="list-group mb-2">
+    {% endif %}
     <li class="list-group-item">
         <p class="fs-small text-body-tertiary mb-0">{{ item.log_creator }} {{ item.created_at.strftime("am %d.%m.%Y um %H:%M") }}:</p>
-        <p class="mb-0 {{ 'text-danger' if item.log_type == 'ERROR' }} {{ 'text-warning' if item.log_type == 'WARNING' }} {{ 'text-body-secondary' if item.log_type == 'DEBUG' }}">
+        <p class="mb-0 {{ 'text-danger' if item.log_type == 'ERROR' }} {{ 'text-warning' if item.log_type == 'WARNING' }}">
             {{ item.log_value }}</p>
     </li>
     {% endfor %}
