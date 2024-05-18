@@ -54,6 +54,7 @@ def for_participant(id):
         registration.verified_weight = int(float(request.form['verified_weight']) * 1000)
 
         db.session.commit()
+        g.event.log(g.device.title, 'DEBUG', f'{registration.short_name()} auf {registration.verified_weight / 1000} kg eingewogen')
 
         return redirect(url_for("mod_weighin.index", event=g.event.slug))
     
