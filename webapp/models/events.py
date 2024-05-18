@@ -124,6 +124,15 @@ class Event(db.Model):
 
         return then
 
+    def log(self, who, type, message):
+        eli = EventLogItem(event=self)
+        eli.log_type = type
+        eli.log_value = message
+        eli.log_creator = who
+        eli.created_at = datetime.datetime.now()
+
+        db.session.add(eli)
+        db.session.commit()
 
     @classmethod
     def from_slug(cls, slug):
@@ -268,3 +277,16 @@ class EventSetting(db.Model):
     event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
     event = db.relationship('Event', backref=db.backref(
         'settings', lazy='dynamic'))
+
+
+class EventLogItem(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+
+    event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
+    event = db.relationship('Event', backref=db.backref(
+        'log_items', lazy='dynamic'))
+    
+    log_type = db.Column(db.String(50))
+    log_value = db.Column(db.Text)
+    log_creator = db.Column(db.String(150))
+    created_at = db.Column(db.DateTime())
