@@ -1,15 +1,16 @@
-{% set event_page="log" %}
+{% set event_page="dashboard" %}
 {% extends "layouts/event-manager.html" %}
 {% block title %}{{ g.event.title }} | Protokoll{% endblock %}
 {% block body %}
-<h1>Protokoll</h1>
+<h1 class="mb-5">Übersicht</h1>
+<h2>Veranstaltungsprotokoll</h2>
 
-<h2 class="h5 fw-bold mt-4 mb-3">Aktuelle Einträge</h2>
+<h3 class="h5 fw-bold mt-4 mb-3">Aktuelle Einträge</h3>
 <ul class="list-group mb-2">
     {% for item in g.event.log_items.order_by('created_at')[::-1] %}
     {% if not loop.first and (loop.previtem.created_at - item.created_at).seconds > 120 %}
 </ul>
-<h2 class="h5 fw-bold mt-4 mb-3">{{ item.created_at.strftime("%d.%m.%Y %H:%M") }}</h2>
+<h3 class="h5 fw-bold mt-4 mb-3">{{ item.created_at.strftime("%d.%m.%Y %H:%M") }}</h3>
 <ul class="list-group mb-2">
     {% endif %}
     <li class="list-group-item">
@@ -19,5 +20,7 @@
     </li>
     {% endfor %}
 </ul>
+
+<a class="btn btn-secondary mt-3" href="{{ url_for('event_manager.index', event=g.event.slug) }}">Zurück zur Übersicht</a>
 
 {% endblock body %}
