@@ -15,7 +15,7 @@
                 <p class="mb-1">Die noch nicht zugewiesenen Kampfgruppen mit insgesamt <strong>einem Kampf</strong></p>
                 {% endif %}
                 <ul>
-                    {% for group in free_groups %}
+                    {% for group in free_groups if not group.participants.count() == 0 %}
                     <li>{{ group.title }}</li>
                     {% endfor %}
                 </ul>

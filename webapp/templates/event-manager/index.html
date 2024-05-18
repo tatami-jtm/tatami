@@ -146,6 +146,8 @@
     </div>
 </div>
 
+{% if g.event.setting('write_activity_log', True) %}
 <a class="btn btn-dark" href="{{ url_for('event_manager.log', event=g.event.slug) }}">🧾 Veranstaltungsprotokoll anzeigen</a>
+{% endif %}
 
 {% endblock body %}

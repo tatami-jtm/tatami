@@ -5,6 +5,8 @@
 <h1 class="mb-5">Übersicht</h1>
 <h2>Veranstaltungsprotokoll</h2>
 
+{% if g.event.setting('write_activity_log', True) %}
+
 <h3 class="h5 fw-bold mt-4 mb-3">Aktuelle Einträge</h3>
 <ul class="list-group mb-2">
     {% for item in g.event.log_items.order_by('created_at')[::-1] %}
@@ -20,6 +22,14 @@
     </li>
     {% endfor %}
 </ul>
+
+{% else %}
+
+<div class="alert alert-info mt-4 mb-3">
+    <p>Das Veranstaltungsprotokoll wurde für diese Veranstaltung deaktiviert.</p>
+</div>
+
+{% endif %}
 
 <a class="btn btn-secondary mt-3" href="{{ url_for('event_manager.index', event=g.event.slug) }}">Zurück zur Übersicht</a>
 

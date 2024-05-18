@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, flash, g, session, \
-    request, redirect, url_for
+    request, redirect, url_for, abort
 
 from datetime import datetime as dt
 
@@ -53,6 +53,9 @@ def update_group(id):
     
     group = g.event.groups.filter_by(id=id).one_or_404()
 
+    if group.participants.count() == 0:
+        abort(400)
+
     if request.form['assignment'] == 'none':
         group.assigned = False
         group.assigned_to_position = None
@@ -101,6 +104,9 @@ def rotate_all_groups():
             matlist = { mi: 0 for mi in used_mats.keys() }
 
             for group in free_groups:
+                if group.participants.count() == 0:
+                    continue
+
                 emptiest_mat = used_mats[sorted(matlist.items(), key=lambda mi: mi[1])[0][0]]
                 group.assigned = True
                 group.assigned_to_position = emptiest_mat

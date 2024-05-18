@@ -184,6 +184,9 @@ class Group(db.Model):
         return self._system[1]
     
     def estimated_fight_count(self):
+        if self.participants.count() == 0:
+            return 0
+
         return max(self.matches.count(), self.list_system().estimated_fight_count)
     
     def estimated_remaining_fight_count(self):
