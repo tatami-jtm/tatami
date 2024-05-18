@@ -1,0 +1,12 @@
+{% extends "layouts/error.html" %}
+{% block title %}Seite nicht gefunden.{% endblock %}
+{% block body %}
+<div class="container">
+    <h1>Zugriff verweigert</h1>
+    <p>Du hast nicht die notwendigen Berechtigungen, um auf diese Seite zuzugreifen. Versuche es ggf. später erneut.</p>
+    <p class="mt-5 text-center">
+        <a href="javascript:history.go(-1)" class="btn btn-secondary btn-no3d">Zurück</a>
+        <a href="{{ url_for('splash') }}" class="btn btn-primary btn-no3d">Startseite aurufen</a>
+    </p>
+</div>
+{% endblock body %}

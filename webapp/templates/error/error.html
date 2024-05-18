@@ -1,0 +1,12 @@
+{% extends "layouts/error.html" %}
+{% block title %}Seite nicht gefunden.{% endblock %}
+{% block body %}
+<div class="container">
+    <h1>Server-Fehler</h1>
+    <p>Upsi! Irgendwas ist schiefgelaufen. Das hätte nicht passieren sollen. Bitte versuche es später erneut.</p>
+    <p class="mt-5 text-center">
+        <a href="javascript:history.go(-1)" class="btn btn-secondary btn-no3d">Zurück</a>
+        <a href="" class="btn btn-primary btn-no3d">Erneut versuchen</a>
+    </p>
+</div>
+{% endblock body %}
