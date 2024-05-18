@@ -1206,9 +1206,9 @@ input.w-min {
 .error .container h1 {
     text-align: center;
     font-weight: bold;
-    font-size: 2rem;
+    font-size: 1.85rem;
     text-transform: uppercase;
-    color: var(--primary);
+    color: #687946;
     margin-bottom: 2rem;
 }
 

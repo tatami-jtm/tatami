@@ -55,9 +55,21 @@ def scoreboard():
     return render_template("scoreboard.html")
 
 @app.errorhandler(404)
-def error_404(e):
-    return render_template('error/404.html'), 404
+@app.route('/notfound')
+def error_404(e=None): return render_template('error/notfound.html'), 404
 
+@app.errorhandler(403)
+@app.errorhandler(401)
+@app.route('/forbidden')
+def error_401(e=None): return render_template('error/forbidden.html'), 401
+
+@app.errorhandler(500)
+@app.route('/error')
+def error_500(e=None): return render_template('error/error.html', err=e), 401
+
+@app.errorhandler(503)
+@app.route('/offline')
+def error_503(e=None): return render_template('error/offline.html', err=e), 401
 
 if SETTINGS['ALLOW_SETUP']:
     @app.route('/setup', methods=['GET', 'POST'])
