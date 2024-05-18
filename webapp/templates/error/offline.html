@@ -4,5 +4,8 @@
 <div class="container">
     <h1>Wartungsmodus</h1>
     <p>Diese TATAMI-Instanz wird gerade gewartet. Bitte kommen Sie später wieder.</p>
+    {% if offr %}
+    <p>Grund: {{ offr }}</p>
+    {% endif %}
 </div>
 {% endblock body %}

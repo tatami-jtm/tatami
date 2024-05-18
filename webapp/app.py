@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, abort
 from flask_migrate import Migrate
 from flask_security import Security, SQLAlchemyUserDatastore, user_registered
 from flask_babel import Babel
@@ -43,6 +43,11 @@ babel = Babel(app, locale_selector=lambda: 'de')
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
 
+if 'OFFLINE' in SETTINGS and SETTINGS['OFFLINE']:
+    @app.before_request
+    def offline_mode():
+        if request.endpoint != 'static':
+            abort(503)
 
 @app.route("/")
 def splash():
@@ -69,7 +74,12 @@ def error_500(e=None): return render_template('error/error.html', err=e), 401
 
 @app.errorhandler(503)
 @app.route('/offline')
-def error_503(e=None): return render_template('error/offline.html', err=e), 401
+def error_503(e=None):
+    if "OFFLINE_REASON" in SETTINGS:
+        offr = SETTINGS['OFFLINE_REASON']
+    else:
+        offr = None
+    return render_template('error/offline.html', offr=offr), 401
 
 if SETTINGS['ALLOW_SETUP']:
     @app.route('/setup', methods=['GET', 'POST'])
