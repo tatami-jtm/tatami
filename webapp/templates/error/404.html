@@ -1,0 +1,9 @@
+{% extends "layouts/error.html" %}
+{% block title %}Seite nicht gefunden.{% endblock %}
+{% block body %}
+<div class="container">
+    <h1>Seite nicht gefunden</h1>
+    <p>Die angefragte Seite wurde drei Mal aufgerufen, aber wollte nicht antreten. Sie wurde daher mit Fusen-Gachi disqualifiziert. Upsi.</p>
+    <p><a href="{{ url_for('splash') }}" class="btn btn-secondary btn-no3d">Zur Startseite gehen</a></p>
+</div>
+{% endblock body %}

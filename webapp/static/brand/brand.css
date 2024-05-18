@@ -1191,3 +1191,29 @@ input.w-min {
 .list-group-item.list-group-item-action {
     width: auto;
 }
+
+.error {
+    background-color: #e5e9de;
+    padding: 2rem;
+}
+
+.error .container {
+    padding: 1rem;
+    max-width: 600px;
+    margin: 4vh auto;
+}
+
+.error .container h1 {
+    text-align: center;
+    font-weight: bold;
+    font-size: 2rem;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin-bottom: 2rem;
+}
+
+.error .container p {
+    line-height: 2;
+
+    font-size: 1.15rem;
+}

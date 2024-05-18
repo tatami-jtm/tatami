@@ -54,6 +54,10 @@ def splash():
 def scoreboard():
     return render_template("scoreboard.html")
 
+@app.errorhandler(404)
+def error_404(e):
+    return render_template('error/404.html'), 404
+
 
 if SETTINGS['ALLOW_SETUP']:
     @app.route('/setup', methods=['GET', 'POST'])
