@@ -59,9 +59,6 @@
                     <div class="nav-item">
                         <a class="nav-link {{ 'active' if event_page=='devices' }}" href="{{ url_for('event_manager.devices', event=g.event.slug) }}">💻 Geräte- und Hallenplan</a>
                     </div>
-                    <div class="nav-item">
-                        <a class="nav-link {{ 'active' if event_page=='log' }}" href="{{ url_for('event_manager.log', event=g.event.slug) }}">🧾 Veranstaltungsprotokoll</a>
-                    </div>
                     {#
                     <div class="nav-item">
                         <a class="nav-link {{ 'active' if event_page=='stream' }}" href="">📽️ Streaming</a>
