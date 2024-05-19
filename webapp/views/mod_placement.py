@@ -549,7 +549,7 @@ def place_for_all_groups(id):
                 resolved_successfully.append(group.title)
 
         if len(resolved_successfully):
-            g.event.log(g.device.title, 'DEBUG', f'Gruppe(n) {', '.join(resolved_successfully)} wurden gelost.')
+            g.event.log(g.device.title, 'DEBUG', f"Gruppe(n) {', '.join(resolved_successfully)} wurden gelost.")
             flash(f"Die Gruppe(n) {', '.join(resolved_successfully)} wurden erfolgreich gelost.", 'success')
 
         if len(unresolved_for_no_participants):
