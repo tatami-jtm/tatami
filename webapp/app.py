@@ -69,8 +69,9 @@ def error_404(e=None): return render_template('error/notfound.html'), 404
 def error_401(e=None): return render_template('error/forbidden.html'), 401
 
 @app.errorhandler(500)
+@app.errorhandler(400)
 @app.route('/error')
-def error_500(e=None): return render_template('error/error.html', err=e), 401
+def error_500(e=None): return render_template('error/error.html', err=e), 500
 
 @app.errorhandler(503)
 @app.route('/offline')
@@ -79,7 +80,7 @@ def error_503(e=None):
         offr = SETTINGS['OFFLINE_REASON']
     else:
         offr = None
-    return render_template('error/offline.html', offr=offr), 401
+    return render_template('error/offline.html', offr=offr), 503
 
 if SETTINGS['ALLOW_SETUP']:
     @app.route('/setup', methods=['GET', 'POST'])
