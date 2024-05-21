@@ -97,6 +97,12 @@
         <div class="col-12 col-md-3">
             <h3 class="h4 fw-bold mb-2">TN der Gruppe</h3>
 
+            {% if current_group.marked_ready %}
+            <div class="alert alert-info">
+                <p>Diese Gruppe wurde zum Kämpfen freigegeben und kann daher nicht mehr geändert werden.</p>
+            </div>
+            {% else %}
+
             <div class="mb-3">
                 <a href="{{ url_for('mod_placement.assign', event=g.event.slug, id=event_class.id, group=current_group.id) }}" class="btn btn-secondary btn-sm">Weitere TN zuweisen</a>
                 <a href="{{ url_for('mod_placement.edit_group', event=g.event.slug, id=event_class.id, group_id=current_group.id) }}" class="btn btn-secondary btn-sm">Gruppe bearbeiten</a>
@@ -134,12 +140,47 @@
             <a href="{{ url_for('mod_placement.delete_group', event=g.event.slug, id=event_class.id, group_id=current_group.id) }}" class="btn btn-danger btn-sm">Gruppe löschen</a>
 
             {% endif %}
+            {% endif %}
         </div>
         <div class="col-12 col-md-3">
             <h3 class="h4 fw-bold mb-2">Setzen und Losen</h3>
             
             {% set list_system = current_group.list_system() %}
-            {% if not list_system %}
+            {% if current_group.marked_ready %}
+            <div class="card">
+                <div class="card-header">
+                    {{ list_system.title }}
+                </div>
+                {% for i in range(list_system.mandatory_maximum) %}
+                {% set participant = current_group.participants.filter_by(placement_index=i).first() %}
+                <div class="card-body p-2 py-1 {{ 'border-top' if not loop.index == 1 }}">
+                    {% if not participant %}
+                    <div class="row">
+                        <div class="col-1 align-self-center text-center px-0">
+                            <div class="{{ 'fs-3' if i < 9 else 'fs-5 py-1' }} fw-bold text-secondary">{{ i + 1 }}</div>
+                        </div>
+                        <div class="col-10 align-self-center">n. n.</div>
+                    </div>
+                    {% else %}
+                    <div class="row">
+                        <div class="col-1 align-self-center text-center px-0">
+                            <div class="{{ 'fs-3' if i < 9 else 'fs-5 py-1' }} fw-bold text-dark">{{ i + 1 }}</div>
+                        </div>
+                        <div class="col-8 align-self-center">
+                            
+                            {% if participant.manually_placed %}
+                                <strong title="TN wurde manuell gesetzt.">📌 {{ participant.full_name }}</strong><br>
+                            {% else %}
+                                <strong>{{ participant.full_name }}</strong><br>
+                            {% endif %}
+                            {{ participant.association_name }}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% elif not list_system %}
             <p>Noch kein Listensystem zugewiesen.</p>
             {% else %}
 
