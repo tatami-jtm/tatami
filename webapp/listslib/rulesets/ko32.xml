@@ -150,34 +150,42 @@
         <match id="m25">
             <white><loser match-id="m13" /></white>
             <blue><loser match-id="m14" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m26">
             <white><loser match-id="m15" /></white>
             <blue><loser match-id="m16" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m27">
             <white><loser match-id="m9" /></white>
             <blue><loser match-id="m10" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m28">
             <white><loser match-id="m11" /></white>
             <blue><loser match-id="m12" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m29">
             <white><loser match-id="m5" /></white>
             <blue><loser match-id="m6" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m30">
             <white><loser match-id="m7" /></white>
             <blue><loser match-id="m8" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m31">
             <white><loser match-id="m1" /></white>
             <blue><loser match-id="m2" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m32">
             <white><loser match-id="m3" /></white>
             <blue><loser match-id="m4" /></blue>
+            <is a="repechage" />
         </match>
 
         <!-- Main // Round of 8 -->
@@ -202,106 +210,131 @@
         <match id="m37">
             <white><winner match-id="m25" /></white>
             <blue><loser match-id="m21" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m38">
             <white><winner match-id="m26" /></white>
             <blue><loser match-id="m22" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m39">
             <white><winner match-id="m27" /></white>
             <blue><loser match-id="m23" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m40">
             <white><winner match-id="m28" /></white>
             <blue><loser match-id="m24" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m41">
             <white><winner match-id="m29" /></white>
             <blue><loser match-id="m17" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m42">
             <white><winner match-id="m30" /></white>
             <blue><loser match-id="m18" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m43">
             <white><winner match-id="m31" /></white>
             <blue><loser match-id="m19" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m44">
             <white><winner match-id="m32" /></white>
             <blue><loser match-id="m20" /></blue>
+            <is a="repechage" />
         </match>
         
         <!-- Main // Semifinal -->
         <match id="m45">
             <white><winner match-id="m33" /></white>
             <blue><winner match-id="m34" /></blue>
+            <is a="semifinal" />
         </match>
         <match id="m46">
             <white><winner match-id="m35" /></white>
             <blue><winner match-id="m36" /></blue>
+            <is a="semifinal" />
         </match>
 
         <!-- Repechage // For Round of 8 -->
         <match id="m47">
             <white><winner match-id="m37" /></white>
             <blue><winner match-id="m38" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m48">
             <white><winner match-id="m39" /></white>
             <blue><winner match-id="m40" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m49">
             <white><winner match-id="m41" /></white>
             <blue><winner match-id="m42" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m50">
             <white><winner match-id="m43" /></white>
             <blue><winner match-id="m44" /></blue>
+            <is a="repechage" />
         </match>
 
         <!-- Repechage // Quarterfinals -->
         <match id="m51">
             <white><winner match-id="m47" /></white>
             <blue><loser match-id="m33" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m52">
             <white><winner match-id="m48" /></white>
             <blue><loser match-id="m34" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m53">
             <white><winner match-id="m49" /></white>
             <blue><loser match-id="m35" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m54">
             <white><winner match-id="m50" /></white>
             <blue><loser match-id="m36" /></blue>
+            <is a="repechage" />
         </match>
 
         <!-- Repechage // Third Place Semifinals -->
         <match id="m55">
             <white><winner match-id="m51" /></white>
             <blue><winner match-id="m52" /></blue>
+            <is a="repechage" />
         </match>
         <match id="m56">
             <white><winner match-id="m53" /></white>
             <blue><winner match-id="m54" /></blue>
+            <is a="repechage" />
         </match>
 
         <!-- Repechage // Third Place Finals -->
         <match id="m57">
             <white><winner match-id="m55" /></white>
             <blue><loser match-id="m46" /></blue>
+            <is a="repechage" />
+            <is a="thirdplace" />
         </match>
         <match id="m58">
             <white><winner match-id="m56" /></white>
             <blue><loser match-id="m45" /></blue>
+            <is a="repechage" />
+            <is a="thirdplace" />
         </match>
 
         <!-- Repechage // Final -->
         <match id="m59">
             <white><winner match-id="m45" /></white>
             <blue><winner match-id="m46" /></blue>
+            <is a="final" />
         </match>
 
         <order>
@@ -330,7 +363,6 @@
             <match id="m22" />
             <match id="m23" />
             <match id="m24" />
-            <!-- <clip /> -->
             <match id="m25" />
             <match id="m26" />
             <match id="m27" />
