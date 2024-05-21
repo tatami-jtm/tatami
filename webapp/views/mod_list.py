@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, flash, g, session, \
-    request, redirect, url_for, send_file, Response, jsonify
+    request, redirect, url_for, send_file, Response, jsonify, abort
 
 import io, zipfile, random, time, json
 from datetime import datetime
@@ -49,9 +49,10 @@ def index():
 
 
 @mod_list_view.route('/display/<id>/list.png')
+@mod_list_view.route('/display/<id>/list-page<int:page>.png')
 @check_and_apply_event
 @check_is_registered
-def display_image(id):
+def display_image(id, page=1):
     if not (g.device.event_role.may_use_global_list or
             g.device.event_role.may_use_assigned_lists or
             g.device.event_role.may_use_placement_tool):
@@ -64,20 +65,23 @@ def display_image(id):
     if 'cumult' in request.values:
         time.sleep(random.random())
 
+    if not group.list_system().display_page_count > page - 1 >= 0:
+        abort(404)
+
     if 'draft' in request.values:
         image = group_list.make_image(title=g.event.title,
                                       event_class=group.event_class.short_title,
                                       group=group.cut_title(),
-                                      draft=True)
+                                      draft=True, page=page)
     elif group.assigned_to_position:
         image = group_list.make_image(title=g.event.title,
                                       event_class=group.event_class.short_title,
                                       group=group.cut_title(),
-                                      mat=group.assigned_to_position.title)
+                                      mat=group.assigned_to_position.title, page=page)
     else:
         image = group_list.make_image(title=g.event.title,
                                       event_class=group.event_class.short_title,
-                                      group=group.cut_title())
+                                      group=group.cut_title(), page=page)
     image_io = io.BytesIO()
     image.save(image_io, 'PNG', quality=70)
     image_io.seek(0)

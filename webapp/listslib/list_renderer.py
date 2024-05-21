@@ -294,4 +294,7 @@ class ListRenderer:
 
     def make_image(self, params):
         self.params = params
-        return pdftool.make_image(self._make_obj())
+        page = 1
+        if 'page' in params:
+            page = params['page']
+        return pdftool.make_image(self._make_obj(), page - 1)
