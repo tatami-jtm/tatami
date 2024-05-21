@@ -42,7 +42,7 @@
                     <div class="row">
                         <div class="col-7">
                             <strong>{{ reg.first_name }} {{ reg.last_name }}</strong><br>
-                            {{ reg.club }}
+                            {{ reg.association.name if g.event.setting('use_association_instead_of_club', False) and reg.association else reg.club }}
                         </div>
                         <div class="col-2">{{ reg.verified_weight / 1000 }} kg</div>
                         <div class="col-3">

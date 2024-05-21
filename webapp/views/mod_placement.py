@@ -172,8 +172,12 @@ def assign(id):
             if request.form['participant'] == 'registration':
                 registration = event_class.registrations.filter_by(id=request.form['registration']).one()
                 participant.full_name = f"{registration.first_name} {registration.last_name}"
-                participant.association_name = registration.club
                 participant.registration = registration
+
+                if g.event.setting('use_association_instead_of_club', False) and registration.association:
+                    participant.association_name = registration.association.name
+                else:
+                    participant.association_name = registration.club
 
                 registration.placed = True
                 registration.placed_at = registration.placed_at or dt.now()
@@ -308,8 +312,12 @@ def assign_all_predefined(id):
                 participant.removal_cause = None
     
                 participant.full_name = f"{registration.first_name} {registration.last_name}"
-                participant.association_name = registration.club
                 participant.registration = registration
+
+                if g.event.setting('use_association_instead_of_club', False) and registration.association:
+                    participant.association_name = registration.association.name
+                else:
+                    participant.association_name = registration.club
 
                 registration.placed = True
                 registration.placed_at = registration.placed_at or dt.now()
@@ -376,8 +384,12 @@ def assign_all_proximity(id):
             participant.removal_cause = None
 
             participant.full_name = f"{registration.first_name} {registration.last_name}"
-            participant.association_name = registration.club
             participant.registration = registration
+
+            if g.event.setting('use_association_instead_of_club', False) and registration.association:
+                participant.association_name = registration.association.name
+            else:
+                participant.association_name = registration.club
 
             registration.placed = True
             registration.placed_at = registration.placed_at or dt.now()

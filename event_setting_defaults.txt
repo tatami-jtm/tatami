@@ -4,3 +4,4 @@ scheduling.max_concurrent_participants: 30
 scheduling.plan_ahead: 5
 count_weighin_as_registration: False
 write_activity_log: True
+use_association_instead_of_club: False

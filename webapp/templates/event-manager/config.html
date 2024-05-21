@@ -60,9 +60,14 @@
                 <label class="form-check-label fw-bold" for="count_weighin_as_registration">Nicht akkreditierte TN gelten als angemeldet, wenn sie eingewogen wurden.</label>
                 <div class="form-text">Dies ist insb. auszuwählen, wenn keine gesonderte Akkreditierung stattfindet, sondern die TN gleich zur Waage gehen können.</div>
             </div>
-            <div class="form-check form-switch">
+            <div class="form-check form-switch mb-3">
                 <input class="form-check-input" type="checkbox" role="switch" id="write_activity_log" name="write_activity_log" {{ 'checked' if g.event.setting('write_activity_log', True) }}>
                 <label class="form-check-label fw-bold" for="write_activity_log">Veranstaltungsprotokoll schreiben</label>
+            </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="use_association_instead_of_club" name="use_association_instead_of_club" {{ 'checked' if g.event.setting('use_association_instead_of_club', False) }}>
+                <label class="form-check-label fw-bold" for="use_association_instead_of_club">Anstelle des Vereins wird für die Listen, das Scoreboard u. a. der Verband verwendet</label>
+                <div class="form-text">Dies ist insb. bei Meisterschaften mit Vorqualifikation auszuwählen, bei denen der Verband maßgeblich ist.<br>Eine Änderung dieser Einstellung gilt nur für TN, die danach einer Gruppe zugewiesen werden.</div>
             </div>
         </div>
         <div class="card-footer">

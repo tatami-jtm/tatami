@@ -28,7 +28,7 @@
                     </li>
                     {% endif %}
                     <li class="segmentation-item">
-                        <strong>{{ reg.verified_weight / 1000 }} kg</strong> &ndash; {{ reg.first_name }} {{ reg.last_name }} ({{ reg.club }})
+                        <strong>{{ reg.verified_weight / 1000 }} kg</strong> &ndash; {{ reg.first_name }} {{ reg.last_name }} ({{ reg.association.name if g.event.setting('use_association_instead_of_club', False) and reg.association else reg.club }})
                     </li>
                     {% endfor %}
                 </ol>
