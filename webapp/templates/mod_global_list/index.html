@@ -232,7 +232,7 @@
 
                     <div class="mb-3">
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="group-{{ group.id }}-marked_ready" name="marked_ready" {{ 'checked' if group.marked_ready }}>
+                            <input class="form-check-input" type="checkbox" {{ 'disabled' if group.marked_ready }} role="switch" id="group-{{ group.id }}-marked_ready" name="marked_ready" {{ 'checked' if group.marked_ready }}>
                             <label class="form-check-label fw-bold" for="group-{{ group.id }}-marked_ready">Gruppe zur Eröffnung freigeben</label>
                         </div>
                     </div>
