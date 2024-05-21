@@ -1,0 +1,36 @@
+{% extends "layouts/application.html" %}
+{% block title %}Hauptliste{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <h1 class="h2 fw-bold mb-4">Gruppe {{ group.title }}</h1>
+
+    
+    <h3 class="h4 fw-bold mb-2">Kämpfe zurücksetzen</h3>
+    <form action="" method="POST">
+        <div class="card card-semidialog">
+            <div class="card-body pb-0">
+                <p>Wollen Sie die Kämpfe der Gruppe {{ group.title }} <strong>vollständig zurücksetzen</strong>?</p>
+                <p>Diese Aktion wird protokolliert.</p>
+
+                <div class="alert alert-danger">
+                    <p>Achtung: Dies kann <strong>nicht</strong> rückgängig gemacht werden. Der gesamte Kampffortschritt und alle bereits eingetragenen Ergebnisse werden verloren gehen. Diese Operation sollte nur in Ausnahmefällen und nur bei genügender Sachkunde bzgl. der möglichen Folgen vorgenommen werden.</p>
+                    <p>Es wird dringend empfohlen, zuvor die Liste in ihrem aktuellen Stand <a href="{{ url_for('mod_list.display_pdf', event=g.event.slug, id=group.id) }}" download="list.pdf">als PDF herunterzuladen</a>, damit im Zweifel eine Sicherheitskopie vorliegt.</p>
+                </div>
+            </div>
+            <div class="card-body border-top">
+                <p>Bestätigen Sie die Operation durch Betätigung dieser Checkbox:</p>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="confirm" name="confirm" value="oopsie">
+                    <label class="form-check-label" for="confirm">Ich habe die obenstehenden Informationen gelesen, verstanden und bin damit einverstanden, die persönliche Verantwortung für alle möglichen Folgen zu übernehmen.</label>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-danger btn-3d">Austragen</button>
+                <a href="{{ url_for('mod_global_list.index', event=g.event.slug, group=group.id) }}" class="btn btn-secondary">Abbrechen</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock body %}

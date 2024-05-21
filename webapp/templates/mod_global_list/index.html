@@ -142,6 +142,7 @@
                 <div class="mb-3">
                     <a href="{{ url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id) }}" class="btn btn-secondary btn-sm" target="_blank">Als PDF anzeigen</a>
                     <a href="{{ url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id) }}" download="list.pdf" class="btn btn-secondary btn-sm">Als PDF herunterladen</a>
+                    <a href="{{ url_for('mod_global_list.reset_group', event=g.event.slug, id=current_group.id) }}" class="btn btn-sm btn-outline-danger">Kämpfe zurücksetzen</a>
                 </div>
 
                 <ul class="pagination pagination-sm">

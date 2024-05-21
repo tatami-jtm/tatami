@@ -86,3 +86,31 @@ def dump_list(list, group):
 
 def force_create_list(group):
     dump_list(load_list(group), group)
+
+
+def reset_list(group):
+    group.marked_ready = False
+    group.marked_ready_at = None
+    group.opened = False
+    group.opened_at = None
+    group.completed = False
+    group.completed_at = None
+    group.currently_used = False
+    group.last_used_at = None
+
+    for participant in group.participants:
+        participant.final_placement = None
+        participant.final_points = None
+        participant.final_score = None
+        participant.removed = False
+        participant.disqualified = False
+        participant.removal_cause = None
+        participant.last_fight_at = None
+
+    for match in group.matches:
+        for result in match.results:
+            db.session.delete(result)
+        
+        db.session.delete(match)
+
+    db.session.commit()

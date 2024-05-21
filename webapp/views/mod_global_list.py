@@ -232,3 +232,27 @@ def class_step_back(id):
     db.session.commit()
     g.event.log(g.device.title, 'DEBUG', f'Kampfklasse {event_class.title} wurde in den früheren Zustand zurückgesetzt.')
     return redirect(url_for('mod_global_list.class_progress', event=g.event.slug))
+
+
+@mod_global_list_view.route('/group/<id>/reset', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def reset_group(id):
+    if not g.device.event_role.may_use_global_list:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+    
+    group = g.event.groups.filter_by(id=id).one_or_404()
+
+    if request.method == 'POST':
+        if 'confirm' in request.form:
+            helpers.reset_list(group)
+
+            g.event.log(g.device.title, 'DANGER', f'Die Gruppe {group.title} wurde zurückgesetzt')
+            flash(f"Gruppe {group.title} wurde erfolgreich zurückgesetzt.", 'success')
+
+            return redirect(url_for('mod_global_list.index', event=g.event.slug, group=group.id))
+        else:
+            flash(f"Fehler: Sie müssen die Checkbox zur Bestätigung betätigen", 'danger')
+    
+    return render_template('mod_global_list/reset_group.html', group=group)
