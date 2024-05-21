@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<ruleset>
+    <meta>
+        <name is="Doppel-KO 32 TN" />
+        <require>
+            <min of="17" />
+            <max of="32" />
+        </require>
+    </meta>
+
+    <rules>
+        <alloc>
+            <fighter id="1" />
+            <fighter id="17" />
+            <fighter id="9" />
+            <fighter id="25" />
+            <fighter id="5" />
+            <fighter id="21" />
+            <fighter id="13" />
+            <fighter id="29" />
+            <fighter id="3" />
+            <fighter id="19" />
+            <fighter id="11" />
+            <fighter id="27" />
+            <fighter id="7" />
+            <fighter id="23" />
+            <fighter id="15" />
+            <fighter id="31" />
+            <fighter id="2" />
+            <fighter id="18" />
+            <fighter id="10" />
+            <fighter id="26" />
+            <fighter id="6" />
+            <fighter id="22" />
+            <fighter id="14" />
+            <fighter id="30" />
+            <fighter id="4" />
+            <fighter id="20" />
+            <fighter id="12" />
+            <fighter id="28" />
+            <fighter id="8" />
+            <fighter id="24" />
+            <fighter id="16" />
+            <fighter id="32" />
+        </alloc>
+
+        <!-- Main // Round of 32 -->
+
+        <match id="m1">
+            <white><fighter id="1" /></white>
+            <blue><fighter id="2" /></blue>
+        </match>
+        <match id="m2">
+            <white><fighter id="3" /></white>
+            <blue><fighter id="4" /></blue>
+        </match>
+        <match id="m3">
+            <white><fighter id="5" /></white>
+            <blue><fighter id="6" /></blue>
+        </match>
+        <match id="m4">
+            <white><fighter id="7" /></white>
+            <blue><fighter id="8" /></blue>
+        </match>
+        <match id="m5">
+            <white><fighter id="9" /></white>
+            <blue><fighter id="10" /></blue>
+        </match>
+        <match id="m6">
+            <white><fighter id="11" /></white>
+            <blue><fighter id="12" /></blue>
+        </match>
+        <match id="m7">
+            <white><fighter id="13" /></white>
+            <blue><fighter id="14" /></blue>
+        </match>
+        <match id="m8">
+            <white><fighter id="15" /></white>
+            <blue><fighter id="16" /></blue>
+        </match>
+        <match id="m9">
+            <white><fighter id="17" /></white>
+            <blue><fighter id="18" /></blue>
+        </match>
+        <match id="m10">
+            <white><fighter id="19" /></white>
+            <blue><fighter id="20" /></blue>
+        </match>
+        <match id="m11">
+            <white><fighter id="21" /></white>
+            <blue><fighter id="22" /></blue>
+        </match>
+        <match id="m12">
+            <white><fighter id="23" /></white>
+            <blue><fighter id="24" /></blue>
+        </match>
+        <match id="m13">
+            <white><fighter id="25" /></white>
+            <blue><fighter id="26" /></blue>
+        </match>
+        <match id="m14">
+            <white><fighter id="27" /></white>
+            <blue><fighter id="28" /></blue>
+        </match>
+        <match id="m15">
+            <white><fighter id="29" /></white>
+            <blue><fighter id="30" /></blue>
+        </match>
+        <match id="m16">
+            <white><fighter id="31" /></white>
+            <blue><fighter id="32" /></blue>
+        </match>
+
+        <!-- Main // Round of 16 -->
+        
+        <match id="m17">
+            <white><winner match-id="m1" /></white>
+            <blue><winner match-id="m2" /></blue>
+        </match>
+        <match id="m18">
+            <white><winner match-id="m3" /></white>
+            <blue><winner match-id="m4" /></blue>
+        </match>
+        <match id="m19">
+            <white><winner match-id="m5" /></white>
+            <blue><winner match-id="m6" /></blue>
+        </match>
+        <match id="m20">
+            <white><winner match-id="m7" /></white>
+            <blue><winner match-id="m8" /></blue>
+        </match>
+        <match id="m21">
+            <white><winner match-id="m9" /></white>
+            <blue><winner match-id="m10" /></blue>
+        </match>
+        <match id="m22">
+            <white><winner match-id="m11" /></white>
+            <blue><winner match-id="m12" /></blue>
+        </match>
+        <match id="m23">
+            <white><winner match-id="m13" /></white>
+            <blue><winner match-id="m14" /></blue>
+        </match>
+        <match id="m24">
+            <white><winner match-id="m15" /></white>
+            <blue><winner match-id="m16" /></blue>
+        </match>
+
+        <!-- Repechage // For Round of 32 -->
+        <match id="m25">
+            <white><loser match-id="m13" /></white>
+            <blue><loser match-id="m14" /></blue>
+        </match>
+        <match id="m26">
+            <white><loser match-id="m15" /></white>
+            <blue><loser match-id="m16" /></blue>
+        </match>
+        <match id="m27">
+            <white><loser match-id="m9" /></white>
+            <blue><loser match-id="m10" /></blue>
+        </match>
+        <match id="m28">
+            <white><loser match-id="m11" /></white>
+            <blue><loser match-id="m12" /></blue>
+        </match>
+        <match id="m29">
+            <white><loser match-id="m5" /></white>
+            <blue><loser match-id="m6" /></blue>
+        </match>
+        <match id="m30">
+            <white><loser match-id="m7" /></white>
+            <blue><loser match-id="m8" /></blue>
+        </match>
+        <match id="m31">
+            <white><loser match-id="m1" /></white>
+            <blue><loser match-id="m2" /></blue>
+        </match>
+        <match id="m32">
+            <white><loser match-id="m3" /></white>
+            <blue><loser match-id="m4" /></blue>
+        </match>
+
+        <!-- Main // Round of 8 -->
+        <match id="m33">
+            <white><winner match-id="m17" /></white>
+            <blue><winner match-id="m18" /></blue>
+        </match>
+        <match id="m34">
+            <white><winner match-id="m19" /></white>
+            <blue><winner match-id="m20" /></blue>
+        </match>
+        <match id="m35">
+            <white><winner match-id="m21" /></white>
+            <blue><winner match-id="m22" /></blue>
+        </match>
+        <match id="m36">
+            <white><winner match-id="m23" /></white>
+            <blue><winner match-id="m24" /></blue>
+        </match>
+
+        <!-- Repechage // For Round of 16 -->
+        <match id="m37">
+            <white><winner match-id="m25" /></white>
+            <blue><loser match-id="m21" /></blue>
+        </match>
+        <match id="m38">
+            <white><winner match-id="m26" /></white>
+            <blue><loser match-id="m22" /></blue>
+        </match>
+        <match id="m39">
+            <white><winner match-id="m27" /></white>
+            <blue><loser match-id="m23" /></blue>
+        </match>
+        <match id="m40">
+            <white><winner match-id="m28" /></white>
+            <blue><loser match-id="m24" /></blue>
+        </match>
+        <match id="m41">
+            <white><winner match-id="m29" /></white>
+            <blue><loser match-id="m17" /></blue>
+        </match>
+        <match id="m42">
+            <white><winner match-id="m30" /></white>
+            <blue><loser match-id="m18" /></blue>
+        </match>
+        <match id="m43">
+            <white><winner match-id="m31" /></white>
+            <blue><loser match-id="m19" /></blue>
+        </match>
+        <match id="m44">
+            <white><winner match-id="m32" /></white>
+            <blue><loser match-id="m20" /></blue>
+        </match>
+        
+        <!-- Main // Semifinal -->
+        <match id="m45">
+            <white><winner match-id="m33" /></white>
+            <blue><winner match-id="m34" /></blue>
+        </match>
+        <match id="m46">
+            <white><winner match-id="m35" /></white>
+            <blue><winner match-id="m36" /></blue>
+        </match>
+
+        <!-- Repechage // For Round of 8 -->
+        <match id="m47">
+            <white><winner match-id="m37" /></white>
+            <blue><winner match-id="m38" /></blue>
+        </match>
+        <match id="m48">
+            <white><winner match-id="m39" /></white>
+            <blue><winner match-id="m40" /></blue>
+        </match>
+        <match id="m49">
+            <white><winner match-id="m41" /></white>
+            <blue><winner match-id="m42" /></blue>
+        </match>
+        <match id="m50">
+            <white><winner match-id="m43" /></white>
+            <blue><winner match-id="m44" /></blue>
+        </match>
+
+        <!-- Repechage // Quarterfinals -->
+        <match id="m51">
+            <white><winner match-id="m47" /></white>
+            <blue><loser match-id="m33" /></blue>
+        </match>
+        <match id="m52">
+            <white><winner match-id="m48" /></white>
+            <blue><loser match-id="m34" /></blue>
+        </match>
+        <match id="m53">
+            <white><winner match-id="m49" /></white>
+            <blue><loser match-id="m35" /></blue>
+        </match>
+        <match id="m54">
+            <white><winner match-id="m50" /></white>
+            <blue><loser match-id="m36" /></blue>
+        </match>
+
+        <!-- Repechage // Third Place Semifinals -->
+        <match id="m55">
+            <white><winner match-id="m51" /></white>
+            <blue><winner match-id="m52" /></blue>
+        </match>
+        <match id="m56">
+            <white><winner match-id="m53" /></white>
+            <blue><winner match-id="m54" /></blue>
+        </match>
+
+        <!-- Repechage // Third Place Finals -->
+        <match id="m57">
+            <white><winner match-id="m55" /></white>
+            <blue><loser match-id="m46" /></blue>
+        </match>
+        <match id="m58">
+            <white><winner match-id="m56" /></white>
+            <blue><loser match-id="m45" /></blue>
+        </match>
+
+        <!-- Repechage // Final -->
+        <match id="m59">
+            <white><winner match-id="m45" /></white>
+            <blue><winner match-id="m46" /></blue>
+        </match>
+
+        <order>
+            <match id="m1" />
+            <match id="m2" />
+            <match id="m3" />
+            <match id="m4" />
+            <match id="m5" />
+            <match id="m6" />
+            <match id="m7" />
+            <match id="m8" />
+            <match id="m9" />
+            <match id="m10" />
+            <match id="m11" />
+            <match id="m12" />
+            <match id="m13" />
+            <match id="m14" />
+            <match id="m15" />
+            <match id="m16" />
+            <clip />
+            <match id="m17" />
+            <match id="m18" />
+            <match id="m19" />
+            <match id="m20" />
+            <match id="m21" />
+            <match id="m22" />
+            <match id="m23" />
+            <match id="m24" />
+            <!-- <clip /> -->
+            <match id="m25" />
+            <match id="m26" />
+            <match id="m27" />
+            <match id="m28" />
+            <match id="m29" />
+            <match id="m30" />
+            <match id="m31" />
+            <match id="m32" />
+            <clip />
+            <match id="m33" />
+            <match id="m34" />
+            <match id="m35" />
+            <match id="m36" />
+            <match id="m37" />
+            <match id="m38" />
+            <match id="m39" />
+            <match id="m40" />
+            <match id="m41" />
+            <match id="m42" />
+            <match id="m43" />
+            <match id="m44" />
+            <clip />
+            <match id="m45" />
+            <match id="m46" />
+            <match id="m47" />
+            <match id="m48" />
+            <match id="m49" />
+            <match id="m50" />
+            <clip />
+            <match id="m51" />
+            <match id="m52" />
+            <match id="m53" />
+            <match id="m54" />
+            <clip />
+            <match id="m55" />
+            <match id="m56" />
+            <clip />
+            <match id="m57" />
+            <match id="m58" />
+            <clip />
+            <match id="m59" />
+        </order>
+    </rules>
+
+    <display>
+        <template page="12">
+            <write-header x="137.5" y="16.75" />
+
+            <!-- Main // Round of 32 -->
+            <write-fighter x="22" y="43.5" type="full"><fighter id="1" /></write-fighter>
+            <write-fighter x="22" y="49.5" type="full"><fighter id="2" /></write-fighter>
+            <write-fighter x="22" y="55.5" type="full"><fighter id="3" /></write-fighter>
+            <write-fighter x="22" y="61.5" type="full"><fighter id="4" /></write-fighter>
+            <write-fighter x="22" y="67.5" type="full"><fighter id="5" /></write-fighter>
+            <write-fighter x="22" y="73.5" type="full"><fighter id="6" /></write-fighter>
+            <write-fighter x="22" y="79.5" type="full"><fighter id="7" /></write-fighter>
+            <write-fighter x="22" y="85.5" type="full"><fighter id="8" /></write-fighter>
+            <write-fighter x="22" y="91.5" type="full"><fighter id="9" /></write-fighter>
+            <write-fighter x="22" y="97.5" type="full"><fighter id="10" /></write-fighter>
+            <write-fighter x="22" y="103.5" type="full"><fighter id="11" /></write-fighter>
+            <write-fighter x="22" y="109.5" type="full"><fighter id="12" /></write-fighter>
+            <write-fighter x="22" y="115.5" type="full"><fighter id="13" /></write-fighter>
+            <write-fighter x="22" y="121.5" type="full"><fighter id="14" /></write-fighter>
+            <write-fighter x="22" y="127.5" type="full"><fighter id="15" /></write-fighter>
+            <write-fighter x="22" y="133" type="full"><fighter id="16" /></write-fighter>
+            <write-fighter x="22" y="139" type="full"><fighter id="17" /></write-fighter>
+            <write-fighter x="22" y="145" type="full"><fighter id="18" /></write-fighter>
+            <write-fighter x="22" y="151" type="full"><fighter id="19" /></write-fighter>
+            <write-fighter x="22" y="157" type="full"><fighter id="20" /></write-fighter>
+            <write-fighter x="22" y="163" type="full"><fighter id="21" /></write-fighter>
+            <write-fighter x="22" y="169" type="full"><fighter id="22" /></write-fighter>
+            <write-fighter x="22" y="175" type="full"><fighter id="23" /></write-fighter>
+            <write-fighter x="22" y="181" type="full"><fighter id="24" /></write-fighter>
+            <write-fighter x="22" y="187" type="full"><fighter id="25" /></write-fighter>
+            <write-fighter x="22" y="193" type="full"><fighter id="26" /></write-fighter>
+            <write-fighter x="22" y="199" type="full"><fighter id="27" /></write-fighter>
+            <write-fighter x="22" y="205" type="full"><fighter id="28" /></write-fighter>
+            <write-fighter x="22" y="210.5" type="full"><fighter id="29" /></write-fighter>
+            <write-fighter x="22" y="216.5" type="full"><fighter id="30" /></write-fighter>
+            <write-fighter x="22" y="222.5" type="full"><fighter id="31" /></write-fighter>
+            <write-fighter x="22" y="228.5" type="full"><fighter id="32" /></write-fighter>
+
+            <!-- Main // Round of 16 -->
+            <write-fighter x="65.5" y="44" type="short"><winner match-id="m1" /></write-fighter>
+            <write-fighter x="65.5" y="56" type="short"><winner match-id="m2" /></write-fighter>
+            <write-fighter x="65.5" y="68" type="short"><winner match-id="m3" /></write-fighter>
+            <write-fighter x="65.5" y="80" type="short"><winner match-id="m4" /></write-fighter>
+            <write-fighter x="65.5" y="92" type="short"><winner match-id="m5" /></write-fighter>
+            <write-fighter x="65.5" y="104" type="short"><winner match-id="m6" /></write-fighter>
+            <write-fighter x="65.5" y="116" type="short"><winner match-id="m7" /></write-fighter>
+            <write-fighter x="65.5" y="127.5" type="short"><winner match-id="m8" /></write-fighter>
+            <write-fighter x="65.5" y="139" type="short"><winner match-id="m9" /></write-fighter>
+            <write-fighter x="65.5" y="151" type="short"><winner match-id="m10" /></write-fighter>
+            <write-fighter x="65.5" y="163" type="short"><winner match-id="m11" /></write-fighter>
+            <write-fighter x="65.5" y="175" type="short"><winner match-id="m12" /></write-fighter>
+            <write-fighter x="65.5" y="187" type="short"><winner match-id="m13" /></write-fighter>
+            <write-fighter x="65.5" y="199" type="short"><winner match-id="m14" /></write-fighter>
+            <write-fighter x="65.5" y="210.5" type="short"><winner match-id="m15" /></write-fighter>
+            <write-fighter x="65.5" y="222.5" type="short"><winner match-id="m16" /></write-fighter>
+
+            <!-- Main // Round of 8 -->
+            <write-fighter x="101" y="50" type="short"><winner match-id="m17" /></write-fighter>
+            <write-fighter x="101" y="74" type="short"><winner match-id="m18" /></write-fighter>
+            <write-fighter x="101" y="98" type="short"><winner match-id="m19" /></write-fighter>
+            <write-fighter x="101" y="122" type="short"><winner match-id="m20" /></write-fighter>
+            <write-fighter x="101" y="146" type="short"><winner match-id="m21" /></write-fighter>
+            <write-fighter x="101" y="170" type="short"><winner match-id="m22" /></write-fighter>
+            <write-fighter x="101" y="193.5" type="short"><winner match-id="m23" /></write-fighter>
+            <write-fighter x="101" y="217.5" type="short"><winner match-id="m24" /></write-fighter>
+
+            <!-- Main // Semifinals -->
+            <write-fighter x="137" y="62" type="short"><winner match-id="m33" /></write-fighter>
+            <write-fighter x="137" y="110" type="short"><winner match-id="m34" /></write-fighter>
+            <write-fighter x="137" y="157.5" type="short"><winner match-id="m35" /></write-fighter>
+            <write-fighter x="137" y="205.5" type="short"><winner match-id="m36" /></write-fighter>
+
+            <!-- Main Final -->
+            <write-fighter x="101" y="246.5" type="short"><winner match-id="m45" /></write-fighter>
+            <write-fighter x="101" y="270.25" type="short"><winner match-id="m46" /></write-fighter>
+            <write-fighter x="137" y="258.5" type="short"><winner match-id="m59" /></write-fighter>
+        </template>
+        <template page="13">
+            <write-header x="137.5" y="16.75" />
+
+            <!-- Repechage // For Round of 32 -->
+            <write-fighter x="22" y="51" type="short"><loser match-id="m13" /></write-fighter>
+            <write-fighter x="22" y="63" type="short"><loser match-id="m14" /></write-fighter>
+            <write-fighter x="22" y="81" type="short"><loser match-id="m15" /></write-fighter>
+            <write-fighter x="22" y="93" type="short"><loser match-id="m16" /></write-fighter>
+            <write-fighter x="22" y="115.5" type="short"><loser match-id="m9" /></write-fighter>
+            <write-fighter x="22" y="127.5" type="short"><loser match-id="m10" /></write-fighter>
+            <write-fighter x="22" y="145" type="short"><loser match-id="m11" /></write-fighter>
+            <write-fighter x="22" y="157" type="short"><loser match-id="m12" /></write-fighter>
+
+            <!-- Repechage // For Round of 16 -->
+            <write-fighter x="58" y="57" type="short"><winner match-id="m25" /></write-fighter>
+            <write-fighter x="58" y="72" type="short"><loser match-id="m21" /></write-fighter>
+            <write-fighter x="58" y="87" type="short"><winner match-id="m26" /></write-fighter>
+            <write-fighter x="58" y="102" type="short"><loser match-id="m22" /></write-fighter>
+            <write-fighter x="58" y="121.5" type="short"><winner match-id="m27" /></write-fighter>
+            <write-fighter x="58" y="136" type="short"><loser match-id="m23" /></write-fighter>
+            <write-fighter x="58" y="151.5" type="short"><winner match-id="m28" /></write-fighter>
+            <write-fighter x="58" y="166" type="short"><loser match-id="m24" /></write-fighter>
+
+            <!-- Repechage // For Round of 8 -->
+            <write-fighter x="94" y="65" type="short"><winner match-id="m37" /></write-fighter>
+            <write-fighter x="94" y="95" type="short"><winner match-id="m38" /></write-fighter>
+            <write-fighter x="94" y="129" type="short"><winner match-id="m39" /></write-fighter>
+            <write-fighter x="94" y="159" type="short"><winner match-id="m40" /></write-fighter>
+
+            <!-- Repechage // Quarterfinals-->
+            <write-fighter x="130" y="80" type="short"><winner match-id="m47" /></write-fighter>
+            <write-fighter x="130" y="122" type="short"><loser match-id="m33" /></write-fighter>
+            <write-fighter x="130" y="144" type="short"><winner match-id="m48" /></write-fighter>
+            <write-fighter x="130" y="186" type="short"><loser match-id="m34" /></write-fighter>
+
+            <!-- Repechage // Third Place Semifinals -->
+            <write-fighter x="22" y="209" type="short"><winner match-id="m51" /></write-fighter>
+            <write-fighter x="22" y="233" type="short"><winner match-id="m52" /></write-fighter>
+
+            <!-- Repechage // Third Place Finals -->
+            <write-fighter x="58" y="221" type="short"><winner match-id="m55" /></write-fighter>
+            <write-fighter x="58" y="242" type="short"><loser match-id="m46" /></write-fighter>
+            <write-fighter x="94" y="231.5" type="short"><winner match-id="m57" /></write-fighter>
+
+            <!-- Total Results -->
+            <write-fighter x="152" y="230" type="default">
+                <winner match-id="m59" />
+            </write-fighter>
+            <write-fighter x="152" y="236" type="default">
+                <loser match-id="m59" />
+            </write-fighter>
+            <write-fighter x="152" y="242" type="default">
+                <winner match-id="m57" />
+            </write-fighter>
+            <write-fighter x="152" y="248" type="default">
+                <winner match-id="m58" />
+            </write-fighter>
+            <write-fighter x="152" y="254" type="default">
+                <loser match-id="m57" />
+            </write-fighter>
+            <write-fighter x="152" y="260" type="default">
+                <loser match-id="m58" />
+            </write-fighter>
+            <write-fighter x="152" y="266" type="default">
+                <loser match-id="m55" />
+            </write-fighter>
+            <write-fighter x="152" y="272" type="default">
+                <loser match-id="m56" />
+            </write-fighter>
+        </template>
+        <template page="14">
+            <write-header x="137.5" y="16.75" />
+
+            <!-- Repechage // For Round of 32 (Cont.) -->
+            <write-fighter x="22" y="51" type="short"><loser match-id="m5" /></write-fighter>
+            <write-fighter x="22" y="63" type="short"><loser match-id="m6" /></write-fighter>
+            <write-fighter x="22" y="81" type="short"><loser match-id="m7" /></write-fighter>
+            <write-fighter x="22" y="93" type="short"><loser match-id="m8" /></write-fighter>
+            <write-fighter x="22" y="115.5" type="short"><loser match-id="m1" /></write-fighter>
+            <write-fighter x="22" y="127.5" type="short"><loser match-id="m2" /></write-fighter>
+            <write-fighter x="22" y="145" type="short"><loser match-id="m3" /></write-fighter>
+            <write-fighter x="22" y="157" type="short"><loser match-id="m4" /></write-fighter>
+
+            <!-- Repechage // For Round of 16 (Cont.) -->
+            <write-fighter x="58" y="57" type="short"><winner match-id="m29" /></write-fighter>
+            <write-fighter x="58" y="72" type="short"><loser match-id="m17" /></write-fighter>
+            <write-fighter x="58" y="87" type="short"><winner match-id="m30" /></write-fighter>
+            <write-fighter x="58" y="102" type="short"><loser match-id="m18" /></write-fighter>
+            <write-fighter x="58" y="121.5" type="short"><winner match-id="m31" /></write-fighter>
+            <write-fighter x="58" y="136" type="short"><loser match-id="m19" /></write-fighter>
+            <write-fighter x="58" y="151.5" type="short"><winner match-id="m32" /></write-fighter>
+            <write-fighter x="58" y="166" type="short"><loser match-id="m20" /></write-fighter>
+
+            <!-- Repechage // For Round of 8 (Cont.) -->
+            <write-fighter x="94" y="65" type="short"><winner match-id="m41" /></write-fighter>
+            <write-fighter x="94" y="95" type="short"><winner match-id="m42" /></write-fighter>
+            <write-fighter x="94" y="129" type="short"><winner match-id="m43" /></write-fighter>
+            <write-fighter x="94" y="159" type="short"><winner match-id="m44" /></write-fighter>
+
+            <!-- Repechage // Quarterfinals (Cont.) -->
+            <write-fighter x="130" y="80" type="short"><winner match-id="m49" /></write-fighter>
+            <write-fighter x="130" y="122" type="short"><loser match-id="m35" /></write-fighter>
+            <write-fighter x="130" y="144" type="short"><winner match-id="m50" /></write-fighter>
+            <write-fighter x="130" y="186" type="short"><loser match-id="m36" /></write-fighter>
+
+            <!-- Repechage // Third Place Semifinals (Cont.) -->
+            <write-fighter x="22" y="209" type="short"><winner match-id="m53" /></write-fighter>
+            <write-fighter x="22" y="233" type="short"><winner match-id="m54" /></write-fighter>
+
+            <!-- Repechage // Third Place Finals (Cont.) -->
+            <write-fighter x="58" y="221" type="short"><winner match-id="m56" /></write-fighter>
+            <write-fighter x="58" y="242" type="short"><loser match-id="m45" /></write-fighter>
+            <write-fighter x="94" y="231.5" type="short"><winner match-id="m58" /></write-fighter>
+        </template>
+    </display>
+</ruleset>

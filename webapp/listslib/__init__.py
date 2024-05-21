@@ -18,39 +18,22 @@ if __name__ == "__main__":
     # example_list.enter_results(fmr)
 
     # example_list.score()
-    list_cls = compile_list('ko8')
+    list_cls = compile_list('ko32')
     example_list = list_cls()
     example_list.import_struct({
         'random_seed': 4,
         'fighters': [
-            Fighter('aaa', 'A-Fighter', 'A-Team'),
-            Fighter('bbb', 'B-Fighter', 'B-Team'),
-            Fighter('ccc', 'C-Fighter', 'C-Team'),
-            Fighter('ddd', 'D-Fighter', 'D-Team'),
-            Fighter('eee', 'E-Fighter', 'E-Team'),
-            Fighter('fff', 'F-Fighter', 'F-Team'),
-            Fighter('ggg', 'G-Fighter', 'G-Team'),
-            Fighter('hhh', 'H-Fighter', 'H-Team'),
+            Fighter(f'p{i}', f'{i}-Fighter', f'{i}-Team') for i in range(1, 33)
         ],
         'matches': {
-            'AvB': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'CvD': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'EvF': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'GvH': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'ABvCD': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'EFvGH': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'ABCDvEFGH': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'rabvcd': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'refvgh': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'rRABCDvefgh': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
-            'rREFGHvabcd': MatchResult.mk(1, 10, None, 0, 0, None, None, 120),
+            f'm{i}': MatchResult.mk(1, 10, None, 0, 0, None, None, 120) for i in range(1, 60)
         },
         'playoff_matches': {
         }
     })
 
     print(example_list.get_schedule())
-    example_list.make_image(title="Testmeisterschaft 2023", event_class='U18m', group='-50kg').show()
+    example_list.make_image(title="Testmeisterschaft 2023", event_class='U18m', group='-50kg', page=2).show()
 
     # print("Schedule:", example_list.get_schedule())
     # print("Completed?", example_list.completed())

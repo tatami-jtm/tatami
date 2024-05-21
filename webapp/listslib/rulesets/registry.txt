@@ -4,6 +4,7 @@ bestof3
 pool3
 pool4
 pool5
-ko8
 doublepool8
+ko8
 ko16
+ko32
