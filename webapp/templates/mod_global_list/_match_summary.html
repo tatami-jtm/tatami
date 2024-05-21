@@ -59,7 +59,7 @@
     {% elif result.winner() == 'blue' %}
     <div class="match-result">
         <div class="match-result-title">Ergebnis:</div>
-        <div class="match-result-winner match-result-winner-blue">{{ match.white.full_name }}</div>
+        <div class="match-result-winner match-result-winner-blue">{{ match.blue.full_name }}</div>
         <div class="match-result-winner-score">hat gewonnen ({{ result.score() }} WP).</div>
     </div>
     {% endif %}
