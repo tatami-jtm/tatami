@@ -64,6 +64,8 @@ def dump_list(list, group):
 
             if group.matches.filter_by(listslib_match_id=match_id).count() == 0:
                 match = Match(event=group.event, event_class=group.event_class, group=group)
+                db.session.add(match)
+
                 match.white = Participant.query.filter_by(id=item['match'].get_white().get_id()).one()
                 match.blue = Participant.query.filter_by(id=item['match'].get_blue().get_id()).one()
                 match.is_playoff = list.is_playoff(match_id)
@@ -75,7 +77,6 @@ def dump_list(list, group):
                 match.running = False
                 match.completed = False
 
-                db.session.add(match)
 
     db.session.commit()
 
