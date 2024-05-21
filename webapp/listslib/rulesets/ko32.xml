@@ -405,6 +405,13 @@
             <clip />
             <match id="m59" />
         </order>
+
+        <score>
+            <first><winner match-id="m59" /></first>
+            <second><loser match-id="m59" /></second>
+            <third><winner match-id="m57" /><winner match-id="m58" /></third>
+            <fifth><loser match-id="m57" /><loser match-id="m58" /></fifth>
+        </score>
     </rules>
 
     <display>
