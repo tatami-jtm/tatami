@@ -1234,3 +1234,8 @@ input.w-min {
     background-color: var(--primary);
     color: white;
 }
+
+.form-check-input[disabled] + .form-check-label {
+    pointer-events: none;
+    user-select: none;
+}
