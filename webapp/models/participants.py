@@ -89,6 +89,7 @@ class ListSystem(db.Model):
     mandatory_maximum = db.Column(db.Integer())
     estimated_fight_count = db.Column(db.Integer())
     break_count = db.Column(db.Integer())
+    display_page_count = db.Column(db.Integer(), default=1)
     enabled = db.Column(db.Boolean)
 
     @classmethod

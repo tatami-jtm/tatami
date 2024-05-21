@@ -58,39 +58,39 @@ def setup_class_templates():
 def setup_list_systems():
     _get_or_create(ListSystem, title="Einzelliste", list_file="single",
                    mandatory_minimum=1, mandatory_maximum=1, enabled=True,
-                   estimated_fight_count=0, break_count=0)
+                   estimated_fight_count=0, break_count=0, display_page_count=1)
     
     _get_or_create(ListSystem, title="2er-Pool", list_file="pool2",
                    mandatory_minimum=2, mandatory_maximum=2, enabled=True,
-                   estimated_fight_count=1, break_count=0)
+                   estimated_fight_count=1, break_count=0, display_page_count=1)
     
     _get_or_create(ListSystem, title="Best of Three", list_file="bestof3",
                    mandatory_minimum=2, mandatory_maximum=2, enabled=True,
-                   estimated_fight_count=2, break_count=2)
+                   estimated_fight_count=2, break_count=2, display_page_count=1)
     
     _get_or_create(ListSystem, title="3er-Pool", list_file="pool3",
                    mandatory_minimum=3, mandatory_maximum=3, enabled=True,
-                   estimated_fight_count=3, break_count=2)
+                   estimated_fight_count=3, break_count=2, display_page_count=1)
     
     _get_or_create(ListSystem, title="4er-Pool", list_file="pool4",
                    mandatory_minimum=4, mandatory_maximum=4, enabled=True,
-                   estimated_fight_count=6, break_count=2)
+                   estimated_fight_count=6, break_count=2, display_page_count=1)
     
     _get_or_create(ListSystem, title="5er-Pool", list_file="pool5",
                    mandatory_minimum=5, mandatory_maximum=5, enabled=True,
-                   estimated_fight_count=10, break_count=4)
+                   estimated_fight_count=10, break_count=4, display_page_count=1)
     
     _get_or_create(ListSystem, title="Doppel-Pool 8 TN", list_file="doublepool8",
                    mandatory_minimum=5, mandatory_maximum=8, enabled=True,
-                   estimated_fight_count=15, break_count=3)
+                   estimated_fight_count=15, break_count=3, display_page_count=1)
     
     _get_or_create(ListSystem, title="Doppel-KO 8 TN", list_file="ko8",
                    mandatory_minimum=5, mandatory_maximum=8, enabled=True,
-                   estimated_fight_count=11, break_count=2)
+                   estimated_fight_count=11, break_count=2, display_page_count=1)
     
     _get_or_create(ListSystem, title="Doppel-KO 16 TN", list_file="ko16",
                    mandatory_minimum=9, mandatory_maximum=16, enabled=True,
-                   estimated_fight_count=27, break_count=4)
+                   estimated_fight_count=27, break_count=4, display_page_count=1)
 
 def setup_event_roles():
     _get_or_create(EventRole, name="Anmeldung",
