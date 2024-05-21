@@ -45,7 +45,7 @@ def dump_list(list, group):
 
         for plm, func in [(1, list.get_first), (2, list.get_second), (3, list.get_third), (5, list.get_fifth)]:
             data = func()
-            if type(data) == Fighter:
+            if type(data) == Fighter or data == BlankFighter:
                 data = [data]
 
             for fighter in data:
