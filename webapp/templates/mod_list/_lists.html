@@ -10,8 +10,17 @@
     </div>
     {% endfor %}
 </div>
+<ul class="pagination pagination-sm m-0 p-1">
+    {% for _ in range(shown_list.list_system().display_page_count) %}
+    {% if request.values.get('page', "1") == ""~loop.index %}
+    <li class="page-item active" aria-current="page"><span class="page-link">{{ loop.index }}</span></li>
+    {% else %}
+    <li class="page-item"><a class="page-link" href="?shown_list={{ shown_list.id }}&page={{ loop.index }}">{{ loop.index }}</a></li>
+    {% endif %}
+    {% endfor %}
+</ul>
 <div class="p-1">
-    <img src="{{ url_for('mod_list.display_image', event=g.event.slug, id=shown_list.id) }}" alt="">
+    <img src="{{ url_for('mod_list.display_image', event=g.event.slug, id=shown_list.id, page=request.values.get('page')) }}" alt="">
 </div>
 {% else %}
 <p>Dieser Matte wurden noch keine Listen zugewiesen, die Listen wurden noch nicht freigegeben oder alle Kämpfe sind beendet.</p>

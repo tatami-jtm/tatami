@@ -137,14 +137,26 @@
         <div class="col-12 col-md-4">
             <h3 class="h4 fw-bold mb-4">Kampfliste</h3>
 
-            <div class="mb-3">
-                <a href="{{ url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id) }}" class="btn btn-secondary btn-sm" target="_blank">Als PDF anzeigen</a>
-                <a href="{{ url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id) }}" download="list.pdf" class="btn btn-secondary btn-sm">Als PDF herunterladen</a>
+            {% if current_group %}
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="mb-3">
+                    <a href="{{ url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id) }}" class="btn btn-secondary btn-sm" target="_blank">Als PDF anzeigen</a>
+                    <a href="{{ url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id) }}" download="list.pdf" class="btn btn-secondary btn-sm">Als PDF herunterladen</a>
+                </div>
+
+                <ul class="pagination pagination-sm">
+                    {% for _ in range(current_group.list_system().display_page_count) %}
+                    {% if request.values.get('page', "1") == ""~loop.index %}
+                    <li class="page-item active" aria-current="page"><span class="page-link">{{ loop.index }}</span></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?group={{ current_group.id }}&page={{ loop.index }}">{{ loop.index }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
             </div>
             
-            {% if current_group %}
             <div class="mb-3">
-                <img src="{{ url_for('mod_list.display_image', event=g.event.slug, id=current_group.id) }}" alt="">
+                <img src="{{ url_for('mod_list.display_image', event=g.event.slug, id=current_group.id, page=request.values.get('page')) }}" alt="">
             </div>
             {% endif %}
         </div>
