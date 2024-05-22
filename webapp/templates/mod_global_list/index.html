@@ -142,7 +142,6 @@
                 <div class="mb-3">
                     <a href="{{ url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id) }}" class="btn btn-secondary btn-sm" target="_blank">Als PDF anzeigen</a>
                     <a href="{{ url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id) }}" download="list.pdf" class="btn btn-secondary btn-sm">Als PDF herunterladen</a>
-                    <a href="{{ url_for('mod_global_list.reset_group', event=g.event.slug, id=current_group.id) }}" class="btn btn-sm btn-outline-danger">Kämpfe zurücksetzen</a>
                 </div>
 
                 <ul class="pagination pagination-sm">
@@ -229,15 +228,22 @@
                     </div>
 
                     <input type="hidden" name="group_list" value="{{ request.values.get('group_list', 'status') }}">
-
+                    
+                    {% if not group.marked_ready %}
                     <div class="mb-3">
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" {{ 'disabled' if group.marked_ready }} role="switch" id="group-{{ group.id }}-marked_ready" name="marked_ready" {{ 'checked' if group.marked_ready }}>
+                            <input class="form-check-input" type="checkbox" role="switch" id="group-{{ group.id }}-marked_ready" name="marked_ready">
                             <label class="form-check-label fw-bold" for="group-{{ group.id }}-marked_ready">Gruppe zur Eröffnung freigeben</label>
                         </div>
                     </div>
+                    {% else %}
+                    <p class="mb-1">Gruppe wurde zur Eröffnung freigegeben.</p>
+                    {% endif %}
     
                     <button type="submit" class="btn btn-primary btn-sm">Speichern</button>
+                    {% if group.marked_ready %}
+                    <a href="{{ url_for('mod_global_list.reset_group', event=g.event.slug, id=current_group.id) }}" class="btn btn-sm btn-outline-danger">Kämpfe zurücksetzen</a>
+                    {% endif %}
                 </form>
             </div>
         </div>
