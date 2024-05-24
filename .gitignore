@@ -4,6 +4,7 @@ config.py
 webapp/config.py
 tatami.db
 webapp/tatami.db
+*.db
 venv
 
 webapp/temp
