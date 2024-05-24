@@ -60,6 +60,7 @@ def scoreboard():
     return render_template("scoreboard.html")
 
 @app.errorhandler(404)
+@app.errorhandler(405)
 @app.route('/notfound')
 def error_404(e=None): return render_template('error/notfound.html'), 404
 
