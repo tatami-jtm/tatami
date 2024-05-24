@@ -341,6 +341,65 @@ def class_step_back(id):
     return redirect(url_for('event_manager.edit_class', event=g.event.slug, id=event_class.id))
 
 
+@eventmgr_view.route('/classes/<id>/merge_into', methods=['GET', 'POST'])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def merge_into_class(id):
+    event_class = EventClass.query.filter_by(id=id).one_or_404()
+
+    if request.method == 'POST':
+        source_class = EventClass.query.filter_by(id=request.form['source']).one_or_404()
+
+        if source_class.id == event_class.id:
+            abort(400)
+
+        modified_registrations = []
+        g.event.log(current_user.qualified_name(), 'DEBUG',
+                    f'Merge {source_class.title} -> {event_class.title} beginnt.')
+
+        for reg in source_class.registrations:
+            reg.event_class = event_class
+            modified_registrations.append(reg.short_name())
+
+        db.session.commit()
+        g.event.log(current_user.qualified_name(), 'DEBUG',
+                    f'Merge {source_class.title} -> {event_class.title}. Registrierungen übertragen: ' + ", ".join(modified_registrations))
+
+        modified_groups = []
+        for group in source_class.groups:
+            group.title = event_class.short_title + " " + group.cut_title()
+            group.event_class = event_class
+            modified_groups.append(group.title)
+        
+        db.session.commit()
+        g.event.log(current_user.qualified_name(), 'DEBUG',
+                    f'Merge {source_class.title} -> {event_class.title}. Gruppen übertragen: ' + ", ".join(modified_groups))
+        
+        modified_matches = []
+        for match in source_class.matches:
+            match.event_class = event_class
+            modified_matches.append(f"{match.group.title} - {match.white.full_name}/{match.blue.full_name}")
+        
+        db.session.commit()
+        g.event.log(current_user.qualified_name(), 'DEBUG',
+                    f'Merge {source_class.title} -> {event_class.title}. Kämpfe übertragen: ' + ", ".join(modified_matches))
+        
+        db.session.delete(source_class)
+        db.session.commit()
+
+        g.event.log(current_user.qualified_name(), 'DEBUG',
+                    f'Merge {source_class.title} -> {event_class.title} abgeschlossen, Kampfklasse gelöscht.')
+        
+        flash(f"Kampfklasse {source_class.title} erfolgreich mit {event_class.title} zusammengeführt. {len(modified_registrations)} TN, {len(modified_groups)} Gruppen, {len(modified_matches)} Kämpfe wurden übertragen.", 'success')
+        
+        return redirect(url_for('event_manager.classes', event=g.event.slug))
+
+    else:
+        classes = g.event.classes.filter(EventClass.id != id).all()
+        return render_template("event-manager/classes/merge.html", event_class=event_class, classes=classes)
+
+
 @eventmgr_view.route('/registrations')
 @login_required
 @check_and_apply_event

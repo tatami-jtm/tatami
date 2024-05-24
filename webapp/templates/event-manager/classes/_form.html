@@ -38,6 +38,13 @@
                 Fortschritt
         </button>
         </div>
+        <div class="nav-item">
+            <a class="nav-link" id="class-progress-tab"
+                    role="tab" aria-selected="false"
+                    href="{{ url_for('event_manager.merge_into_class', event=g.event.slug, id=event_class.id) }}">
+                Merge
+        </button>
+        </div>
         {% endif %}
     </div>
     <div class="tab-content" id="classform-tabContent">
