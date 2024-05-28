@@ -408,6 +408,7 @@ def assign_all_proximity(id):
     else:
         default_segmentation = {}
         max_proximity = event_class.default_maximal_proximity
+        use_percentage = event_class.proximitiy_uses_percentage_instead_of_absolute
         max_size = event_class.default_maximal_size
         current_max_weight = None
         group_size = 0
@@ -423,7 +424,8 @@ def assign_all_proximity(id):
                 
                 past_registration = registration
 
-            elif actual_weight + max_proximity >= current_max_weight:
+            elif (not use_percentage and (actual_weight + max_proximity >= current_max_weight)) or \
+                 (    use_percentage and (actual_weight * (1 + max_proximity/100) >= current_max_weight)):
                 group_size += 1
 
                 if group_size == max_size:

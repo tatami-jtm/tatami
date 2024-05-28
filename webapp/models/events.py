@@ -176,6 +176,7 @@ class EventClass(db.Model):
 
     use_proximity_weight_mode = db.Column(db.Boolean())  # gewichtsnahe Gruppen
     default_maximal_proximity = db.Column(db.Integer())
+    proximitiy_uses_percentage_instead_of_absolute = db.Column(db.Boolean())
     default_maximal_size = db.Column(db.Integer())
     weight_generator = db.Column(db.Text())
 

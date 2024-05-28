@@ -36,7 +36,11 @@
             </td>
             <td>
                 {% if cl.use_proximity_weight_mode %}
+                {% if cl.proximitiy_uses_percentage_instead_of_absolute %}
+                <em>Gewichtsnahe Gruppen</em><br>mit Differenz kleiner {{ cl.default_maximal_proximity }}%
+                {% else %}
                 <em>Gewichtsnahe Gruppen</em><br>mit Differenz kleiner {{ cl.default_maximal_proximity / 1000 }}kg
+                {% endif %}
                 {% else %}
                 <em>Gewichtsklassen</em><br>{{ ", ".join(cl.weight_generator.split("\n")) }}
                 {% endif %}
