@@ -64,10 +64,18 @@
                 <input class="form-check-input" type="checkbox" role="switch" id="write_activity_log" name="write_activity_log" {{ 'checked' if g.event.setting('write_activity_log', True) }}>
                 <label class="form-check-label fw-bold" for="write_activity_log">Veranstaltungsprotokoll schreiben</label>
             </div>
-            <div class="form-check form-switch">
+            <div class="form-check form-switch mb-3">
                 <input class="form-check-input" type="checkbox" role="switch" id="use_association_instead_of_club" name="use_association_instead_of_club" {{ 'checked' if g.event.setting('use_association_instead_of_club', False) }}>
                 <label class="form-check-label fw-bold" for="use_association_instead_of_club">Anstelle des Vereins wird für die Listen, das Scoreboard u. a. der Verband verwendet</label>
                 <div class="form-text">Dies ist insb. bei Meisterschaften mit Vorqualifikation auszuwählen, bei denen der Verband maßgeblich ist.<br>Eine Änderung dieser Einstellung gilt nur für TN, die danach einer Gruppe zugewiesen werden.</div>
+            </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="proxplace_hide_name" name="proxplace_hide_name" {{ 'checked' if g.event.setting('proximity_placement.hide_name', False) }}>
+                <label class="form-check-label fw-bold" for="proxplace_hide_name">TN-Name bei Einteilung nach gewichtsnahen Gruppen ausblenden</label>
+            </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="proxplace_hide_club" name="proxplace_hide_club" {{ 'checked' if g.event.setting('proximity_placement.hide_club', False) }}>
+                <label class="form-check-label fw-bold" for="proxplace_hide_name">Verein bzw. Verband bei Einteilung nach gewichtsnahen Gruppen ausblenden</label>
             </div>
         </div>
         <div class="card-footer">

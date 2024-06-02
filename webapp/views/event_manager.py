@@ -132,6 +132,10 @@ def save_config():
         g.event.save_setting('write_activity_log', 'write_activity_log' in request.form)
         g.event.save_setting('use_association_instead_of_club', 'use_association_instead_of_club' in request.form)
 
+        g.event.save_setting('proximity_placement.hide_name', 'proxplace_hide_name' in request.form)
+        g.event.save_setting('proximity_placement.hide_club', 'proxplace_hide_club' in request.form)
+
+
         flash("Einstellungen erfolgreich gespeichert", 'success')
         g.event.log(current_user.qualified_name(), 'DEBUG', 'Allgemeine Einstellungen wurden aktualisiert.')
 

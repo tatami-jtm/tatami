@@ -1,4 +1,5 @@
 from . import db
+import base64
 
 class Registration(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
@@ -39,6 +40,15 @@ class Registration(db.Model):
             assoc_pt = f" ({self.association.short_name})"
 
         return self.first_name[0].upper() + ". " + self.last_name.upper() + assoc_pt
+    
+    def anon_name(self):
+        return base64.b16encode(f"{self.id}".encode() + self.last_name.encode() + b" " + self.first_name.encode()).decode()[:24]
+    
+    def anon_club(self):
+        if self.association:
+            return base64.b16encode(self.club.encode() + b"+" + self.association.short_name.encode()).decode()[:18]
+        else:
+            return base64.b16encode(self.club.encode()).decode()[:18]
     
     def matches_status(self, filter):
         # All registrations match no filter
