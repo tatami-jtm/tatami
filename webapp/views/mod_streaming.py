@@ -51,7 +51,7 @@ def matches_stream(mats):
             if not cm: continue
             
             font = ImageFont.truetype('arial.ttf', 16)
-            frame_draw.text((20, y+100), cm.group.title.replace(" ", "\n"), align="center", font=font)
+            frame_draw.text((20, y+100), cm.group.title.replace(" ", "\n", 1), align="center", font=font)
 
             font = ImageFont.truetype('arialbd.ttf', 32)
             frame_draw.text((120, y+5), cm.white.full_name, font=font, fill='black')
