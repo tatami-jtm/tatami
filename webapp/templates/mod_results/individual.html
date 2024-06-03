@@ -1,8 +1,9 @@
 {% extends "layouts/application.html" %}
 {% block title %}Ergebnisse{% endblock %}
+{% set page = "individual" %}
 {% from "mod_global_list/_match_summary.html" import small_match_summary %}
 {% block body %}
-<h1 class="fw-bold h2">Ergebnisse</h1>
+{% include "mod_results/_header.html" %}
 
 {% for evcl in g.event.classes if evcl.groups.filter_by(completed=True).count() > 0 %}
 <h2 class="h4 mt-4">{{ evcl.title }}</h2>

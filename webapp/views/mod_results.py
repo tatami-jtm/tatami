@@ -16,7 +16,7 @@ mod_results_view = Blueprint('mod_results', __name__)
 @mod_results_view.route('/')
 @check_and_apply_event
 @check_is_registered
-def index():
+def individual():
     if not g.device.event_role.may_use_results:
         flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
         return redirect(url_for('devices.index', event=g.event.slug))
@@ -25,7 +25,29 @@ def index():
         for group in evcl.groups.filter_by(completed=True):
             helpers.force_create_list(group)
     
-    return render_template("mod_results/index.html")
+    return render_template("mod_results/individual.html")
+
+
+@mod_results_view.route('/teams')
+@check_and_apply_event
+@check_is_registered
+def team_results():
+    if not g.device.event_role.may_use_results:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+    
+    return render_template("mod_results/team_results.html")
+
+
+@mod_results_view.route('/teams/ranked')
+@check_and_apply_event
+@check_is_registered
+def team_rankings():
+    if not g.device.event_role.may_use_results:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+    
+    return render_template("mod_results/team_rankings.html")
 
 
 @mod_results_view.route('/print/<id>')
