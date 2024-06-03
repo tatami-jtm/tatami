@@ -78,6 +78,34 @@ class Registration(db.Model):
         
         # No registrations match any other filter
         return False
+    
+    @classmethod
+    def filter(cls, event, event_class=None, status=None, name=None, club=None):
+        query = cls.query.filter(cls.event_id==event.id)
+
+        if event_class:
+            query = query.filter(cls.event_class_id==event_class.id)
+
+        if name:
+            name = name.replace('*', '%')
+            if name.startswith('^'): # Filter for first name only
+                query = query.filter(cls.first_name.ilike(f"{name[1:]}%"))
+            elif name.startswith('$'): # Filter for last name only
+                query = query.filter(cls.last_name.ilike(f"{name[1:]}%"))
+            else:
+                query = query.filter(cls.first_name.ilike(f"{name}%") | cls.last_name.ilike(f"{name}%"))
+
+        if club:
+            query = query.filter(cls.club.ilike(f"%{club}%"))
+
+        query = query.order_by('last_name', 'first_name', 'club')
+        query = query.all()
+
+        if status:
+            query = [*filter(lambda o: o.matches_status(status), query)]
+
+        return query
+
 
 
 class Association(db.Model):

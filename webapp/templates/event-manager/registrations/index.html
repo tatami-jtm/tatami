@@ -3,45 +3,53 @@
 {% extends "layouts/event-manager.html" %}
 {% block title %}{{ g.event.title }}{% endblock %}
 
-{% if filtered_class %}
-    {% set query = filtered_class.registrations %}
-{% else %}
-    {% set query = g.event.registrations %}
-{% endif %}
-
 {% block body %}
 {% include "event-manager/registrations/_header.html" %}
 
-<h2>Teilnehmende</h2>
-
-<form action="" method="GET" class="row gx-2 mb-4 align-items-center">
+<form action="" method="GET" class="row gx-2 mb-4 align-items-end">
     <div class="col-auto">
+        <label for="class_filter" class="form-label mb-1">Kampfklasse</label>
         <select name="class_filter" id="class_filter" class="form-select">
             <option value="">(alle anzeigen)</option>
             {% for cl in g.event.classes.order_by('title') %}
-            <option value="{{ cl.id }}"{{ ' selected' if cl.id == filtered_class.id }}>{{ cl.title }} - {{ cl.registrations.count() }} TN</option>
+            <option value="{{ cl.id }}"{{ ' selected' if cl.id == filtered_class.id }}>{{ cl.title }}</option>
             {% endfor %}
         </select>
     </div>
     <div class="col-auto">
+        <label for="status_filter" class="form-label mb-1">Status</label>
         <select name="status_filter" id="status_filter" class="form-select">
             <option value="">(alle anzeigen)</option>
-            <option value="not_yet_confirmed"{{ ' selected' if status_filter == 'not_yet_confirmed' }}>Voranmeldung noch nicht bestätigt</option>
-            <option value="confirmed"{{ ' selected' if status_filter == 'confirmed' }}>Voranmeldung bestätigt</option>
-            <option value="not_yet_registered"{{ ' selected' if status_filter == 'not_yet_registered' }}>Noch nicht akkreditiert</option>
+            <option value="not_yet_confirmed"{{ ' selected' if status_filter == 'not_yet_confirmed' }}>Nicht bestätigt</option>
+            <option value="confirmed"{{ ' selected' if status_filter == 'confirmed' }}>Bestätigt</option>
+            <option value="not_yet_registered"{{ ' selected' if status_filter == 'not_yet_registered' }}>Nicht akkreditiert</option>
             <option value="registered"{{ ' selected' if status_filter == 'registered' }}>Akkreditiert</option>
-            <option value="registered_not_weighed_in"{{ ' selected' if status_filter == 'registered_not_weighed_in' }}>Akkreditiert, noch nicht Eingewogen</option>
+            <option value="registered_not_weighed_in"{{ ' selected' if status_filter == 'registered_not_weighed_in' }}>Akkreditiert, nicht Eingewogen</option>
             <option value="weighed_in"{{ ' selected' if status_filter == 'weighed_in' }}>Eingewogen</option>
-            <option value="weighed_in_without_registration"{{ ' selected' if status_filter == 'weighed_in_without_registration' }}>Eingewogen (ohne Akkreditierung)</option>
+            <option value="weighed_in_without_registration"{{ ' selected' if status_filter == 'weighed_in_without_registration' }}>Eingewogen, nicht Akkreditiert</option>
         </select>
     </div>
     <div class="col-auto">
-        <button type="submit" class="btn btn-secondary">Filtern</button>
+        <label for="name_filter" class="form-label mb-1">Name</label>
+        <input type="text" class="form-control" id="name_filter" name="name_filter" value="{{ name_filter or '' }}">
     </div>
     <div class="col-auto">
-        <a href="?">Zurücksetzen</a>
+        <label for="club_filter" class="form-label mb-1">Verein</label>
+        <input type="text" class="form-control" id="club_filter" name="club_filter" value="{{ club_filter or '' }}">
+    </div>
+    <div class="col-auto flex-grow-1"></div>
+    <div class="col-auto pt-2">
+        <button type="submit" class="btn py-1 btn-dark">Filtern</button>
+        <a href="?" class="btn py-1 btn-secondary">Zurücksetzen</a>
     </div>
 </form>
+
+
+{% if filtered %}
+<h2 class="h3 fw-bold">{{ g.event.registrations.count() }} Teilnehmende (ausgewählt: {{ query|length }} TN)</h2>
+{% else %}
+<h2 class="h3 fw-bold">{{ g.event.registrations.count() }} Teilnehmende</h2>
+{% endif %}
 
 <table class="table table-hover table-bordered">
     <thead>
@@ -56,7 +64,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for reg in query.order_by('last_name', 'first_name', 'club') if not status_filter or reg.matches_status(status_filter) %}
+        {% for reg in query %}
         <tr>
             <td>{{ reg.event_class.title }}</td>
             <td>{{ reg.last_name }}</td>
