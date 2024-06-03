@@ -47,7 +47,7 @@
             </td>
             <td>
                 <a href="{{ url_for('event_manager.edit_class', event=g.event.slug, id=cl.id) }}" class="btn btn-sm btn-primary">Bearbeiten</a>
-                <a href="{{ url_for('event_manager.registrations', event=g.event.slug, class_filter=cl.id) }}" class="btn btn-sm btn-secondary">TN</a>
+                <a href="{{ url_for('event_manager.registrations', event=g.event.slug, class_filter=cl.id) }}" class="btn btn-sm btn-secondary">{{ cl.registrations.count() }} TN</a>
                 <a href="{{ url_for('event_manager.class_registrations_as_csv', event=g.event.slug, id=cl.id) }}" class="btn btn-sm btn-secondary">CSV</a>
             </td>
         </tr>
