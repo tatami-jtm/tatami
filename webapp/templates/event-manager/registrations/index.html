@@ -11,9 +11,18 @@
         <label for="class_filter" class="form-label mb-1">Kampfklasse</label>
         <select name="class_filter" id="class_filter" class="form-select">
             <option value="">(alle anzeigen)</option>
-            {% for cl in g.event.classes.order_by('title') %}
-            <option value="{{ cl.id }}"{{ ' selected' if cl.id == filtered_class.id }}>{{ cl.title }}</option>
-            {% endfor %}
+            <optgroup label="Einzelne Kampfklassen">
+                {% for cl in g.event.classes.order_by('title') %}
+                <option value="{{ cl.id }}"{{ ' selected' if class_filter=='single' and cl.id == filtered_class.id }}>{{ cl.title }}</option>
+                {% endfor %}
+            </optgroup>
+            <optgroup label="Nach Fortschritt">
+                <option value="pending"{{ ' selected' if class_filter == 'pending' }}>Ausstehend</option>
+                <option value="weighing_in"{{ ' selected' if class_filter == 'weighing_in' }}>In Waage</option>
+                <option value="weighed_in"{{ ' selected' if class_filter == 'weighed_in' }}>Wiegen beendet</option>
+                <option value="fighting"{{ ' selected' if class_filter == 'fighting' }}>Kämpft</option>
+                <option value="completed"{{ ' selected' if class_filter == 'completed' }}>Beendet</option>
+            </optgroup>
         </select>
     </div>
     <div class="col-auto">

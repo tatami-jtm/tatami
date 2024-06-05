@@ -413,19 +413,25 @@ def merge_into_class(id):
 @check_and_apply_event
 @check_is_event_supervisor
 def registrations():
+    class_filter = None
     filtered_class = None
     status_filter = request.values.get('status_filter', None)
     name_filter = request.values.get('name_filter', None)
     club_filter = request.values.get('club_filter', None)
 
     if request.values.get('class_filter', None):
-        filtered_class = EventClass.query.filter_by(id=request.values['class_filter']).one_or_404()
+        if request.values['class_filter'] not in ['pending', 'weighing_in', 'weighed_in', 'fighting', 'completed']:
+            filtered_class = EventClass.query.filter_by(id=request.values['class_filter']).one_or_404()
+            class_filter = 'single'
+        else:
+            class_filter = request.values['class_filter']
 
     filtered = filtered_class is not None or status_filter is not None or name_filter is not None or club_filter is not None
-    query = Registration.filter(g.event, event_class=filtered_class, status=status_filter, name=name_filter, club=club_filter)
+    query = Registration.filter(g.event, class_filter=class_filter, event_class=filtered_class, status=status_filter, name=name_filter, club=club_filter)
 
-    return render_template("event-manager/registrations/index.html", filtered=filtered, filtered_class=filtered_class,
-                           status_filter=status_filter, name_filter=name_filter, club_filter=club_filter, query=query)
+    return render_template("event-manager/registrations/index.html", filtered=filtered, class_filter=class_filter,
+                           filtered_class=filtered_class, status_filter=status_filter, name_filter=name_filter,
+                           club_filter=club_filter, query=query)
 
 
 @eventmgr_view.route('/registrations/print')

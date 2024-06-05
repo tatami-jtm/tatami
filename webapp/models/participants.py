@@ -80,11 +80,29 @@ class Registration(db.Model):
         return False
     
     @classmethod
-    def filter(cls, event, event_class=None, status=None, name=None, club=None):
+    def filter(cls, event, class_filter=None, event_class=None, status=None, name=None, club=None):
         query = cls.query.filter(cls.event_id==event.id)
 
-        if event_class:
+        # Doing some db-black magic to prevent circular import issues
+        EventClass = cls.event_class.mapper.class_
+
+        if class_filter == 'single':
             query = query.filter(cls.event_class_id==event_class.id)
+        elif class_filter == 'pending':
+            data = map(lambda c: c.id, EventClass.query.filter_by(begin_weigh_in=False).all())
+            query = query.filter(cls.event_class_id.in_(data))
+        elif class_filter == 'weighing_in':
+            data = map(lambda c: c.id, EventClass.query.filter_by(begin_weigh_in=True, begin_placement=False).all())
+            query = query.filter(cls.event_class_id.in_(data))
+        elif class_filter == 'weighed_in':
+            data = map(lambda c: c.id, EventClass.query.filter_by(begin_placement=True, begin_fighting=False).all())
+            query = query.filter(cls.event_class_id.in_(data))
+        elif class_filter == 'fighting':
+            data = map(lambda c: c.id, EventClass.query.filter_by(begin_fighting=True, ended_fighting=False).all())
+            query = query.filter(cls.event_class_id.in_(data))
+        elif class_filter == 'completed':
+            data = map(lambda c: c.id, EventClass.query.filter_by(ended_fighting=True).all())
+            query = query.filter(cls.event_class_id.in_(data))
 
         if name:
             name = name.replace('*', '%')
