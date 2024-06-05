@@ -19,7 +19,7 @@
     {% for participant in group.placements() %}
     <div class="card-body p-2 py-1 {{ 'border-top' if not loop.index == 1 }}">
         <div class="row">
-            <div class="col-1 align-self-center text-center px-0">
+            <div class="col-1 align-self-center text-center">
                 <div class="{{ 'fs-3' if participant.final_placement < 9 else 'fs-5 py-1' }} place{{ participant.final_placement }} fw-bold">{{ participant.final_placement }}.</div>
             </div>
             <div class="col-11 align-self-center">

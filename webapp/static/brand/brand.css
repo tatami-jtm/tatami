@@ -923,13 +923,22 @@ input.w-min {
 }
 
 .place1 {
-    color: goldenrod;
+    background-color: goldenrod;
+    color: black;
+    border-radius: .5rem;
+    box-shadow: 0 -.2rem 0 0 rgba(0, 0, 0, 0.1) inset;
 }
 .place2 {
-    color: darkslategray;
+    background-color: lightgray;
+    color: black;
+    border-radius: .5rem;
+    box-shadow: 0 -.15rem 0 0 rgba(0, 0, 0, 0.2) inset;
 }
 .place3 {
-    color: maroon;
+    background-color: sienna;
+    color: white;
+    border-radius: .5rem;
+    box-shadow: 0 -.1rem 0 rgba(0, 0, 0, 0.2) inset;
 }
 
 
