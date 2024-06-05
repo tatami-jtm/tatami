@@ -198,6 +198,9 @@ document.querySelector("[data-tatami-enter-results]").addEventListener("click", 
     if (document.getElementById('match-loser-removed').checked)
         formData.append('loser_removed', 1)
 
+    document.getElementById('match-loser-disqualified').checked = false;
+    document.getElementById('match-loser-removed').checked = false;
+
     formData.append('sb-white-ippon', (sbState.white.ippon) ? 1 : 0)
     formData.append('sb-white-wazaari', (sbState.white.wazaari_awasete_ippon) ? 2 : (sbState.white.wazaari) ? 1 : 0)
     formData.append('sb-white-shido', sbState.white.shido)
