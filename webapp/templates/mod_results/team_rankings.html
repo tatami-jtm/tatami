@@ -5,4 +5,57 @@
 {% block body %}
 {% include "mod_results/_header.html" %}
 
+{% for evcl in event_classes %}
+<h2 class="h4 mt-4 mb-3">{{ evcl[0].title }}</h2>
+
+<div class="card card-semidialog mb-3">
+    <div class="card-body p-3 py-1">
+        <div class="row">
+            <div class="col-8"></div>
+            <div class="fs-small col-1 align-self-center text-center px-0">
+                1. Platz
+            </div>
+            <div class="fs-small col-1 align-self-center text-center px-0">
+                2. Platz
+            </div>
+            <div class="fs-small col-1 align-self-center text-center px-0">
+                3. Platz
+            </div>
+            <div class="fs-small col-1 align-self-center text-center px-0">
+                5. Platz
+            </div>
+        </div>
+    </div>
+    {% for team, results in evcl[1].items() %}
+    <div class="card-body p-3 py-1 border-top">
+        <div class="row">
+            <div class="col-8 align-self-center px-3">
+                <div class="fs-5 fw-bold">{{ team }}</div>
+            </div>
+            <div class="col-1 align-self-center text-center px-0">
+                {% if results[1] != 0 %}
+                <div class="fs-3 place1 fw-bold">{{ results[1] }}&times;</div>
+                {% endif %}
+            </div>
+            <div class="col-1 align-self-center text-center px-0">
+                {% if results[2] != 0 %}
+                <div class="fs-3 place2 fw-bold">{{ results[2] }}&times;</div>
+                {% endif %}
+            </div>
+            <div class="col-1 align-self-center text-center px-0">
+                {% if results[3] != 0 %}
+                <div class="fs-3 place3 fw-bold">{{ results[3] }}&times;</div>
+                {% endif %}
+            </div>
+            <div class="col-1 align-self-center text-center px-0">
+                {% if results[5] != 0 %}
+                <div class="fs-3 place5 fw-bold">{{ results[5] }}&times;</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}
+
 {% endblock body %}

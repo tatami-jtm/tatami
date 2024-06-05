@@ -36,7 +36,25 @@ def team_results():
         flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
         return redirect(url_for('devices.index', event=g.event.slug))
     
-    return render_template("mod_results/team_results.html")
+    event_classes = []
+    for evcl in g.event.classes:
+        teams = {}
+        for group in evcl.groups.filter_by(completed=True):
+            helpers.force_create_list(group)
+
+            for participant in group.placements():
+                team = participant.association_name
+
+                if team not in teams:
+                    teams[team] = []
+                
+                teams[team].append(participant)
+
+        if len(teams.keys()):
+            teams = {k: sorted(v, key=lambda p: p.final_placement) for k, v in teams.items()}
+            event_classes.append([evcl, teams])
+    
+    return render_template("mod_results/team_results.html", event_classes=event_classes)
 
 
 @mod_results_view.route('/teams/ranked')
@@ -47,7 +65,25 @@ def team_rankings():
         flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
         return redirect(url_for('devices.index', event=g.event.slug))
     
-    return render_template("mod_results/team_rankings.html")
+    event_classes = []
+    for evcl in g.event.classes:
+        teams = {}
+        for group in evcl.groups.filter_by(completed=True):
+            helpers.force_create_list(group)
+
+            for participant in group.placements():
+                team = participant.association_name
+
+                if team not in teams:
+                    teams[team] = {1:0, 2:0, 3:0, 5:0, 7:0}
+                
+                teams[team][participant.final_placement] += 1
+
+        if len(teams.keys()):
+            teams = dict(sorted(teams.items(), key=lambda t: (t[1][1], t[1][2], t[1][3], t[1][5]), reverse=True))
+            event_classes.append([evcl, teams])
+    
+    return render_template("mod_results/team_rankings.html", event_classes=event_classes)
 
 
 @mod_results_view.route('/print/<id>')

@@ -5,4 +5,33 @@
 {% block body %}
 {% include "mod_results/_header.html" %}
 
+{% for evcl in event_classes %}
+<h2 class="h4 mt-4 mb-3">{{ evcl[0].title }}</h2>
+
+
+{% for team, participants in evcl[1].items() %}
+<div class="card card-semidialog mb-3">
+    <div class="card-header">
+        {{ team }}
+    </div>
+    {% for participant in participants %}
+    <div class="card-body p-2 py-1 {{ 'border-top' if not loop.index == 1 }}">
+        <div class="row">
+            <div class="col-1 align-self-center text-center px-0">
+                <div class="{{ 'fs-3' if participant.final_placement < 9 else 'fs-5 py-1' }} place{{ participant.final_placement }} fw-bold">{{ participant.final_placement }}.</div>
+            </div>
+            <div class="col-9 align-self-center">
+                <strong>{{ participant.full_name }}</strong><br>
+                {{ participant.association_name }}
+            </div>
+            <div class="col-2 align-self-center text-center px-0">
+                <div class="fs-5 py-1 fw-bold">{{ participant.group.cut_title() }}</div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}
+{% endfor %}
+
 {% endblock body %}
