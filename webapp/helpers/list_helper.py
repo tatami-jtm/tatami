@@ -22,7 +22,10 @@ def load_list(group):
         if participant.placement_index is None:
             continue
 
-        struct['fighters'].append(Fighter(participant.id, participant.full_name, participant.association_name))
+        f = Fighter(participant.id, participant.full_name, participant.association_name)
+        if participant.disqualified:
+            f.disqualify()
+        struct['fighters'].append(f)
 
     for match in group.matches.all():
         if match.has_result():
