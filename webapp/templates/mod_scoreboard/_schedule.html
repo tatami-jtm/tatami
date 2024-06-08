@@ -97,7 +97,7 @@
             </div>
         </div>
     </div>
-    {% for list in assigned_lists %}
+    {% for list in assigned_lists if not list.completed %}
     <div class="accordion-item">
         <h3 class="accordion-header">
             <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#listScheduleAccordion-pending-gr{{ list.id }}" aria-control="listScheduleAccordion-pending-gr{{ list.id }}">{{ list.title }}</button>
