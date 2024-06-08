@@ -2,7 +2,7 @@ var local_config = {
     fightDuration: 240,
     hasGoldenScore: true,
     maxGoldenScore: null,
-    defaultScreen: 'callup'
+    defaultScreen: 'break'
 }
 
 const enter_results = document.querySelector("[data-control=\"enter-results\"]")
@@ -127,7 +127,6 @@ const managedTick = () => {
 }
 
 window.addEventListener("load", () => {
-    startNewMatch()
     setInterval(managedTick, 50)
 })
 
@@ -166,6 +165,7 @@ const startNewMatch = () => {
     updateLocalConfig()
     updateFromSource()
     resetState(local_config)
+    sbState.view.screen = 'callup'
 
     if (document.querySelector("[data-tatami-source=\"current_match.any\"]").value == '1') {
         callupModal.show()
@@ -228,7 +228,14 @@ document.querySelector("[data-tatami-enter-results]").addEventListener("click", 
         alert(`Fehler: ${reply.message}`)
     } else if (reply.status == 'success') {
         await update_schedule()
-        startNewMatch()
+
+        callup_again.innerText = 'Kampf aufrufen'
+        callup_again.classList.add('btn-dark')
+        callup_again.classList.remove('btn-outline-danger')
+
+        enter_results.setAttribute('disabled', 'disabled');
+        enter_results.classList.remove('btn-dark')
+        enter_results.classList.add('btn-light');
     }
 })
 
@@ -250,4 +257,12 @@ enter_results.addEventListener('click', () => {
 
 callup_again.addEventListener('click', () => {
     startNewMatch()
+
+    callup_again.innerText = 'Erneut aufrufen'
+    callup_again.classList.remove('btn-dark')
+    callup_again.classList.add('btn-outline-danger')
+
+    enter_results.removeAttribute('disabled');
+    enter_results.classList.remove('btn-light');
+    enter_results.classList.add('btn-dark');
 })
