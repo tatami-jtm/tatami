@@ -1,5 +1,5 @@
 var local_config = {
-    fightDuration: 240,
+    fightDuration: 0,
     hasGoldenScore: true,
     maxGoldenScore: null,
     defaultScreen: 'break'
@@ -181,6 +181,18 @@ document.querySelector("[data-tatami-end-callup]").addEventListener("click", () 
 })
 
 document.querySelector("[data-tatami-enter-results]").addEventListener("click", async () => {
+    if (document.getElementById('match-winner').value == 'white') {
+        sbState.view.screen = 'winner:white'
+        setOption('winner:name', document.querySelector("[data-tatami-source=\"current_match.white.name\"]").value)
+        setOption('winner:club', document.querySelector("[data-tatami-source=\"current_match.white.association\"]").value)
+    } else if (document.getElementById('match-winner').value == 'blue') {
+        sbState.view.screen = 'winner:blue'
+        setOption('winner:name', document.querySelector("[data-tatami-source=\"current_match.blue.name\"]").value)
+        setOption('winner:club', document.querySelector("[data-tatami-source=\"current_match.blue.association\"]").value)
+    } else {
+        // No winner selected; aborting.
+        return;
+    }
     resultsModal.hide()
 
     let formData = new FormData()

@@ -188,6 +188,8 @@ const properties = {
                 document.querySelector("[data-sbf-id='tatami-scoreboard:time:running']").classList.remove('running');
         }
     },
+    "tatami-scoreboard:winner:name": null,
+    "tatami-scoreboard:winner:club": null,
     "tatami-scoreboard:time:main": {
         render: (prop) => {
             return new Date(1000 * prop).toISOString().substr(15, 4)
