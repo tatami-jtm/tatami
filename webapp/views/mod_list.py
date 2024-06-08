@@ -194,6 +194,10 @@ def schedule_match(id, match_id):
             match.white.last_fight_at = datetime.now()
             match.blue.last_fight_at = datetime.now()
 
+            if not group.opened:
+                group.opened = True
+                group.opened_at = datetime.now()
+
             db.session.commit()
             g.event.log(g.device.title, 'DEBUG', f'Der Kampf {group.title} - {match.white.full_name}/{match.blue.full_name} wurde auf Nr. {match.match_schedule_key} angesetzt.')
 
@@ -411,6 +415,10 @@ def api_schedule_match(match_id):
                                         if max_schedule_key is not None else 0) + 1
             match.white.last_fight_at = datetime.now()
             match.blue.last_fight_at = datetime.now()
+
+            if not match.group.opened:
+                match.group.opened = True
+                match.group.opened_at = datetime.now()
 
             db.session.commit()
             g.event.log(g.device.title, 'DEBUG', f'Der Kampf {match.group.title} - {match.white.full_name}/{match.blue.full_name} wurde auf Nr. {match.match_schedule_key} angesetzt.')
