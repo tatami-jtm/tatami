@@ -35,6 +35,15 @@
 {% endif %}
 {% else %}
 <p class="mb-3">Zurzeit findet kein Kampf statt.</p>
+
+{% if g.event.setting('scheduling.use', True) %}
+<p>Die Listen werden auf dieser Matte automatisch geführt. Folglich sind entweder noch keine Listen freigegeben, alle Kämpf erledigt oder es muss zurzeit eine Pause stattfinden.</p>
+
+<a href="?" class="btn btn-secondary w-100 mb-5">Seite aktualisieren</a>
+{% else %}
+<p class="mb-5">Unten können ggf. Kämpfe ausgewählt werden, die jetzt stattfinden können.</p>
+{% endif %}
+
 <input type="hidden" data-tatami-source="current_match.any" value="0">
 {% endif %}
 
