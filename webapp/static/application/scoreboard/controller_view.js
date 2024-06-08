@@ -55,6 +55,11 @@ const renderControls = () => {
         callup_view.classList.remove("active")
         break_view.classList.add("active")
         current_screen.innerText = "- Pause -"
+    } else if (sbState.view.screen == 'winner:white' || sbState.view.screen == 'winner:blue') {
+        main_view.classList.remove("active")
+        callup_view.classList.remove("active")
+        break_view.classList.add("active")
+        current_screen.innerText = "- Gewinner*in wird angezeigt -"
     }
 
     if (sbState.view.medical) {

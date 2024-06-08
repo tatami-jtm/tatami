@@ -8,10 +8,12 @@ var local_config = {
 const enter_results = document.querySelector("[data-control=\"enter-results\"]")
 const transactional_end_fight = enter_results
 const callup_again = document.querySelector("[data-control=\"callup-again\"]")
+const callup_now = document.querySelector("[data-control=\"callup\"]")
 
 const scheduledArea = document.querySelector('[data-scheduled-area]')
 const resultsModal = new bootstrap.Modal('#results-modal')
 const callupModal = new bootstrap.Modal('#callup-modal')
+const winnerShownModal = new bootstrap.Modal('#winner-shown-modal')
 
 scheduledArea.addEventListener('click', async (e) => {
     let event = document.body.getAttribute("data-tatami-event")
@@ -185,15 +187,20 @@ document.querySelector("[data-tatami-enter-results]").addEventListener("click", 
         sbState.view.screen = 'winner:white'
         setOption('winner:name', document.querySelector("[data-tatami-source=\"current_match.white.name\"]").value)
         setOption('winner:club', document.querySelector("[data-tatami-source=\"current_match.white.association\"]").value)
+        updateField("winner.name", document.querySelector("[data-tatami-source=\"current_match.white.name\"]").value)
+        updateField("winner.club", document.querySelector("[data-tatami-source=\"current_match.white.association\"]").value)
     } else if (document.getElementById('match-winner').value == 'blue') {
         sbState.view.screen = 'winner:blue'
         setOption('winner:name', document.querySelector("[data-tatami-source=\"current_match.blue.name\"]").value)
         setOption('winner:club', document.querySelector("[data-tatami-source=\"current_match.blue.association\"]").value)
+        updateField("winner.name", document.querySelector("[data-tatami-source=\"current_match.blue.name\"]").value)
+        updateField("winner.club", document.querySelector("[data-tatami-source=\"current_match.blue.association\"]").value)
     } else {
         // No winner selected; aborting.
         return;
     }
     resultsModal.hide()
+    winnerShownModal.show()
 
     let formData = new FormData()
     
@@ -267,7 +274,8 @@ enter_results.addEventListener('click', () => {
 
 })
 
-callup_again.addEventListener('click', () => {
+let do_callup = () => {
+    winnerShownModal.hide()
     startNewMatch()
 
     callup_again.innerText = 'Erneut aufrufen'
@@ -277,4 +285,8 @@ callup_again.addEventListener('click', () => {
     enter_results.removeAttribute('disabled');
     enter_results.classList.remove('btn-light');
     enter_results.classList.add('btn-dark');
-})
+}
+
+callup_now.addEventListener('click', do_callup);
+
+callup_again.addEventListener('click', do_callup)
