@@ -418,6 +418,7 @@ def registrations():
     status_filter = request.values.get('status_filter', None)
     name_filter = request.values.get('name_filter', None)
     club_filter = request.values.get('club_filter', None)
+    order_by = request.values.get('order_by', None)
 
     if request.values.get('class_filter', None):
         if request.values['class_filter'] not in ['pending', 'weighing_in', 'weighed_in', 'fighting', 'completed']:
@@ -427,11 +428,12 @@ def registrations():
             class_filter = request.values['class_filter']
 
     filtered = filtered_class is not None or status_filter is not None or name_filter is not None or club_filter is not None
-    query = Registration.filter(g.event, class_filter=class_filter, event_class=filtered_class, status=status_filter, name=name_filter, club=club_filter)
+    query = Registration.filter(g.event, class_filter=class_filter, event_class=filtered_class, status=status_filter,
+                                name=name_filter, club=club_filter, order_by=order_by)
 
     return render_template("event-manager/registrations/index.html", filtered=filtered, class_filter=class_filter,
                            filtered_class=filtered_class, status_filter=status_filter, name_filter=name_filter,
-                           club_filter=club_filter, query=query)
+                           club_filter=club_filter, order_by=order_by, query=query)
 
 
 @eventmgr_view.route('/registrations/print')

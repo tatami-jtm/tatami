@@ -80,7 +80,7 @@ class Registration(db.Model):
         return False
     
     @classmethod
-    def filter(cls, event, class_filter=None, event_class=None, status=None, name=None, club=None):
+    def filter(cls, event, class_filter=None, event_class=None, status=None, name=None, club=None, order_by=None):
         query = cls.query.filter(cls.event_id==event.id)
 
         # Doing some db-black magic to prevent circular import issues
@@ -116,7 +116,17 @@ class Registration(db.Model):
         if club:
             query = query.filter(cls.club.ilike(f"%{club}%"))
 
-        query = query.order_by('last_name', 'first_name', 'club')
+        if order_by == 'first_name':
+            query = query.order_by('first_name')
+        elif order_by == 'last_name':
+            query = query.order_by('last_name')
+        elif order_by == 'club':
+            query = query.order_by('club')
+        elif order_by == 'verified_weight':
+            query = query.order_by('verified_weight')
+        else:
+            query = query.order_by('last_name', 'first_name', 'club')
+
         query = query.all()
 
         if status:

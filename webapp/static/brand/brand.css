@@ -921,6 +921,10 @@ input.w-min {
     width: 80px;
     max-width: 80px;
 }
+select.w-min {
+    width: 150px;
+    max-width: 150px;
+}
 
 .place1 {
     background-color: goldenrod;
