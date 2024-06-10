@@ -100,12 +100,14 @@
     {% for list in assigned_lists if not list.completed %}
     <div class="accordion-item">
         <h3 class="accordion-header">
-            <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#listScheduleAccordion-pending-gr{{ list.id }}" aria-control="listScheduleAccordion-pending-gr{{ list.id }}">{{ list.title }}</button>
+            <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#listScheduleAccordion-pending-gr{{ list.id }}" aria-control="listScheduleAccordion-pending-gr{{ list.id }}">
+                {{ list.title }}
+            </button>
         </h3>
         <div id="listScheduleAccordion-pending-gr{{ list.id }}" class="accordion-collapse collapse" data-bs-parent="#listScheduleAccordion">
             <div class="accordion-body p-0">
                 {% for match in list.matches.filter_by(scheduled=False, completed=False) %}
-                    <div class="p-2 {{ 'border-bottom' if not loop.last}}">
+                    <div class="p-2 border-bottom">
                         {{ small_match_summary(match) }}
                         {% if not match.schedulable() %}
                         <p class="mb-0 fs-small text-danger">Auszeit notwendig &ndash; Kampf kann zurzeit nicht stattfinden.</p>
@@ -116,8 +118,9 @@
                         {% endif %}
                     </div>
                     {% else %}
-                    <p class="p-3 mb-0">In dieser Gruppe stehen keine Kämpfe mehr aus.</p>
+                    <p class="p-3 mb-0 border-bottom">In dieser Gruppe stehen keine Kämpfe mehr aus.</p>
                 {% endfor %}
+                    <p class="p-3 py-2 m-0"><a href="{{ url_for('mod_list.display', event=g.event.slug, shown_list=list.id, show_only_one_list='yes') }}" data-show-list>Liste anzeigen</a></p>
             </div>
         </div>
     </div>

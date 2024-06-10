@@ -290,3 +290,12 @@ let do_callup = () => {
 callup_now.addEventListener('click', do_callup);
 
 callup_again.addEventListener('click', do_callup)
+
+
+document.querySelectorAll('[data-show-list]').forEach((sl) => {
+    sl.addEventListener('click', (e) => {
+        e.preventDefault()
+        url = e.target.href;
+        window.open(url, '_blank', "popup,width=600, height=700")
+    })
+})

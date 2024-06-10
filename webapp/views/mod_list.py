@@ -48,6 +48,34 @@ def index():
     return render_template("mod_list/index.html", assigned_lists=assigned_lists, shown_list=shown_list)
 
 
+@mod_list_view.route('/display')
+@check_and_apply_event
+@check_is_registered
+def display():
+    if not g.device.event_role.may_use_assigned_lists:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    g.mat = g.device.position
+    assigned_lists = g.mat.assigned_groups.filter_by(marked_ready=True, completed=False).all()
+
+    # Make sure all assigned lists are created (if not already)
+    for assigned_list in assigned_lists:
+        helpers.force_create_list(assigned_list)
+
+    if 'shown_list' in request.values:
+        shown_list = g.mat.assigned_groups.filter_by(marked_ready=True, id=request.values['shown_list']).one_or_404()
+    else:
+        current_match = g.mat.current_match()
+        if current_match:
+            shown_list = current_match.group
+        elif len(assigned_lists):
+            shown_list = assigned_lists[0]
+        else:
+            shown_list = None
+
+    return render_template("mod_list/display.html", assigned_lists=assigned_lists, shown_list=shown_list)
+
 @mod_list_view.route('/display/<id>/list.png')
 @mod_list_view.route('/display/<id>/list-page<int:page>.png')
 @check_and_apply_event
