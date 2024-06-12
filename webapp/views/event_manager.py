@@ -450,14 +450,20 @@ def print_registrations():
 
 
 @eventmgr_view.route('/registrations/class_<id>_registrations.csv')
+@eventmgr_view.route('/registrations/registrations.csv')
 @login_required
 @check_and_apply_event
 @check_is_event_supervisor
-def class_registrations_as_csv(id):
-    evcl = g.event.classes.filter_by(id=id).one_or_404()
+def class_registrations_as_csv(id=None):
+    if id is not None:
+        evcl = g.event.classes.filter_by(id=id).one_or_404()
+        registrations = evcl.registrations.order_by('last_name', 'first_name', 'club')
+    else:
+        registrations = g.event.registrations.order_by('last_name', 'first_name', 'club')
 
     data = [()]
     field_names = (
+        'Kampfklasse',
         'Nachname',
         'Vorname',
         'Verein',
@@ -469,8 +475,9 @@ def class_registrations_as_csv(id):
         'Eingewogen?'
     )
 
-    for registration in evcl.registrations.order_by('last_name', 'first_name', 'club'):
+    for registration in registrations:
         data.append((
+            registration.event_class.short_title,
             registration.last_name,
             registration.first_name,
             registration.club,

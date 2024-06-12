@@ -70,6 +70,18 @@
 <h2 class="h3 fw-bold">{{ g.event.registrations.count() }} Teilnehmende</h2>
 {% endif %}
 
+<div class="my-3">
+    <a href="{{ url_for('event_manager.create_registration', event=g.event.slug) }}" class="btn btn-primary">TN hinzufügen</a>
+    <a href="{{ url_for('event_manager.import_registrations_index', event=g.event.slug) }}" class="btn btn-secondary">TN importieren</a>
+    {% if filtered_class %}
+    <a href="{{ url_for('event_manager.print_registrations', event=g.event.slug, id=filtered_class.id) }}" class="btn btn-secondary" target="_blank">TN/Wiegeliste drucken ({{ filtered_class.short_title }})</a>
+    <a href="{{ url_for('event_manager.class_registrations_as_csv', event=g.event.slug, id=filtered_class.id) }}" class="btn btn-secondary">CSV exportieren ({{ filtered_class.short_title }})</a>
+    {% else %}
+    <a href="{{ url_for('event_manager.print_registrations', event=g.event.slug) }}" class="btn btn-secondary" target="_blank">TN/Wiegeliste drucken</a>
+    <a href="{{ url_for('event_manager.class_registrations_as_csv', event=g.event.slug) }}" class="btn btn-secondary">CSV exportieren</a>
+    {% endif %}
+</div>
+
 <table class="table table-hover table-bordered">
     <thead>
         <tr>
@@ -111,13 +123,4 @@
         {% endfor %}
     </tbody>
 </table>
-
-<a href="{{ url_for('event_manager.create_registration', event=g.event.slug) }}" class="btn btn-primary">TN hinzufügen</a>
-<a href="{{ url_for('event_manager.import_registrations_index', event=g.event.slug) }}" class="btn btn-secondary">TN importieren</a>
-{% if filtered_class %}
-<a href="{{ url_for('event_manager.print_registrations', event=g.event.slug, id=filtered_class.id) }}" class="btn btn-secondary" target="_blank">TN/Wiegeliste drucken (aktuelle Kampfklasse)</a>
-<a href="{{ url_for('event_manager.class_registrations_as_csv', event=g.event.slug, id=filtered_class.id) }}" class="btn btn-secondary">CSV exportieren (aktuelle Kampfklasse)</a>
-{% else %}
-<a href="{{ url_for('event_manager.print_registrations', event=g.event.slug) }}" class="btn btn-secondary" target="_blank">TN drucken</a>
-{% endif %}
 {% endblock body %}
