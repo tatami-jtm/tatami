@@ -4,6 +4,8 @@ from flask import Blueprint, render_template, flash, g, session, \
 import io, zipfile, random, time, json
 from datetime import datetime
 
+from pypdf import PdfWriter
+
 from .event_manager import check_and_apply_event
 from .devices import check_is_registered
 
@@ -155,7 +157,46 @@ def display_pdf(id):
 @mod_list_view.route('/display/all_lists.zip')
 @check_and_apply_event
 @check_is_registered
-def display_all():
+def display_all_zip():
+    if not g.device.event_role.may_use_global_list:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+    
+    collected_groups = []
+    for event_class in g.event.classes.filter_by(begin_fighting=True, ended_fighting=False).all():
+        for group in event_class.groups.all():
+            collected_groups.append([
+                group,
+                helpers.load_list(group)
+            ])
+
+    pdfw = PdfWriter()
+
+    for group, group_list in collected_groups:
+        if group.assigned_to_position:
+            pdf = group_list.make_pdf(title=g.event.title,
+                                    event_class=group.event_class.short_title,
+                                    group=group.cut_title(),
+                                    mat=group.assigned_to_position.title)
+        else:
+            pdf = group_list.make_pdf(title=g.event.title,
+                                    event_class=group.event_class.short_title,
+                                    group=group.cut_title())
+
+        for page in pdf.pages:
+            pdfw.add_page(page)
+
+    pdf_io = io.BytesIO()
+    pdfw.write(pdf_io)
+    pdf_io.seek(0)
+
+    return send_file(pdf_io, mimetype='application/pdf')
+
+
+@mod_list_view.route('/display/all_lists.zip')
+@check_and_apply_event
+@check_is_registered
+def display_all_pdf():
     if not g.device.event_role.may_use_global_list:
         flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
         return redirect(url_for('devices.index', event=g.event.slug))
@@ -189,8 +230,6 @@ def display_all():
         title = group.title
         title = title.replace(":", "_").replace(".", "").replace(",", "").replace(" ", "_")
         title = title.replace("+", "_plus_")
-
-        print(title)
 
         zip_file.writestr(f"{title}.pdf", pdf_io.getbuffer())
     
