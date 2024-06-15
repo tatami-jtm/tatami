@@ -82,6 +82,8 @@
                 {% endfor %}
             </div>
 
+            <a href="{{ url_for('mod_placement.delete_all_for_class', event=g.event.slug, id=event_class.id) }}" class="btn btn-outline-danger btn-sm my-2 w-100">Gesamte Einteilung löschen</a>
+
             {% else %}
 
             <div class="alert alert-info mt-3">

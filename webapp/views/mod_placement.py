@@ -10,6 +10,8 @@ from .devices import check_is_registered
 
 from ..models import db, EventClass, Group, ListSystem, Participant
 
+from .. import helpers
+
 mod_placement_view = Blueprint('mod_placement', __name__)
 
 @mod_placement_view.context_processor
@@ -580,6 +582,46 @@ def place_for_all_groups(id):
         return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id))
 
     return render_template("mod_placement/participant/place_for_all_groups.html", event_class=event_class, groups=groups)
+
+
+@mod_placement_view.route('/class/<id>/delete_all', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def delete_all_for_class(id):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+
+    if request.method == 'POST':
+        if 'confirm' in request.form:
+            group_counter = participant_counter = registration_counter = 0
+            for group in event_class.groups:
+                helpers.reset_list(group)
+
+                for participant in group.participants:
+                    db.session.delete(participant)
+                    participant_counter += 1
+
+                db.session.delete(group)
+                group_counter += 1
+            
+            for registration in event_class.registrations:
+                registration.placed = False
+                registration.placed_at = None
+                registration_counter += 1
+
+            db.session.commit()
+                    
+            g.event.log(g.device.title, 'DANGER', f'Für die Kampklasse {event_class.title} wurde die Einteilung zurückgesetzt: {group_counter} Gruppen, {participant_counter} TN wurden gelöscht und {registration_counter} TN-Registrierungen wurden zurückgesetzt')
+            flash(f"Für die Kampklasse {event_class.title} wurde die Einteilung zurückgesetzt. {group_counter} Gruppen, {participant_counter} TN wurden gelöscht und {registration_counter} TN-Registrierungen wurden zurückgesetzt.", 'success')
+
+            return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id))
+        else:
+            flash(f"Fehler: Sie müssen die Checkbox zur Bestätigung betätigen", 'danger')
+
+    return render_template("mod_placement/delete_all_for_class.html", event_class=event_class)
 
 
 def _get_weight_classes(event_class):
