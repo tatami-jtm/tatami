@@ -643,11 +643,11 @@ def import_registrations_do(fn):
     
     first_name_offset = int(request.form['first_name'])
     last_name_offset = int(request.form['last_name'])
-    contact_details_offset = int(request.form['contact_details'])
-    club_offset = int(request.form['club'])
+    contact_details_offset = int(request.form['contact_details']) if request.form['contact_details'] != 'null' else None
+    club_offset = int(request.form['club']) if request.form['club'] != 'null' else None
     association_offset = int(request.form['association'])
     event_class_offset = int(request.form['event_class'])
-    suggested_group_offset = int(request.form['suggested_group'])
+    suggested_group_offset = int(request.form['suggested_group']) if request.form['suggested_group'] != 'null' else None
 
     successful = 0
 
@@ -659,9 +659,15 @@ def import_registrations_do(fn):
 
         registration.first_name = row[first_name_offset]
         registration.last_name = row[last_name_offset]
-        registration.club = row[club_offset]
-        registration.contact_details = row[contact_details_offset]
-        registration.suggested_group = row[suggested_group_offset]
+
+        if club_offset is not None:
+            registration.club = row[club_offset]
+
+        if contact_details_offset is not None:
+            registration.contact_details = row[contact_details_offset]
+
+        if suggested_group_offset is not None:
+            registration.suggested_group = row[suggested_group_offset]
 
         registration.confirmed = request.form['confirm_all'] == 'yes'
         registration.registered = False

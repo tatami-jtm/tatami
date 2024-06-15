@@ -47,11 +47,11 @@
 
     {{ col_chooser(colcount, 'first_name', 'Vorname') }}
     {{ col_chooser(colcount, 'last_name', 'Nachname') }}
-    {{ col_chooser(colcount, 'contact_details', 'Kontaktinformationen') }}
-    {{ col_chooser(colcount, 'club', 'Verein') }}
+    {{ col_chooser(colcount, 'contact_details', 'Kontaktinformationen', optional=True) }}
+    {{ col_chooser(colcount, 'club', 'Verein', optional=True) }}
     {{ col_chooser(colcount, 'association', 'Verband') }}
     {{ col_chooser(colcount, 'event_class', 'Kampfklasse') }}
-    {{ col_chooser(colcount, 'suggested_group', 'Vorgeschlagene Einteilung') }}
+    {{ col_chooser(colcount, 'suggested_group', 'Vorgeschlagene Einteilung', optional=True) }}
 
     <div class="mt-3 mb-3">
         <label for="confirm_all" class="form-label">Voranmeldung für importierte TN bestätigen</label>
@@ -66,10 +66,15 @@
 {% endblock body %}
 
 
-{% macro col_chooser(colcount, form_column, form_label) %}
+{% macro col_chooser(colcount, form_column, form_label, optional=False) %}
 <div class="mb-1 d-flex align-items-center">
     <label for="{{ form_column }}" class="form-label w-25 mb-0">{{ form_label }} ist in:</label>
     <select name="{{ form_column }}" id="{{ form_column }}" class="form-select w-75">
+        {% if optional %}
+        <option value="null">(ggf. auswählen &ndash; optional)</option>
+        {% else %}
+        <option value="null" selected disabled>(bitte auswählen)</option>
+        {% endif %}
         {% for col in range(colcount) %}
         <option value="{{ col }}">Spalte {{ loop.index }}</option>
         {% endfor %}
