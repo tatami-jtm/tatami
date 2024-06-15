@@ -146,7 +146,7 @@ class Event(db.Model):
 
     @classmethod
     def from_slug(cls, slug):
-        return cls.query.where(cls.slug == slug).one()
+        return cls.query.where(cls.slug == slug).one_or_404()
 
     @classmethod
     def that_allows_registration(cls):

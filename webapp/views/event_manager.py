@@ -40,6 +40,9 @@ def check_is_event_supervisor(func):
 
 @eventmgr_view.context_processor
 def inject_device_options():
+    # this should not have happened, we are likely already on an error page
+    if not hasattr(g, 'event'): return {}
+
     device_positions = DevicePosition.query.filter_by(event=g.event).order_by('is_mat', 'position').all()
     device_roles = EventRole.query.all()
     return {
