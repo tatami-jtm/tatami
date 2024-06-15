@@ -645,14 +645,18 @@ def import_registrations_do(fn):
     last_name_offset = int(request.form['last_name'])
     contact_details_offset = int(request.form['contact_details']) if request.form['contact_details'] != 'null' else None
     club_offset = int(request.form['club']) if request.form['club'] != 'null' else None
-    association_offset = int(request.form['association'])
+    association_offset = int(request.form['association']) if request.form['association'] != 'null' else None
     event_class_offset = int(request.form['event_class'])
     suggested_group_offset = int(request.form['suggested_group']) if request.form['suggested_group'] != 'null' else None
 
     successful = 0
 
     for row in relevant_data:
-        association = row[association_offset]
+        if association_offset is not None:
+            association = row[association_offset]
+        else:
+            association = None
+
         event_class = row[event_class_offset]
 
         registration = Registration(event=g.event)
@@ -674,7 +678,7 @@ def import_registrations_do(fn):
         registration.weighed_in = False
         registration.placed = False
 
-        if len(association):
+        if association is not None and len(association):
             assoc = g.event.associations.filter(
                 Association.short_name.ilike(f"%{association}%") |
                 Association.name.ilike(f"%{association}%")
