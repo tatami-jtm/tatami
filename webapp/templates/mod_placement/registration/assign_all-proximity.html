@@ -14,12 +14,22 @@
                 <p class="fw-bold">Die Einteilung erfolgt nach gewichtsnahen Gruppen.</p>
                 <p>Es wird die folgende Einteilung</p>
                 <ul>
+                    {% if event_class.default_maximal_proximity %}
                     {% if event_class.proximity_uses_percentage_instead_of_absolute %}
                     <li>mit einem Höchstabstand von {{ event_class.default_maximal_proximity }}% und</li>
                     {% else %}
                     <li>mit einem Höchstabstand von {{ event_class.default_maximal_proximity / 1000 }}kg und</li>
                     {% endif %}
-                    <li>mit einer Gruppengröße von höchstens {{ event_class.default_maximal_size }} TN</li>
+                    {% endif %}
+                    <li>mit einer Gruppengröße von je höchstens {{ event_class.default_maximal_size }} TN{% if event_class.default_maximal_group_count %} und{% endif %}</li>
+                    {% if event_class.default_maximal_group_count %}
+                    <li>mit höchstens {{ event_class.default_maximal_group_count }} unterschiedlichen Gruppen</li>
+                    {% if event_class.proximity_prefer_group_count_over_proximity %}
+                    <li>wobei bei Widersprüchen die Anzahl der Gruppen Vorrang genießt</li>
+                    {% else %}
+                    <li>wobei bei Widersprüchen die Anzahl der TN je Gruppe Vorrang genießt</li>
+                    {% endif %}
+                    {% endif %}
                 </ul>
                 <p>vorgeschlagen. Die schwarzen Balken zeigen an, wo Gruppengrenzen gezogen werden.</p>
                 <p>Durch Klick auf den schwarzen bzw. grauen Balken kann geändert werden, ob an dieser Stelle eine Gruppengrenze gezogen werden soll.</p>
