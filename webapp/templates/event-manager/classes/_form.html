@@ -117,8 +117,8 @@
                 <div class="input-group">
                     <input name="default_maximal_proximity" id="default_maximal_proximity" value="{{ event_class.default_maximal_proximity or '' }}" class="form-control w-75" type="number">
                     <select name="proximity_unit" id="proximity_unit" class="form-select w-25">
-                        <option value="absolute" {{ 'selected' if not event_class.proximitiy_uses_percentage_instead_of_absolute }}>Gramm</option>
-                        <option value="relative" {{ 'selected' if event_class.proximitiy_uses_percentage_instead_of_absolute }}>Prozent</option>
+                        <option value="absolute" {{ 'selected' if not event_class.proximity_uses_percentage_instead_of_absolute }}>Gramm</option>
+                        <option value="relative" {{ 'selected' if event_class.proximity_uses_percentage_instead_of_absolute }}>Prozent</option>
                     </select>
                 </div>
                 <div class="form-text">

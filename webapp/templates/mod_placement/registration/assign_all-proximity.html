@@ -14,7 +14,7 @@
                 <p class="fw-bold">Die Einteilung erfolgt nach gewichtsnahen Gruppen.</p>
                 <p>Es wird die folgende Einteilung</p>
                 <ul>
-                    {% if event_class.proximitiy_uses_percentage_instead_of_absolute %}
+                    {% if event_class.proximity_uses_percentage_instead_of_absolute %}
                     <li>mit einem Höchstabstand von {{ event_class.default_maximal_proximity }}% und</li>
                     {% else %}
                     <li>mit einem Höchstabstand von {{ event_class.default_maximal_proximity / 1000 }}kg und</li>

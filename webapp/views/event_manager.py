@@ -224,7 +224,7 @@ def update_class(id):
     if request.form['default_maximal_proximity']:
         event_class.default_maximal_proximity = int(request.form['default_maximal_proximity'])
 
-    event_class.proximitiy_uses_percentage_instead_of_absolute = request.form.get('proximity_unit', 'absolute') == 'relative'
+    event_class.proximity_uses_percentage_instead_of_absolute = request.form.get('proximity_unit', 'absolute') == 'relative'
 
     event_class.default_maximal_size = None
     if request.form['default_maximal_size']:
@@ -264,7 +264,7 @@ def create_class():
         if request.form['default_maximal_proximity']:
             event_class.default_maximal_proximity = int(request.form['default_maximal_proximity'])
 
-        event_class.proximitiy_uses_percentage_instead_of_absolute = request.form.get('proximity_unit', 'absolute') == 'relative'
+        event_class.proximity_uses_percentage_instead_of_absolute = request.form.get('proximity_unit', 'absolute') == 'relative'
 
         event_class.default_maximal_size = None
         if request.form['default_maximal_size']:
