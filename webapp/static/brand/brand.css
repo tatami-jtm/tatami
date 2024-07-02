@@ -1252,3 +1252,8 @@ select.w-min {
     pointer-events: none;
     user-select: none;
 }
+
+
+.modal-content.modal-border-red {
+    border: 1rem solid var(--bs-danger);
+}

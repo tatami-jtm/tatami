@@ -14,6 +14,7 @@ const scheduledArea = document.querySelector('[data-scheduled-area]')
 const resultsModal = new bootstrap.Modal('#results-modal')
 const callupModal = new bootstrap.Modal('#callup-modal')
 const winnerShownModal = new bootstrap.Modal('#winner-shown-modal')
+const offlineModal = new bootstrap.Modal('#offline-modal')
 
 scheduledArea.addEventListener('click', async (e) => {
     let event = document.body.getAttribute("data-tatami-event")
@@ -182,80 +183,105 @@ document.querySelector("[data-tatami-end-callup]").addEventListener("click", () 
     callupModal.hide()
 })
 
-document.querySelector("[data-tatami-enter-results]").addEventListener("click", async () => {
-    if (document.getElementById('match-winner').value == 'white') {
-        sbState.view.screen = 'winner:white'
-        setOption('winner:name', document.querySelector("[data-tatami-source=\"current_match.white.name\"]").value)
-        setOption('winner:club', document.querySelector("[data-tatami-source=\"current_match.white.association\"]").value)
-        updateField("winner.name", document.querySelector("[data-tatami-source=\"current_match.white.name\"]").value)
-        updateField("winner.club", document.querySelector("[data-tatami-source=\"current_match.white.association\"]").value)
-    } else if (document.getElementById('match-winner').value == 'blue') {
-        sbState.view.screen = 'winner:blue'
-        setOption('winner:name', document.querySelector("[data-tatami-source=\"current_match.blue.name\"]").value)
-        setOption('winner:club', document.querySelector("[data-tatami-source=\"current_match.blue.association\"]").value)
-        updateField("winner.name", document.querySelector("[data-tatami-source=\"current_match.blue.name\"]").value)
-        updateField("winner.club", document.querySelector("[data-tatami-source=\"current_match.blue.association\"]").value)
-    } else {
-        // No winner selected; aborting.
-        return;
-    }
-    resultsModal.hide()
-    winnerShownModal.show()
+document.querySelectorAll("[data-tatami-enter-results]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+        offlineModal.hide()
+        if (document.getElementById('match-winner').value == 'white') {
+            sbState.view.screen = 'winner:white'
+            setOption('winner:name', document.querySelector("[data-tatami-source=\"current_match.white.name\"]").value)
+            setOption('winner:club', document.querySelector("[data-tatami-source=\"current_match.white.association\"]").value)
+            updateField("winner.name", document.querySelector("[data-tatami-source=\"current_match.white.name\"]").value)
+            updateField("winner.club", document.querySelector("[data-tatami-source=\"current_match.white.association\"]").value)
+        } else if (document.getElementById('match-winner').value == 'blue') {
+            sbState.view.screen = 'winner:blue'
+            setOption('winner:name', document.querySelector("[data-tatami-source=\"current_match.blue.name\"]").value)
+            setOption('winner:club', document.querySelector("[data-tatami-source=\"current_match.blue.association\"]").value)
+            updateField("winner.name", document.querySelector("[data-tatami-source=\"current_match.blue.name\"]").value)
+            updateField("winner.club", document.querySelector("[data-tatami-source=\"current_match.blue.association\"]").value)
+        } else {
+            // No winner selected; aborting.
+            return;
+        }
 
-    let formData = new FormData()
-    
-    formData.append('is_api', 'yup')
-    formData.append('winner', document.getElementById('match-winner').value)
-    formData.append('score', document.getElementById('match-score').value)
+        let formData = new FormData()
+        
+        formData.append('is_api', 'yup')
+        formData.append('winner', document.getElementById('match-winner').value)
+        formData.append('score', document.getElementById('match-score').value)
 
-    document.getElementById('match-winner').options.selectedIndex = 0;
-    document.getElementById('match-score').options.selectedIndex = 0;
+        if (document.getElementById('match-loser-disqualified').checked)
+            formData.append('loser_disqualified', 1)
 
-    if (document.getElementById('match-loser-disqualified').checked)
-        formData.append('loser_disqualified', 1)
+        if (document.getElementById('match-loser-removed').checked)
+            formData.append('loser_removed', 1)
 
-    if (document.getElementById('match-loser-removed').checked)
-        formData.append('loser_removed', 1)
+        formData.append('sb-white-ippon', (sbState.white.ippon) ? 1 : 0)
+        formData.append('sb-white-wazaari', (sbState.white.wazaari_awasete_ippon) ? 2 : (sbState.white.wazaari) ? 1 : 0)
+        formData.append('sb-white-shido', sbState.white.shido)
+        formData.append('sb-white-hansokumake', (sbState.white.hansokumake) ? 1 : 0)
 
-    document.getElementById('match-loser-disqualified').checked = false;
-    document.getElementById('match-loser-removed').checked = false;
+        formData.append('sb-blue-ippon', (sbState.blue.ippon) ? 1 : 0)
+        formData.append('sb-blue-wazaari', (sbState.blue.wazaari_awasete_ippon) ? 2 : (sbState.blue.wazaari) ? 1 : 0)
+        formData.append('sb-blue-shido', sbState.blue.shido)
+        formData.append('sb-blue-hansokumake', (sbState.blue.hansokumake) ? 1 : 0)
 
-    formData.append('sb-white-ippon', (sbState.white.ippon) ? 1 : 0)
-    formData.append('sb-white-wazaari', (sbState.white.wazaari_awasete_ippon) ? 2 : (sbState.white.wazaari) ? 1 : 0)
-    formData.append('sb-white-shido', sbState.white.shido)
-    formData.append('sb-white-hansokumake', (sbState.white.hansokumake) ? 1 : 0)
+        let displayTime = getFullTime(sbState)
+        let mins = Math.floor(displayTime / 60)
+        let secs = displayTime % 60
 
-    formData.append('sb-blue-ippon', (sbState.blue.ippon) ? 1 : 0)
-    formData.append('sb-blue-wazaari', (sbState.blue.wazaari_awasete_ippon) ? 2 : (sbState.blue.wazaari) ? 1 : 0)
-    formData.append('sb-blue-shido', sbState.blue.shido)
-    formData.append('sb-blue-hansokumake', (sbState.blue.hansokumake) ? 1 : 0)
+        formData.append('ft-minutes', mins)
+        formData.append('ft-seconds', secs)
 
-    let displayTime = getFullTime(sbState)
-    let mins = Math.floor(displayTime / 60)
-    let secs = displayTime % 60
+        let response;
+        try {
+            response = await fetch(
+                document.querySelector("[data-tatami-source=\"current_match.results_link\"]").value,
+                {
+                    method: 'POST',
+                    body: formData
+                }
+            )
+        } catch (error) {
+            response = {
+                ok: false,
+                status: 'TATAMI ist offline:',
+                statusText: error || ''
+            }
+        }
 
-    formData.append('ft-minutes', mins)
-    formData.append('ft-seconds', secs)
+        console.log(response)
 
-    let response = await fetch(document.querySelector("[data-tatami-source=\"current_match.results_link\"]").value, {
-        method: 'POST',
-        body: formData
+        if (response.ok) {
+            let reply = await response.json()
+            if (reply.status == 'error') {
+                document.getElementById('offline-error-message').innerText = reply.message || 'unbekannt'
+                resultsModal.hide()
+                offlineModal.show()
+            } else if (reply.status == 'success') {
+                resultsModal.hide()
+                winnerShownModal.show()
+
+                await update_schedule()
+
+                document.getElementById('match-winner').options.selectedIndex = 0;
+                document.getElementById('match-score').options.selectedIndex = 0;
+                document.getElementById('match-loser-disqualified').checked = false;
+                document.getElementById('match-loser-removed').checked = false;
+
+                callup_again.innerText = 'Kampf aufrufen'
+                callup_again.classList.add('btn-dark')
+                callup_again.classList.remove('btn-outline-danger')
+
+                enter_results.setAttribute('disabled', 'disabled');
+                enter_results.classList.remove('btn-dark')
+                enter_results.classList.add('btn-light');
+            }
+        } else {
+            document.getElementById('offline-error-message').innerText = response.status + " " + response.statusText
+            resultsModal.hide()
+            offlineModal.show()
+        }
     })
-    let reply = await response.json()
-
-    if (reply.status == 'error') {
-        alert(`Fehler: ${reply.message}`)
-    } else if (reply.status == 'success') {
-        await update_schedule()
-
-        callup_again.innerText = 'Kampf aufrufen'
-        callup_again.classList.add('btn-dark')
-        callup_again.classList.remove('btn-outline-danger')
-
-        enter_results.setAttribute('disabled', 'disabled');
-        enter_results.classList.remove('btn-dark')
-        enter_results.classList.add('btn-light');
-    }
 })
 
 enter_results.addEventListener('click', () => {
