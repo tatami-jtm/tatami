@@ -410,7 +410,7 @@ def assign_all_proximity(id):
     else:
         default_segmentation = {}
         max_proximity = event_class.default_maximal_proximity
-        use_percentage = event_class.proximitiy_uses_percentage_instead_of_absolute
+        use_percentage = event_class.proximity_uses_percentage_instead_of_absolute
         max_size = event_class.default_maximal_size
         current_max_weight = None
         group_size = 0

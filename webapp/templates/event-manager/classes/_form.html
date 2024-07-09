@@ -117,8 +117,8 @@
                 <div class="input-group">
                     <input name="default_maximal_proximity" id="default_maximal_proximity" value="{{ event_class.default_maximal_proximity or '' }}" class="form-control w-75" type="number">
                     <select name="proximity_unit" id="proximity_unit" class="form-select w-25">
-                        <option value="absolute" {{ 'selected' if not event_class.proximitiy_uses_percentage_instead_of_absolute }}>Gramm</option>
-                        <option value="relative" {{ 'selected' if event_class.proximitiy_uses_percentage_instead_of_absolute }}>Prozent</option>
+                        <option value="absolute" {{ 'selected' if not event_class.proximity_uses_percentage_instead_of_absolute }}>Gramm</option>
+                        <option value="relative" {{ 'selected' if event_class.proximity_uses_percentage_instead_of_absolute }}>Prozent</option>
                     </select>
                 </div>
                 <div class="form-text">
@@ -135,6 +135,28 @@
                 <div class="input-group">
                     <input name="default_maximal_size" id="default_maximal_size" value="{{ event_class.default_maximal_size or '' }}" class="form-control w-75" type="number">
                     <div class="input-group-text w-25">Kämpfer*innen</div>
+                </div>
+            </div>
+            <div class="mb-2 ms-5">
+                <label for="default_maximal_group_count" class="form-label fw-normal">sowie mit insgesamt höchstens</label>
+                <div class="input-group">
+                    <input name="default_maximal_group_count" id="default_maximal_group_count" value="{{ event_class.default_maximal_group_count or '' }}" class="form-control w-75" type="number">
+                    <div class="input-group-text w-25">Gruppen</div>
+                </div>
+            </div>
+            <div class="mb-2 ms-5">
+                <label for="default_maximal_size" class="form-label fw-normal">Führen diese Kriterien dazu, dass eine Einteilung nicht möglich ist, setzt sich durch:</label>
+                <div class="form-check mb-1">
+                    <input class="form-check-input" type="radio" value="no" name="prefer_group_count" id="pref_grpc-no" {{ 'checked' if not event_class.proximity_prefer_group_count_over_proximity }}>
+                    <label class="form-check-label mb-1" for="pref_grpc-no">
+                        Höchstanzahl von Kämpfer*innen
+                    </label>
+                </div>
+                <div class="form-check mb-1">
+                    <input class="form-check-input" type="radio" value="yes" name="prefer_group_count" id="pref_grpc-yes" {{ 'checked' if event_class.proximity_prefer_group_count_over_proximity }}>
+                    <label class="form-check-label mb-1" for="pref_grpc-yes">
+                        Höchstanzahl von Gruppen
+                    </label>
                 </div>
             </div>
 
