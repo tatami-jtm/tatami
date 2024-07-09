@@ -690,7 +690,12 @@ def import_registrations_do(fn):
             assoc = g.event.associations.filter(
                 Association.short_name.ilike(f"%{association}%") |
                 Association.name.ilike(f"%{association}%")
-            ).one_or_none()
+            ).all()
+
+            if len(assoc) != 1:
+                assoc = None
+            else:
+                assoc = assoc[0]
 
             registration.association_id = assoc.id if assoc is not None else None
         else:
