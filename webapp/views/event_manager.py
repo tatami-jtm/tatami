@@ -697,11 +697,27 @@ def import_registrations_do(fn):
             registration.association_id = None
 
         if len(event_class):
+            # First attempt to find an exact match
+            # behavior is undefined, if one class has the exact same short_title, title or template name
+            # as any other classes short_title, title or template_name
             evcl = g.event.classes.filter(
-                EventClass.short_title.ilike(f"%{event_class}%") |
-                EventClass.title.ilike(f"%{event_class}%") |
-                EventClass.template_name.ilike(f"%{event_class}%")
+                (EventClass.short_title == event_class) |
+                (EventClass.title == event_class) |
+                (EventClass.template_name == event_class)
             ).one_or_none()
+
+            # Only guess if there is no exact match
+            if not evcl:
+                evcl = g.event.classes.filter(
+                    EventClass.short_title.ilike(f"%{event_class}%") |
+                    EventClass.title.ilike(f"%{event_class}%") |
+                    EventClass.template_name.ilike(f"%{event_class}%")
+                ).all()
+
+                if len(evcl) != 1:
+                    evcl = None
+                else:
+                    evcl = evcl[0]
 
             registration.event_class_id = evcl.id if evcl is not None else None
         else:
