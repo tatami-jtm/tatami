@@ -1028,6 +1028,7 @@ select.w-min {
     cursor: pointer;
     border-radius: 0.2rem;
     box-shadow: 0 -4px 0 -1px #2b2b2b inset;
+    line-height: 1.15;
 }
 .sb .sb-side.sb-white .sb-btn {
     box-shadow: 0 -4px 0 -1px #bfbfbf inset;
@@ -1051,7 +1052,7 @@ select.w-min {
 .sb .sb-time-header {
     font-size: 1.5rem;
     font-weight: bold;
-    padding: 0.75rem;
+    padding: 0.5rem;
     display: flex;
     justify-content: space-between;
 }
@@ -1062,6 +1063,8 @@ select.w-min {
     flex-direction: column;
     align-items: center;
     position: relative;
+    flex-grow: 1;
+    justify-content: space-around;
 }
 .sb .sb-time .sb-time-global {
     background-color: #dd6;
@@ -1075,6 +1078,9 @@ select.w-min {
     border-radius: 0.2rem;
     width: 100%;
     border: 0.75rem solid transparent;
+    line-height: 1.15;
+    flex-grow: 2;
+    align-content: center;
 }
 
 .sb .sb-time.running .sb-time-global {
@@ -1089,6 +1095,7 @@ select.w-min {
     justify-content: center;
     width: 100%;
     max-width: 600px;
+    flex-grow: 1;
 }
 
 .sb .sb-time-control .sb-btn,
@@ -1120,12 +1127,13 @@ select.w-min {
 
 .sb .sb-side {
     flex-grow: 1;
+    max-height: 200px;
 }
 
 .sb .sb-side,
 .sb .sb-side-labels {
     display: flex;
-    padding: 0.75rem;
+    padding: 0.5rem;
 }
 
 .sb .sb-side-labels {
@@ -1145,19 +1153,21 @@ select.w-min {
 }
 .sb .sb-side-labels .sb-cell.sb-btncell .sb-btn,
 .sb .sb-side .sb-cell.sb-twobtncell .sb-btn {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     font-weight: bold;
     margin: 0.15rem;
+    height: 1.75em;
     border-width: 2px;
     border-color: rgba(0, 0, 0, 0.25);
     width: 100%;
 }
+
 .sb .sb-side.sb-blue .sb-cell.sb-twobtncell .sb-btn {
     border-color: rgba(255, 255, 255, 0.45);
 }
 .sb .sb-side .sb-cell.sb-twobtncell .sb-btn.sb-btn-large {
     font-size: 3rem;
-    padding: 1rem;
+    padding: 0.25rem;
     flex-grow: 1;
 }
 .sb .sb-side .sb-cell.sb-twobtncell .sb-btn.sb-btn-large[disabled] {
@@ -1169,7 +1179,7 @@ select.w-min {
     border-color: rgba(255, 255, 255, 0.1);
 }
 .sb .sb-side .sb-cell.sb-twobtncell.sb-osaekomi-btns .sb-btn.sb-btn-large {
-    font-size: 2rem;
+    font-size: 1.85rem;
 }
 
 .sb .sb-side .sb-cell.sb-twobtncell.sb-penalty .sb-btn.sb-btn-large {
@@ -1183,35 +1193,79 @@ select.w-min {
     font-weight: bold;
     font-size: 1.5rem;
     text-align: center;
+    line-height: 1.15;
 }
 
 .sb .sb-side .sb-cell.sb-osaekomi {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 4rem;
+    font-size: 3.5rem;
     font-weight: 500;
     font-family: 'Reddit Mono';
 }
 
 .sb .sb-side .sb-cell.sb-osaekomi .sb-osaekomi-item {
     border: .125em double;
-    height: 6rem;
-    width: 6rem;
+    height: 5.5rem;
+    width: 5.5rem;
     line-height: 1;
-    padding: .5rem 0;
+    padding: 2.3rem 0;
+    letter-spacing: -0.25rem;
+    padding-right: 0.25rem;
     text-align: center;
     border-radius: 50%;
+    margin: 0;
+    line-height: 0;
 }
 .sb .sb-side .sb-cell.sb-osaekomi .sb-osaekomi-item:empty {
     display: none;
 }
 
 .sb .sb-side.sb-white .sb-cell.sb-osaekomi .sb-osaekomi-item {
-    margin-top: 2.75rem;
+    margin-top: 2rem;
 }
 .sb .sb-side.sb-blue .sb-cell.sb-osaekomi .sb-osaekomi-item {
-    margin-bottom: 2.75rem;
+    margin-bottom: 2rem;
+}
+
+@media all and (min-width: 1800px) {
+    .sb .sb-side .sb-cell.sb-twobtncell .sb-btn.sb-btn-large {
+        font-size: 4rem;
+    }
+    .sb .sb-side .sb-cell.sb-osaekomi {
+        font-size: 4rem;
+    }
+    .sb .sb-side .sb-cell.sb-osaekomi .sb-osaekomi-item {
+        width: 6rem;
+        height: 6rem;
+        padding: 2.55rem 0;
+        padding-right: 0.25rem;
+    }
+}
+
+@media all and (max-width: 1400px) {
+    .sb .sb-side-labels .sb-cell.sb-btncell .sb-btn,
+    .sb .sb-side .sb-cell.sb-twobtncell .sb-btn {
+        font-size: 1.25rem;
+        height: 1.65em;
+    }
+
+    .sb .sb-side-labels .sb-cell.sb-label {
+        font-size: 1rem;
+    }
+    .sb .sb-side .sb-cell.sb-twobtncell .sb-btn.sb-btn-large {
+        font-size: 2rem;
+    }
+    .sb .sb-side .sb-cell.sb-twobtncell.sb-osaekomi-btns .sb-btn.sb-btn-large {
+        font-size: 1.5rem;
+    }
+}
+
+@media all and (max-width: 1199px) {
+    .sb {
+        min-height: 100vh;
+    }
 }
 
 .list-group-item.w-label {
