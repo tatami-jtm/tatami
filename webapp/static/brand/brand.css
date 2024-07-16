@@ -872,7 +872,7 @@ img {
 .match-summary.match-summary-large-fs:not(.match-summary-compact) .match-white strong,
 .match-summary.match-summary-large-fs:not(.match-summary-compact) .match-blue strong {
     display: block;
-    font-size: 1.75rem;
+    font-size: 1.5rem;
 }
 
 .table-scoreboard {
