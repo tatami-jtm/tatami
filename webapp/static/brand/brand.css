@@ -1039,8 +1039,8 @@ select.w-min {
     box-shadow: 0 -4px 0 -1px #666666 inset;
 }
 .sb .sb-btn[disabled],
-.sb .sb-time-control .sb-btn[disabled]
-.sb .sb-side.sb-white .sb-btn[disabled]
+.sb .sb-time-control .sb-btn[disabled],
+.sb .sb-side.sb-white .sb-btn[disabled],
 .sb .sb-side.sb-blue .sb-btn[disabled] {
     opacity: 0.4;
     pointer-events: none;

@@ -97,8 +97,8 @@ body {
 .view-main .main-grid .main-row-name {
     grid-column-start: 2;
     grid-column-end: 3;
-    font-size: 40px;
-    padding: 1rem 3rem;
+    font-size: 50px;
+    padding: 0.5rem 3rem;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -365,8 +365,8 @@ body {
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 100px 1fr 1fr 250px;
+    grid-template-columns: 100%;
+    grid-template-rows: 100px 1fr 1fr 1fr;
 }
 
 .view-callup .callup-grid .callup-row-meta {
@@ -401,7 +401,7 @@ body {
 }
 
 .view-callup .callup-grid .callup-row-fighter {
-    padding: 2rem;
+    padding: 1rem 2rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -424,6 +424,7 @@ body {
     margin-bottom: 10px;
     max-height: 2.35em;
     overflow: hidden;
+    white-space: nowrap;
     text-overflow: ellipsis;
 }
 .view-callup .callup-grid .callup-row-fighter .fighter-club {
@@ -434,7 +435,7 @@ body {
 .view-callup .callup-grid .callup-row-prepare {
     padding: 1rem 2rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     flex-direction: column;
     color: white;
     background-color: #222;
@@ -452,14 +453,23 @@ body {
 .view-callup .callup-grid .callup-row-prepare .prepare-fighter {
     display: flex;
     align-items: center;
-    font-size: 50px;
+    font-size: 65px;
     font-weight: bold;
 }
+.view-callup .callup-grid .callup-row-prepare .prepare-fighter .fighter-call {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
 .view-callup .callup-grid .callup-row-prepare .prepare-fighter .fighter-color {
-    height: 1.3em;
-    width: 1.3em;
-    border-radius: 0.5em;
+    height: 95%;
+    width: 0.75em;
+    min-height: 1em;
+    min-width: 0.75em;
+    border-radius: 0.25em;
     margin-right: 1rem;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 .view-callup .callup-grid .callup-row-prepare .prepare-fighter.fighter-white .fighter-color {
     background-color: white;
