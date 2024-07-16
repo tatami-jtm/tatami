@@ -37,10 +37,15 @@
             <h2 class="fw-bold display-3 text-center mb-3">{{ mat.title }}</h2>
 
             {% for match in mat.scheduled_matches()[:5] %}
-            <div class="card mb-3 shadow">
-                <div class="card-body p-2">
-                    {{ small_match_summary(match, large_fs=True) }}
-                </div>
+            {% if loop.index == 1 %}
+            <div class="bg-white p-3 mb-3 shadow border border-5 border-danger">
+            {% elif loop.index == 2 %}
+            <div class="bg-white p-3 mb-3 shadow border border-5 border-warning">
+            {% else %}
+            <div class="bg-white p-3 mb-3 shadow border border-5 border-white">
+            {% endif %}
+                {% set first_three = loop.index <= 3 %}
+                {{ small_match_summary(match, large_fs=first_three, compact=not first_three) }}
             </div>
             {% else %}
             <p class="text-center fs-3">n. n.</p>

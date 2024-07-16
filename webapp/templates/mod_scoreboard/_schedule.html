@@ -89,7 +89,7 @@
 
                     {% for match in g.mat.scheduled_matches(include_called_up=False) %}
                     <div class="p-2 {{ 'border-bottom' if not loop.last}}">
-                        {{ small_match_summary(match) }}
+                        {{ small_match_summary(match, compact=True) }}
                     </div>
                     {% else %}
                     <p class="p-3 mb-0">Zurzeit wurde keine (weiteren) Kämpfe angesetzt.</p>
@@ -108,7 +108,7 @@
             <div class="accordion-body p-0">
                 {% for match in list.matches.filter_by(scheduled=False, completed=False) %}
                     <div class="p-2 border-bottom">
-                        {{ small_match_summary(match) }}
+                        {{ small_match_summary(match, compact=True) }}
                         {% if not match.schedulable() %}
                         <p class="mb-0 fs-small text-danger">Auszeit notwendig &ndash; Kampf kann zurzeit nicht stattfinden.</p>
                         {% elif not g.event.setting('scheduling.use', True) %}

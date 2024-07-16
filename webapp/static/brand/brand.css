@@ -758,6 +758,15 @@ img {
     border-left: 0.35rem solid #3333dd;
     padding: 0.25rem 0.35rem;
 }
+.match-summary:not(.match-summary-compact) .match-white,
+.match-summary:not(.match-summary-compact) .match-blue {
+    font-size: 0.75em;
+}
+.match-summary:not(.match-summary-compact) .match-white strong,
+.match-summary:not(.match-summary-compact) .match-blue strong {
+    display: block;
+    font-size: 1.33333333em;
+}
 .match-summary .match-result {
     margin: 0.25rem 0;
     padding: 0.15rem;
@@ -843,16 +852,27 @@ img {
 }
 
 .match-summary.match-summary-large-fs .match-header {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     padding: 0.35rem 0;
 }
 
 .match-summary.match-summary-large-fs .match-white,
 .match-summary.match-summary-large-fs .match-blue {
-    font-size: 1.7rem;
+    font-size: 1.75rem;
     padding: 0.6rem 0.35rem;
     border-left-width: 0.5rem;
     padding-left: 0.5rem;
+}
+
+
+.match-summary.match-summary-large-fs:not(.match-summary-compact) .match-white,
+.match-summary.match-summary-large-fs:not(.match-summary-compact) .match-blue {
+    font-size: 1.125em;
+}
+.match-summary.match-summary-large-fs:not(.match-summary-compact) .match-white strong,
+.match-summary.match-summary-large-fs:not(.match-summary-compact) .match-blue strong {
+    display: block;
+    font-size: 1.75rem;
 }
 
 .table-scoreboard {
