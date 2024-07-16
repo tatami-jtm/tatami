@@ -445,6 +445,7 @@ def clear_match_result(id, match_id):
         match.running = False
         match.running_since = None
         match.scheduled = False
+        match.match_schedule_key = None
         match.scheduled_at = None
         is_new, match_result = match.get_result()
 
