@@ -102,7 +102,7 @@ const osaekomiCheck = () => {
             sbState.white.wazaari_pending = false
             endOfTime(true)
         } else if (white_osaekomi_time >= 10 && !sbState.white.osaekomi.wazaari_given) {
-            if (sbState.white.wazaari) {
+            if (sbState.white.wazaari || sbState.white.wazaari_pending) {
                 sbState.white.osaekomi.running = false
                 sbState.white.wazaari_awasete_ippon = true
                 sbState.white.wazaari_pending = false
@@ -123,7 +123,7 @@ const osaekomiCheck = () => {
             sbState.blue.wazaari_pending = false
             endOfTime(true)
         } else if (blue_osaekomi_time >= 10 && !sbState.blue.osaekomi.wazaari_given) {
-            if (sbState.blue.wazaari) {
+            if (sbState.blue.wazaari || sbState.blue.wazaari_pending) {
                 sbState.blue.osaekomi.running = false
                 sbState.blue.wazaari_awasete_ippon = true
                 sbState.blue.wazaari_pending = false

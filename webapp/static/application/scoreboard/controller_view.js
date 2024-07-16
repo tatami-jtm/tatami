@@ -90,13 +90,13 @@ const renderControls = () => {
 
     if (sbState.white.osaekomi.running) {
         enable_btn(toggle_osaekomi, 'btn-secondary')
-        toggle_osaekomi.innerText = 'Tauschen »'
+        toggle_osaekomi.innerText = 'Tauschen'
     } else if (sbState.blue.osaekomi.running) {
         enable_btn(toggle_osaekomi, 'btn-secondary')
-        toggle_osaekomi.innerText = '« Tauschen'
+        toggle_osaekomi.innerText = 'Tauschen'
     } else {
         disable_btn(toggle_osaekomi, 'btn-secondary')
-        toggle_osaekomi.innerText = '« Tauschen »'
+        toggle_osaekomi.innerText = 'Tauschen'
     }
 
     if (sbState.white.ippon) {
@@ -128,7 +128,7 @@ const renderControls = () => {
         enable_btn(white_expand_wazaari, "btn-secondary")
         enable_btn(white_reduce_wazaari, "btn-secondary")
     } else if (sbState.white.wazaari_pending) {
-        wazaari_white.innerText = "(1)"
+        wazaari_white.innerText = "[1]"
         enable_btn(white_expand_wazaari, "btn-secondary")
         enable_btn(white_reduce_wazaari, "btn-secondary")
     } else {
@@ -146,7 +146,7 @@ const renderControls = () => {
         enable_btn(blue_expand_wazaari, "btn-secondary")
         enable_btn(blue_reduce_wazaari, "btn-secondary")
     } else if (sbState.blue.wazaari_pending) {
-        wazaari_blue.innerText = "(1)"
+        wazaari_blue.innerText = "[1]"
         enable_btn(blue_expand_wazaari, "btn-secondary")
         enable_btn(blue_reduce_wazaari, "btn-secondary")
     } else {
