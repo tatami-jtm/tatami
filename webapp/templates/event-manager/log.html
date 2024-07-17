@@ -23,14 +23,17 @@
     {% endfor %}
 </ul>
 
+<a class="btn btn-secondary mt-3" href="{{ url_for('event_manager.index', event=g.event.slug) }}">Zurück zur Übersicht</a>
+<a class="btn btn-dark mt-3" href="{{ url_for('event_manager.raw_log', event=g.event.slug) }}" download="event.log">Protokoll speichern</a>
+
 {% else %}
 
 <div class="alert alert-info mt-4 mb-3">
     <p>Das Veranstaltungsprotokoll wurde für diese Veranstaltung deaktiviert.</p>
 </div>
 
-{% endif %}
-
 <a class="btn btn-secondary mt-3" href="{{ url_for('event_manager.index', event=g.event.slug) }}">Zurück zur Übersicht</a>
+
+{% endif %}
 
 {% endblock body %}

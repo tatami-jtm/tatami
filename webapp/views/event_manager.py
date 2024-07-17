@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, abort, flash, session, g, \
-    request, redirect, url_for, send_file
+    request, redirect, url_for, send_file, make_response
 from flask_security import login_required, current_user
 from werkzeug.utils import secure_filename
 
@@ -1001,6 +1001,22 @@ def quick_sign_in():
 @check_is_event_supervisor
 def log():
     return render_template("event-manager/log.html")
+
+@eventmgr_view.route('/log/raw')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def raw_log():
+    if not g.event.setting('write_activity_log', True):
+        abort(404)
+
+    log_text = []
+    for item in g.event.log_items.order_by('created_at'):
+        log_text.append(f"[{item.log_type}] {item.log_creator} at {item.created_at}: {item.log_value}")
+
+    resp = make_response("\n".join(log_text))
+    resp.mimetype = "text/plain"
+    return resp
 
 
 def _load_csv(fn):
