@@ -269,7 +269,12 @@ def create_class():
         if request.form['default_maximal_proximity']:
             event_class.default_maximal_proximity = int(request.form['default_maximal_proximity'])
 
+        event_class.default_maximal_group_count = None
+        if request.form['default_maximal_group_count']:
+            event_class.default_maximal_group_count = int(request.form['default_maximal_group_count'])
+
         event_class.proximity_uses_percentage_instead_of_absolute = request.form.get('proximity_unit', 'absolute') == 'relative'
+        event_class.proximity_prefer_group_count_over_proximity = request.form.get('prefer_group_count', 'no') == 'yes'
 
         event_class.default_maximal_size = None
         if request.form['default_maximal_size']:
@@ -298,6 +303,60 @@ def create_class():
     templates = EventClass.query.filter_by(is_template=True).order_by(EventClass.template_name).all()
 
     return render_template("event-manager/classes/new.html", event_class=event_class, templates=templates, new=True)
+
+
+@eventmgr_view.route('/classes/generate', methods=["GET", "POST"])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def generate_classes():
+    if request.method == "POST":
+        template = EventClass.query.filter_by(is_template=True, id=request.form['template']).one_or_404()
+
+        success = []
+
+        for class_template in request.form['generation'].strip().split('\n'):
+            if ":" in class_template:
+                full_name, shortcode = class_template.rsplit(":", 1)
+            else:
+                full_name = shortcode = class_template
+
+            full_name, shortcode = full_name.strip(), shortcode.strip()
+
+            if shortcode == "":
+                shortcode = template.short_title
+
+            event_class = EventClass(event=g.event)
+
+            event_class.title = full_name
+            event_class.short_title = shortcode
+
+            event_class.use_proximity_weight_mode = template.use_proximity_weight_mode
+            event_class.weight_generator = template.weight_generator
+            event_class.default_maximal_proximity = template.default_maximal_proximity
+            event_class.default_maximal_group_count = template.default_maximal_group_count
+            event_class.proximity_uses_percentage_instead_of_absolute = template.proximity_uses_percentage_instead_of_absolute
+            event_class.proximity_prefer_group_count_over_proximity = template.proximity_prefer_group_count_over_proximity
+            event_class.default_maximal_size = template.default_maximal_size
+            event_class.fighting_time = template.fighting_time
+            event_class.golden_score_time = template.golden_score_time
+            event_class.between_fights_time = template.between_fights_time
+
+            event_class.begin_weigh_in = False
+            event_class.begin_placement = False
+            event_class.begin_fighting = False
+            event_class.ended_fighting = False
+
+            success.append(full_name)
+
+            db.session.add(event_class)
+            db.session.commit()
+
+        flash("Die Kampfklasse(n) " + ', '.join(success) + " wurden erfolgreich generiert", success)
+        return redirect(url_for('event_manager.classes', event=g.event.slug))
+    
+    templates = EventClass.query.filter_by(is_template=True).order_by(EventClass.template_name).all()
+    return render_template("event-manager/classes/generate.html", templates=templates, new=True)
 
 
 @eventmgr_view.route('/classes/<id>/progress/next', methods=['GET', 'POST'])

@@ -56,4 +56,5 @@
 </table>
 
 <a href="{{ url_for('event_manager.create_class', event=g.event.slug) }}" class="btn btn-primary">Kampfklasse hinzufügen</a>
+<a href="{{ url_for('event_manager.generate_classes', event=g.event.slug) }}" class="btn btn-secondary">Autom. Generation</a>
 {% endblock body %}
