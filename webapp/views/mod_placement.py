@@ -411,40 +411,33 @@ def assign_all_proximity(id):
         default_segmentation = {}
         max_proximity = event_class.default_maximal_proximity
         use_percentage = event_class.proximity_uses_percentage_instead_of_absolute
-        max_size = event_class.default_maximal_size
-        current_max_weight = None
-        group_size = 0
-        past_registration = None
+        max_size = event_class.default_maximal_size or 0
+        max_count = event_class.default_maximal_group_count or 0
 
-        for registration in registrations.all()[::-1]:
-            actual_weight = registration.verified_weight
-            default_segmentation[registration.id] = False
+        proximity = 'count' if event_class.proximity_prefer_group_count_over_proximity else 'size'
 
-            if current_max_weight is None:
-                current_max_weight = actual_weight
-                group_size += 1
-                
-                past_registration = registration
+        if use_percentage:
+            delta_match_func = (lambda w1, w2, max_delta: w2 * (1 + max_delta/100) >= w1)
+        
+        else:
+            delta_match_func = (lambda w1, w2, max_delta: w1 - w2 <= max_delta / 1000)
+        
 
-            elif (not use_percentage and (actual_weight + max_proximity >= current_max_weight)) or \
-                 (    use_percentage and (actual_weight * (1 + max_proximity/100) >= current_max_weight)):
-                group_size += 1
+        grouping = helpers.group_by_proximity(registrations.all(),
+                                              max_proximity, max_size, max_count, proximity,
+                                              delta_match_func=delta_match_func,
+                                              item_weight_func=lambda reg: reg.verified_weight / 1000)
 
-                if group_size == max_size:
-                    default_segmentation[registration.id] = True
-                    current_max_weight = None
-                    group_size = 0
+        group_count = len(grouping)
+        for group in grouping:
+            default_segmentation[group[0].id] = True
 
-                past_registration = registration
+            for item in group[1:]:
+                default_segmentation[item.id] = False
+        
 
-            else:
-                default_segmentation[past_registration.id] = True
-                current_max_weight = actual_weight
-                group_size = 1
-
-                past_registration = registration
-
-        return render_template("mod_placement/registration/assign_all-proximity.html", event_class=event_class, registrations=registrations, default_segmentation=default_segmentation)
+        return render_template("mod_placement/registration/assign_all-proximity.html", event_class=event_class,
+                               registrations=registrations, default_segmentation=default_segmentation, group_count=group_count)
 
 
 @mod_placement_view.route('/class/<id>/participant/<participant_id>/place', methods=['GET', 'POST'])
