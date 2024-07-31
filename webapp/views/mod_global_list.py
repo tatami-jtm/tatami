@@ -6,7 +6,7 @@ from datetime import datetime as dt
 from .event_manager import check_and_apply_event
 from .devices import check_is_registered
 
-from ..models import db, Group
+from ..models import db, Group, Match
 
 from .. import helpers
 
@@ -30,17 +30,33 @@ def index():
     scheduled_matches = None
     not_scheduled_matches = None
     completed_matches = None
+    obsolete_matches = None
     if 'group' in request.values:
         current_group = g.event.groups.filter_by(id=request.values['group']).one_or_404()
         if current_group.marked_ready:
             helpers.force_create_list(current_group)
-            scheduled_matches = current_group.matches.filter_by(scheduled=True, completed=False).order_by('match_schedule_key')
-            not_scheduled_matches = current_group.matches.filter_by(scheduled=False, completed=False)
-            completed_matches = current_group.matches.filter_by(completed=True)
+            scheduled_matches = current_group.matches.filter(
+                Match.scheduled==True,
+                Match.completed==False,
+                (Match.obsolete==False) | (Match.obsolete==None)
+            ).order_by('match_schedule_key')
+            not_scheduled_matches = current_group.matches.filter(
+                Match.scheduled==False,
+                Match.completed==False,
+                (Match.obsolete==False) | (Match.obsolete==None)
+            )
+            completed_matches = current_group.matches.filter(
+                Match.completed==True,
+                (Match.obsolete==False) | (Match.obsolete==None)
+            )
+            obsolete_matches = current_group.matches.filter(
+                Match.obsolete==True,
+                Match.completed==True
+            )
 
     mats = g.event.device_positions.filter_by(is_mat=True).all()
     
-    return render_template("mod_global_list/index.html", mats=mats, current_group=current_group, free_groups=free_groups, scheduled_matches=scheduled_matches, not_scheduled_matches=not_scheduled_matches,completed_matches=completed_matches)
+    return render_template("mod_global_list/index.html", mats=mats, current_group=current_group, free_groups=free_groups, scheduled_matches=scheduled_matches, not_scheduled_matches=not_scheduled_matches,completed_matches=completed_matches, obsolete_matches=obsolete_matches)
 
 
 @mod_global_list_view.route('/group/<id>/edit', methods=['POST'])

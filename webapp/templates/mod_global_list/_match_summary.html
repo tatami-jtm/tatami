@@ -1,8 +1,9 @@
 {% macro match_summary(match) %}
 {% if match != None %}
 {% set result = match.get_result()[1] %}
-<div class="match-summary match-summary-compact">
+<div class="match-summary match-summary-compact {{ 'match-summary-obsolete' if match.obsolete }}">
     <div class="match-header">
+        {% if not match.obsolete %}
         <div class="match-group">{{ match.group.title }}</div>
         {% if match.completed %}
         <div class="match-status match-status-completed">Erledigt</div>
@@ -40,6 +41,7 @@
             {{ _results_dropdown(match, result, 'Ergebnis eintragen') }}
             {% endif %}
         </div>
+        {% endif %}
     </div>
     <div class="match-white">
         <strong>{{ match.white.full_name }}</strong>

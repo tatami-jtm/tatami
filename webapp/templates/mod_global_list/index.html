@@ -1,5 +1,5 @@
 {% extends "layouts/application.html" %}
-{% from "mod_global_list/_match_summary.html" import match_summary %}
+{% from "mod_global_list/_match_summary.html" import match_summary, small_match_summary %}
 {% block title %}Hauptliste{% endblock %}
 
 {% block body %}
@@ -128,6 +128,21 @@
                 </div>
                 {% endfor %}
             </div>
+            {% endif %}
+
+            {% if obsolete_matches.count() %}
+            {% if 'obsolete' in request.values.keys() %}
+            <div class="card mb-3">
+                <div class="card-header">Kämpfe aus überholten Daten (aufgrund Fehleingabe)</div>
+                {% for match in obsolete_matches %}
+                <div class="card-body {{ 'border-top' if loop.index != 1 }} p-0">
+                    {{ match_summary(match) }}
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="fs-small">Es gibt Kämpfe aus überholten Daten. <a href="?group={{ current_group.id }}&obsolete=yes">Anzeigen?</a></p>
+            {% endif %}
             {% endif %}
             {% else %}
             <p>Diese Liste ist noch nicht freigegeben. Die Kämpfe können erst berechnet werden, wenn die Gruppeneinteilung abschließend geprüft und freigegeben wurde.</p>

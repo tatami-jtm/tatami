@@ -28,7 +28,7 @@ def load_list(group):
         struct['fighters'].append(f)
 
     for match in group.matches.all():
-        if match.has_result():
+        if not match.obsolete and match.has_result():
             if not match.is_playoff:
                 struct['matches'][match.listslib_match_id] = match.get_result()[1]._make_list_result()
             else:
@@ -60,12 +60,24 @@ def dump_list(list, group):
     if group.random_seed is None:
         group.random_seed = list._random_seed
 
+    # validate completed matches
+    for match_id in list._match_results:
+        existing_match = group.matches.filter(Match.listslib_match_id==match_id, (Match.obsolete==False) | (Match.obsolete==None)).one_or_none()
+
+        if existing_match is not None:
+            existing_match = _check_if_match_is_obsolete(existing_match, list.get_match_by_id(match_id))
+
     for item in schedule:
         if item['type'] == 'match':
             match_id = item['match'].get_id()
             match_tags = item['match'].get_tags()
 
-            if group.matches.filter_by(listslib_match_id=match_id).count() == 0:
+            existing_match = group.matches.filter(Match.listslib_match_id==match_id, (Match.obsolete==False) | (Match.obsolete==None)).one_or_none()
+
+            if existing_match is not None:
+                existing_match = _check_if_match_is_obsolete(existing_match, item['match'])
+
+            if existing_match is None:
                 match = Match(event=group.event, event_class=group.event_class, group=group)
                 db.session.add(match)
 
@@ -79,6 +91,7 @@ def dump_list(list, group):
                 match.called_up = False
                 match.running = False
                 match.completed = False
+                match.obsolete = False
 
 
     db.session.commit()
@@ -117,3 +130,26 @@ def reset_list(group):
         db.session.delete(match)
 
     db.session.commit()
+
+
+def _check_if_match_is_obsolete(dbmatch, listmatch):
+    if (dbmatch.white.id != listmatch.get_white().get_id() or
+        dbmatch.blue.id != listmatch.get_blue().get_id()):
+        
+        # Do not modify existing matches that have results
+        # or are already scheduled, instead mark them as obsolete
+        if dbmatch.scheduled or dbmatch.has_result():
+            dbmatch.obsolete = True
+            dbmatch.scheduled = False
+            dbmatch.called_up = False
+            dbmatch.running = False
+            dbmatch = None
+
+        else:
+            dbmatch.white = Participant.query.filter_by(id=listmatch.get_white().get_id()).one()
+            dbmatch.blue = Participant.query.filter_by(id=listmatch.get_blue().get_id()).one()
+
+    elif dbmatch.obsolete is None:
+        dbmatch.obsolete = False
+
+    return dbmatch

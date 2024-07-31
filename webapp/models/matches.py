@@ -43,6 +43,9 @@ class Match(db.Model):
     completed = db.Column(db.Boolean)
     completed_at = db.Column(db.DateTime())
 
+    # This flag will be set, when this match is obsolete because of a change in the lists
+    obsolete = db.Column(db.Boolean)
+
     def get_result(self):
         if self.results.count() != 1:
             return True, MatchResult(match=self)

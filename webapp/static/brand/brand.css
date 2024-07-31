@@ -875,6 +875,29 @@ img {
     font-size: 1.5rem;
 }
 
+.match-summary.match-summary-obsolete {
+    background-color: #eaa;
+    padding: 0.25rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.match-summary.match-summary-obsolete .match-header {
+    display: none;
+}
+.match-summary.match-summary-obsolete .match-white,
+.match-summary.match-summary-obsolete .match-blue {
+    width: 0;
+    flex-grow: 1;
+}
+.match-summary.match-summary-obsolete .match-white {
+    border-color: white;
+}
+.match-summary.match-summary-obsolete .match-result {
+    background-color: transparent;
+    width: 100%;
+    flex-grow: 0;
+}
+
 .table-scoreboard {
     width: 100%;
     border: 1px solid rgba(0, 0, 0, 0.5);
