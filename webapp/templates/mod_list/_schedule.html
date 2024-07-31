@@ -53,7 +53,7 @@
         </h3>
         <div id="listScheduleAccordion-pending-gr{{ list.id }}" class="accordion-collapse collapse" data-bs-parent="#listScheduleAccordion">
             <div class="accordion-body p-0">
-                {% for match in list.matches.filter_by(scheduled=False, completed=False) %}
+                {% for match in list.matches.filter_by(scheduled=False, completed=False) if not match.obsolete %}
                     <div class="p-2 {{ 'border-bottom' if not loop.last}}">
                         {{ small_match_summary(match, compact=True) }}
                         {% if not match.schedulable() %}

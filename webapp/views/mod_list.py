@@ -253,7 +253,9 @@ def schedule_match(id, match_id):
 
     match = group.matches.filter_by(id=match_id).one_or_404()
     if not match.scheduled:
-        if match.schedulable():
+        if match.obsolete:
+            flash("Match beruht auf veralteten Daten und kann daher nicht angesetzt werden.", 'danger')
+        elif match.schedulable():
             match.scheduled = True
             match.scheduled_at = datetime.now()
             max_schedule_key = group.event_class.matches.filter_by(scheduled=True).order_by(Match.match_schedule_key.desc()).first()
@@ -311,8 +313,12 @@ def write_match_result(id, match_id):
         return redirect(url_for('devices.index', event=g.event.slug))
     
     group = g.event.groups.filter_by(id=id).one_or_404()
-
     match = group.matches.filter_by(id=match_id).one_or_404()
+
+    if match.obsolete:
+        flash("Match beruht auf veralteten Daten und kann daher kein Ergebnis erhalten.", 'danger')
+        return redirect(request.form['origin_url'])
+
     if not match.completed:
         match.completed = True
         match.completed_at = datetime.now()
@@ -433,8 +439,12 @@ def clear_match_result(id, match_id):
         return redirect(url_for('devices.index', event=g.event.slug))
     
     group = g.event.groups.filter_by(id=id).one_or_404()
-
     match = group.matches.filter_by(id=match_id).one_or_404()
+
+    if match.obsolete:
+        flash("Match beruht auf veralteten Daten, daher kann das Ergebnis nicht entfernt werden.", 'danger')
+        return redirect(request.form['origin_url'])
+
     if match.completed:
         match.completed = False
         match.completed_at = None
@@ -474,7 +484,12 @@ def api_schedule_match(match_id):
     match = g.event.matches.filter_by(id=match_id).one_or_404()
 
     if not match.scheduled:
-        if match.schedulable():
+        if match.obsolete:
+            return jsonify({
+                'status': 'error',
+                'message': 'Match beruht auf veralteten Daten und kann daher nicht angesetzt werden.'
+            }), 400
+        elif match.schedulable():
             match.scheduled = True
             match.scheduled_at = datetime.now()
             max_schedule_key = match.group.event_class.matches.filter_by(scheduled=True) \

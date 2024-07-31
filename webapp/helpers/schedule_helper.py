@@ -94,7 +94,10 @@ def make_config(max_concurrent_groups, max_concurrent_participants):
 
 def get_next_match(group):
     list_system = load_list(group)
-    open_matches = group.matches.filter_by(scheduled=False)
+    open_matches = group.matches.filter(
+        Match.scheduled==False,
+        (Match.obsolete==False) | (Match.obsolete==None)
+    )
     schedule = list_system.get_schedule()
 
     for item in schedule:
