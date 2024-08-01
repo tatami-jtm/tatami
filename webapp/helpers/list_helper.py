@@ -97,9 +97,6 @@ def dump_list(list, group):
     db.session.commit()
 
 
-
-
-
 def force_create_list(group):
     dump_list(load_list(group), group)
 
