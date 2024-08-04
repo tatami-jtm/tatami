@@ -343,9 +343,13 @@ def write_match_result(id, match_id):
 
         if 'loser_disqualified' in request.form:
             match.blue.disqualified = True
+        else:
+            match.blue.disqualified = False
 
         if 'loser_removed' in request.form:
             match.blue.removed = True
+        else:
+            match.blue.removed = False
 
     elif request.form['winner'] == 'blue':
         match_result.is_white_winner = False
@@ -365,9 +369,13 @@ def write_match_result(id, match_id):
 
         if 'loser_disqualified' in request.form:
             match.white.disqualified = True
+        else:
+            match.white.disqualified = False
 
         if 'loser_removed' in request.form:
             match.white.removed = True
+        else:
+            match.white.removed = False
     else:
         flash("Es wurde kein Ergebnis eingetragen, da nicht genügend Informationen übermittelt wurden.", 'danger')
         return redirect(request.form['origin_url'])

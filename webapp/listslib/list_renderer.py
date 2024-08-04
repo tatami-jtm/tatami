@@ -238,8 +238,11 @@ class ListRenderer:
         pdf.cell(37, 5, item['fighter'].get_name(), align='L', fill=('debug' in self.params))
     
     def _write_full_fighter(self, pdf, item):
-        if item['fighter'].is_disqualified() and not item['fighter'] == BlankFighter:
+        if item['fighter'].is_strictly_disqualified():
             pdf.set_text_color(255, 0, 0)
+        
+        elif item['fighter'].is_removed() and not item['fighter'] == BlankFighter:
+            pdf.set_text_color(200, 200, 200)
 
         pdf.set_font("helvetica", "B", 8.5)
         pdf.set_xy(item['x'], item['y'])
@@ -249,10 +252,17 @@ class ListRenderer:
         pdf.set_xy(item['x'], item['y']+3.25)
         pdf.cell(37, 2, item['fighter'].get_affil(), align='L', fill=('debug' in self.params))
 
-        if item['fighter'].is_disqualified() and not item['fighter'] == BlankFighter:
+        if item['fighter'].is_strictly_disqualified():
             pdf.set_font("helvetica", "B", 14)
             pdf.set_xy(item['x'] + 33, item['y'])
             pdf.cell(4.25, 5.5, 'H', align='C', fill=('debug' in self.params))
+
+            pdf.set_text_color(0, 0, 0)
+
+        elif item['fighter'].is_removed() and not item['fighter'] == BlankFighter:
+            pdf.set_font("helvetica", "B", 8)
+            pdf.set_xy(item['x'] + 31, item['y'] )
+            pdf.cell(6.25, 5.5, 'Aus', align='C', fill=('debug' in self.params))
 
             pdf.set_text_color(0, 0, 0)
 

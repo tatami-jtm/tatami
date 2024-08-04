@@ -12,6 +12,7 @@ class Fighter:
         self._affil = affil
 
         self._disqualified = False
+        self._removed = False
 
     def __repr__(self):
         return f"Fighter({repr(self.get_id())}, {repr(self.get_name())}, {repr(self.get_affil())})"
@@ -48,9 +49,19 @@ class Fighter:
     def disqualify(self):
         self._disqualified = True
         return self
+    
+    def remove(self):
+        self._removed = True
+        return self
 
     def is_disqualified(self):
+        return self._disqualified or self._removed
+    
+    def is_strictly_disqualified(self):
         return self._disqualified
+    
+    def is_removed(self):
+        return self._removed
 
 class _BlankFighter(Fighter):
 
@@ -61,6 +72,12 @@ class _BlankFighter(Fighter):
         return "BlankFighter"
     
     def is_disqualified(self):
+        return True
+    
+    def is_strictly_disqualified(self):
+        return False
+    
+    def is_removed(self):
         return True
 
 BlankFighter = _BlankFighter()

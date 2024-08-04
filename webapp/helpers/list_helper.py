@@ -25,6 +25,8 @@ def load_list(group):
         f = Fighter(participant.id, participant.full_name, participant.association_name)
         if participant.disqualified:
             f.disqualify()
+        elif participant.removed:
+            f.remove()
         struct['fighters'].append(f)
 
     for match in group.matches.all():
