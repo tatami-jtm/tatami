@@ -53,7 +53,7 @@ def register():
     registration.registered_at = datetime.now()
     registration.confirmed = False
     registration.title = "Gerät " + registration.get_human_readable_code() + \
-        " - " + request.remote_addr
+        " - " + (request.access_route[-1] if len(request.access_route) else request.remote_addr)
 
     db.session.add(registration)
     db.session.commit()
