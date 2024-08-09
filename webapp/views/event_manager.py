@@ -30,7 +30,7 @@ def check_and_apply_event(func):
 def check_is_event_supervisor(func):
     def inner_func(*args, **kwargs):
         if (not g.event.is_supervisor(current_user) and
-                not current_user.has_privilege('create_tournaments')):
+                not current_user.has_privilege('admin')):
             abort(404)
 
         return func(*args, **kwargs)
