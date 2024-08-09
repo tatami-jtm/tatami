@@ -232,7 +232,7 @@ def update_role(id):
 def events():
     current_user_events = events = current_user.get_all_supervised_events()
 
-    if current_user.has_privilege('create_tournaments'):
+    if current_user.has_privilege('admin'):
         events = Event.query.all()
 
     return render_template(
