@@ -73,6 +73,7 @@
                 {% for group in groups.order_by('title').all() %}
                 <div class="card-body p-2 {{ 'border-top' if not loop.index == 1 }}">
                     <div class="row">
+                        {% if group.list_system() == None %}<div class="col-auto pe-0">⚠️</div>{% endif %}
                         <div class="col">
                             <a href="?group={{ group.id }}" class="link-dark {{ 'fw-bold' if group == current_group }}">{{ group.title }}</a>
                         </div>
@@ -102,6 +103,7 @@
             {% if current_group.marked_ready %}
             <div class="alert alert-info">
                 <p>Diese Gruppe wurde zum Kämpfen freigegeben und kann daher nicht mehr geändert werden.</p>
+                <p>Die Hauptliste kann die Kämpfe zurücksetzen und dadurch die Freigabe zurücknehmen</p>
             </div>
             {% else %}
 
@@ -183,9 +185,16 @@
                 {% endfor %}
             </div>
             {% elif not list_system %}
-            <p>Noch kein Listensystem zugewiesen.</p>
-            {% else %}
+            <div class="mb-3">
+                <a href="" disabled class="btn disabled opacity-25 btn-primary btn-sm">Verbleibende Gruppen-TN losen</a>
+                <a href="" disabled class="btn disabled opacity-25 btn-secondary btn-sm">Vorschau als PDF</a>
+            </div>
 
+            <div class="alert alert-danger">
+                <p>Noch kein Listensystem zugewiesen.</p>
+                <p>Dies tritt in der Regel auf, wenn diese Gruppe zu groß ist, sodass kein ausreichend mächtiges Listensystem bereitsteht.</p>
+            </div>
+            {% else %}
             <div class="mb-3">
                 <a href="{{ url_for('mod_placement.place_all', event=g.event.slug, id=event_class.id, group_id=current_group.id) }}" class="btn btn-primary btn-sm">Verbleibende Gruppen-TN losen</a>
                 <a href="{{ url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id, draft=1) }}" class="btn btn-secondary btn-sm" target="_blank">Vorschau als PDF</a>
