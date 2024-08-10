@@ -28,7 +28,7 @@
 </ul>
 {% endif %}
 <div class="p-1 mb-2">
-    <img src="{{ url_for('mod_list.display_image', event=g.event.slug, id=shown_list.id, page=request.values.get('page')) }}" alt="">
+    <img src="{{ url_for('mod_list.display_image', event=g.event.slug, id=shown_list.id, page=request.values.get('page')) }}" class="img-spinner" alt="">
 </div>
 {% else %}
 <p>Dieser Matte wurden noch keine Listen zugewiesen, die Listen wurden noch nicht freigegeben oder alle Kämpfe sind beendet.</p>

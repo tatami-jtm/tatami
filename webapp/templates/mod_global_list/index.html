@@ -171,7 +171,7 @@
             </div>
             
             <div class="mb-3">
-                <img src="{{ url_for('mod_list.display_image', event=g.event.slug, id=current_group.id, page=request.values.get('page')) }}" alt="">
+                <img src="{{ url_for('mod_list.display_image', event=g.event.slug, id=current_group.id, page=request.values.get('page')) }}" class="img-spinner" alt="">
             </div>
             {% endif %}
         </div>
