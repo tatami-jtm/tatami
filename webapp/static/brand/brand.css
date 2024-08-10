@@ -1372,9 +1372,43 @@ select.w-min {
 }
 
 img.img-spinner {
-    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48c3R5bGU+LnNwaW5uZXJfUzFXTnthbmltYXRpb246c3Bpbm5lcl9NR2ZiIC44cyBsaW5lYXIgaW5maW5pdGU7YW5pbWF0aW9uLWRlbGF5Oi0uOHN9LnNwaW5uZXJfS205UHthbmltYXRpb24tZGVsYXk6LS42NXN9LnNwaW5uZXJfSkFwUHthbmltYXRpb24tZGVsYXk6LS41c31Aa2V5ZnJhbWVzIHNwaW5uZXJfTUdmYns5My43NSUsMTAwJXtvcGFjaXR5Oi4yfX08L3N0eWxlPjxjaXJjbGUgY2xhc3M9InNwaW5uZXJfUzFXTiIgY3g9IjQiIGN5PSIxMiIgcj0iMyIvPjxjaXJjbGUgY2xhc3M9InNwaW5uZXJfUzFXTiBzcGlubmVyX0ttOVAiIGN4PSIxMiIgY3k9IjEyIiByPSIzIi8+PGNpcmNsZSBjbGFzcz0ic3Bpbm5lcl9TMVdOIHNwaW5uZXJfSkFwUCIgY3g9IjIwIiBjeT0iMTIiIHI9IjMiLz48L3N2Zz4=");
     background-repeat: no-repeat;
     background-position: center center;
     width: 100%;
     min-height: 50px;
+
+    /*
+    The image represented in base64 in the line below this copyright notice has been obtained
+    from
+
+        https://github.com/n3r4zzurr0/svg-spinners
+
+    where the image had been made available under the following license terms:
+
+        The MIT License (MIT)
+
+        Copyright (c) Utkarsh Verma
+
+        Permission is hereby granted, free of charge, to any person obtaining a copy of
+        this software and associated documentation files (the "Software"), to deal in
+        the Software without restriction, including without limitation the rights to
+        use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+        the Software, and to permit persons to whom the Software is furnished to do so,
+        subject to the following conditions:
+
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+        FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+        COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+        IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+        CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    
+    The above copyright notice only refers to the line after this comment and does not
+    apply to any other parts of this TATAMI software, see /LICENSE for more information
+    on the license TATAMI is being provided under.
+    */
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48c3R5bGU+LnNwaW5uZXJfUzFXTnthbmltYXRpb246c3Bpbm5lcl9NR2ZiIC44cyBsaW5lYXIgaW5maW5pdGU7YW5pbWF0aW9uLWRlbGF5Oi0uOHN9LnNwaW5uZXJfS205UHthbmltYXRpb24tZGVsYXk6LS42NXN9LnNwaW5uZXJfSkFwUHthbmltYXRpb24tZGVsYXk6LS41c31Aa2V5ZnJhbWVzIHNwaW5uZXJfTUdmYns5My43NSUsMTAwJXtvcGFjaXR5Oi4yfX08L3N0eWxlPjxjaXJjbGUgY2xhc3M9InNwaW5uZXJfUzFXTiIgY3g9IjQiIGN5PSIxMiIgcj0iMyIvPjxjaXJjbGUgY2xhc3M9InNwaW5uZXJfUzFXTiBzcGlubmVyX0ttOVAiIGN4PSIxMiIgY3k9IjEyIiByPSIzIi8+PGNpcmNsZSBjbGFzcz0ic3Bpbm5lcl9TMVdOIHNwaW5uZXJfSkFwUCIgY3g9IjIwIiBjeT0iMTIiIHI9IjMiLz48L3N2Zz4=");
 }
