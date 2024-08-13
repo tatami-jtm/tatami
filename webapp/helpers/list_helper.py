@@ -48,6 +48,10 @@ def dump_list(list, group):
             group.completed = True
             group.completed_at = dt.now()
 
+            if not group.opened:
+                group.opened = True
+                group.opened_at = dt.now()
+
         for plm, func in [(1, list.get_first), (2, list.get_second), (3, list.get_third), (5, list.get_fifth)]:
             data = func()
             if type(data) == Fighter or data == BlankFighter:
