@@ -110,12 +110,12 @@ def rotate_all_groups():
         free_groups += event_class.groups.filter_by(assigned=None).all()
         free_groups += event_class.groups.filter_by(assigned=False).all()
 
+    free_groups = filter(lambda gr: gr.list_system(), free_groups)
     free_groups = sorted(free_groups, key=lambda group: group.estimated_fight_count())[::-1]
     mats = g.event.device_positions.filter_by(is_mat=True).all()
 
     if request.method == "POST":
         if len(request.form.getlist('to')):
-            mat_index = -1
             used_mats = { m.id: m for m in mats if str(m.id) in request.form.getlist('to')}
             matlist = { mi: 0 for mi in used_mats.keys() }
 
