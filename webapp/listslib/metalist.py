@@ -1046,8 +1046,10 @@ class MetaList:
             match.set_result(match_result)
             self.enter_results(obj, match_result)
 
-        self.get_schedule(obj, True)
-        self.score(obj)
+            # Better be safe than sorry, get info schedule and run score after every
+            # match has been entered, so that resolv-matches can be added possibly
+            self.get_schedule(obj, True)
+            self.score(obj)
 
         for po_match_id in struct['playoff_matches']:
             po_match_result = struct['playoff_matches'][po_match_id]
