@@ -571,8 +571,14 @@ class MetaList:
 
             if scope not in obj._score_deductions['calced']:
                 return None
-                
-            return obj._score_deductions['calced'][scope]['order'][ref['placed'] - 1][0]
+            
+            expected_placement = ref['placed'] - 1
+
+            if len(obj._score_deductions['calced'][scope]['order']) > expected_placement:
+                return obj._score_deductions['calced'][scope]['order'][expected_placement][0]
+            else:
+                # no fighter with that placement, possibly because this list is not full
+                return None
 
     """
         get_match_by_id(obj, match_id, informational_only=False)
