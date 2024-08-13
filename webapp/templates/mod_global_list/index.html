@@ -257,7 +257,7 @@
     
                     <button type="submit" class="btn btn-primary btn-sm">Speichern</button>
                     {% if group.marked_ready %}
-                    <a href="{{ url_for('mod_global_list.reset_group', event=g.event.slug, id=current_group.id) }}" class="btn btn-sm btn-outline-danger">Kämpfe zurücksetzen</a>
+                    <a href="{{ url_for('mod_global_list.reset_group', event=g.event.slug, id=group.id) }}" class="btn btn-sm btn-outline-danger">Kämpfe zurücksetzen</a>
                     {% endif %}
                 </form>
             </div>
