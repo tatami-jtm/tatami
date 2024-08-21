@@ -11,6 +11,7 @@ from .views import admin_view, eventmgr_view, devices_view, mod_scoreboard_view,
 
 app = Flask(__name__, instance_path=SETTINGS['INSTANCE_PATH'])
 app.config['BRAND_NAME'] = "TATAMI 2024"
+app.config['STREAMING_REDIS'] = SETTINGS['STREAMING_REDIS']
 
 # SQLAlchemy and Migrate
 app.config['SQLALCHEMY_DATABASE_URI'] = SETTINGS['SQL_URL']
@@ -128,7 +129,10 @@ app.register_blueprint(mod_list_view, url_prefix="/go/<event>/mod_list")
 app.register_blueprint(mod_beamer_view, url_prefix='/go/<event>/mod_beamer')
 app.register_blueprint(mod_results_view, url_prefix='/go/<event>/mod_results')
 
-app.register_blueprint(mod_streaming_view, url_prefix='/go/<event>/mod_streaming')
+
+# Only implement streaming if it has been included
+if app.config['STREAMING_REDIS'] is not None:
+    app.register_blueprint(mod_streaming_view, url_prefix='/go/<event>/mod_streaming')
 
 
 # Make sure that registered users are deactivated by default

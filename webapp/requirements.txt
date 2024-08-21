@@ -11,3 +11,5 @@ pypdfium2
 
 pytest
 pytest-flask-sqlalchemy
+
+redis

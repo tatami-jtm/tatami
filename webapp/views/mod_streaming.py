@@ -44,26 +44,27 @@ def matches_stream(mats):
             frame.paste(match_base_frame, (0, y))
 
             # Write match number
-            font = ImageFont.truetype('arialbd.ttf', 80)
-            frame_draw.text((32, y+10), m.title.split(" ")[1], font=font)
+            draw_text(frame_draw, 57.5, y+40, m.title.split(" ")[1], size=80, bold=True, color='white', alignment='center')
 
-            cm = m.current_match()
-            if not cm: continue
+            cm = helpers.streaming.get_value(helpers.streaming.make_key(m.id, 'current_match', 'exists'))
+
+            if not cm:
+                continue
+
+            group_title = helpers.streaming.get_value(helpers.streaming.make_key(m.id, 'current_match', 'group_title'))
+            white_name = helpers.streaming.get_value(helpers.streaming.make_key(m.id, 'current_match', 'white.name'))
+            white_assoc = helpers.streaming.get_value(helpers.streaming.make_key(m.id, 'current_match', 'white.association'))
+            blue_name = helpers.streaming.get_value(helpers.streaming.make_key(m.id, 'current_match', 'blue.name'))
+            blue_assoc = helpers.streaming.get_value(helpers.streaming.make_key(m.id, 'current_match', 'blue.association'))
             
-            font = ImageFont.truetype('arial.ttf', 16)
-            frame_draw.text((20, y+100), cm.group.title.replace(" ", "\n", 1), align="center", font=font)
 
-            font = ImageFont.truetype('arialbd.ttf', 32)
-            frame_draw.text((120, y+5), cm.white.full_name, font=font, fill='black')
+            draw_text(frame_draw, 57.5, y+120, group_title.replace(" ", "\n", 1), size=18, color='white', alignment='center')
 
-            font = ImageFont.truetype('arial.ttf', 18)
-            frame_draw.text((120, y+45), cm.white.association_name, font=font, fill='black')
+            draw_text(frame_draw, 120, y+5, white_name, size=32, bold=True, color='black')
+            draw_text(frame_draw, 120, y+45, white_assoc, size=18, color='black')
 
-            font = ImageFont.truetype('arialbd.ttf', 32)
-            frame_draw.text((120, y+80), cm.blue.full_name, font=font, fill='white')
-
-            font = ImageFont.truetype('arial.ttf', 18)
-            frame_draw.text((120, y+120), cm.blue.association_name, font=font, fill='white')
+            draw_text(frame_draw, 120, y+80, blue_name, size=32, bold=True, color='white')
+            draw_text(frame_draw, 120, y+120, blue_assoc, size=18, color='white')
 
             y += match_base_frame.height
         
@@ -74,3 +75,21 @@ def matches_stream(mats):
                 b'Content-Type: image/png\r\n\r\n' + frame_byte_arr.getvalue() + b'\r\n')
         
         time.sleep(1)
+
+def draw_text(frame, x, y, text, *, font='arial', size=16, color='black', bold=False, alignment='left'):
+    if bold:
+        font = ImageFont.truetype(f'{font}bd.ttf', size)
+    else:
+        font = ImageFont.truetype(f'{font}.ttf', size)
+
+    _, _, w, h = frame.textbbox((0, 0), text, font=font)
+
+    if alignment == 'right':
+        x -= w
+        y -= h
+    
+    elif alignment == 'center':
+        x -= w/2
+        y -= h/2
+
+    frame.text((x, y), text, font=font, align=alignment, fill=color)
