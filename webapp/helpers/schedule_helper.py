@@ -1,5 +1,6 @@
 from ..models import db, Match
 from .list_helper import load_list
+from . import streaming_helper as streaming
 from datetime import datetime as dt
 
 def do_promote_scheduled_fights(mat):
@@ -15,6 +16,8 @@ def do_promote_scheduled_fights(mat):
             waiting_match.running = True
             waiting_match.running_since = dt.now()
 
+            streaming.update_redis_for_current_match(mat, waiting_match)
+
         elif len(scheduled_matches):
             # choose current match
             oldest_scheduled_match = scheduled_matches[0]
@@ -23,12 +26,22 @@ def do_promote_scheduled_fights(mat):
             oldest_scheduled_match.running = True
             oldest_scheduled_match.running_since = dt.now()
 
+            streaming.update_redis_for_current_match(mat, oldest_scheduled_match)
+
+        else:
+            streaming.update_redis_for_current_match(mat, None)
+
     scheduled_matches = mat.scheduled_matches(include_called_up=False)
     if mat.waiting_match() is None:
         if len(scheduled_matches):
             oldest_scheduled_match = scheduled_matches[0]
             oldest_scheduled_match.called_up = True
             oldest_scheduled_match.called_up_at = dt.now()
+
+            streaming.update_redis_for_waiting_match(mat, oldest_scheduled_match)
+        
+        else:
+            streaming.update_redis_for_waiting_match(mat, None)
     
     db.session.commit()
 
