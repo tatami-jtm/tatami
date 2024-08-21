@@ -36,20 +36,25 @@ def matches_stream(mats):
     match_base_frame = Image.open('./static/stream_frames/match_base_frame.png')
 
     while True:
-        frame = Image.new('RGB', (match_base_frame.width, (match_base_frame.height) * len(mats)))
+        frame = Image.new('RGB', (match_base_frame.width, (match_base_frame.height) * len(mats) - 5))
         frame_draw = ImageDraw.Draw(frame)
 
         y = 0
         for m in mats:
             frame.paste(match_base_frame, (0, y))
 
-            # Write match number
-            draw_text(frame_draw, 57.5, y+40, m.title.split(" ")[1], size=80, bold=True, color='white', alignment='center')
-
             cm = helpers.streaming.get_value(helpers.streaming.make_key(m.id, 'current_match', 'exists'))
 
             if not cm:
+                # Write mat number a bit lowered
+                draw_text(frame_draw, 57.5, y+67.5, m.title.split(" ")[1], size=70, bold=True, color='white', alignment='center')
+
+                y += match_base_frame.height
                 continue
+
+
+            # Write mat number
+            draw_text(frame_draw, 57.5, y+40, m.title.split(" ")[1], size=70, bold=True, color='white', alignment='center')
 
             group_title = helpers.streaming.get_value(helpers.streaming.make_key(m.id, 'current_match', 'group_title'))
             white_name = helpers.streaming.get_value(helpers.streaming.make_key(m.id, 'current_match', 'white.name'))
@@ -58,7 +63,7 @@ def matches_stream(mats):
             blue_assoc = helpers.streaming.get_value(helpers.streaming.make_key(m.id, 'current_match', 'blue.association'))
             
 
-            draw_text(frame_draw, 57.5, y+120, group_title.replace(" ", "\n", 1), size=18, color='white', alignment='center')
+            draw_text(frame_draw, 57.5, y+110, group_title.replace(" ", "\n", 1), size=24, color='white', alignment='center')
 
             draw_text(frame_draw, 120, y+5, white_name, size=32, bold=True, color='black')
             draw_text(frame_draw, 120, y+45, white_assoc, size=18, color='black')
