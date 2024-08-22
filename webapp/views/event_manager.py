@@ -591,6 +591,7 @@ def update_registration(id):
     registration.last_name = request.form['last_name']
     registration.club = request.form['club']
     registration.contact_details = request.form['contact_details']
+    registration.external_id = request.form['external_id']
     registration.suggested_group = request.form['suggested_group']
 
     registration.confirmed = "confirmed" in request.form
@@ -631,6 +632,7 @@ def create_registration():
         registration.last_name = request.form['last_name']
         registration.club = request.form['club']
         registration.contact_details = request.form['contact_details']
+        registration.external_id = request.form['external_id']
         registration.suggested_group = request.form['suggested_group']
 
         registration.confirmed = "confirmed" in request.form

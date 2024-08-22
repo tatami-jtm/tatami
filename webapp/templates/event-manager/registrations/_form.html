@@ -26,11 +26,11 @@
 
     <div class="mb-3">
         <div class="row g-2">
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-4">
                 <label for="club" class="form-label">Verein</label>
                 <input name="club" id="club" value="{{ registration.club or '' }}" class="form-control">
             </div>
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-4">
                 <label for="association" class="form-label">Verband</label>
                 <select name="association" id="association" class="form-select">
                     <option value=""></option>
@@ -38,6 +38,10 @@
                     <option value="{{ assoc.id }}"{{ " selected" if assoc.id == registration.association_id }}>{{ assoc.name }}</option>
                     {% endfor %} 
                 </select>
+            </div>
+            <div class="col-12 col-md-4">
+                <label for="external_id" class="form-label">Externe ID (z. B. Pass-ID)</label>
+                <input name="external_id" id="external_id" value="{{ registration.external_id or '' }}" class="form-control">
             </div>
         </div>
     </div>
