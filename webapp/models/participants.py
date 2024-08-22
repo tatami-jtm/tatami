@@ -19,6 +19,8 @@ class Registration(db.Model):
     association_id = db.Column(db.Integer(), db.ForeignKey('association.id'))
     association = db.relationship('Association', backref=db.backref(
         'registrations', lazy='dynamic'))
+    
+    external_id = db.Column(db.String(50))
 
     created_at = db.Column(db.DateTime())
     confirmed_at = db.Column(db.DateTime())
