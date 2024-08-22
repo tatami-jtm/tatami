@@ -27,6 +27,12 @@
                 <div class="fw-bold">Kampfklasse</div>
                 <div>{{ registration.event_class.title }}</div>
             </div>
+            {% if registration.external_id %}
+            <div class="mb-2">
+                <div class="fw-bold">Externe ID</div>
+                <div>{{ registration.external_id }}</div>
+            </div>
+            {% endif %}
         </div>
         {% if not registration.registered %}
         {% if g.event.setting('count_weighin_as_registration', False) %}
