@@ -70,7 +70,7 @@ def exit():
     return redirect(url_for('splash'))
 
 
-@devices_view.route('/api/register')
+@devices_view.route('/api/register', methods=['GET', 'POST'])
 @check_and_apply_event
 def api_register():
     if "device_token" in session:
