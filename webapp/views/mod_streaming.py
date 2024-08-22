@@ -133,10 +133,10 @@ def mats_stream(mats):
             draw_text(frame_draw, 605, y+35, group_title.replace(" ", "\n", 1), size=20, color='white', alignment='center')
 
             draw_text(frame_draw, 120, y+5, white_name, size=32, bold=True, color='black')
-            draw_text(frame_draw, 120, y+45, white_assoc, size=18, bold=True, color='black')
+            draw_text(frame_draw, 120, y+45, white_assoc, size=18, color='black')
 
             draw_text(frame_draw, 650, y+5, blue_name, size=32, bold=True, color='white')
-            draw_text(frame_draw, 650, y+45, blue_assoc, size=18, bold=True, color='white')
+            draw_text(frame_draw, 650, y+45, blue_assoc, size=18, color='white')
 
             wm = helpers.streaming.get_value(helpers.streaming.make_key(m.id, 'waiting_match', 'exists'))
 
@@ -151,8 +151,8 @@ def mats_stream(mats):
             blue_assoc = helpers.streaming.get_value(helpers.streaming.make_key(m.id, 'waiting_match', 'blue.association'))
 
             draw_text(frame_draw, 605, y+94, group_title.replace(" ", "\n", 1), size=12, color="#eee", alignment='center')
-            draw_text(frame_draw, 120, y+83, f"{white_name} ({white_assoc})"[:40], size=20, color='#333')
-            draw_text(frame_draw, 650, y+83, f"{blue_name} ({blue_assoc})"[:40], size=20, color='#eee')
+            draw_text(frame_draw, 120, y+83, f"{white_name} ({white_assoc})"[:39], bold=True, size=20, color='#333')
+            draw_text(frame_draw, 650, y+83, f"{blue_name} ({blue_assoc})"[:39], bold=True, size=20, color='#eee')
 
             y += match_base_frame.height
         
