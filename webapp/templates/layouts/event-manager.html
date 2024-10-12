@@ -42,7 +42,12 @@
     <div class="container-fluid event-container">
         <div class="row">
             <div class="col event-sidebar bg-light shadow-sm">
-                <h3>{{ g.event.title }}</h3>
+                <h3>
+                    {{ g.event.title }} 
+                    {% if g.event.team_mode %}
+                    <span class="badge text-bg-warning fs-small mt-2">TEAM</span>
+                    {% endif %}
+                </h3>
                 <div class="nav flex-column mb-4">
                     <div class="nav-item">
                         <a class="nav-link {{ 'active' if event_page=='dashboard' }}" href="{{ url_for('event_manager.index', event=g.event.slug) }}">📊 Übersicht</a>

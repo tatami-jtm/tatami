@@ -18,9 +18,14 @@
             ({{ evt.first_day.strftime("%d.%m.%Y") }} &ndash; {{ evt.last_day.strftime("%d.%m.%Y") }})
         </div>
         <div class="font-monospace small">{{ evt.slug }}</div>
-        {% if current_user.has_privilege('admin') and evt in current_user_events %}
-        <div class="small"><span class="badge text-bg-secondary">Meine Veranstaltung</span></div>
-        {% endif %}
+        <div class="small">
+            {% if evt.team_mode %}
+            <span class="badge text-bg-warning">Team-Event</span>
+            {% endif %}
+            {% if current_user.has_privilege('admin') and evt in current_user_events %}
+            <span class="badge text-bg-secondary">Meine Veranstaltung</span>
+            {% endif %}
+        </div>
     </a>
 {% endfor %}
 </div>

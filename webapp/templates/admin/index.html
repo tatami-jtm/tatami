@@ -47,6 +47,9 @@
                             ({{ evt.first_day.strftime("%d.%m.%Y") }} &ndash; {{ evt.last_day.strftime("%d.%m.%Y") }})
                         </div>
                         <div class="font-monospace small">{{ evt.slug }}</div>
+                        {% if evt.team_mode %}
+                        <div class="small badge text-bg-warning">Team-Event</div>
+                        {% endif %}
                     </a>
                 {% endfor %}
                 </div>
