@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, flash, g, session, \
-    request, redirect, url_for, abort
+    request, redirect, url_for, abort, jsonify
 
 from ..models import db, DeviceRegistration
 from .event_manager import check_and_apply_event
@@ -48,19 +48,7 @@ def register():
     if not g.event.allow_device_registration:
         abort(404)
 
-    registration = DeviceRegistration(event=g.event)
-    registration.token = str(uuid.uuid4())
-    registration.registered_at = datetime.now()
-    registration.confirmed = False
-    registration.title = "Gerät " + registration.get_human_readable_code() + \
-        " - " + (request.access_route[-1] if len(request.access_route) else request.remote_addr)
-
-    db.session.add(registration)
-    db.session.commit()
-
-    session["device_token"] = registration.token
-
-    g.event.log(registration.title, 'DEBUG', f'Neues Gerät {registration.title} registriert, wartet auf Freigabe.')
+    registration = _create_new_registration()
 
     return render_template("devices/register.html", registration=registration)
 
@@ -80,3 +68,51 @@ def exit():
     db.session.commit()
 
     return redirect(url_for('splash'))
+
+
+@devices_view.route('/api/register', methods=['GET', 'POST'])
+@check_and_apply_event
+def api_register():
+    if "device_token" in session:
+        matching_registration = DeviceRegistration.query.filter_by(
+            event=g.event, token=session["device_token"]).all()
+
+        if len(matching_registration) == 1:
+            if (registration := matching_registration[0]).confirmed:
+                return jsonify({
+                    "result": "success"
+                })
+
+            return jsonify({
+                "result": "pending",
+                "auth_code": registration.get_human_readable_code()
+            })
+        else:
+            del session["device_token"]
+
+    if not g.event.allow_device_registration:
+        abort(404)
+
+    registration = _create_new_registration()
+
+    return jsonify({
+        "result": "pending",
+        "auth_code": registration.get_human_readable_code()
+    })
+
+def _create_new_registration():
+    registration = DeviceRegistration(event=g.event)
+    registration.token = str(uuid.uuid4())
+    registration.registered_at = datetime.now()
+    registration.confirmed = False
+    registration.title = "Gerät " + registration.get_human_readable_code() + \
+        " - " + (request.access_route[-1] if len(request.access_route) else request.remote_addr)
+
+    db.session.add(registration)
+    db.session.commit()
+
+    session["device_token"] = registration.token
+
+    g.event.log(registration.title, 'DEBUG', f'Neues Gerät {registration.title} registriert, wartet auf Freigabe.')
+
+    return registration

@@ -19,6 +19,8 @@ class Registration(db.Model):
     association_id = db.Column(db.Integer(), db.ForeignKey('association.id'))
     association = db.relationship('Association', backref=db.backref(
         'registrations', lazy='dynamic'))
+    
+    external_id = db.Column(db.String(50))
 
     created_at = db.Column(db.DateTime())
     confirmed_at = db.Column(db.DateTime())
@@ -80,7 +82,8 @@ class Registration(db.Model):
         return False
     
     @classmethod
-    def filter(cls, event, class_filter=None, event_class=None, status=None, name=None, club=None, order_by=None):
+    def filter(cls, event, class_filter=None, event_class=None, status=None, name=None,
+               club=None, order_by=None, external_id=None):
         query = cls.query.filter(cls.event_id==event.id)
 
         # Doing some db-black magic to prevent circular import issues
@@ -115,6 +118,9 @@ class Registration(db.Model):
 
         if club:
             query = query.filter(cls.club.ilike(f"%{club}%"))
+
+        if external_id:
+            query = query.filter(cls.external_id.ilike(f"{external_id}%"))
 
         if order_by == 'first_name':
             query = query.order_by('first_name')

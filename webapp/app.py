@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, abort
+from flask import Flask, render_template, request, flash, abort, jsonify
 from flask_migrate import Migrate
 from flask_security import Security, SQLAlchemyUserDatastore, user_registered
 from flask_babel import Babel
@@ -53,6 +53,19 @@ if 'OFFLINE' in SETTINGS and SETTINGS['OFFLINE']:
 def splash():
     avail_events = Event.that_allows_registration()
     return render_template("index.html", avail_events=avail_events)
+
+
+@app.route("/api/events")
+def api_events():
+    avail_events = Event.that_allows_registration()
+    return jsonify([
+        {
+            "slug": e.slug,
+            "title": e.title,
+            "first_day": e.first_day,
+            "last_day": e.last_day
+        } for e in avail_events
+    ])
 
 
 @app.route("/scoreboard")

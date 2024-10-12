@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, flash, g, session, \
-    request, redirect, url_for
+    request, redirect, url_for, jsonify
 
 from datetime import datetime as dt
 
@@ -22,7 +22,8 @@ def index():
     quarg = None
 
     if "query" in request.values:
-        query = query.filter(Registration.last_name.ilike(f"{request.values['query']}%"))
+        query = query.filter(Registration.last_name.ilike(f"{request.values['query']}%") |
+                             Registration.external_id.ilike(f"{request.values['query']}%"))
         quarg = request.values['query']
 
     query = query.order_by('registered', 'last_name', 'first_name').all()
@@ -62,3 +63,48 @@ def unconfirm(id):
     g.event.log(g.device.title, 'DEBUG', f'Akkreditierung von {reg.short_name()} wurde aufgehoben.')
 
     return redirect(url_for('mod_registrations.index', event=g.event.slug))
+
+
+@mod_registrations_view.route('/api', methods=['POST'])
+@check_and_apply_event
+@check_is_registered
+def api():
+    if not g.device.event_role.may_use_registration:
+        return jsonify({
+            "result": "error",
+            "message": "Sie haben keine Berechtigung, hierauf zuzugreifen"
+        }), 401
+
+    external_id = request.form.get('id', None)
+
+    if not external_id:
+        return jsonify({
+            "result": "error",
+            "message": "Fügen Sie die externe ID (Pass-ID) mit dem Formularfeld ?id bei."
+        }), 400
+
+    registration = Registration.query.filter_by(event=g.event, external_id=external_id).all()
+
+    if len(registration) == 0:
+        return jsonify({
+            "result": "error",
+            "message": "Kein TN mit dieser ID gefunden."
+        }), 404
+    
+    elif len(registration) != 1:
+        return jsonify({
+            "result": "error",
+            "message": "Mehrere TN mit dieser ID gefunden -- bitte wenden Sie sich an die Veranstaltungsleitung."
+        }), 400
+    
+    registration = registration[0]
+
+    registration.registered = True
+    registration.registered_at = dt.now()
+    db.session.commit()
+
+    g.event.log(g.device.title, 'DEBUG', f'{registration.short_name()} wurde akkreditiert.')
+
+    return jsonify({
+        "result": "success"
+    })
