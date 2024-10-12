@@ -47,6 +47,10 @@
         <input type="text" class="form-control" id="club_filter" name="club_filter" value="{{ club_filter or '' }}">
     </div>
     <div class="col-auto">
+        <label for="externalid_filter" class="form-label mb-1">Ext. ID</label>
+        <input type="text" class="form-control w-min" id="externalid_filter" name="externalid_filter" value="{{ externalid_filter or '' }}">
+    </div>
+    <div class="col-auto">
         <label for="order_by" class="form-label mb-1">Sortieren nach</label>
         <select name="order_by" id="order_by" class="form-select w-min">
             <option value="">(Nach-, Vorname, Verein)</option>
@@ -88,6 +92,7 @@
             <th>Kampfklasse</th>
             <th>Nachname</th>
             <th>Vorname</th>
+            <th>Ext. ID</th>
             <th>Verein</th>
             <th>Verband</th>
             <th>Status</th>
@@ -100,6 +105,7 @@
             <td>{{ reg.event_class.title }}</td>
             <td>{{ reg.last_name }}</td>
             <td>{{ reg.first_name }}</td>
+            <td>{{ reg.external_id or '-' }}</td>
             <td>{{ reg.club }}</td>
             <td>{{ reg.association.short_name if reg.association else "-" }}</td>
             <td>
