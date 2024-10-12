@@ -9,3 +9,5 @@ venv
 
 webapp/temp
 !webapp/temp/.keep
+temp/
+!temp/.keep
