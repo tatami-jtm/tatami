@@ -7,4 +7,5 @@ from .user import *
 from .events import *
 from .participants import *
 from .matches import *
+from .teams import *
 # autopep8: on
