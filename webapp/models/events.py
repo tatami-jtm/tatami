@@ -17,6 +17,8 @@ class Event(db.Model):
 
     allow_device_registration = db.Column(db.Boolean())
 
+    team_mode = db.Column(db.Boolean())
+
     supervising_user_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
     supervising_user = db.relationship(
         'User', backref=db.backref('supervised_events', lazy='dynamic'))
