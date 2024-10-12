@@ -84,6 +84,7 @@
     </div>
 </form>
 
+{% if not g.event.team_mode %}
 <form action="" method="POST">
     <div class="card my-3">
         <div class="card-header">Vollautomatische Listenführung</div>
@@ -122,6 +123,7 @@
         </div>
     </div>
 </form>
+{% endif %}
 
 
 <form action="" method="POST">
