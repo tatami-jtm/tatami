@@ -276,6 +276,7 @@ def create_event():
     event.last_day = datetime.fromisoformat(last_day)
     event.supervising_role = role
     event.supervising_user = user
+    event.team_mode = request.form['mode'] == 'team'
 
     db.session.add(event)
     db.session.commit()
