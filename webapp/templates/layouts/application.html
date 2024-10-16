@@ -12,13 +12,21 @@
             <a href="{{ url_for('devices.index', event=g.event.slug) }}" class="splash-logo">{{ config.BRAND_NAME }}</a>
             <div class="dropdown dropdown-center">
                 <button class="btn btn-light fw-bold dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ g.event.title }}
+                    {{ g.event.title }} {% if g.event.team_mode %}
+                    <span class="badge text-bg-warning small">TEAM</span>
+                    {% endif %}
                 </button>
                 <ul class="dropdown-menu">
                     {% if g.device.event_role.may_use_registration %}
                     <li>
                         <a class="dropdown-item" href="{{ url_for('mod_registrations.index', event=g.event.slug) }}">
                             📝 Anmeldungen
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if g.device.event_role.may_use_registration and g.event.team_mode %}<li>
+                        <a class="dropdown-item" href="">
+                            ☑️ Team-Akkreditierung
                         </a>
                     </li>
                     {% endif %}
@@ -29,17 +37,31 @@
                         </a>
                     </li>
                     {% endif %}
-                    {% if g.device.event_role.may_use_placement_tool %}
+                    {% if g.device.event_role.may_use_placement_tool and not g.event.team_mode %}
                     <li>
                         <a class="dropdown-item" href="{{ url_for('mod_placement.index', event=g.event.slug) }}">
                             🎲 Einteilung
                         </a>
                     </li>
                     {% endif %}
-                    {% if g.device.event_role.may_use_global_list %}
+                    {% if g.device.event_role.may_use_placement_tool and g.event.team_mode %}
+                    <li>
+                        <a class="dropdown-item" href="">
+                            👥 Team-Einteilung
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if g.device.event_role.may_use_global_list and not g.event.team_mode %}
                     <li>
                         <a class="dropdown-item" href="{{ url_for('mod_global_list.index', event=g.event.slug) }}">
                             📜 Hauptliste
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if g.device.event_role.may_use_global_list and g.event.team_mode %}
+                    <li>
+                        <a class="dropdown-item" href="">
+                            📜 Hauptliste (Teams)
                         </a>
                     </li>
                     {% endif %}
@@ -71,10 +93,17 @@
                         </a>
                     </li>
                     {% endif %}
-                    {% if g.device.event_role.may_use_results %}
+                    {% if g.device.event_role.may_use_results and not g.event.team_mode %}
                     <li>
                         <a class="dropdown-item" href="{{ url_for('mod_results.individual', event=g.event.slug) }}">
                             🏅 Ergebnisse
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if g.device.event_role.may_use_results and g.event.team_mode %}
+                    <li>
+                        <a class="dropdown-item" href="">
+                            🏅 Ergebnisse (Teams)
                         </a>
                     </li>
                     {% endif %}
