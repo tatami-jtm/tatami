@@ -88,7 +88,7 @@ class Registration(db.Model):
     
     @classmethod
     def filter(cls, event, class_filter=None, event_class=None, status=None, name=None,
-               club=None, order_by=None, external_id=None):
+               club=None, order_by=None, external_id=None, team=None):
         query = cls.query.filter(cls.event_id==event.id)
 
         # Doing some db-black magic to prevent circular import issues
@@ -126,6 +126,9 @@ class Registration(db.Model):
 
         if external_id:
             query = query.filter(cls.external_id.ilike(f"{external_id}%"))
+
+        if team:
+            query = query.filter(cls.team_registration_id==int(team))
 
         if order_by == 'first_name':
             query = query.order_by('first_name')

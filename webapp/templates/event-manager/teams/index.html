@@ -14,7 +14,6 @@
             <th>Bezeichnung</th>
             <th>Verein</th>
             <th>Verband</th>
-            <th>Teilnehmende</th>
             <th>Status</th>
             <td></td>
         </tr>
@@ -26,7 +25,6 @@
             <td>{{ team.team_name }}</td>
             <td>{{ team.club }}</td>
             <td>{{ team.association.short_name if team.association else "-" }}</td>
-            <td>{{ team.members.count() }} TN</td>
             <td>
                 {% if team.registered %}
                 <strong>Angemeldet</strong>.
@@ -38,6 +36,7 @@
             </td>
             <td>
                 <a href="{{ url_for('event_manager.edit_team', event=g.event.slug, id=team.id) }}" class="btn btn-sm btn-primary">Bearbeiten</a>
+                <a href="{{ url_for('event_manager.registrations', event=g.event.slug, team_filter=team.id) }}" class="btn btn-sm btn-secondary">{{ team.members.count() }} TN</a>
             </td>
         </tr>
         {% endfor %}

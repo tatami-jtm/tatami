@@ -496,6 +496,7 @@ def registrations():
     name_filter = request.values.get('name_filter', None)
     externalid_filter = request.values.get('externalid_filter', None)
     club_filter = request.values.get('club_filter', None)
+    team_filter = request.values.get('team_filter', None)
     order_by = request.values.get('order_by', None)
 
     if request.values.get('class_filter', None):
@@ -505,10 +506,10 @@ def registrations():
         else:
             class_filter = request.values['class_filter']
 
-    filtered = filtered_class is not None or status_filter is not None or name_filter is not None or club_filter is not None or externalid_filter is not None
+    filtered = filtered_class is not None or status_filter is not None or name_filter is not None or club_filter is not None or externalid_filter is not None or (g.event.team_mode and team_filter is not None)
     query = Registration.filter(g.event, class_filter=class_filter, event_class=filtered_class,
                                 status=status_filter, name=name_filter, club=club_filter, order_by=order_by,
-                                external_id=externalid_filter)
+                                external_id=externalid_filter, team=team_filter)
 
     return render_template("event-manager/registrations/index.html", filtered=filtered, class_filter=class_filter,
                            filtered_class=filtered_class, status_filter=status_filter, name_filter=name_filter,
