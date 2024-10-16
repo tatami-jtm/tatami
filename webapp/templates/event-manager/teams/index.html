@@ -1,0 +1,49 @@
+{% set event_page="registrations" %}
+{% set curpage = "teams" %}
+{% extends "layouts/event-manager.html" %}
+{% block title %}{{ g.event.title }}{% endblock %}
+{% block body %}
+{% include "event-manager/registrations/_header.html" %}
+
+<h2 class="h3 fw-bold">Teams</h2>
+
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>Kampfklasse</th>
+            <th>Bezeichnung</th>
+            <th>Verein</th>
+            <th>Verband</th>
+            <th>Teilnehmende</th>
+            <th>Status</th>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for team in g.event.team_registrations.order_by('event_class_id', 'club', 'team_name') %}
+        <tr>
+            <td>{{ team.event_class.title }}</td>
+            <td>{{ team.team_name }}</td>
+            <td>{{ team.club }}</td>
+            <td>{{ reg.association.short_name if team.association else "-" }}</td>
+            <td>0 TN</td>
+            <td>
+                {% if team.registered %}
+                <strong>Angemeldet</strong>.
+                {% elif team.confirmed %}
+                Voranmeldung <strong>bestätigt</strong>.
+                {% else %}
+                Voranmeldung erhalten.
+                {% endif %}
+            </td>
+            <td>
+                <a href="{# url_for('event_manager.edit_association', event=g.event.slug, id=assoc.id) #}" class="btn btn-sm btn-primary">Bearbeiten</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ url_for('event_manager.create_team', event=g.event.slug) }}" class="btn btn-primary">Team hinzufügen</a>
+
+{% endblock body %}

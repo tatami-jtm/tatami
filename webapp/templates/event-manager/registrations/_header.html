@@ -1,6 +1,15 @@
 <h1 class="mb-5">Anmeldungen</h1>
 
 <div class="nav nav-tabs mb-4">
+    {% if g.event.team_mode %}
+    <div class="nav-item">
+        <a class="nav-link {{ 'active' if curpage == 'teams' }}"
+           {{ 'aria-current="page"' if curpage == 'teams' }}
+           href="{{ url_for('event_manager.teams', event=g.event.slug) }}">
+            Teams
+        </a>
+    </div>
+    {% endif %}
     <div class="nav-item">
         <a class="nav-link {{ 'active' if curpage == 'registrations' }}"
            {{ 'aria-current="page"' if curpage == 'registrations' }}

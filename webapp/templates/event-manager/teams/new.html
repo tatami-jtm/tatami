@@ -1,0 +1,9 @@
+{% set event_page="registrations" %}
+{% extends "layouts/event-manager.html" %}
+{% block title %}{{ g.event.title }}{% endblock %}
+{% block body %}
+<h1>Team erstellen</h1>
+
+{% include "event-manager/teams/_form.html" %}
+
+{% endblock body %}

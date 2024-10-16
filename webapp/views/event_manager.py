@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 
 from ..models import db, Event, EventClass, DeviceRegistration, \
     DevicePosition, EventRole, Association, Registration, ListSystemRule, \
-    ListSystem, Role, User
+    ListSystem, Role, User, TeamRegistration
 
 from ..helpers import _get_or_create
 
@@ -855,6 +855,50 @@ def create_association():
         return redirect(url_for('event_manager.edit_association', event=g.event.slug, id=association.id))
 
     return render_template("event-manager/associations/new.html", association=association)
+
+
+@eventmgr_view.route('/teams')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def teams():
+    return render_template("event-manager/teams/index.html")
+
+
+@eventmgr_view.route('/teams/create', methods=["GET", "POST"])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def create_team():
+    team = TeamRegistration(event=g.event)
+
+    if request.method == "POST":
+        team.team_name = request.form['team_name']
+        team.club = request.form['club']
+
+        team.confirmed = "confirmed" in request.form
+        team.registered = "registered" in request.form
+        team.placed = "placed" in request.form
+
+        if len(request.form['association']):
+            team.association_id = int(request.form['association'])
+        else:
+            team.association_id = None
+
+        if len(request.form['event_class']):
+            team.event_class_id = int(request.form['event_class'])
+        else:
+            team.event_class_id = None
+
+        db.session.add(team)
+
+        db.session.commit()
+        g.event.log(current_user.qualified_name(), 'DEBUG', f'Neues Team {team.team_name} angelegt.')
+
+        #return redirect(url_for('event_manager.edit_association', event=g.event.slug, id=association.id))
+        return redirect(url_for('event_manager.teams', event=g.event.slug))
+
+    return render_template("event-manager/teams/new.html", team=team)
 
 
 @eventmgr_view.route('/devices')
