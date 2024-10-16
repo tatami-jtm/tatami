@@ -627,6 +627,11 @@ def update_registration(id):
     else:
         registration.verified_weight = None
 
+    if g.event.team_mode and len(request.form['team_registration']):
+        registration.team_registration_id = int(request.form['team_registration'])
+    else:
+        registration.team_registration_id = None
+
     db.session.commit()
     g.event.log(current_user.qualified_name(), 'DEBUG', f'TN-Anmeldung {registration.short_name()} wurde bearbeitet.')
 
@@ -667,6 +672,11 @@ def create_registration():
             registration.verified_weight = int(float(request.form['verified_weight']) * 1000)
         else:
             registration.verified_weight = None
+
+        if g.event.team_mode and len(request.form['team_registration']):
+            registration.team_registration_id = int(request.form['team_registration'])
+        else:
+            registration.team_registration_id = None
 
         db.session.add(registration)
         db.session.commit()

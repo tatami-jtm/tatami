@@ -46,6 +46,20 @@
         </div>
     </div>
 
+    {% if g.event.team_mode %}
+    <div class="mb-3">
+        <label for="team_registration" class="form-label">Team-Registrierung</label>
+        <select name="team_registration" id="team_registration" class="form-select">
+            <option value=""></option>
+            {% for tr in g.event.team_registrations.order_by('event_class_id', 'club', 'team_name') %}
+            <option value="{{ tr.id }}"{{ " selected" if tr.id == registration.team_registration_id }}>
+                {{ tr.event_class.title }} - {{ tr.team_name }} (Verein: {{ tr.club }})
+            </option>
+            {% endfor %} 
+        </select>
+    </div>
+    {% endif %}
+
     <h3 class="fw-bold mt-5 mb-3">Einteilung</h3>
 
     <div class="mb-3">
