@@ -7,7 +7,10 @@ from .config_base import SETTINGS
 from . import setup_data
 
 from .models import db, User, Role, Event
-from .views import admin_view, eventmgr_view, devices_view, mod_scoreboard_view, mod_registrations_view, mod_weighin_view, mod_placement_view, mod_global_list_view, mod_list_view, mod_beamer_view, mod_results_view
+from .views import admin_view, eventmgr_view, devices_view, mod_scoreboard_view, \
+                   mod_registrations_view, mod_weighin_view, mod_placement_view, \
+                   mod_global_list_view, mod_list_view, mod_beamer_view, mod_results_view, \
+                   mod_team_registrations_view
 
 app = Flask(__name__, instance_path=SETTINGS['INSTANCE_PATH'])
 app.config['BRAND_NAME'] = "TATAMI 2024"
@@ -140,6 +143,8 @@ app.register_blueprint(mod_global_list_view, url_prefix="/go/<event>/mod_global_
 app.register_blueprint(mod_list_view, url_prefix="/go/<event>/mod_list")
 app.register_blueprint(mod_beamer_view, url_prefix='/go/<event>/mod_beamer')
 app.register_blueprint(mod_results_view, url_prefix='/go/<event>/mod_results')
+
+app.register_blueprint(mod_team_registrations_view, url_prefix='/go/<event>/mod_team_registrations')
 
 
 # Make sure that registered users are deactivated by default

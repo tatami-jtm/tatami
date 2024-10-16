@@ -10,3 +10,5 @@ from .mod_global_list import *
 from .mod_list import *
 from .mod_beamer import *
 from .mod_results import *
+
+from .mod_team_registrations import *

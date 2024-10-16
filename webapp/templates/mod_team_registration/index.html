@@ -1,0 +1,61 @@
+{% extends "layouts/application.html" %}
+{% block title %}Team-Akkreditierung{% endblock %}
+{% block body %}
+
+<div class="container container-small">
+    <div class="card mb-5 shadow-lg">
+        <div class="card-body">
+            <h1 class="h4 fw-bold mb-4">☑️ Team-Akkreditierung</h1>
+            <form class="row align-items-center" target="" method="GET">
+                <div class="col pe-0">
+                    <select name="event_class" id="event_class" class="form-select fs-5">
+                        <option value="">(Kampfklasse auswählen)</option>
+                        {% for cl in g.event.classes.order_by("title") %}
+                        <option value="{{ cl.id }}"{{ " selected" if cl.id == qclid }}>{{ cl.title }}</option>
+                        {% endfor %} 
+                    </select>
+                </div>
+                <div class="col pe-0">
+                    <input class="form-control fs-5" autofocus="true" name="query" placeholder="Team suchen..." value="{{ quarg or '' }}">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-lg fs-6 btn-secondary">Suchen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% for team in query %}
+    <div class="card mb-3 {{ 'ignorable' if team.registered }}">
+        <div class="card-header p-3">
+            <div class="m-0 fw-bold">{{ team.event_class.title }}</div>
+            <h4 class="m-0 fs-3">{{ team.team_name }}</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-4">
+                    <div class="fw-bold">Verein</div>
+                    <div>{{ team.club or '-' }}</div>
+                </div>
+                <div class="col-4">
+                    <div class="fw-bold">Verband</div>
+                    <div>{{ team.association.name if team.association else '-' }}</div>
+                </div>
+                <div class="col-4">
+                    <div class="fw-bold">Kampfklasse</div>
+                    <div>{{ team.event_class.title }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer p-2">
+            {% if not team.registered %}
+            <a href="{{ url_for('mod_team_registrations.confirm', event=g.event.slug, id=team.id) }}" class="btn w-100 p-2 fs-5 fw-bold btn-success">Bestätigen</a>
+            {% else %}
+            <a href="{{ url_for('mod_team_registrations.unconfirm', event=g.event.slug, id=team.id) }}" class="btn w-100 p-2 fs-5 btn-outline-danger">Bestätigung zurücknehmen</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock body %}
