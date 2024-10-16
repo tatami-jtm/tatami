@@ -37,7 +37,7 @@
                 {% endif %}
             </td>
             <td>
-                <a href="{# url_for('event_manager.edit_association', event=g.event.slug, id=assoc.id) #}" class="btn btn-sm btn-primary">Bearbeiten</a>
+                <a href="{{ url_for('event_manager.edit_team', event=g.event.slug, id=team.id) }}" class="btn btn-sm btn-primary">Bearbeiten</a>
             </td>
         </tr>
         {% endfor %}

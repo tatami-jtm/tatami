@@ -38,6 +38,16 @@ def check_is_event_supervisor(func):
     inner_func.__name__ = func.__name__
     return inner_func
 
+def check_event_is_in_team_mode(func):
+    def inner_func(*args, **kwargs):
+        if (not g.event.team_mode):
+            abort(404)
+
+        return func(*args, **kwargs)
+
+    inner_func.__name__ = func.__name__
+    return inner_func
+
 @eventmgr_view.context_processor
 def inject_device_options():
     # this should not have happened, we are likely already on an error page
@@ -861,14 +871,52 @@ def create_association():
 @login_required
 @check_and_apply_event
 @check_is_event_supervisor
+@check_event_is_in_team_mode
 def teams():
     return render_template("event-manager/teams/index.html")
+
+
+@eventmgr_view.route('/teams/<id>/edit', methods=["GET", "POST"])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+@check_event_is_in_team_mode
+def edit_team(id):
+    team = TeamRegistration.query.filter_by(event=g.event, id=id).one_or_404()
+
+    if request.method == "POST":
+        team.team_name = request.form['team_name']
+        team.club = request.form['club']
+
+        team.confirmed = "confirmed" in request.form
+        team.registered = "registered" in request.form
+        team.placed = "placed" in request.form
+
+        if len(request.form['association']):
+            team.association_id = int(request.form['association'])
+        else:
+            team.association_id = None
+
+        if len(request.form['event_class']):
+            team.event_class_id = int(request.form['event_class'])
+        else:
+            team.event_class_id = None
+
+        db.session.add(team)
+
+        db.session.commit()
+        g.event.log(current_user.qualified_name(), 'DEBUG', f'Neues Team {team.team_name} angelegt.')
+
+        return redirect(url_for('event_manager.edit_team', event=g.event.slug, id=team.id))
+
+    return render_template("event-manager/teams/edit.html", team=team)
 
 
 @eventmgr_view.route('/teams/create', methods=["GET", "POST"])
 @login_required
 @check_and_apply_event
 @check_is_event_supervisor
+@check_event_is_in_team_mode
 def create_team():
     team = TeamRegistration(event=g.event)
 
@@ -895,8 +943,7 @@ def create_team():
         db.session.commit()
         g.event.log(current_user.qualified_name(), 'DEBUG', f'Neues Team {team.team_name} angelegt.')
 
-        #return redirect(url_for('event_manager.edit_association', event=g.event.slug, id=association.id))
-        return redirect(url_for('event_manager.teams', event=g.event.slug))
+        return redirect(url_for('event_manager.edit_team', event=g.event.slug, id=team.id))
 
     return render_template("event-manager/teams/new.html", team=team)
 
