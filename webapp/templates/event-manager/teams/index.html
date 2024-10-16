@@ -25,8 +25,8 @@
             <td>{{ team.event_class.title }}</td>
             <td>{{ team.team_name }}</td>
             <td>{{ team.club }}</td>
-            <td>{{ reg.association.short_name if team.association else "-" }}</td>
-            <td>0 TN</td>
+            <td>{{ team.association.short_name if team.association else "-" }}</td>
+            <td>{{ team.members.count() }} TN</td>
             <td>
                 {% if team.registered %}
                 <strong>Angemeldet</strong>.
