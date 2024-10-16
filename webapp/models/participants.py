@@ -20,6 +20,11 @@ class Registration(db.Model):
     association = db.relationship('Association', backref=db.backref(
         'registrations', lazy='dynamic'))
     
+    # optional and only relevant if the event is in team mode:
+    team_registration_id = db.Column(db.Integer(), db.ForeignKey('team_registration.id'))
+    team_registration = db.relationship('TeamRegistration', backref=db.backref(
+        'members', lazy='dynamic'))
+    
     external_id = db.Column(db.String(50))
 
     created_at = db.Column(db.DateTime())
