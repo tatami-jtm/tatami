@@ -18,7 +18,7 @@
                     data-bs-toggle="tab" type="button" role="tab"
                     data-bs-target="#class-groups" aria-controls="class-groups"
                     aria-selected="false">
-                Gruppen
+                {% if not g.event.team_mode %}Gruppen{% else %}Team-Einteilung{% endif %}
             </button>
         </div>
         <div class="nav-item">
@@ -93,19 +93,29 @@
         <div class="tab-pane" role="tabpanel" tabindex="0"
              id="class-groups" aria-labelledby="class-groups-tab">
 
+            {% if not g.event.team_mode %}
             <h3 class="fw-bold mt-4 mb-3">Gruppen</h3>
             <p class="fw-bold">Die Gruppen werden eingeteilt &hellip;</p>
+            {% else %}
+            <h3 class="fw-bold mt-4 mb-3">Team-Einteilung</h3>
+            <p class="fw-bold">Die Teams werden gebildet &hellip;</p>
+            {% endif %}
             <div class="form-check mb-1">
                 <input class="form-check-input" type="radio" value="predefined" name="weight_mode" id="perm-weight_mode-predefined" {{ 'checked' if not event_class.use_proximity_weight_mode }}>
                 <label class="form-check-label mb-1 fw-bold" for="perm-weight_mode-predefined">
+                    {% if not g.event.team_mode %}
                     in die folgenden Gewichtsklassen:
+                    {% else %}
+                    mit festgelegten Teams und den folgenden festen Gewichtsklassen:
+                    {% endif %}
                 </label>
             </div>
             <div class="mb-2 ms-5">
                 <textarea name="weight_generator" id="weight_generator" class="form-control font-monospace">{{ event_class.weight_generator or '' }}</textarea>
                 <div class="form-text">Jeweils eine Gewichtsklasse pro Zeile; Bezeichner können mit "-" beginnen, Plusklasse muss mit "+" beginnen</div>
             </div>
-        
+
+            {% if not g.event.team_mode %}
             <div class="form-check mb-3">
                 <input class="form-check-input" type="radio" value="proximity" name="weight_mode" id="perm-weight_mode-proximity" {{ 'checked' if event_class.use_proximity_weight_mode }}>
                 <label class="form-check-label mb-1 fw-bold" for="perm-weight_mode-proximity">
@@ -159,6 +169,46 @@
                     </label>
                 </div>
             </div>
+            {% else %}
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="radio" value="proximity" name="weight_mode" id="perm-weight_mode-proximity" {{ 'checked' if event_class.use_proximity_weight_mode }}>
+                <label class="form-check-label mb-1 fw-bold" for="perm-weight_mode-proximity">
+                    im Rotationsverfahren mit den folgenden Parametern:
+                </label>
+            </div>
+            <div class="mb-2 ms-5">
+                <label for="default_maximal_proximity" class="form-label fw-normal">mit einem Höchstabstand von</label>
+                <div class="input-group">
+                    <input name="default_maximal_proximity" id="default_maximal_proximity" value="{{ event_class.default_maximal_proximity or '' }}" class="form-control w-75" type="number">
+                    <select name="proximity_unit" id="proximity_unit" class="form-select w-25">
+                        <option value="absolute" {{ 'selected' if not event_class.proximity_uses_percentage_instead_of_absolute }}>Gramm</option>
+                        <option value="relative" {{ 'selected' if event_class.proximity_uses_percentage_instead_of_absolute }}>Prozent</option>
+                    </select>
+                </div>
+                <div class="form-text">
+                    <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=2000; proximity_unit.value='absolute';">2 kg</button>
+                    <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=3000; proximity_unit.value='absolute';">3 kg</button>
+                    <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=4000; proximity_unit.value='absolute';">4 kg</button>
+                    <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=5000; proximity_unit.value='absolute';">5 kg</button>
+                    <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=5; proximity_unit.value='relative';">5 %</button>
+                    <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=10; proximity_unit.value='relative';">10 %</button>
+                </div>
+            </div>
+            <div class="mb-2 ms-5">
+                <label for="default_maximal_size" class="form-label fw-normal">sowie mit je Team höchstens</label>
+                <div class="input-group">
+                    <input name="default_maximal_size" id="default_maximal_size" value="{{ event_class.default_maximal_size or '' }}" class="form-control w-75" type="number">
+                    <div class="input-group-text w-25">Gruppen</div>
+                </div>
+            </div>
+            <div class="mb-2 ms-5">
+                <label for="default_maximal_group_count" class="form-label fw-normal">sowie mit insgesamt höchstens</label>
+                <div class="input-group">
+                    <input name="default_maximal_group_count" id="default_maximal_group_count" value="{{ event_class.default_maximal_group_count or '' }}" class="form-control w-75" type="number">
+                    <div class="input-group-text w-25">Teams</div>
+                </div>
+            </div>
+            {% endif %}
 
         </div>
         <div class="tab-pane" role="tabpanel" tabindex="0"
