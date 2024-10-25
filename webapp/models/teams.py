@@ -20,7 +20,7 @@ class TeamRow(db.Model):
         'team_rows', lazy='dynamic'))
     
     lower_row_id = db.Column(db.Integer(), db.ForeignKey('team_row.id'))
-    lower_row = db.relationship('TeamRow', backref=db.backref(
+    lower_row = db.relationship('TeamRow', remote_side=[id], backref=db.backref(
         'higher_row', lazy='dynamic'))
 
 
@@ -94,7 +94,7 @@ class TeamMember(db.Model):
 
     event_id = db.Column(db.Integer(), db.ForeignKey('event.id'))
     event = db.relationship('Event', backref=db.backref(
-        'participants', lazy='dynamic'))
+        'team_members', lazy='dynamic'))
 
     team_id = db.Column(db.Integer(), db.ForeignKey('team.id'))
     team = db.relationship('Team', backref=db.backref(
@@ -106,4 +106,4 @@ class TeamMember(db.Model):
 
     registration_id = db.Column(db.Integer(), db.ForeignKey('registration.id'))
     registration = db.relationship('Registration', backref=db.backref(
-        'participants', lazy='dynamic'))
+        'team_members', lazy='dynamic'))
