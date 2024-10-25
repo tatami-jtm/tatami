@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, flash, g, session, \
 
 from datetime import datetime as dt
 
-from .event_manager import check_and_apply_event
+from .event_manager import check_and_apply_event, check_event_is_in_team_mode
 from .devices import check_is_registered
 
 from ..models import db, TeamRegistration
@@ -13,6 +13,7 @@ mod_team_registrations_view = Blueprint('mod_team_registrations', __name__)
 @mod_team_registrations_view.route('/')
 @check_and_apply_event
 @check_is_registered
+@check_event_is_in_team_mode
 def index():
     if not g.device.event_role.may_use_registration:
         flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
@@ -47,6 +48,7 @@ def index():
 @mod_team_registrations_view.route('/confirm/<id>')
 @check_and_apply_event
 @check_is_registered
+@check_event_is_in_team_mode
 def confirm(id):
     if not g.device.event_role.may_use_registration:
         flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
@@ -64,6 +66,7 @@ def confirm(id):
 @mod_team_registrations_view.route('/unconfirm/<id>')
 @check_and_apply_event
 @check_is_registered
+@check_event_is_in_team_mode
 def unconfirm(id):
     if not g.device.event_role.may_use_registration:
         flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')

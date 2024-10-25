@@ -46,7 +46,7 @@
                     {% endif %}
                     {% if g.device.event_role.may_use_placement_tool and g.event.team_mode %}
                     <li>
-                        <a class="dropdown-item" href="">
+                        <a class="dropdown-item" href="{{ url_for('mod_team_building.index', event=g.event.slug) }}">
                             👥 Team-Einteilung
                         </a>
                     </li>

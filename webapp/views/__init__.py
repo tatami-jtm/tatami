@@ -12,3 +12,4 @@ from .mod_beamer import *
 from .mod_results import *
 
 from .mod_team_registrations import *
+from .mod_team_building import *

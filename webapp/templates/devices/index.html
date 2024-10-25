@@ -50,7 +50,7 @@
         {% endif %}
         {% if g.device.event_role.may_use_placement_tool and g.event.team_mode %}
         <div class="col-12 col-md-6 col-lg-3">
-            <a href="" class="card card-link">
+            <a href="{{ url_for('mod_team_building.index', event=g.event.slug) }}" class="card card-link">
                 <div class="card-body p-3">
                     <div class="cll-icon">👥</div>
                     <h3>Team-Einteilung</h3>

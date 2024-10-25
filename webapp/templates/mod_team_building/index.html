@@ -1,0 +1,27 @@
+{% extends "layouts/application.html" %}
+{% set page="index" %}
+{% block title %}Einteilung{% endblock %}
+{% block pre_messages %}{% include "mod_team_building/_header.html" %}{% endblock %}
+
+{% block body %}
+
+
+<div class="container-fluid">
+
+    <h1 class="h2 fw-bold mb-4">Team-Einteilung</h1>
+
+
+    <p>Wählen Sie oben eine Kampfklasse aus, um die Einteilung in Teams durchzuführen.</p>
+
+    
+    <h3 class="mt-4 h4 mb-3 fw-bold">Bedeutung der Zeichen</h3>
+    
+    <p class="mb-1">Die mit 🏁 gekennzeichneten Kampfklassen können gerade bearbeitet werden.</p>
+
+    <p class="mb-1">Die mit 🔒 gekennzeichneten Kampfklassen sind von der Administration noch nicht freigegeben worden.</p>
+
+    <p class="mb-1">Die nicht gekennzeichneten Kampfklassen haben bereits mit den Kämpfen begonnen.</p>
+
+</div>
+
+{% endblock body %}
