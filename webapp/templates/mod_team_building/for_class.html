@@ -1,0 +1,80 @@
+{% extends "layouts/application.html" %}
+{% set page=event_class %}
+{% block title %}Team-Einteilung - {{ event_class.title }}{% endblock %}
+{% block pre_messages %}{% include "mod_team_building/_header.html" %}{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <h1 class="h2 py-2 fw-bold mb-3">{{ event_class.title }} &ndash; Team-Einteilung</h1>
+    <div class="row">
+        <div class="col-12 col-md-3">
+            <h2 class="h4 mb-3 fw-bold">Teams</h2>
+
+            <div class="mb-3">
+                <a href="" class="btn btn-primary btn-sm">Teams generieren</a>
+                <a href="" class="btn btn-primary btn-sm">TN zuweisen</a>
+                <a href="" class="btn btn-secondary btn-sm">Neues Team</a>
+            </div>
+
+            {% for tm in event_class.teams %}
+            <div class="card mb-1">
+                <div class="card-body p-2 py-0">
+                    <a href="{{ url_for('mod_team_building.for_class', event=g.event.slug, id=event_class.id, team=tm.id) }}" class="link-dark py-2 d-block {{ 'fw-bold' if current_team.id == tm.id }}">{{ tm.team_name }}</a>
+                </div>
+            </div>
+            {% endfor %}
+
+            <h2 class="h4 mt-5 mb-3 fw-bold">Team-Registrierungen</h2>
+
+            {% for tr in event_class.team_registrations if not tr.teams.count() %}
+            <div class="card mb-1">
+                <div class="card-body p-2 py-1 row align-items-center">
+                    <div class="col">{{ tr.team_name }}</div>
+                    <div class="col-auto">
+                        <a href="" class="btn btn-sm btn-secondary">Erstellen</a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <p>Keine offenen Team-Registrierungen gefunden.</p>
+            {% endfor %}
+
+        </div>
+        <div class="col-12 col-md-3">
+            <h2 class="h4 mb-3 fw-bold">Teilnehmende</h2>
+
+            {% if current_team %}
+
+            <div class="row mb-2 align-items-center">
+                <div class="col pe-0">
+                    <select name="" id="" class="form-select bg-none">
+                        <option value="all">(alle TN)</option>
+                        <option value="none">(TN ohne Team-Registrierung)</option>
+                        {% for tr in event_class.team_registrations %}
+                        <option value="{{ tr.id }}">{{ tr.team_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-dark btn-sm" type="submit">Anzeigen</button>
+                </div>
+            </div>
+
+            {% else %}
+            <p>Wählen Sie erst aus der linken Spalte ein Team.</p>
+            {% endif %}
+        </div>
+        <div class="col-12 col-md-3">
+            {% if current_team %}
+
+            <h2 class="h4 mb-3 fw-bold">Team: {{ current_team.team_name }}</h2>
+
+            <div class="mb-3">
+                <a href="" class="btn btn-secondary btn-sm">Alle TN des Teams zuweisen</a>
+                <a href="" class="btn btn-secondary btn-sm">Ausgewählte TN zuweisen</a>
+            </div>
+
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

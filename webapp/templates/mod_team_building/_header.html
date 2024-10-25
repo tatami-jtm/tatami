@@ -6,11 +6,11 @@
         {% for ec in classes_query %}
         {% if ec.begin_fighting %}
         <li class="nav-item">
-            <a class="nav-link deactive {{ 'active' if page==ec }}" {{ 'aria-current' if page==ec }} href="" title="Kampfklasse hat bereits mit Kämpfen begonnen.">{{ ec.title }}</a>
+            <a class="nav-link deactive {{ 'active' if page==ec }}" {{ 'aria-current' if page==ec }} href="{{ url_for('mod_team_building.for_class', event=g.event.slug, id=ec.id) }}" title="Kampfklasse hat bereits mit Kämpfen begonnen.">{{ ec.title }}</a>
         </li>
         {% elif ec.begin_placement %}
         <li class="nav-item">
-            <a class="nav-link {{ 'active' if page==ec }}" {{ 'aria-current' if page==ec }} href="">🏁 {{ ec.title }}</a>
+            <a class="nav-link {{ 'active' if page==ec }}" {{ 'aria-current' if page==ec }} href="{{ url_for('mod_team_building.for_class', event=g.event.slug, id=ec.id) }}">🏁 {{ ec.title }}</a>
         </li>
         {% else %}
         <li class="nav-item">
