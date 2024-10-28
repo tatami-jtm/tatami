@@ -41,8 +41,23 @@ def for_class(id):
         return redirect(url_for('mod_team_building.index', event=g.event.slug))
     
     current_team = None
+    registration_filter = None
+    registrations = event_class.registrations
 
     if 'team' in request.values:
         current_team = event_class.teams.filter_by(id=request.values['team']).one_or_404()
 
-    return render_template("mod_team_building/for_class.html", event_class=event_class, current_team=current_team)
+        if 'registration_filter' in request.values:
+            registration_filter = request.values['registration_filter']
+
+            if registration_filter == 'all':
+                pass # registrations are already correctly filtered
+
+            elif registration_filter == 'none':
+                registrations = registrations.filter_by(team_registration_id=None)
+
+            else:
+                registration_filter = int(registration_filter)
+                registrations = registrations.filter_by(team_registration_id=registration_filter)
+
+    return render_template("mod_team_building/for_class.html", event_class=event_class, current_team=current_team, registration_filter=registration_filter, registrations=registrations)

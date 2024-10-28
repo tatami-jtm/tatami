@@ -40,35 +40,58 @@
 
         </div>
         <div class="col-12 col-md-3">
-            <h2 class="h4 mb-3 fw-bold">Teilnehmende</h2>
+            <h2 class="h4 mb-2 fw-bold">Teilnehmende</h2>
 
             {% if current_team %}
 
+            <form action="{{ url_for('mod_team_building.for_class', event=g.event.slug, id=event_class.id) }}" method="GET">
+
             <div class="row mb-2 align-items-center">
                 <div class="col pe-0">
-                    <select name="" id="" class="form-select bg-none">
-                        <option value="all">(alle TN)</option>
-                        <option value="none">(TN ohne Team-Registrierung)</option>
+                    <select name="registration_filter" id="registration_filter" class="form-select bg-none">
+                        <option value="all" {{ 'selected' if registration_filter == 'all' }}>(alle TN)</option>
+                        <option value="none" {{ 'selected' if registration_filter == 'none' }}>(TN ohne Team-Registrierung)</option>
                         {% for tr in event_class.team_registrations %}
-                        <option value="{{ tr.id }}">{{ tr.team_name }}</option>
+                        <option value="{{ tr.id }}" {{ 'selected' if registration_filter == tr.id or (registration_filter == None and tr.id == current_team.id) }}>{{ tr.team_name }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-auto">
-                    <button class="btn btn-dark btn-sm" type="submit">Anzeigen</button>
+                    <button class="btn btn-dark btn-sm" type="submit">Filtern</button>
                 </div>
+            </div>
+
+            <input name="team" value="{{ current_team.id }}" type="hidden">
+
+            </form>
+
+            <div class="card">
+                {% for reg in registrations %}
+                <div class="card-body p-2 {{ 'border-top' if not loop.index == 1 }}">
+                    <div class="row">
+                        <div class="col-7">
+                            <strong>{{ reg.first_name }} {{ reg.last_name }}</strong><br>
+                            {{ reg.association.name if g.event.setting('use_association_instead_of_club', False) and reg.association else reg.club }}
+                        </div>
+                        <div class="col-2 fs-small ps-1 pe-1">{{ reg.verified_weight / 1000 }} kg</div>
+                        <div class="col-3">
+                            <a href="" class="btn btn-secondary w-100 btn-sm">Zuweisen</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
 
             {% else %}
             <p>Wählen Sie erst aus der linken Spalte ein Team.</p>
             {% endif %}
         </div>
-        <div class="col-12 col-md-3">
+        <div class="col-12 col-md-6">
             {% if current_team %}
 
             <h2 class="h4 mb-3 fw-bold">Team: {{ current_team.team_name }}</h2>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <a href="" class="btn btn-secondary btn-sm">Alle TN des Teams zuweisen</a>
                 <a href="" class="btn btn-secondary btn-sm">Ausgewählte TN zuweisen</a>
             </div>

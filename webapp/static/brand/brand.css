@@ -75,6 +75,9 @@ html, body {
 .btn.btn-sm {
     padding: 0.125rem 0.35rem;
 }
+.btn.w-100 {
+    padding: 0.125rem;
+}
 .btn.btn-primary:not(.btn-no3d),
 .btn.btn-secondary:not(.btn-no3d),
 .btn.btn-dark:not(.btn-no3d),
