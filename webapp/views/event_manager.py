@@ -742,6 +742,9 @@ def import_registrations_do(fn):
     event_class_offset = int(request.form['event_class'])
     suggested_group_offset = int(request.form['suggested_group']) if request.form['suggested_group'] != 'null' else None
 
+    if g.event.team_mode:
+        team_offset = int(request.form['team'])
+
     successful = 0
 
     for row in relevant_data:
@@ -812,6 +815,26 @@ def import_registrations_do(fn):
             registration.event_class_id = evcl.id if evcl is not None else None
         else:
             registration.event_class_id = None
+
+        if g.event.team_mode:
+            team = row[team_offset]
+
+            if team is not None and len(team):
+                team = g.event.team_registrations.filter(TeamRegistration.team_name.ilike(f"%{team}%")).all()
+
+                if len(team) != 1:
+                    team = g.event.team_registrations.filter(TeamRegistration.club.ilike(f"%{team}%")).all()
+
+                    if len(team) != 1:
+                        team = None
+                    else:
+                        team = team[0]
+                else:
+                    team = team[0]
+
+                registration.team_registration_id = team.id if team is not None else None
+            else:
+                registration.team_registration_id = None
 
         db.session.add(registration)
         db.session.commit()

@@ -51,6 +51,9 @@
     {{ col_chooser(colcount, 'club', 'Verein', optional=True) }}
     {{ col_chooser(colcount, 'association', 'Verband', optional=True) }}
     {{ col_chooser(colcount, 'event_class', 'Kampfklasse') }}
+    {% if g.event.team_mode %}
+    {{ col_chooser(colcount, 'team', 'Team-Zuweisung', optional=True) }}
+    {% endif %}
     {{ col_chooser(colcount, 'suggested_group', 'Vorgeschlagene Einteilung', optional=True) }}
 
     <div class="mt-3 mb-3">
