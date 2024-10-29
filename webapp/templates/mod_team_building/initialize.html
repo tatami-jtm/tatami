@@ -1,0 +1,76 @@
+{% extends "layouts/application.html" %}
+{% set page=event_class %}
+{% block title %}Team-Einteilung - {{ event_class.title }}{% endblock %}
+{% block pre_messages %}{% include "mod_team_building/_header.html" %}{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <h1 class="h2 fw-bold mb-4">{{ event_class.title }} &ndash; Team-Einteilung</h1>
+
+    <h3 class="h4 fw-bold mb-2">Zeilen anlegen</h3>
+
+    <form action="" method="POST">
+        <p>Sie müssen zunächst mindestens eine Zeile anlegen, um Teams einteilen zu können.</p>
+
+        <div class="card card-semidialog mb-3">
+            <div class="card-body">
+                <div class="form-check mb-1">
+                    <input class="form-check-input" type="radio" value="predefined" name="mode" id="mode-predefined" checked>
+                    <label class="form-check-label mb-1 fw-bold" for="mode-predefined">
+                        Zeilen für die folgenden Gewichtsklassen erstellen (empfohlen):
+                    </label>
+                </div>
+
+                <div class="ms-4 px-3">
+                    <ul>
+                        {% for cl in weight_classes %}
+                        {% if cl[1][0] and cl[1][1] %}
+                        <li><strong>{{ cl[0] }}</strong> (über {{ cl[1][0] }} kg bis {{ cl[1][1] }} kg)</li>
+                        {% elif cl[1][0] %}
+                        <li><strong>{{ cl[0] }}</strong> (über {{ cl[1][0] }} kg)</li>
+                        {% elif cl[1][1] %}
+                        <li><strong>{{ cl[0] }}</strong> (bis {{ cl[1][1] }} kg)</li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body border-top">
+
+                <div class="form-check mb-1">
+                    <input class="form-check-input" type="radio" value="manual" name="mode" id="mode-manual">
+                    <label class="form-check-label mb-1 fw-bold" for="mode-manual">
+                        Folgende Zeile manuell anlegen:
+                    </label>
+                </div>
+
+                <div class="ms-4 p-3 border bg-light">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Bezeichnung</label>
+                        <div class="input-group">
+                            <div class="input-group-text">{{ event_class.short_title }}</div>
+                            <input name="name" id="name" class="form-control" value="">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="assign_by_logic" name="assign_by_logic">
+                            <label class="form-check-label fw-bold" for="assign_by_logic">Teilnehmenden anhand ihres Gewichts automatisch zuteilen</label>
+                        </div>
+                    </div>
+                    <p class="mb-3">Wenn ausgewählt:</p>
+                    <div class="mb-3">
+                        <label for="min_weight" class="form-label">Mindesgewicht (in kg) - nicht mehr enthalten -</label>
+                        <input name="min_weight" id="min_weight" type="number" min="0" step="0.1" max="500" class="form-control" value="">
+                    </div>
+                    <div class="mb-3">
+                        <label for="max_weight" class="form-label">Höchstgewicht (in kg) - noch enthalten -</label>
+                        <input name="max_weight" id="max_weight" type="number" min="0" step="0.1" max="500" class="form-control"value="">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mb-3">Speichern und fortfahren &raquo;</button>
+    </form>
+</div>
+{% endblock %}
