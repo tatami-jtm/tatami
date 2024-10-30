@@ -105,6 +105,17 @@
                 <a href="" class="btn btn-secondary btn-sm">Ausgewählte TN zuweisen</a>
             </div>
 
+            {% for row in event_class.team_rows %}
+            <div class="mb-3 card">
+                <div class="card-header">{{ row.title }}</div>
+                <div class="card-body">
+                    {% for tm in current_team.members.filter_by(row=row).all() %}
+                    <p>{{ tm.full_name }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+
             {% endif %}
         </div>
     </div>
