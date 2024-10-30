@@ -18,7 +18,12 @@
             {% for tm in event_class.teams %}
             <div class="card mb-1">
                 <div class="card-body p-2 py-0">
-                    <a href="{{ url_for('mod_team_building.for_class', event=g.event.slug, id=event_class.id, team=tm.id) }}" class="link-dark py-2 d-block {{ 'fw-bold' if current_team.id == tm.id }}">{{ tm.team_name }}</a>
+                    <div class="row">
+                        <div class="col">
+                            <a href="{{ url_for('mod_team_building.for_class', event=g.event.slug, id=event_class.id, team=tm.id) }}" class="link-dark py-2 d-block {{ 'fw-bold' if current_team.id == tm.id }}">{{ tm.team_name }}</a>
+                        </div>
+                        <div class="col-auto py-2">{{ tm.members.count() }} TN</div>
+                    </div>
                 </div>
             </div>
             {% endfor %}
