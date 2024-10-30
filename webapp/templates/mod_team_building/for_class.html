@@ -115,11 +115,15 @@
             {% for row in event_class.team_rows %}
             <div class="mb-3 card">
                 <div class="card-header">{{ row.title }}</div>
-                <div class="card-body">
-                    {% for tm in current_team.members.filter_by(row=row).all() %}
-                    <p>{{ tm.full_name }}</p>
-                    {% endfor %}
+                {% for tm in current_team.members.filter_by(row=row).all() %}
+                <div class="card-body py-1 {{ 'border-top' if not loop.first }}">
+                    <p class="m-0">{{ tm.full_name }}</p>
                 </div>
+                {% else %}
+                <div class="card-body py-2">
+                    <p class="m-0 text-secondary fst-italic">nicht besetzt</p>
+                </div>
+                {% endfor %}
             </div>
             {% endfor %}
 
