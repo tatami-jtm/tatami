@@ -53,15 +53,21 @@ def for_class(id):
         if 'registration_filter' in request.values:
             registration_filter = request.values['registration_filter']
 
-            if registration_filter == 'all':
-                pass # registrations are already correctly filtered
+        elif current_team.team_registration:
+            registration_filter = current_team.team_registration.id
+        
+        else:
+            registration_filter = 'all'
 
-            elif registration_filter == 'none':
-                registrations = registrations.filter_by(team_registration_id=None)
+        if registration_filter == 'all':
+            pass # registrations are already correctly filtered
 
-            else:
-                registration_filter = int(registration_filter)
-                registrations = registrations.filter_by(team_registration_id=registration_filter)
+        elif registration_filter == 'none':
+            registrations = registrations.filter_by(team_registration_id=None)
+
+        else:
+            registration_filter = int(registration_filter)
+            registrations = registrations.filter_by(team_registration_id=registration_filter)
 
     return render_template("mod_team_building/for_class.html", event_class=event_class, current_team=current_team, registration_filter=registration_filter, registrations=registrations)
 
