@@ -212,16 +212,64 @@ def include_to_team(id, team):
         else:
             errors.append(f"TN#{incluse}")
 
-    if len(errors) == 0:
+    if success > 0:
         flash(f"Erfolgreich {success} TN zugewiesen.",
               'success')
-    elif success == 0:
-        flash(f"Fehler sind aufgetreten bei: " + ', '.join(errors),
+
+    if len(errors) > 0:
+        flash(f"Fehler sind aufgetreten bei bei der Zuweisung von: " + ', '.join(errors),
+              'danger')
+
+    return redirect(url_for('mod_team_building.for_class',
+                            event=g.event.slug, id=event_class.id, team=team.id))
+
+
+@mod_team_building_view.route('/class/<id>/team/<team>/include_all', methods=['GET'])
+@check_and_apply_event
+@check_is_registered
+@check_event_is_in_team_mode
+def include_all_of_team(id, team):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+
+    if not event_class.begin_placement:
+        flash(f"Die Kampfklasse {event_class.title} wurde noch nicht freigegeben.", 'danger')
+        return redirect(url_for('mod_team_building.index', event=g.event.slug))
+    
+    team = event_class.teams.filter_by(id=team).one_or_404()
+
+    success = 0
+    errors = []
+    team_registration = team.team_registration
+
+    if not team_registration:
+        flash(f"Kann nicht TN von Team {team.team_name} zuweisen, da keine Anmeldedaten für dieses "
+              f"Team angelegt wurden.")
+
+        return redirect(url_for('mod_team_building.for_class',
+                                event=g.event.slug, id=event_class.id, team=team.id))
+
+    for tr in team_registration.members:
+        if tr.team_members.count() > 0:
+            continue
+
+        tm = _create_member_for_registration(team, tr)
+    
+        if tm:
+            success += 1
+        else:
+            errors.append(tr.first_name + ' ' + tr.last_name)
+
+    if success > 0:
+        flash(f"Erfolgreich {success} TN zugewiesen.",
               'success')
-    else:
-        flash(f"Erfolgreich {success} TN zugewiesen. "
-              "Fehler sind aufgetreten bei: " + ', '.join(errors),
-              'success')
+
+    if len(errors) > 0:
+        flash(f"Fehler sind aufgetreten bei der Zuweisung von: " + ', '.join(errors),
+              'danger')
 
     return redirect(url_for('mod_team_building.for_class',
                             event=g.event.slug, id=event_class.id, team=team.id))

@@ -108,7 +108,7 @@
             <h2 class="h4 mb-3 fw-bold">Team: {{ current_team.team_name }}</h2>
 
             <div class="mb-2">
-                <a href="" class="btn btn-secondary btn-sm">Alle TN des Teams zuweisen</a>
+                <a href="{{ url_for('mod_team_building.include_all_of_team', event=g.event.slug, id=event_class.id, team=current_team.id) }}" class="btn btn-secondary btn-sm">Alle TN des Teams zuweisen</a>
                 <button type="submit" form="include-form" class="btn btn-secondary btn-sm">Ausgewählte TN zuweisen</button>
             </div>
 
