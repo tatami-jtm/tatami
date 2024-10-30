@@ -7,7 +7,7 @@ from .event_manager import check_and_apply_event, check_event_is_in_team_mode
 from .devices import check_is_registered
 from .mod_placement import provide_classes_query, _get_weight_classes
 
-from ..models import db, TeamRegistration, TeamRow
+from ..models import db, TeamRegistration, TeamRow, Team
 
 mod_team_building_view = Blueprint('mod_team_building', __name__)
 
@@ -129,3 +129,41 @@ def initialize(id):
 
     return render_template("mod_team_building/initialize.html",
                                event_class=event_class, weight_classes=weight_classes)
+
+
+@mod_team_building_view.route('/class/<id>/create_for_team/<registration>')
+@check_and_apply_event
+@check_is_registered
+@check_event_is_in_team_mode
+def create_for_team(id, registration):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+
+    if not event_class.begin_placement:
+        flash(f"Die Kampfklasse {event_class.title} wurde noch nicht freigegeben.", 'danger')
+        return redirect(url_for('mod_team_building.index', event=g.event.slug))
+    
+    team_registration = TeamRegistration.query.filter_by(id=registration).one_or_404()
+
+    if team_registration.teams.count() != 0:
+        flash(f"Für diese Team-Anmeldung wurde bereits ein Team erstellt.", 'danger')
+        return redirect(url_for('mod_team_building.for_class',
+                                event=g.event.slug, id=event_class))
+    
+    team = Team(event=g.event, event_class=event_class)
+    team.team_name = team_registration.team_name
+    team.team_registration = team_registration
+
+    team.manually_placed = False
+    team.removed = False
+    team.disqualified = False
+
+    db.session.add(team)
+    db.session.commit()
+
+    flash(f"Team {team.team_name} wurde erfolgreich erstellt.", 'success')
+    return redirect(url_for('mod_team_building.for_class',
+                            event=g.event.slug, id=event_class.id, team=team.id))

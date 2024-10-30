@@ -30,7 +30,7 @@
                 <div class="card-body p-2 py-1 row align-items-center">
                     <div class="col">{{ tr.team_name }}</div>
                     <div class="col-auto">
-                        <a href="" class="btn btn-sm btn-secondary">Erstellen</a>
+                        <a href="{{ url_for('mod_team_building.create_for_team', event=g.event.slug, id=event_class.id, registration=tr.id) }}" class="btn btn-sm btn-secondary">Erstellen</a>
                     </div>
                 </div>
             </div>
