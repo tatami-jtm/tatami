@@ -7,7 +7,7 @@ from .event_manager import check_and_apply_event, check_event_is_in_team_mode
 from .devices import check_is_registered
 from .mod_placement import provide_classes_query, _get_weight_classes
 
-from ..models import db, TeamRegistration, TeamRow, Team
+from ..models import db, TeamRegistration, TeamRow, Team, TeamMember
 
 mod_team_building_view = Blueprint('mod_team_building', __name__)
 
@@ -45,7 +45,7 @@ def for_class(id):
     
     current_team = None
     registration_filter = None
-    registrations = event_class.registrations
+    registrations = event_class.registrations.filter_by(placed=False)
 
     if 'team' in request.values:
         current_team = event_class.teams.filter_by(id=request.values['team']).one_or_404()
@@ -152,7 +152,7 @@ def create_for_team(id, registration):
         flash(f"Die Kampfklasse {event_class.title} wurde noch nicht freigegeben.", 'danger')
         return redirect(url_for('mod_team_building.index', event=g.event.slug))
     
-    team_registration = TeamRegistration.query.filter_by(id=registration).one_or_404()
+    team_registration = event_class.team_registrations.filter_by(id=registration).one_or_404()
 
     if team_registration.teams.count() != 0:
         flash(f"Für diese Team-Anmeldung wurde bereits ein Team erstellt.", 'danger')
@@ -173,3 +173,91 @@ def create_for_team(id, registration):
     flash(f"Team {team.team_name} wurde erfolgreich erstellt.", 'success')
     return redirect(url_for('mod_team_building.for_class',
                             event=g.event.slug, id=event_class.id, team=team.id))
+
+
+@mod_team_building_view.route('/class/<id>/team/<team>/include', methods=['POST'])
+@check_and_apply_event
+@check_is_registered
+@check_event_is_in_team_mode
+def include_to_team(id, team):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+
+    if not event_class.begin_placement:
+        flash(f"Die Kampfklasse {event_class.title} wurde noch nicht freigegeben.", 'danger')
+        return redirect(url_for('mod_team_building.index', event=g.event.slug))
+    
+    team = event_class.teams.filter_by(id=team).one_or_404()
+
+    success = 0
+    errors = []
+
+    for incluse in request.form.getlist('include'):
+        tr = event_class.registrations.filter_by(id=incluse).one_or_none()
+
+        if tr:
+            if tr.team_members.count() > 0:
+                continue
+
+            tm = _create_member_for_registration(team, tr)
+        
+            if tm:
+                success += 1
+            else:
+                errors.append(tr.first_name + ' ' + tr.last_name)
+        
+        else:
+            errors.append(f"TN#{incluse}")
+
+    if len(errors) == 0:
+        flash(f"Erfolgreich {success} TN zugewiesen.",
+              'success')
+    elif success == 0:
+        flash(f"Fehler sind aufgetreten bei: " + ', '.join(errors),
+              'success')
+    else:
+        flash(f"Erfolgreich {success} TN zugewiesen. "
+              "Fehler sind aufgetreten bei: " + ', '.join(errors),
+              'success')
+
+    return redirect(url_for('mod_team_building.for_class',
+                            event=g.event.slug, id=event_class.id, team=team.id))
+
+
+def _create_member_for_registration(team, registration, row=None):
+    tm = TeamMember(event=team.event, team=team, registration=registration)
+
+    tm.full_name = registration.first_name + ' ' + registration.last_name
+    tm.association_name = registration.club
+    tm.removed = False
+    tm.disqualified = False
+    tm.removal_cause = None
+    tm.last_fight_at = None
+
+    if row is not None:
+        tm.row = row
+    
+    else:
+        actual_weight = registration.verified_weight
+
+        applicable_rows = team.event_class.team_rows.filter(
+            TeamRow.min_weight.is_(None) | (TeamRow.min_weight < actual_weight),
+            TeamRow.max_weight.is_(None) | (TeamRow.max_weight >= actual_weight)
+        )
+
+        if applicable_rows.count() == 1:
+            tm.row = applicable_rows.first()
+        
+        else:
+            return None
+    
+    db.session.add(tm)
+
+    registration.placed = True
+
+    db.session.commit()
+
+    return tm
