@@ -110,6 +110,7 @@
             <div class="mb-2">
                 <a href="{{ url_for('mod_team_building.include_all_of_team', event=g.event.slug, id=event_class.id, team=current_team.id) }}" class="btn btn-secondary btn-sm">Alle TN des Teams zuweisen</a>
                 <button type="submit" form="include-form" class="btn btn-secondary btn-sm">Ausgewählte TN zuweisen</button>
+                <a href="{{ url_for('mod_team_building.print_team', event=g.event.slug, id=event_class.id, team=current_team.id) }}" class="btn btn-secondary btn-sm" target="_blank">Ausdrucken</a>
             </div>
 
             {% for row in event_class.team_rows %}

@@ -137,6 +137,22 @@ def initialize(id):
                                event_class=event_class, weight_classes=weight_classes)
 
 
+@mod_team_building_view.route('/class/<id>/team/<team>/print', methods=['GET'])
+@check_and_apply_event
+@check_is_registered
+@check_event_is_in_team_mode
+def print_team(id, team):
+    if not g.device.event_role.may_use_placement_tool and not g.device.event_role.may_use_global_list:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+
+    team = event_class.teams.filter_by(id=team).one_or_404()
+
+    return render_template('mod_team_building/print_team.html', team=team)
+
+
 @mod_team_building_view.route('/class/<id>/create_for_team/<registration>')
 @check_and_apply_event
 @check_is_registered
@@ -224,7 +240,7 @@ def include_to_team(id, team):
                             event=g.event.slug, id=event_class.id, team=team.id))
 
 
-@mod_team_building_view.route('/class/<id>/team/<team>/include_all', methods=['GET'])
+@mod_team_building_view.route('/class/<id>/team/<team>/include_all', methods=['GET', 'POST'])
 @check_and_apply_event
 @check_is_registered
 @check_event_is_in_team_mode

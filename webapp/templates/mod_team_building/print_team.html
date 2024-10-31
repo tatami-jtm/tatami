@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ g.event.title }} | Team | {{ team.team_name }}</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        html {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            max-width: 1024px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 23px;
+            margin: 0;
+            margin-bottom: 6px;
+            font-weight: normal;
+        }
+
+        main {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        h2 {
+            font-size: 27px;
+            margin: 0;
+        }
+
+        section {
+            break-inside: avoid;
+            flex-grow: 1;
+            min-width: 40%;
+            width: 0;
+            padding: 0 0.25rem;
+        }
+
+        h3 {
+            font-size: 21px;
+            margin-top: 31px;
+            margin-bottom: 6px;
+            break-after: avoid;
+            text-align: center;
+        }
+
+        table {
+            border-top: 1px solid;
+            border-bottom: 1px solid;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table thead th {
+            border-bottom: 1px solid;
+        }
+
+
+        table th {
+            padding: 4px;
+            font-size: 14px !important;
+        }
+        table td {
+            padding: 4px;
+            vertical-align: middle;
+        }
+
+        table th {
+            text-align: left;
+        }
+
+        table tbody tr:nth-child(2n+1) {
+            background-color: #eeeeee;
+        }
+
+        table tbody tr.noshow {
+            background-color: transparent;
+        }
+        table tbody tr.noshow td {
+            text-align: center;
+            font-style: italic;
+        }
+
+        table .full-name {
+            font-size: 16px;
+            width: 55%;
+        }
+
+        table .weight {
+            width: 3%;
+            font-size: 14px;
+        }
+
+        table .association {
+            width: 42%;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ g.event.title }}</h1>
+    <h2>{{ team.team_name }} (Team)</h2>
+
+    <main>
+    {% for row in team.event_class.team_rows %}
+    <section>
+        <h3>{{ row.title }}</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th class="full-name">Teilnehmer/in</th>
+                    <th class="weight">Gewicht</th>
+                    <th class="association">Verband</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tm in team.members.filter_by(row=row).all() %}
+                <tr>
+                    <td class="full-name">{{ tm.full_name }}</td>
+                    <td class="weight">{% if tm.registration %}{{ tm.registration.verified_weight / 1000 }} kg{% endif %}</td>
+                    <td class="association">{{ tm.association_name }}</td>
+                </tr>
+                {% else %}
+                <tr class="noshow">
+                    <td colspan="3" >nicht besetzt</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    {% endfor %}
+    </main>
+
+    <script>print();</script>
+</body>
+</html>
