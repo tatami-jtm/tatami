@@ -118,7 +118,12 @@
                 <div class="card-header">{{ row.title }}</div>
                 {% for tm in current_team.members.filter_by(row=row).all() %}
                 <div class="card-body py-1 {{ 'border-top' if not loop.first }}">
-                    <p class="m-0">{{ tm.full_name }}</p>
+                    <div class="row align-items-center">
+                        <div class="col">{{ tm.full_name }}</div>
+                        <div class="col-auto">
+                            <a href="{{ url_for('mod_team_building.exclude_from_team', event=g.event.slug, id=event_class.id, team=current_team.id, member=tm.id) }}" class="btn btn-outline-danger btn-sm">Entfernen</a>
+                        </div>
+                    </div>
                 </div>
                 {% else %}
                 <div class="card-body py-2">

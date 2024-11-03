@@ -240,6 +240,39 @@ def include_to_team(id, team):
                             event=g.event.slug, id=event_class.id, team=team.id))
 
 
+
+@mod_team_building_view.route('/class/<id>/team/<team>/exclude/<member>', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+@check_event_is_in_team_mode
+def exclude_from_team(id, team, member):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+
+    if not event_class.begin_placement:
+        flash(f"Die Kampfklasse {event_class.title} wurde noch nicht freigegeben.", 'danger')
+        return redirect(url_for('mod_team_building.index', event=g.event.slug))
+    
+    team = event_class.teams.filter_by(id=team).one_or_404()
+
+    member = team.members.filter_by(id=member).one_or_404()
+
+    if request.method == 'POST':
+        member.registration.placed = False
+        db.session.delete(member)
+        db.session.commit()
+
+        flash(f"TN wurde gelöscht.", 'success')
+        return redirect(url_for('mod_team_building.for_class',
+                                event=g.event.slug, id=event_class.id, team=team.id))
+    
+    return render_template('mod_team_building/exclude.html',
+                           event_class=event_class, team=team, member=member)
+
+
 @mod_team_building_view.route('/class/<id>/team/<team>/include_all', methods=['GET', 'POST'])
 @check_and_apply_event
 @check_is_registered
