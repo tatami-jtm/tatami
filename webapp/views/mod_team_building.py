@@ -191,7 +191,7 @@ def create_for_team(id, registration):
                             event=g.event.slug, id=event_class.id, team=team.id))
 
 
-@mod_team_building_view.route('/class/<id>/team/<team>/include', methods=['POST'])
+@mod_team_building_view.route('/class/<id>/team/<team>/include', methods=['GET', 'POST'])
 @check_and_apply_event
 @check_is_registered
 @check_event_is_in_team_mode
@@ -211,7 +211,7 @@ def include_to_team(id, team):
     success = 0
     errors = []
 
-    for incluse in request.form.getlist('include'):
+    for incluse in request.values.getlist('include'):
         tr = event_class.registrations.filter_by(id=incluse).one_or_none()
 
         if tr:

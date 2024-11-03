@@ -45,9 +45,14 @@
 
         </div>
         <div class="col-12 col-md-3">
-            <h2 class="h4 mb-2 fw-bold">Teilnehmende</h2>
+            <h2 class="h4 mb-3 fw-bold">Teilnehmende</h2>
 
             {% if current_team %}
+
+            <div class="mb-2">
+                <button type="submit" form="include-form" class="btn btn-dark btn-sm">Ausgewählte TN zuweisen</button>
+                <a href="{{ url_for('mod_team_building.include_all_of_team', event=g.event.slug, id=event_class.id, team=current_team.id) }}" class="btn btn-secondary btn-sm">Alle TN des Teams zuweisen</a>
+            </div>
 
             <form action="{{ url_for('mod_team_building.for_class', event=g.event.slug, id=event_class.id) }}" method="GET">
 
@@ -62,7 +67,7 @@
                     </select>
                 </div>
                 <div class="col-auto">
-                    <button class="btn btn-dark btn-sm" type="submit">Filtern</button>
+                    <button class="btn btn-secondary" type="submit">Filtern</button>
                 </div>
             </div>
 
@@ -87,7 +92,7 @@
                             </div>
                             <div class="col-2 fs-small ps-1 pe-1">{{ reg.verified_weight / 1000 }} kg</div>
                             <div class="col-3">
-                                <a href="" class="btn btn-secondary w-100 btn-sm">Zuweisen</a>
+                                <a href="{{ url_for('mod_team_building.include_to_team', event=g.event.slug, id=event_class.id, team=current_team.id, include=reg.id) }}" class="btn btn-secondary w-100 btn-sm">Zuweisen</a>
                             </div>
                         </div>
                     </div>
@@ -108,8 +113,7 @@
             <h2 class="h4 mb-3 fw-bold">Team: {{ current_team.team_name }}</h2>
 
             <div class="mb-2">
-                <a href="{{ url_for('mod_team_building.include_all_of_team', event=g.event.slug, id=event_class.id, team=current_team.id) }}" class="btn btn-secondary btn-sm">Alle TN des Teams zuweisen</a>
-                <button type="submit" form="include-form" class="btn btn-secondary btn-sm">Ausgewählte TN zuweisen</button>
+                <a href="" class="btn btn-secondary btn-sm">Team bearbeiten</a>
                 <a href="{{ url_for('mod_team_building.print_team', event=g.event.slug, id=event_class.id, team=current_team.id) }}" class="btn btn-secondary btn-sm" target="_blank">Ausdrucken</a>
             </div>
 
