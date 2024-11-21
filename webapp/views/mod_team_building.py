@@ -7,7 +7,7 @@ from .event_manager import check_and_apply_event, check_event_is_in_team_mode
 from .devices import check_is_registered
 from .mod_placement import provide_classes_query, _get_weight_classes
 
-from ..models import db, TeamRegistration, TeamRow, Team, TeamMember
+from ..models import db, TeamRegistration, TeamRow, Team, TeamMember, Registration
 
 mod_team_building_view = Blueprint('mod_team_building', __name__)
 
@@ -68,6 +68,8 @@ def for_class(id):
         else:
             registration_filter = int(registration_filter)
             registrations = registrations.filter_by(team_registration_id=registration_filter)
+
+        registrations = registrations.order_by(Registration.verified_weight)
 
     return render_template("mod_team_building/for_class.html", event_class=event_class, current_team=current_team, registration_filter=registration_filter, registrations=registrations)
 
