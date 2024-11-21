@@ -155,6 +155,42 @@ def print_team(id, team):
     return render_template('mod_team_building/print_team.html', team=team)
 
 
+@mod_team_building_view.route('/class/<id>/create_for_teams')
+@check_and_apply_event
+@check_is_registered
+@check_event_is_in_team_mode
+def create_for_all_teams(id):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+
+    if not event_class.begin_placement:
+        flash(f"Die Kampfklasse {event_class.title} wurde noch nicht freigegeben.", 'danger')
+        return redirect(url_for('mod_team_building.index', event=g.event.slug))
+    
+    team_registrations = event_class.team_registrations.all()
+
+    teams = []
+
+    for team_registration in team_registrations:
+        success, team = _create_for_team_registration(team_registration)
+
+        if success:
+            teams.append(team.team_name)
+
+    if len(teams) > 0:
+        flash(f"Es wurden erfolgreich {len(teams)} Teams erstellt.", 'success')
+        return redirect(url_for('mod_team_building.for_class',
+                                event=g.event.slug, id=event_class.id))
+    else:
+        flash(f"Es konnte kein Team erstellt werden; ggf. wurden die Teams schon erstellt.", 'warning')
+        return redirect(url_for('mod_team_building.for_class',
+                                event=g.event.slug, id=event_class.id))
+
+
+
 @mod_team_building_view.route('/class/<id>/create_for_team/<registration>')
 @check_and_apply_event
 @check_is_registered
@@ -172,25 +208,17 @@ def create_for_team(id, registration):
     
     team_registration = event_class.team_registrations.filter_by(id=registration).one_or_404()
 
-    if team_registration.teams.count() != 0:
+    success, team = _create_for_team_registration(team_registration)
+
+    if success:
+        flash(f"Team {team.team_name} wurde erfolgreich erstellt.", 'success')
+        return redirect(url_for('mod_team_building.for_class',
+                                event=g.event.slug, id=event_class.id, team=team.id))
+    else:
         flash(f"Für diese Team-Anmeldung wurde bereits ein Team erstellt.", 'danger')
         return redirect(url_for('mod_team_building.for_class',
-                                event=g.event.slug, id=event_class))
-    
-    team = Team(event=g.event, event_class=event_class)
-    team.team_name = team_registration.team_name
-    team.team_registration = team_registration
+                                event=g.event.slug, id=event_class.id))
 
-    team.manually_placed = False
-    team.removed = False
-    team.disqualified = False
-
-    db.session.add(team)
-    db.session.commit()
-
-    flash(f"Team {team.team_name} wurde erfolgreich erstellt.", 'success')
-    return redirect(url_for('mod_team_building.for_class',
-                            event=g.event.slug, id=event_class.id, team=team.id))
 
 
 @mod_team_building_view.route('/class/<id>/team/<team>/include', methods=['GET', 'POST'])
@@ -292,27 +320,7 @@ def include_all_of_team(id, team):
     
     team = event_class.teams.filter_by(id=team).one_or_404()
 
-    success = 0
-    errors = []
-    team_registration = team.team_registration
-
-    if not team_registration:
-        flash(f"Kann nicht TN von Team {team.team_name} zuweisen, da keine Anmeldedaten für dieses "
-              f"Team angelegt wurden.")
-
-        return redirect(url_for('mod_team_building.for_class',
-                                event=g.event.slug, id=event_class.id, team=team.id))
-
-    for tr in team_registration.members:
-        if tr.team_members.count() > 0:
-            continue
-
-        tm = _create_member_for_registration(team, tr)
-    
-        if tm:
-            success += 1
-        else:
-            errors.append(tr.first_name + ' ' + tr.last_name)
+    success, errors = _include_all_of_team(team)
 
     if success > 0:
         flash(f"Erfolgreich {success} TN zugewiesen.",
@@ -324,6 +332,42 @@ def include_all_of_team(id, team):
 
     return redirect(url_for('mod_team_building.for_class',
                             event=g.event.slug, id=event_class.id, team=team.id))
+
+
+@mod_team_building_view.route('/class/<id>/team/all/include_all', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+@check_event_is_in_team_mode
+def include_all_for_all_teams(id):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+
+    if not event_class.begin_placement:
+        flash(f"Die Kampfklasse {event_class.title} wurde noch nicht freigegeben.", 'danger')
+        return redirect(url_for('mod_team_building.index', event=g.event.slug))
+    
+    teams = event_class.teams.all()
+
+    success, errors = 0, []
+
+    for team in teams:
+        suc, err = _include_all_of_team(team)
+        success += success
+        errors += errors
+
+    if success > 0:
+        flash(f"Erfolgreich {success} TN zugewiesen.",
+              'success')
+
+    if len(errors) > 0:
+        flash(f"Fehler sind aufgetreten bei der Zuweisung von: " + ', '.join(errors),
+              'danger')
+
+    return redirect(url_for('mod_team_building.for_class',
+                            event=g.event.slug, id=event_class.id))
 
 
 @mod_team_building_view.route('/class/<id>/delete_all', methods=['GET', 'POST'])
@@ -404,3 +448,49 @@ def _create_member_for_registration(team, registration, row=None):
     db.session.commit()
 
     return tm
+
+
+def _include_all_of_team(team):
+    event_class = team.event_class
+
+    success = 0
+    errors = []
+    team_registration = team.team_registration
+
+    if not team_registration:
+        flash(f"Kann nicht TN von Team {team.team_name} zuweisen, da keine Anmeldedaten für dieses "
+              f"Team angelegt wurden.")
+
+        return redirect(url_for('mod_team_building.for_class',
+                                event=g.event.slug, id=event_class.id, team=team.id))
+
+    for tr in team_registration.members:
+        if tr.team_members.count() > 0:
+            continue
+
+        tm = _create_member_for_registration(team, tr)
+    
+        if tm:
+            success += 1
+        else:
+            errors.append(tr.first_name + ' ' + tr.last_name)
+
+    return success, errors
+
+
+def _create_for_team_registration(team_registration):
+    if team_registration.teams.count() != 0:
+        return False, None
+    
+    team = Team(event=g.event, event_class=team_registration.event_class)
+    team.team_name = team_registration.team_name
+    team.team_registration = team_registration
+
+    team.manually_placed = False
+    team.removed = False
+    team.disqualified = False
+
+    db.session.add(team)
+    db.session.commit()
+
+    return True, team
