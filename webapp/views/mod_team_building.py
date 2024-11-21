@@ -324,6 +324,50 @@ def include_all_of_team(id, team):
                             event=g.event.slug, id=event_class.id, team=team.id))
 
 
+@mod_team_building_view.route('/class/<id>/delete_all', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def delete_all_for_class(id):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+
+    if request.method == 'POST':
+        if 'confirm' in request.form:
+            # TODO: reset team_group progress
+
+            team_counter = team_member_counter = team_row_counter = registration_counter = 0
+            for team in event_class.teams:
+                for member in team.members:
+                    db.session.delete(member)
+                    team_member_counter += 1
+
+                db.session.delete(team)
+                team_counter += 1
+            
+            for registration in event_class.registrations:
+                registration.placed = False
+                registration.placed_at = None
+                registration_counter += 1
+
+            for row in event_class.team_rows:
+                db.session.delete(row)
+                team_row_counter += 1
+
+            db.session.commit()
+                    
+            g.event.log(g.device.title, 'DANGER', f'Für die Kampklasse {event_class.title} wurde die Team-Einteilung zurückgesetzt: {team_counter} Teams, {team_member_counter} TN wurden gelöscht, {team_row_counter} Zeilen wurden entfernt und {registration_counter} TN-Registrierungen wurden zurückgesetzt')
+            flash(f'Für die Kampklasse {event_class.title} wurde die Team-Einteilung zurückgesetzt: {team_counter} Teams, {team_member_counter} TN wurden gelöscht, {team_row_counter} Zeilen wurden entfernt und {registration_counter} TN-Registrierungen wurden zurückgesetzt', 'success')
+
+            return redirect(url_for('mod_team_building.for_class', event=g.event.slug, id=event_class.id))
+        else:
+            flash(f"Fehler: Sie müssen die Checkbox zur Bestätigung betätigen", 'danger')
+
+    return render_template("mod_team_building/delete_all_for_class.html", event_class=event_class)
+
+
 def _create_member_for_registration(team, registration, row=None):
     tm = TeamMember(event=team.event, team=team, registration=registration)
 

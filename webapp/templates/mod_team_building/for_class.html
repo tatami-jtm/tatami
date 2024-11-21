@@ -28,6 +28,10 @@
             </div>
             {% endfor %}
 
+            {% if event_class.teams %}
+            <a href="{{ url_for('mod_team_building.delete_all_for_class', event=g.event.slug, id=event_class.id) }}" class="btn btn-outline-danger btn-sm mt-2">Alle Teams zurücksetzen</a>
+            {% endif %}
+
             <h2 class="h4 mt-5 mb-3 fw-bold">Team-Registrierungen</h2>
 
             {% for tr in event_class.team_registrations if not tr.teams.count() %}
