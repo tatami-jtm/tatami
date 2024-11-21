@@ -3,6 +3,8 @@ from flask_migrate import Migrate
 from flask_security import Security, SQLAlchemyUserDatastore, user_registered
 from flask_babel import Babel
 
+from datetime import datetime
+
 from .config_base import SETTINGS
 from . import setup_data
 
@@ -51,6 +53,12 @@ if 'OFFLINE' in SETTINGS and SETTINGS['OFFLINE']:
     def offline_mode():
         if request.endpoint != 'static':
             abort(503)
+
+
+@app.context_processor
+def inject_now():
+    return {'now': datetime.utcnow()}
+
 
 @app.route("/")
 def splash():

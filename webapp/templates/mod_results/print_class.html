@@ -17,6 +17,15 @@
             margin: 0 auto;
         }
 
+        body::before {
+            content: 'Gedruckt am {{ now.strftime("%d.%m.%Y %H:%M:%S") }} mit {{ config["BRAND_NAME"] }}';
+            position: fixed;
+            bottom: 0;
+            right: 0px;
+            font-size: 8px;
+            opacity: 0.8;
+        }
+
         h1 {
             font-size: 23px;
             margin: 0;

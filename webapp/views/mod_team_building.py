@@ -155,6 +155,22 @@ def print_team(id, team):
     return render_template('mod_team_building/print_team.html', team=team)
 
 
+@mod_team_building_view.route('/class/<id>/team/all/print', methods=['GET'])
+@check_and_apply_event
+@check_is_registered
+@check_event_is_in_team_mode
+def print_all_teams(id):
+    if not g.device.event_role.may_use_placement_tool and not g.device.event_role.may_use_global_list:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+
+    teams = event_class.teams.all()
+
+    return render_template('mod_team_building/print_all_teams.html', teams=teams, event_class=event_class)
+
+
 @mod_team_building_view.route('/class/<id>/create_for_teams')
 @check_and_apply_event
 @check_is_registered
