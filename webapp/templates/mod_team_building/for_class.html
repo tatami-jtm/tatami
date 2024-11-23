@@ -12,7 +12,7 @@
             <div class="mb-3">
                 <a href="{{ url_for('mod_team_building.create_for_all_teams', event=g.event.slug, id=event_class.id) }}" class="btn btn-primary btn-sm">Teams generieren</a>
                 <a href="{{ url_for('mod_team_building.include_all_for_all_teams', event=g.event.slug, id=event_class.id) }}" class="btn btn-primary btn-sm">TN zuweisen</a>
-                <a href="" class="btn btn-secondary btn-sm">Neues Team</a>
+                <a href="{{ url_for('mod_team_building.new_team', event=g.event.slug, id=event_class.id) }}" class="btn btn-secondary btn-sm">Neues Team</a>
             </div>
 
             {% for tm in event_class.teams %}
