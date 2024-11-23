@@ -74,6 +74,37 @@ def for_class(id):
     return render_template("mod_team_building/for_class.html", event_class=event_class, current_team=current_team, registration_filter=registration_filter, registrations=registrations)
 
 
+@mod_team_building_view.route('/class/<id>/team/<team>/edit', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+@check_event_is_in_team_mode
+def edit_team(id, team):
+    if not g.device.event_role.may_use_placement_tool and not g.device.event_role.may_use_global_list:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+    team = event_class.teams.filter_by(id=team).one_or_404()
+
+    if request.method == 'POST':
+        team.team_name = request.form['team_name']
+
+        if request.form['team_registration_id'] == '':
+            team.team_registration = None
+        else:
+            team.team_registration = event_class.team_registrations.filter_by(
+                id=request.form['team_registration_id']).one_or_none()
+
+        db.session.commit()
+
+        flash(f"Team #{team.team_name} erfolgreich bearbeitet.", 'success')
+        return redirect(url_for('mod_team_building.for_class', event=g.event.slug, id=event_class.id, team=team.id))
+
+    team_registrations = event_class.team_registrations.all()
+    return render_template('mod_team_building/team/edit.html', event_class=event_class, team=team,
+                           team_registrations=team_registrations)
+
+
 @mod_team_building_view.route('/class/<id>/initialize', methods=['GET', 'POST'])
 @check_and_apply_event
 @check_is_registered

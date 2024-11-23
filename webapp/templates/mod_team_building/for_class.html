@@ -121,7 +121,7 @@
             <h2 class="h4 mb-3 fw-bold">Team: {{ current_team.team_name }}</h2>
 
             <div class="mb-2">
-                <a href="" class="btn btn-secondary btn-sm">Team bearbeiten</a>
+                <a href="{{ url_for('mod_team_building.edit_team', event=g.event.slug, id=event_class.id, team=current_team.id) }}" class="btn btn-secondary btn-sm">Team bearbeiten</a>
                 <a href="{{ url_for('mod_team_building.print_team', event=g.event.slug, id=event_class.id, team=current_team.id) }}" class="btn btn-secondary btn-sm" target="_blank">Ausdrucken</a>
                 <a href="{{ url_for('mod_team_building.print_all_teams', event=g.event.slug, id=event_class.id) }}" class="btn btn-secondary btn-sm" target="_blank">Alle Teams ausdrucken</a>
             </div>

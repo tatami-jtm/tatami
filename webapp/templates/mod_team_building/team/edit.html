@@ -1,0 +1,15 @@
+{% extends "layouts/application.html" %}
+{% set page=event_class %}
+{% block title %}Team-Einteilung{% endblock %}
+{% block pre_messages %}{% include "mod_team_building/_header.html" %}{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <h1 class="h2 fw-bold mb-4">{{ event_class.title }} &ndash; {{ 'Gewichtsklassen' if not proximity else 'Gewichtsnahe Gruppen' }}</h1>
+
+    
+    <h3 class="h4 fw-bold mb-2">Team bearbeiten: {{ team.title }}</h3>
+    {% include "mod_team_building/team/_form.html" %}
+</div>
+
+{% endblock body %}
