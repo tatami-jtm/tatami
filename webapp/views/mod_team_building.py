@@ -152,7 +152,7 @@ def print_team(id, team):
 
     team = event_class.teams.filter_by(id=team).one_or_404()
 
-    return render_template('mod_team_building/print_team.html', team=team)
+    return render_template('mod_team_building/team/print.html', team=team)
 
 
 @mod_team_building_view.route('/class/<id>/team/all/print', methods=['GET'])
@@ -168,7 +168,7 @@ def print_all_teams(id):
 
     teams = event_class.teams.all()
 
-    return render_template('mod_team_building/print_all_teams.html', teams=teams, event_class=event_class)
+    return render_template('mod_team_building/team/print_all.html', teams=teams, event_class=event_class)
 
 
 @mod_team_building_view.route('/class/<id>/create_for_teams')
@@ -315,7 +315,7 @@ def exclude_from_team(id, team, member):
         return redirect(url_for('mod_team_building.for_class',
                                 event=g.event.slug, id=event_class.id, team=team.id))
     
-    return render_template('mod_team_building/exclude.html',
+    return render_template('mod_team_building/member/exclude.html',
                            event_class=event_class, team=team, member=member)
 
 
