@@ -205,7 +205,7 @@ def display_all_pdf():
     collected_groups = []
     for event_class in g.event.classes.filter_by(begin_fighting=True, ended_fighting=False).all():
         for group in event_class.groups.all():
-            if not group.participants.count() == 0 and group.list_system() != None
+            if not group.participants.count() == 0 and group.list_system() != None:
                 collected_groups.append([
                     group,
                     helpers.load_list(group)
