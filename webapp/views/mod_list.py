@@ -165,10 +165,11 @@ def display_all_zip():
     collected_groups = []
     for event_class in g.event.classes.filter_by(begin_fighting=True, ended_fighting=False).all():
         for group in event_class.groups.all():
-            collected_groups.append([
-                group,
-                helpers.load_list(group)
-            ])
+            if not group.participants.count() == 0 and group.list_system() != None:
+                collected_groups.append([
+                    group,
+                    helpers.load_list(group)
+                ])
 
     pdfw = PdfWriter()
 
@@ -193,7 +194,7 @@ def display_all_zip():
     return send_file(pdf_io, mimetype='application/pdf')
 
 
-@mod_list_view.route('/display/all_lists.zip')
+@mod_list_view.route('/display/all_lists.pdf')
 @check_and_apply_event
 @check_is_registered
 def display_all_pdf():
@@ -204,10 +205,11 @@ def display_all_pdf():
     collected_groups = []
     for event_class in g.event.classes.filter_by(begin_fighting=True, ended_fighting=False).all():
         for group in event_class.groups.all():
-            collected_groups.append([
-                group,
-                helpers.load_list(group)
-            ])
+            if not group.participants.count() == 0 and group.list_system() != None
+                collected_groups.append([
+                    group,
+                    helpers.load_list(group)
+                ])
 
     zip_io = io.BytesIO()
     zip_file = zipfile.ZipFile(zip_io, mode='w')
