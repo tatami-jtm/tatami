@@ -154,10 +154,10 @@ def display_pdf(id):
     return send_file(pdf_io, mimetype='application/pdf')
 
 
-@mod_list_view.route('/display/all_lists.zip')
+@mod_list_view.route('/display/all_lists.pdf')
 @check_and_apply_event
 @check_is_registered
-def display_all_zip():
+def display_all_pdf():
     if not g.device.event_role.may_use_global_list:
         flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
         return redirect(url_for('devices.index', event=g.event.slug))
@@ -194,10 +194,10 @@ def display_all_zip():
     return send_file(pdf_io, mimetype='application/pdf')
 
 
-@mod_list_view.route('/display/all_lists.pdf')
+@mod_list_view.route('/display/all_lists.zip')
 @check_and_apply_event
 @check_is_registered
-def display_all_pdf():
+def display_all_zip():
     if not g.device.event_role.may_use_global_list:
         flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
         return redirect(url_for('devices.index', event=g.event.slug))
