@@ -5,18 +5,25 @@
                 <h1 class="modal-title h4 fw-bold">Für {{ g.mat.title }} aufrufen</h1>
             </div>
             <div class="modal-body">
-                <div class="match-summary match-summary-large-fs">
-                    <div class="match-header">
-                        <div class="match-group" data-tatami-field="current.group">XXX</div>
-                        <div class="match-tag" data-tatami-field="current.progress">Hauptrunde</div>
+                <div class="row">
+                    <div class="col-11">
+                        <div class="match-summary match-summary-large-fs">
+                            <div class="match-header">
+                                <div class="match-group" data-tatami-field="current.group">XXX</div>
+                                <div class="match-tag" data-tatami-field="current.progress">Hauptrunde</div>
+                            </div>
+                            <div class="match-white">
+                                <strong data-tatami-field="current.white.name">Name</strong>
+                                (<span data-tatami-field="current.white.club">Verein</span>)
+                            </div>
+                            <div class="match-blue">
+                                <strong data-tatami-field="current.blue.name">Name</strong>
+                                (<span data-tatami-field="current.blue.club">Verein</span>)
+                            </div>
+                        </div>
                     </div>
-                    <div class="match-white">
-                        <strong data-tatami-field="current.white.name">Name</strong>
-                        (<span data-tatami-field="current.white.club">Verein</span>)
-                    </div>
-                    <div class="match-blue">
-                        <strong data-tatami-field="current.blue.name">Name</strong>
-                        (<span data-tatami-field="current.blue.club">Verein</span>)
+                    <div class="col-1">
+                        <button class="repeated-call-btn" type="button" data-tatami-repeated-call>60</button>
                     </div>
                 </div>
             </div>
