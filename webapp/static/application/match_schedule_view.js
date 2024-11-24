@@ -5,10 +5,18 @@ var local_config = {
     defaultScreen: 'break'
 }
 
+var repeated_call = {
+    time: 60,
+    running: false,
+    running_since: null
+}
+
 const enter_results = document.querySelector("[data-control=\"enter-results\"]")
 const transactional_end_fight = enter_results
 const callup_again = document.querySelector("[data-control=\"callup-again\"]")
 const callup_now = document.querySelector("[data-control=\"callup\"]")
+
+const repeated_call_btn = document.querySelector("[data-tatami-repeated-call]")
 
 const scheduledArea = document.querySelector('[data-scheduled-area]')
 const resultsModal = new bootstrap.Modal('#results-modal')
@@ -170,6 +178,9 @@ const startNewMatch = () => {
     resetState(local_config)
     sbState.view.screen = 'callup'
 
+    repeated_call.running = true
+    repeated_call.running_since = Date.now()
+
     if (document.querySelector("[data-tatami-source=\"current_match.any\"]").value == '1') {
         callupModal.show()
         document.querySelector("[data-tatami-end-callup]").focus()
@@ -180,6 +191,7 @@ const startNewMatch = () => {
 
 document.querySelector("[data-tatami-end-callup]").addEventListener("click", () => {
     sbState.view.screen = 'main'
+    repeated_call.running = false
     callupModal.hide()
 })
 
@@ -314,9 +326,30 @@ let do_callup = () => {
 }
 
 callup_now.addEventListener('click', do_callup);
-
 callup_again.addEventListener('click', do_callup)
 
+let repeated_call_view = () => {
+    if (repeated_call.running) {
+        time_remaining = Math.ceil(repeated_call.time - (Date.now() - repeated_call.running_since) / 1000)
+
+        if (time_remaining > 0) {
+            repeated_call_btn.innerText = time_remaining
+            repeated_call_btn.classList.remove('pending')
+            repeated_call_btn.setAttribute('disabled', true)
+        } else {
+            repeated_call_btn.classList.add('pending')
+            repeated_call_btn.removeAttribute('disabled')
+        }
+    }
+}
+
+let repeated_call_reset = () => {
+    if (!repeated_call_btn.hasAttribute('disabled'))
+        repeated_call.running_since = Date.now()
+}
+
+setInterval(repeated_call_view, 50)
+repeated_call_btn.addEventListener('click', repeated_call_reset)
 
 document.querySelectorAll('[data-show-list]').forEach((sl) => {
     sl.addEventListener('click', (e) => {

@@ -1367,6 +1367,55 @@ select.w-min {
 }
 
 
+.repeated-call-btn {
+    font: inherit;
+    font-family: 'Reddit Mono';
+    cursor: pointer;
+    line-height: 1;
+    padding: 0.5rem;
+    height: 3rem;
+    width: 3rem;
+    background-color: transparent;
+    position: relative;
+    border: none;
+    color: #888888;
+    text-align: center;
+}
+
+.repeated-call-btn::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0; left: 0;
+    bottom: 0; right: 0;
+    padding: 0.5rem 0.5rem;
+    height: 100%;
+    width: 100%;
+    z-index: 0;
+    border: 0.5rem solid #eeeeee;
+    border-top-color: #cccccc;
+    border-radius: 50%;
+    animation: spinner-rotate 5s ease-in-out infinite;
+    text-align: center;
+}
+@keyframes spinner-rotate {
+    100% {
+        transform: rotate(3turn);
+    }
+}
+@keyframes spinner-pulse {
+    60% {
+        transform: scale(110%);
+    }
+}
+.repeated-call-btn.pending::before {
+    content: '📣';
+    background-color: #f3f300;
+    border-color: #ffff99;
+    animation: spinner-pulse 2s ease-in-out infinite;
+}
+
+
 .modal-content.modal-border-red {
     border: 1rem solid var(--bs-danger);
 }
