@@ -97,7 +97,7 @@ def edit_team(id, team):
 
         db.session.commit()
 
-        flash(f"Team #{team.team_name} erfolgreich bearbeitet.", 'success')
+        flash(f"Team {team.team_name} erfolgreich bearbeitet.", 'success')
         return redirect(url_for('mod_team_building.for_class', event=g.event.slug, id=event_class.id, team=team.id))
 
     team_registrations = event_class.team_registrations.all()
@@ -357,8 +357,8 @@ def include_to_team(id, team):
               'success')
 
     if len(errors) > 0:
-        flash(f"Fehler sind aufgetreten bei bei der Zuweisung von: " + ', '.join(errors),
-              'danger')
+        for error in errors:
+            flash(error, 'danger')
 
     return redirect(url_for('mod_team_building.for_class',
                             event=g.event.slug, id=event_class.id, team=team.id))
@@ -421,8 +421,8 @@ def include_all_of_team(id, team):
               'success')
 
     if len(errors) > 0:
-        flash(f"Fehler sind aufgetreten bei der Zuweisung von: " + ', '.join(errors),
-              'danger')
+        for error in errors:
+            flash(error, 'danger')
 
     return redirect(url_for('mod_team_building.for_class',
                             event=g.event.slug, id=event_class.id, team=team.id))
@@ -449,16 +449,16 @@ def include_all_for_all_teams(id):
 
     for team in teams:
         suc, err = _include_all_of_team(team)
-        success += success
-        errors += errors
+        success += suc
+        errors += err
 
     if success > 0:
         flash(f"Erfolgreich {success} TN zugewiesen.",
               'success')
 
     if len(errors) > 0:
-        flash(f"Fehler sind aufgetreten bei der Zuweisung von: " + ', '.join(errors),
-              'danger')
+        for error in errors:
+            flash(error, 'danger')
 
     return redirect(url_for('mod_team_building.for_class',
                             event=g.event.slug, id=event_class.id))
@@ -552,11 +552,10 @@ def _include_all_of_team(team):
     team_registration = team.team_registration
 
     if not team_registration:
-        flash(f"Kann nicht TN von Team {team.team_name} zuweisen, da keine Anmeldedaten für dieses "
-              f"Team angelegt wurden.")
+        errors = [f"Kann nicht TN von Team {team.team_name} zuweisen, da keine Anmeldedaten für dieses "
+              f"Team angelegt wurden."]
 
-        return redirect(url_for('mod_team_building.for_class',
-                                event=g.event.slug, id=event_class.id, team=team.id))
+        return success, errors
 
     for tr in team_registration.members:
         if tr.team_members.count() > 0:
