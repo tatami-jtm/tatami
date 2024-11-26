@@ -743,7 +743,7 @@ def import_registrations_do(fn):
     suggested_group_offset = int(request.form['suggested_group']) if request.form['suggested_group'] != 'null' else None
 
     if g.event.team_mode:
-        team_offset = int(request.form['team'])
+        team_offset = int(request.form['team']) if request.form['team'] != 'null' else None
 
     successful = 0
 
@@ -816,7 +816,7 @@ def import_registrations_do(fn):
         else:
             registration.event_class_id = None
 
-        if g.event.team_mode:
+        if g.event.team_mode and team_offset is not None:
             team = row[team_offset]
 
             if team is not None and len(team):
