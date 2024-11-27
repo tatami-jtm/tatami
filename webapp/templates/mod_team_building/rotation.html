@@ -1,0 +1,22 @@
+{% extends "layouts/application.html" %}
+{% block title %}Hauptliste{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <h1 class="h2 fw-bold mb-4">Kampfklasse {{ event_class.title }}</h1>
+
+    
+    <h3 class="h4 fw-bold mb-2">Rotationsverfahren</h3>
+    <form action="" method="POST">
+        <div class="card card-semidialog">
+            <div class="card-body pb-0">
+                <p></p>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary btn-3d">Einteilung erstellen</button>
+                <a href="{{ url_for('mod_team_building.for_class', event=g.event.slug, id=event_class.id) }}" class="btn btn-secondary">Abbrechen</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock body %}

@@ -217,6 +217,34 @@ def initialize(id):
                                event_class=event_class, weight_classes=weight_classes)
 
 
+@mod_team_building_view.route('/class/<id>/rotation', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+@check_event_is_in_team_mode
+def rotation(id):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+
+    if not event_class.begin_placement:
+        flash(f"Die Kampfklasse {event_class.title} wurde noch nicht freigegeben.", 'danger')
+        return redirect(url_for('mod_team_building.index', event=g.event.slug))
+    
+    if event_class.team_rows.count() > 0 or not event_class.use_proximity_weight_mode:
+        return redirect(url_for('mod_team_building.for_class', event=g.event.slug, id=event_class.id))
+
+    # TODO: smth
+
+    if request.method == 'POST':
+        # TODO: smth
+        return redirect(url_for('mod_team_building.for_class', event=g.event.slug, id=event_class.id))
+
+    return render_template("mod_team_building/rotation.html",
+                               event_class=event_class)
+
+
 @mod_team_building_view.route('/class/<id>/team/<team>/print', methods=['GET'])
 @check_and_apply_event
 @check_is_registered
