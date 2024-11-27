@@ -128,6 +128,7 @@ if SETTINGS['ALLOW_SETUP']:
             # Install event roles and list systems
             setup_data.setup_event_roles()
             setup_data.setup_list_systems()
+            setup_data.setup_team_name_generators()
 
             # Possibly install template classes
             if "install-class-templates" in request.form:

@@ -107,3 +107,11 @@ class TeamMember(db.Model):
     registration_id = db.Column(db.Integer(), db.ForeignKey('registration.id'))
     registration = db.relationship('Registration', backref=db.backref(
         'team_members', lazy='dynamic'))
+
+
+class TeamNameGenerator(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    title = db.Column(db.String(40))
+    item_count = db.Column(db.Integer())
+    items = db.Column(db.Text)
+    enabled = db.Column(db.Boolean)

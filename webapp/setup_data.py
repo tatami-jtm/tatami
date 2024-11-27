@@ -1,4 +1,4 @@
-from .models import db, Role, EventClass, EventRole, ListSystem
+from .models import db, Role, EventClass, EventRole, ListSystem, TeamNameGenerator
 from .helpers import _get_or_create
 
 def setup_roles():
@@ -118,3 +118,100 @@ def setup_event_roles():
                    may_use_registration=True, may_use_weigh_in=True, may_use_placement_tool=True,
                    may_use_global_list=True, may_use_results=True, may_use_assigned_lists=True,
                    may_use_scoreboard=True, may_use_beamer=True)
+    
+
+def setup_team_name_generators():
+    _get_or_create(TeamNameGenerator, title="Zahlen", enabled=True,
+                   item_count=100, items="\n".join(map(str, range(1, 101))))
+    
+    _get_or_create(TeamNameGenerator, title="Farben", enabled=True,
+                   item_count=15, items= \
+"""Orange
+Rot
+Grün
+Blau
+Violett
+Gelb
+Indigo
+Oliv
+Türkis
+Ultramarin
+Karmin
+Ocker
+Magenta
+Pink
+Platin""")
+    
+    
+    _get_or_create(TeamNameGenerator, title="Tiere", enabled=True,
+                   item_count=26, items= \
+"""Löwe
+Eisbär
+Tiger
+Panther
+Elefant
+Zebra
+Schlange
+Katze
+Känguru
+Adler
+Hund
+Nilpferd
+Alpaka
+Gorilla
+Pinguin
+Seehund
+Chamäleon
+Erdmännchen
+Igel
+Maus
+Affe
+Fuchs
+Giraffe
+Braunbär
+Otter
+Flamingo""")
+    
+    
+    _get_or_create(TeamNameGenerator, title="Judowürfe der Go-Kyo", enabled=True,
+                   item_count=40, items= \
+"""O-goshi
+O-uchi-gari
+De-ashi-barai
+Tomoe-nage
+O-soto-gari
+Ura-nage
+Tai-otoshi
+Seoi-nage
+Uki-goshi
+Yoko-wakare
+Ushiro-goshi
+Tsuri-komi-goshi
+Utsuri-goshi
+Hane-goshi
+Uki-otoshi
+Harai-tsuri-komi-ashi
+Okuri-ashi-barai
+Ko-uchi-gari
+Sumi-gaeshi
+Soto-maki-komi
+Ko-soto-gake
+Kata-guruma
+O-guruma
+O-soto-guruma
+Hiza-guruma
+Ashi-guruma
+Yoko-gake
+Tani-otoshi
+Harai-goshi
+Koshi-guruma
+Yoko-guruma
+Sukui-nage
+Sasae-tsuri-komi-ashi
+Hane-maki-komi
+Tsuri-goshi
+Sumi-otoshi
+Uchi-mata
+Yoko-otoshi
+Ko-soto-gari
+Uki-waza""")
