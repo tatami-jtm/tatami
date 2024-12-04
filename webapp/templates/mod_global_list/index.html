@@ -87,9 +87,8 @@
                 {% endfor %}
             </div>
             {% endfor %}
-
             <a href="{{ url_for('mod_list.display_all_zip', event=g.event.slug) }}" class="btn btn-secondary mb-3">Listen herunterladen</a>
-            <a href="{{ url_for('mod_list.display_all_pdf', event=g.event.slug) }}" download="all_lists.pdf" class="btn btn-secondary mb-3">Sammel-PDF</a>
+            <a href="{{ url_for('mod_list.display_all_pdf', event=g.event.slug) }}" download="all_lists_{{ now.strftime("%Y-%m-%d_%H-%M-%S") }}.pdf" class="btn btn-secondary mb-3">Sammel-PDF</a>
             <a href="{{ url_for('mod_global_list.class_progress', event=g.event.slug) }}" class="btn btn-secondary mb-3">Kampfklassen-Fortschritt</a>
         </div>
         <div class="col-12 col-md-4">
@@ -156,7 +155,7 @@
             <div class="d-flex align-items-center justify-content-between">
                 <div class="mb-3">
                     <a href="{{ url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id) }}" class="btn btn-secondary btn-sm" target="_blank">Als PDF anzeigen</a>
-                    <a href="{{ url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id) }}" download="list.pdf" class="btn btn-secondary btn-sm">Als PDF herunterladen</a>
+                    <a href="{{ url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id) }}" download="{{ current_group.download_name('list.pdf') }}" class="btn btn-secondary btn-sm">Als PDF herunterladen</a>
                 </div>
 
                 <ul class="pagination pagination-sm">

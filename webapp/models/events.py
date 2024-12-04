@@ -5,6 +5,7 @@ from .participants import Group
 import json
 import hashlib
 import datetime
+import re
 
 
 class Event(db.Model):
@@ -203,6 +204,13 @@ class EventClass(db.Model):
     
     def placed_registrations_count(self):
         return self.registrations.filter_by(confirmed=True, registered=True, weighed_in=True, placed=True).count()
+    
+    def download_name(self, file_suffix):
+        name = self.short_title
+        name = name.replace(".", "-")
+        name = re.sub('[^a-zA-Z0-9_-]', '', name)
+        return f"{name}_{file_suffix}"
+
 
 class EventRole(db.Model):
     id = db.Column(db.Integer(), primary_key=True)

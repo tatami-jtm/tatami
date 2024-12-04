@@ -55,8 +55,9 @@ def index():
             )
 
     mats = g.event.device_positions.filter_by(is_mat=True).all()
+    now = dt.now()
     
-    return render_template("mod_global_list/index.html", mats=mats, current_group=current_group, free_groups=free_groups, scheduled_matches=scheduled_matches, not_scheduled_matches=not_scheduled_matches,completed_matches=completed_matches, obsolete_matches=obsolete_matches)
+    return render_template("mod_global_list/index.html", mats=mats, current_group=current_group, free_groups=free_groups, scheduled_matches=scheduled_matches, not_scheduled_matches=not_scheduled_matches,completed_matches=completed_matches, obsolete_matches=obsolete_matches, now=now)
 
 
 @mod_global_list_view.route('/group/<id>/edit', methods=['POST'])
