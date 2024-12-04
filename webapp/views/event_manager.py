@@ -553,7 +553,7 @@ def class_registrations_as_csv(id=None):
             registration.club,
             registration.association.short_name if registration.association else None,
             registration.suggested_group,
-            registration.verified_weight / 1000,
+            registration.verified_weight / 1000 if registration.verified_weight else '',
             'x' if registration.confirmed else '',
             'x' if registration.registered else '',
             'x' if registration.weighed_in else ''

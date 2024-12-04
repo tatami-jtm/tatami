@@ -79,7 +79,7 @@
     <a href="{{ url_for('event_manager.import_registrations_index', event=g.event.slug) }}" class="btn btn-secondary">TN importieren</a>
     {% if filtered_class %}
     <a href="{{ url_for('event_manager.print_registrations', event=g.event.slug, id=filtered_class.id) }}" class="btn btn-secondary" target="_blank">TN/Wiegeliste drucken ({{ filtered_class.short_title }})</a>
-    <a href="{{ url_for('event_manager.class_registrations_as_csv', event=g.event.slug, id=filtered_class.id) }}" class="btn btn-secondary">CSV exportieren ({{ filtered_class.short_title }})</a>
+    <a href="{{ url_for('event_manager.class_registrations_as_csv', event=g.event.slug, id=filtered_class.id) }}" download="{{ filtered_class.download_name('registrations.csv') }}" class="btn btn-secondary">CSV exportieren ({{ filtered_class.short_title }})</a>
     {% else %}
     <a href="{{ url_for('event_manager.print_registrations', event=g.event.slug) }}" class="btn btn-secondary" target="_blank">TN/Wiegeliste drucken</a>
     <a href="{{ url_for('event_manager.class_registrations_as_csv', event=g.event.slug) }}" class="btn btn-secondary">CSV exportieren</a>

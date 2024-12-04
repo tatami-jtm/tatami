@@ -237,8 +237,10 @@ def display_all_zip():
     
     zip_file.close()
 
+    now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
     return Response(zip_io.getvalue(), mimetype='application/zip', headers={
-        'Content-Disposition': 'attachment;filename=all_lists.zip'
+        'Content-Disposition': f'attachment;filename=all_lists_{now}.zip'
     })
 
 

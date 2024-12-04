@@ -1,5 +1,6 @@
 from . import db
 import base64
+import re
 
 class Registration(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
@@ -304,6 +305,12 @@ class Group(db.Model):
     
     def all_participants_have_been_placed(self):
         return self.participants.filter(Participant.placement_index != None).count() > 0
+    
+    def download_name(self, file_suffix):
+        name = self.cut_title()
+        name = name.replace(".", "-")
+        name = re.sub('[^a-zA-Z0-9_-]', '', name)
+        return self.event_class.download_name(f"{name}_{file_suffix}")
 
 
 class Participant(db.Model):
