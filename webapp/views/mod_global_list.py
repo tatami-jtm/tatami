@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, flash, g, session, \
     request, redirect, url_for, abort
 
-from datetime import datetime as dt
+from datetime import datetime as dt, timedelta as td
 
 from .event_manager import check_and_apply_event
 from .devices import check_is_registered
@@ -95,6 +95,42 @@ def update_group(id):
     g.event.log(g.device.title, 'DEBUG', f'Die Gruppe {group.title} wurde bearbeitet')
 
     return redirect(url_for('mod_global_list.index', event=g.event.slug, group_list=request.form['group_list']))
+
+
+@mod_global_list_view.route('/group/<id>/parameters', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def parameters(id):
+    if not g.device.event_role.may_use_global_list:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+    
+    group = g.event.groups.filter_by(id=id).one_or_404()
+
+    break_time = group.event_class.between_fights_time
+    diff_delta = td(0, break_time)
+    saved_participant = None
+
+    if group.participants.count() == 0:
+        abort(400)
+
+    if request.method == 'POST':
+        participant = group.participants.filter_by(id=request.form['participant_id']).one_or_404()
+        participant.disqualified = 'disqualified' in request.form
+        participant.removed = 'removed' in request.form
+        participant.removal_cause = request.form['removal_cause']
+
+        print(dt.fromisoformat(request.form['last_fight_at']) - diff_delta)
+        participant.last_fight_at = (dt.fromisoformat(request.form['last_fight_at']) - diff_delta)
+
+        db.session.commit()
+
+        print(participant.last_fight_at)
+
+        saved_participant = participant.id
+
+    return render_template('mod_global_list/parameters.html', group=group, diff_delta=diff_delta,
+                           saved_participant=saved_participant)
 
 
 @mod_global_list_view.route('/rotate-all', methods=['GET', 'POST'])
