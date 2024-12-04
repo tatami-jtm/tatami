@@ -1,0 +1,21 @@
+{% extends "layouts/admin.html" %}
+{% block title %}Administrationsbereich{% endblock %}
+{% block body %}
+
+<h1 class="mb-4">Problem melden</h1>
+
+<form action="" method="POST">
+    <div class="card card-semidialog mb-3">
+        <div class="card-body">
+            <p>Sie haben ein Problem bzw. benötigen Hilfe auf dieser Plattform? Bitte schildern Sie das Problem so genau wie möglich, damit wir Ihnen bestmöglich helfen können. Geben Sie ggf. das Turnier an, auf das sich das Problem bezieht.</p>
+
+            <label for="description" class="form-label">Problembeschreibung/Anfrage</label>
+            <textarea name="description" id="description" class="form-control"></textarea>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Problem melden</button>
+        </div>
+    </div>
+</form>
+
+{% endblock body %}

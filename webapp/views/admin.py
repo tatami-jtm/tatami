@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, abort, redirect,\
     url_for, request, flash, jsonify
 from flask_security import login_required, current_user
 
-from ..models import db, User, Role, Event, EventClass, ListSystem, ListSystemRule
+from ..models import db, User, Role, Event, EventClass, ListSystem, ListSystemRule, HelpRequest
 
 from ..helpers import _get_or_create
 
@@ -340,3 +340,26 @@ def event_class_template(id):
         "default_maximal_size": event_class.default_maximal_size,
         "weight_generator": event_class.weight_generator.split("\n") if event_class.weight_generator else [],
     })
+
+
+@admin_view.route('/support/new', methods=['GET', 'POST'])
+@login_required
+def new_support():
+
+    if request.method == 'POST':
+        db.session.add(HelpRequest(
+            user=current_user,
+            resolution='',
+            created_at=datetime.now(),
+            resolved=False,
+            resolved_at=None,
+            description=request.form['description']
+        ))
+
+        db.session.commit()
+
+        flash("Ihre Problemmeldung wurde angelegt. Wir melden uns bald bei Ihnen.", 'success')
+
+        return redirect(url_for('admin.index'))
+    
+    return render_template("admin/support/new.html")
