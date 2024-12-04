@@ -22,6 +22,7 @@ class Role(db.Model, RoleMixin):
     description = db.Column(db.String(255))
 
     is_admin = db.Column(db.Boolean)
+    is_support = db.Column(db.Boolean)
     may_create_tournaments = db.Column(db.Boolean)
     may_manage_users = db.Column(db.Boolean)
     may_alter_presets = db.Column(db.Boolean)
@@ -52,6 +53,7 @@ class User(db.Model, UserMixin):
         if self._privilege is None:
             self._privilege = {
                 "admin": False,
+                "support": False,
                 "create_tournaments": False,
                 "manage_users": False,
                 "alter_presets": False,
@@ -66,6 +68,8 @@ class User(db.Model, UserMixin):
                     self._privilege['manage_users'] = True
                 if role.may_alter_presets:
                     self._privilege['alter_presets'] = True
+                if role.is_support:
+                    self._privilege['support'] = True
 
         return priv in self._privilege.keys() and (
             self._privilege['admin'] or self._privilege[priv])
@@ -82,3 +86,16 @@ class User(db.Model, UserMixin):
             evt_list = [*filter(lambda e: now <= e.last_day, evt_list)]
 
         return evt_list
+
+
+class HelpRequest(db.Model, RoleMixin):
+    id = db.Column(db.Integer(), primary_key=True)
+    description = db.Column(db.Text)
+    resolution = db.Column(db.Text)
+    created_at = db.Column(db.DateTime())
+
+    resolved = db.Column(db.Boolean)
+    resolved_at = db.Column(db.DateTime())
+
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    user = db.relationship('User', backref=db.backref('help_requests', lazy='dynamic'))
