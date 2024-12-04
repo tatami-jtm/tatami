@@ -9,7 +9,46 @@
     <form action="" method="POST">
         <div class="card card-semidialog">
             <div class="card-body pb-0">
-                <p></p>
+                <p class="mb-3">Es werden automatisch Teams im Rotationsverfahren gebildet.</p>
+                <div class="mb-3">
+                    <label for="team_name_generator_id" class="form-label">Vorlage für die Team-Bezeichnungen</label>
+                    <select class="form-select" id="team_name_generator_id" name="team_name_generator_id">
+                        {% for generator in team_name_generators %}
+                        <option value="{{ generator.id }}">{{ generator.title }} (bis zu {{ generator.item_count }} Teams)</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="card-body pb-0 border-top">
+                <p class="mb-3">Die folgende Team-Einteilung wird vorgeschlagen:</p>
+                {% for pool in pool_data %}
+                <h3 class="fw-bold mt-3 mb-3">Pool #{{ loop.index }}</h3>
+
+                <div class="csv-wrapper">
+                    <table class="csv-table">
+                        <thead>
+                            <tr class="csv-table-firstrow">
+                                <th class="csv-table-firstcol"></th>
+                                {% for row in pool[0] %}
+                                {% if row %}
+                                <th>-{{ row[-1][0].verified_weight / 1000 }}kg</th>
+                                {% else %}<th>n/a</th>{% endif %}
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        {% for row in pool[1] %}
+                        <tr>
+                            <th class="csv-table-firstcol">Team {{ loop.index }}</th>
+                            {% for col in row %}
+                            {% for reg in col %}
+                            <td>{{ reg.short_name() }}<br>{{ reg.verified_weight/1000 }}</td>
+                            {% endfor %}
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                {% endfor %}
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary btn-3d">Einteilung erstellen</button>

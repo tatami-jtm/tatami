@@ -1000,6 +1000,16 @@ select.w-min {
     position: relative;
 }
 
+.csv-wrapper {
+    overflow: auto;
+    padding: 0.15rem;
+}
+
+.csv-wrapper .csv-table {
+    width: auto;
+    min-width: 100%;
+}
+
 .csv-table th,
 .csv-table td {
     border: 1px solid #eee;
@@ -1012,7 +1022,13 @@ select.w-min {
     font-family: monospace;
 }
 
+.csv-wrapper .csv-table th,
+.csv-wrapper .csv-table td {
+    min-width: 150px;
+}
+
 .csv-table th.csv-table-firstcol {
+    min-width: 60px;
     width: 60px;
     max-width: 60px;
     border-color: #ccc;
@@ -1031,6 +1047,10 @@ select.w-min {
 .csv-table thead th {
     position: sticky;
     top: 3rem;
+}
+
+.csv-wrapper .csv-table thead th {
+    top: 0;
 }
 
 .csv-table td.csv-table-abbreviated {

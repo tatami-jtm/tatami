@@ -7,7 +7,9 @@ from .event_manager import check_and_apply_event, check_event_is_in_team_mode
 from .devices import check_is_registered
 from .mod_placement import provide_classes_query, _get_weight_classes
 
-from ..models import db, TeamRegistration, TeamRow, Team, TeamMember, Registration
+from ..models import db, TeamRow, Team, TeamMember, Registration, TeamNameGenerator
+
+from .. import helpers
 
 mod_team_building_view = Blueprint('mod_team_building', __name__)
 
@@ -234,15 +236,64 @@ def rotation(id):
     
     if event_class.team_rows.count() > 0 or not event_class.use_proximity_weight_mode:
         return redirect(url_for('mod_team_building.for_class', event=g.event.slug, id=event_class.id))
+    
+    eligible_registrations = event_class.registrations.filter_by(weighed_in=True, registered=True) \
+                                        .order_by(Registration.verified_weight.asc()).all()
 
-    # TODO: smth
+    max_delta=event_class.default_maximal_proximity
+    max_teams=event_class.default_maximal_group_count
+    max_rows=event_class.default_maximal_size
+    weight_diff = eligible_registrations[-1].verified_weight - eligible_registrations[0].verified_weight
+
+    if event_class.proximity_uses_percentage_instead_of_absolute:
+        delta_match_func = (lambda w1, w2, max_delta: w2 * (1 + max_delta/100) >= w1)
+        min_max_delta = eligible_registrations[0].verified_weight * max_delta / 100
+        
+    else:
+        delta_match_func = (lambda w1, w2, max_delta: w1 - w2 <= max_delta / 1000)    
+        min_max_delta = max_delta * 0.8 # correction factor
+
+    pool_max_delta = min_max_delta * max_rows
+    pool_count = max(1, weight_diff // pool_max_delta)
+    pool_actual_size = len(eligible_registrations) / pool_count
+
+    pools = [[]]
+
+    for reg in eligible_registrations:
+        if len(pools[-1]) == 0:
+            pools[-1].append(reg)
+        
+        else:
+            if len(pools[-1]) < pool_actual_size:
+                pools[-1].append(reg)
+            
+            else:
+                pools.append([reg])
+
+    pool_data = []
+    for pool in pools:
+        matrix, suggestion = helpers.build_team_rotation(
+            pool,
+            delta_match_func=delta_match_func,
+            item_weight_func=lambda reg: reg.verified_weight / 1000,
+            max_delta=max_delta,
+            max_teams=max_teams,
+            max_rows=max_rows
+        )
+
+        matrix = [[*filter(lambda x: x, i)] for i in matrix]
+        pool_data.append([matrix, suggestion])
+
+    team_name_generators = TeamNameGenerator.query.filter_by(enabled=True).all()
 
     if request.method == 'POST':
         # TODO: smth
         return redirect(url_for('mod_team_building.for_class', event=g.event.slug, id=event_class.id))
 
     return render_template("mod_team_building/rotation.html",
-                               event_class=event_class)
+                               event_class=event_class,
+                               pool_data=pool_data,
+                               team_name_generators=team_name_generators)
 
 
 @mod_team_building_view.route('/class/<id>/team/<team>/print', methods=['GET'])
