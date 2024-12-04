@@ -81,6 +81,9 @@ def update_user(id):
         for role in roles:
             if role.is_admin and not current_user.has_privilege('admin'):
                 continue
+            if role.is_support and not current_user.has_privilege(
+                    'support'):
+                continue
             if role.may_manage_users and not current_user.has_privilege(
                     'manage_users'):
                 continue
@@ -161,6 +164,7 @@ def create_role():
     role.name = request.form['name']
     role.description = request.form['description']
     role.is_admin = False
+    role.is_support = False
     role.may_manage_users = False
     role.may_create_tournaments = False
     role.may_alter_presets = False
@@ -170,6 +174,9 @@ def create_role():
 
     if current_user.has_privilege('manage_users'):
         role.may_manage_users = 'may_manage_users' in request.form
+
+    if current_user.has_privilege('support'):
+        role.is_support = 'is_support' in request.form
 
     if current_user.has_privilege('create_tournaments'):
         role.may_create_tournaments = 'may_create_tournaments' in request.form
@@ -211,6 +218,9 @@ def update_role(id):
 
     if current_user.has_privilege('admin'):
         role.is_admin = 'is_admin' in request.form
+
+    if current_user.has_privilege('support'):
+        role.is_support = 'is_support' in request.form
 
     if current_user.has_privilege('manage_users'):
         role.may_manage_users = 'may_manage_users' in request.form
