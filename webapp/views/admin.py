@@ -10,6 +10,12 @@ from datetime import datetime
 
 admin_view = Blueprint('admin', __name__)
 
+@admin_view.context_processor
+def inject_support_tickets():
+    return {
+        "open_support_tickets": HelpRequest.query.filter_by(resolved=False).count()
+    }
+
 
 @admin_view.route('/')
 @login_required
@@ -363,3 +369,31 @@ def new_support():
         return redirect(url_for('admin.index'))
     
     return render_template("admin/support/new.html")
+
+
+@admin_view.route('/support')
+@login_required
+def support_tickets():
+    if not current_user.has_privilege('support'):
+        abort(404)
+
+    support_tickets = HelpRequest.query.filter_by(resolved=False).all()
+    
+    return render_template("admin/support/tickets.html", support_tickets=support_tickets)
+
+
+@admin_view.route('/support/<id>/resolve', methods=['POST'])
+@login_required
+def resolve_ticket(id):
+    if not current_user.has_privilege('support'):
+        abort(404)
+
+    support_ticket = HelpRequest.query.filter_by(resolved=False, id=id).one_or_404()
+
+    support_ticket.resolved = True
+    support_ticket.resolved_at = datetime.now()
+    support_ticket.resolution = request.form['resolution']
+
+    db.session.commit()
+
+    return redirect(url_for('admin.support_tickets'))
