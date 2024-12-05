@@ -69,4 +69,24 @@
         </div>
     </div>
 </div>
+
+{% if current_user.help_requests_that_are_open_or_recently_resolved().count() > 0 %}
+<div class="card">
+    <div class="card-header">Ihre Support-Anfragen</div>
+    {% for request in current_user.help_requests_that_are_open_or_recently_resolved() %}
+    <div class="card-body {{ 'border-top' if not loop.first }} py-2">
+        <p class="mb-1"><strong>Problem:</strong> {{ request.description }}</p>
+        {% if request.resolved %}
+        <p class="mb-0"><strong class="text-success">Behoben</strong> am {{ request.resolved_at.strftime("%d.%m.%Y") }}: {{ request.resolution }}</p>
+        {% else %}
+        <p class="mb-0"><strong class="text-danger">Noch offen</strong></p>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="card-body">
+        <p>Sie haben gerade keine aktuellen Support-Anfragen.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 {% endblock body %}

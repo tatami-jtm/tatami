@@ -1,6 +1,6 @@
 from . import db
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask_security import UserMixin, RoleMixin
 
@@ -86,6 +86,9 @@ class User(db.Model, UserMixin):
             evt_list = [*filter(lambda e: now <= e.last_day, evt_list)]
 
         return evt_list
+    
+    def help_requests_that_are_open_or_recently_resolved(self):
+        return HelpRequest.that_are_open_or_recently_resolved().filter_by(user=self)
 
 
 class HelpRequest(db.Model, RoleMixin):
@@ -99,3 +102,8 @@ class HelpRequest(db.Model, RoleMixin):
 
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
     user = db.relationship('User', backref=db.backref('help_requests', lazy='dynamic'))
+
+    @classmethod
+    def that_are_open_or_recently_resolved(cls):
+        cutoff_date = datetime.today() - timedelta(days=30)
+        return cls.query.filter((cls.resolved==False) | (cls.resolved_at > cutoff_date)).order_by(cls.created_at.desc())
