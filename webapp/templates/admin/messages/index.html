@@ -24,7 +24,7 @@
                 <td>{{ msg.user.display_name if msg.user else 'System' }}</td>
                 <td>{{ msg.created_at.strftime("%d.%m.%Y") }}</td>
                 <td>
-                    <form action="" method="POST" class="d-flex">
+                    <form action="{{ url_for('admin.delete_message', id=msg.id) }}" method="POST" class="d-flex">
                         <a href="{{ url_for('admin.message', id=msg.id) }}" class="m-1 btn btn-secondary btn-sm">Bearbeiten</a>
                         <button type="submit" class="m-1 btn btn-outline-danger btn-sm">Entfernen</button>
                     </form>

@@ -487,8 +487,34 @@ def new_message():
         db.session.add(message)
         db.session.commit()
 
-        flash('Systemmeldung erfolgreich gespeichert.', 'success')
+        flash('Systemmeldung erfolgreich angelegt.', 'success')
+
+        return redirect(url_for('admin.message', id=message.id))
 
     users = User.query.all()
     
     return render_template("admin/messages/edit.html", message=message, action='new', users=users)
+
+
+@admin_view.route('/messages/<id>/delete', methods=['POST'])
+@login_required
+def delete_message(id):
+    if not current_user.has_privilege('admin'):
+        abort(404)
+
+    message = SystemMessage(
+        created_at=datetime.now(),
+        removed=False,
+        removed_at=None,
+        user=current_user
+    )
+
+    message = SystemMessage.query.filter_by(id=id).one_or_404()
+    message.removed = True
+    message.removed_at = datetime.now()
+
+    db.session.commit()
+
+    flash('Systemmeldung erfolgreich gelöscht.', 'success')
+
+    return redirect(url_for('admin.messages'))
