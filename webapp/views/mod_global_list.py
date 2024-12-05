@@ -121,12 +121,12 @@ def parameters(id):
         participant.removed = 'removed' in request.form
         participant.removal_cause = request.form['removal_cause']
 
-        print(dt.fromisoformat(request.form['last_fight_at']) - diff_delta)
-        participant.last_fight_at = (dt.fromisoformat(request.form['last_fight_at']) - diff_delta)
+        if request.form['last_fight_at'] == '':
+            participant.last_fight_at = None
+        else:
+            participant.last_fight_at = (dt.fromisoformat(request.form['last_fight_at']) - diff_delta)
 
         db.session.commit()
-
-        print(participant.last_fight_at)
 
         saved_participant = participant.id
 

@@ -41,7 +41,7 @@
                             </td>
 
                             <td>
-                                <input class="form-control" type="datetime-local" name="last_fight_at" value="{{ (part.last_fight_at + diff_delta).isoformat().rsplit(":", 1)[0] }}">
+                                <input class="form-control" type="datetime-local" name="last_fight_at" value="{{ (part.last_fight_at + diff_delta).isoformat().rsplit(":", 1)[0] if part.last_fight_at }}">
                             </td>
                             <td>
                                 {% if saved_participant == part.id %}
