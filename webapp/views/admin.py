@@ -2,7 +2,8 @@ from flask import Blueprint, render_template, abort, redirect,\
     url_for, request, flash, jsonify
 from flask_security import login_required, current_user
 
-from ..models import db, User, Role, Event, EventClass, ListSystem, ListSystemRule, HelpRequest
+from ..models import db, User, Role, Event, EventClass, ListSystem, \
+    ListSystemRule, HelpRequest, SystemMessage
 
 from ..helpers import _get_or_create
 
@@ -26,7 +27,8 @@ def inject_support_tickets():
 @login_required
 def index():
     events = current_user.get_all_supervised_events(in_the_future=True)
-    return render_template("admin/index.html", events=events)
+    system_messages = SystemMessage.that_are_not_removed()
+    return render_template("admin/index.html", events=events, system_messages=system_messages)
 
 
 @admin_view.route('/toggle-display-mode-preference')

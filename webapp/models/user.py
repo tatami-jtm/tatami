@@ -91,7 +91,7 @@ class User(db.Model, UserMixin):
         return HelpRequest.that_are_open_or_recently_resolved().filter_by(user=self)
 
 
-class HelpRequest(db.Model, RoleMixin):
+class HelpRequest(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     description = db.Column(db.Text)
     resolution = db.Column(db.Text)
@@ -108,3 +108,19 @@ class HelpRequest(db.Model, RoleMixin):
     def that_are_open_or_recently_resolved(cls):
         cutoff_date = datetime.today() - timedelta(days=30)
         return cls.query.filter((cls.resolved==False) | (cls.resolved_at > cutoff_date)).order_by(cls.created_at.desc())
+
+
+class SystemMessage(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    description = db.Column(db.Text)
+    created_at = db.Column(db.DateTime())
+
+    removed = db.Column(db.Boolean)
+    removed_at = db.Column(db.DateTime())
+
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    user = db.relationship('User')
+
+    @classmethod
+    def that_are_not_removed(cls):
+        return cls.query.filter(cls.removed==False).order_by(cls.created_at.desc()).all()
