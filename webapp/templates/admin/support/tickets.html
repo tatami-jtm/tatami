@@ -13,7 +13,7 @@
                 <div class="col-6">
                     <p><strong>Problembeschreibung:</strong></p>
                     <p>{{ ticket.description }}</p>
-                    <p>von {{ ticket.user.display_name }}</p>
+                    <p>von <a href="{{ url_for('admin.edit_user', id=ticket.user.id) }}">{{ ticket.user.display_name }}</a></p>
                 </div>
                 <div class="col-6">
                     <label for="resolution" class="form-label">Antwort</label>
