@@ -1,0 +1,37 @@
+{% extends "layouts/admin.html" %}
+{% block title %}Administrationsbereich{% endblock %}
+{% block body %}
+
+<div class="float-end pt-2"><a href="{{ url_for('admin.new_message') }}" class="btn btn-primary">Nachricht anlegen</a></div>
+<h1 class="mb-4">Systemnachrichten</h3>
+
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Beschreibung</th>
+                <th>Autor</th>
+                <th>Datum</th>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        {% for msg in messages %}
+            <tr>
+                <td>{{ msg.id }}</td>
+                <td>{{ msg.description[:120] }}{{ '...' if msg.description|length > 120 }}</td>
+                <td>{{ msg.user.display_name if msg.user else 'System' }}</td>
+                <td>{{ msg.created_at.strftime("%d.%m.%Y") }}</td>
+                <td>
+                    <form action="{{ url_for('admin.delete_message', id=msg.id) }}" method="POST" class="d-flex">
+                        <a href="{{ url_for('admin.message', id=msg.id) }}" class="m-1 btn btn-secondary btn-sm">Bearbeiten</a>
+                        <button type="submit" class="m-1 btn btn-outline-danger btn-sm">Entfernen</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock body %}

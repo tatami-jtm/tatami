@@ -24,9 +24,9 @@
                     <span class="badge text-bg-{{ 'secondary' if not role.is_admin else 'primary' }}" title="{{ role.description }}">{{ role.name }}</span>
                 {% endfor %}
             </div>
-            <div class="card-body border-top">
-                <a href="{{ url_for('admin.edit_user_me') }}" class="btn btn-secondary btn-sm w-100">Profil bearbeiten</a>
-                {# <a href="" class="btn btn-outline-danger btn-sm">Problem melden</a> #}
+            <div class="card-footer">
+                <a href="{{ url_for('admin.edit_user_me') }}" class="btn btn-secondary btn-sm">Profil bearbeiten</a>
+                <a href="{{ url_for('admin.new_support') }}" class="btn btn-outline-danger btn-sm">Problem melden</a>
             </div>
         </div>
     </div>
@@ -34,11 +34,11 @@
         <div class="card">
             <div class="card-header">Deine Veranstaltungen</div>
             {% if events|length == 0 %}
-            <div class="card-body border-bottom">
+            <div class="card-body">
                 <p>Du hast keine aktuellen Veranstaltungen.</p>
             </div>
             {% else %}
-            <div class="card-body border-bottom p-1">
+            <div class="card-body p-1">
                 <div class="list-group list-group-flush">
                 {% for evt in events %}
                     <a href="{{ url_for('event_manager.index', event=evt.slug) }}" class="list-group-item list-group-item-action">
@@ -52,7 +52,7 @@
                 </div>
             </div>
             {% endif %}
-            <div class="card-body">
+            <div class="card-footer">
                 <a href="{{ url_for('admin.events') }}" class="btn btn-primary btn-sm">Alle Veranstaltungen</a>
                 {% if current_user.has_privilege('create_tournaments') %}
                 <a href="{{ url_for('admin.new_event') }}" class="btn btn-secondary btn-sm">Veranstaltung hinzufügen</a>
@@ -63,10 +63,42 @@
     <div class="col-12 col-lg-3 mb-4">
         <div class="card">
             <div class="card-header">Systemnachrichten</div>
-            <div class="card-body">
-                <p>Hier gibt es zurzeit nichts.</p>
+            {% for msg in system_messages %}
+            <div class="card-body py-2">
+                <p class="fs-smaller mb-1 text-secondary">{{ msg.user.display_name if msg.user else 'System' }} am {{ msg.created_at.strftime("%d.%m.%Y") }}:</p>
+                <p class="mb-0">{{ msg.description }}</p>
             </div>
+            {% else %}
+            <div class="card-body">
+                <p class="mb-1">Hier gibt es zurzeit nichts zu sehen.</p>
+            </div>
+            {% endfor %}
+            {% if current_user.has_privilege('admin') %}
+            <div class="card-footer">
+                <a href="{{ url_for('admin.messages') }}" class="btn btn-secondary btn-sm">Meldungen bearbeiten</a>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
+
+{% if current_user.help_requests_that_are_open_or_recently_resolved().count() > 0 %}
+<div class="card">
+    <div class="card-header">Ihre Support-Anfragen</div>
+    {% for request in current_user.help_requests_that_are_open_or_recently_resolved() %}
+    <div class="card-body {{ 'border-top' if not loop.first }} py-2">
+        <p class="mb-1"><strong>Problem:</strong> {{ request.description }}</p>
+        {% if request.resolved %}
+        <p class="mb-0"><strong class="text-success">Behoben</strong> am {{ request.resolved_at.strftime("%d.%m.%Y") }}: {{ request.resolution }}</p>
+        {% else %}
+        <p class="mb-0"><strong class="text-danger">Noch offen</strong></p>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="card-body">
+        <p>Sie haben gerade keine aktuellen Support-Anfragen.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 {% endblock body %}

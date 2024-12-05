@@ -1,0 +1,28 @@
+{% extends "layouts/admin.html" %}
+{% block title %}Administrationsbereich{% endblock %}
+{% block body %}
+
+<h1>Systemnachricht {{ 'erstellen' if action == 'new' else 'bearbeiten' }}</h1>
+
+<form action="" method="POST">
+    <div class="mb-3 d-flex gap-1">
+        <button type="submit" class="btn btn-primary">Speichern</button>
+        <a href="{{ url_for('admin.messages') }}" class="btn btn-secondary">Abbrechen</a>
+    </div>
+
+    <div class="mb-3">
+        <label for="description" class="form-label">Inhalt</label>
+        <textarea name="description" id="description" class="form-control">{{ message.description or '' }}</textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="user_id" class="form-label">Autor*in</label>
+        <select name="user_id" id="user_id" class="form-select">
+            <option value="">(System)</option>
+            {% for user in users %}
+            <option value="{{ user.id }}" {{ 'selected' if user == message.user }}>#{{ user.id }} - {{ user.display_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</form>
+{% endblock body %}

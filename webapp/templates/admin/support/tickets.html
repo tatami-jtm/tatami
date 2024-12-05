@@ -1,0 +1,49 @@
+{% extends "layouts/admin.html" %}
+{% block title %}Administrationsbereich{% endblock %}
+{% block body %}
+
+<h1 class="mb-4">Support-Anfragen</h1>
+
+{% for ticket in support_tickets %}
+
+<div class="card card-semidialog mb-3">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-6">
+                <p><strong>Problembeschreibung:</strong></p>
+                <p>{{ ticket.description }}</p>
+                <p>von <a href="{{ url_for('admin.edit_user', id=ticket.user.id) }}">{{ ticket.user.display_name }}</a></p>
+            </div>
+            <div class="col-6">
+                <form action="{{ url_for('admin.resolve_ticket', id=ticket.id) }}" method="POST" id="resolve-{{ ticket.id }}">
+                    <label for="resolution" class="form-label">Antwort</label>
+                    <textarea name="resolution" id="resolution" class="form-control mb-3" tabindex="{{ ticket.id }}1"></textarea>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="row">
+            <div class="col-6 align-self-center">
+                {% if not ticket.escalated %}
+                <form action="{{ url_for('admin.escalate_ticket', id=ticket.id) }}" method="POST">
+                    <button type="submit" class="btn btn-outline-danger" tabindex="{{ ticket.id }}3">An Administrator*in eskalieren</button>
+                </form>
+                {% else %}
+                <p class="mb-0 p-3 py-1 text-danger border border-danger fw-bold text-center">An Administrator*in eskaliert!</p>
+                {% endif %}
+            </div>
+            <div class="col-6">
+                <button type="submit" class="btn btn-primary" form="resolve-{{ ticket.id }}" tabindex="{{ ticket.id }}2">Ticket schließen</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+
+<p>Gerade gibt es keine offenen Tickets &mdash; Yippie!</p>
+
+{% endfor %}
+
+{% endblock body %}

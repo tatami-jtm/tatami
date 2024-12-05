@@ -2,7 +2,8 @@ from flask import Blueprint, render_template, abort, redirect,\
     url_for, request, flash, jsonify
 from flask_security import login_required, current_user
 
-from ..models import db, User, Role, Event, EventClass, ListSystem, ListSystemRule
+from ..models import db, User, Role, Event, EventClass, ListSystem, \
+    ListSystemRule, HelpRequest, SystemMessage
 
 from ..helpers import _get_or_create
 
@@ -10,12 +11,24 @@ from datetime import datetime
 
 admin_view = Blueprint('admin', __name__)
 
+@admin_view.context_processor
+def inject_support_tickets():
+    if current_user.has_privilege('admin'):
+        return {
+            "open_support_tickets": HelpRequest.query.filter_by(resolved=False).count()
+        }
+    else:
+        return {
+            "open_support_tickets": HelpRequest.query.filter_by(resolved=False, escalated=False).count()
+        }
+
 
 @admin_view.route('/')
 @login_required
 def index():
     events = current_user.get_all_supervised_events(in_the_future=True)
-    return render_template("admin/index.html", events=events)
+    system_messages = SystemMessage.that_are_not_removed()
+    return render_template("admin/index.html", events=events, system_messages=system_messages)
 
 
 @admin_view.route('/toggle-display-mode-preference')
@@ -78,8 +91,12 @@ def update_user(id):
     if current_user.has_privilege('manage_users'):
         selected_role_ids = list(
             map(Role.query.get, request.form.getlist('roles')))
+        
         for role in roles:
             if role.is_admin and not current_user.has_privilege('admin'):
+                continue
+            if role.is_support and not current_user.has_privilege(
+                    'support'):
                 continue
             if role.may_manage_users and not current_user.has_privilege(
                     'manage_users'):
@@ -88,7 +105,7 @@ def update_user(id):
                     'create_tournaments'):
                 continue
             if role.may_alter_presets and not current_user.has_privilege(
-                    'may_alter_presets'):
+                    'alter_presets'):
                 continue
 
             if (role in selected_role_ids) and (role not in user.roles):
@@ -161,6 +178,7 @@ def create_role():
     role.name = request.form['name']
     role.description = request.form['description']
     role.is_admin = False
+    role.is_support = False
     role.may_manage_users = False
     role.may_create_tournaments = False
     role.may_alter_presets = False
@@ -170,6 +188,9 @@ def create_role():
 
     if current_user.has_privilege('manage_users'):
         role.may_manage_users = 'may_manage_users' in request.form
+
+    if current_user.has_privilege('support'):
+        role.is_support = 'is_support' in request.form
 
     if current_user.has_privilege('create_tournaments'):
         role.may_create_tournaments = 'may_create_tournaments' in request.form
@@ -211,6 +232,9 @@ def update_role(id):
 
     if current_user.has_privilege('admin'):
         role.is_admin = 'is_admin' in request.form
+
+    if current_user.has_privilege('support'):
+        role.is_support = 'is_support' in request.form
 
     if current_user.has_privilege('manage_users'):
         role.may_manage_users = 'may_manage_users' in request.form
@@ -330,3 +354,167 @@ def event_class_template(id):
         "default_maximal_size": event_class.default_maximal_size,
         "weight_generator": event_class.weight_generator.split("\n") if event_class.weight_generator else [],
     })
+
+
+@admin_view.route('/support/new', methods=['GET', 'POST'])
+@login_required
+def new_support():
+
+    if request.method == 'POST':
+        db.session.add(HelpRequest(
+            user=current_user,
+            resolution='',
+            created_at=datetime.now(),
+            resolved=False,
+            escalated=False,
+            resolved_at=None,
+            description=request.form['description']
+        ))
+
+        db.session.commit()
+
+        flash("Ihre Problemmeldung wurde angelegt. Wir melden uns bald bei Ihnen.", 'success')
+
+        return redirect(url_for('admin.index'))
+    
+    return render_template("admin/support/new.html")
+
+
+@admin_view.route('/support')
+@login_required
+def support_tickets():
+    if not current_user.has_privilege('support'):
+        abort(404)
+
+    support_tickets = HelpRequest.query.filter_by(resolved=False)
+    support_tickets = support_tickets.order_by(HelpRequest.escalated.desc(), HelpRequest.created_at.asc())
+
+    if not current_user.has_privilege('admin'):
+        support_tickets = support_tickets.filter_by(escalated=False)
+
+    support_tickets = support_tickets.all()
+    
+    return render_template("admin/support/tickets.html", support_tickets=support_tickets)
+
+
+@admin_view.route('/support/<id>/resolve', methods=['POST'])
+@login_required
+def resolve_ticket(id):
+    if not current_user.has_privilege('support'):
+        abort(404)
+
+    support_ticket = HelpRequest.query.filter_by(resolved=False, id=id).one_or_404()
+
+    support_ticket.resolved = True
+    support_ticket.resolved_at = datetime.now()
+    support_ticket.resolution = request.form['resolution']
+
+    db.session.commit()
+
+    return redirect(url_for('admin.support_tickets'))
+
+
+@admin_view.route('/support/<id>/escalate', methods=['POST'])
+@login_required
+def escalate_ticket(id):
+    if not current_user.has_privilege('support'):
+        abort(404)
+
+    support_ticket = HelpRequest.query.filter_by(resolved=False, id=id).one_or_404()
+    support_ticket.escalated = True
+    db.session.commit()
+
+    return redirect(url_for('admin.support_tickets'))
+
+
+@admin_view.route('/messages')
+@login_required
+def messages():
+    if not current_user.has_privilege('admin'):
+        abort(404)
+
+    messages = SystemMessage.query.filter_by(removed=False)
+    
+    return render_template("admin/messages/index.html", messages=messages)
+
+
+@admin_view.route('/messages/<id>', methods=['GET', 'POST'])
+@login_required
+def message(id):
+    if not current_user.has_privilege('admin'):
+        abort(404)
+
+    message = SystemMessage.query.filter_by(id=id).one_or_404()
+
+    if request.method == 'POST':
+        message.description = request.form['description']
+
+        if request.form['user_id'] == '':
+            message.user_id = None
+        else:
+            message.user_id = User.query.get_or_404(request.form['user_id']).id
+
+        db.session.commit()
+
+        flash('Systemmeldung erfolgreich gespeichert.', 'success')
+
+    users = User.query.all()
+    
+    return render_template("admin/messages/edit.html", message=message, action='edit', users=users)
+
+
+@admin_view.route('/messages/new', methods=['GET', 'POST'])
+@login_required
+def new_message():
+    if not current_user.has_privilege('admin'):
+        abort(404)
+
+    message = SystemMessage(
+        created_at=datetime.now(),
+        removed=False,
+        removed_at=None,
+        user=current_user
+    )
+
+    if request.method == 'POST':
+        message.description = request.form['description']
+
+        if request.form['user_id'] == '':
+            message.user_id = None
+        else:
+            message.user_id = User.query.get_or_404(request.form['user_id']).id
+
+        db.session.add(message)
+        db.session.commit()
+
+        flash('Systemmeldung erfolgreich angelegt.', 'success')
+
+        return redirect(url_for('admin.message', id=message.id))
+
+    users = User.query.all()
+    
+    return render_template("admin/messages/edit.html", message=message, action='new', users=users)
+
+
+@admin_view.route('/messages/<id>/delete', methods=['POST'])
+@login_required
+def delete_message(id):
+    if not current_user.has_privilege('admin'):
+        abort(404)
+
+    message = SystemMessage(
+        created_at=datetime.now(),
+        removed=False,
+        removed_at=None,
+        user=current_user
+    )
+
+    message = SystemMessage.query.filter_by(id=id).one_or_404()
+    message.removed = True
+    message.removed_at = datetime.now()
+
+    db.session.commit()
+
+    flash('Systemmeldung erfolgreich gelöscht.', 'success')
+
+    return redirect(url_for('admin.messages'))

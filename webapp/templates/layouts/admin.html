@@ -41,6 +41,18 @@
                             <a class="nav-link" href="{{ url_for('admin.presets') }}">Voreinstellungen</a>
                         </div>
                         {% endif %}
+                        {% if current_user.has_privilege('support') %}
+                        <div class="nav-item">
+                            {% if open_support_tickets > 0 %}
+                            <a class="nav-link" href="{{ url_for('admin.support_tickets') }}">
+                                Support
+                                <span class="badge text-bg-danger">{{ open_support_tickets }}</span>
+                            </a>
+                            {% else %}
+                            <a class="nav-link" href="{{ url_for('admin.support_tickets') }}">Support</a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="navbar-nav">
                         <div class="nav-item">
