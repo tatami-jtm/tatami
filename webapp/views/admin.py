@@ -461,3 +461,34 @@ def message(id):
     users = User.query.all()
     
     return render_template("admin/messages/edit.html", message=message, action='edit', users=users)
+
+
+@admin_view.route('/messages/new', methods=['GET', 'POST'])
+@login_required
+def new_message():
+    if not current_user.has_privilege('admin'):
+        abort(404)
+
+    message = SystemMessage(
+        created_at=datetime.now(),
+        removed=False,
+        removed_at=None,
+        user=current_user
+    )
+
+    if request.method == 'POST':
+        message.description = request.form['description']
+
+        if request.form['user_id'] == '':
+            message.user_id = None
+        else:
+            message.user_id = User.query.get_or_404(request.form['user_id']).id
+
+        db.session.add(message)
+        db.session.commit()
+
+        flash('Systemmeldung erfolgreich gespeichert.', 'success')
+
+    users = User.query.all()
+    
+    return render_template("admin/messages/edit.html", message=message, action='new', users=users)

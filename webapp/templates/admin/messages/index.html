@@ -2,7 +2,7 @@
 {% block title %}Administrationsbereich{% endblock %}
 {% block body %}
 
-<div class="float-end pt-2"><a href="" class="btn btn-primary">Nachricht anlegen</a></div>
+<div class="float-end pt-2"><a href="{{ url_for('admin.new_message') }}" class="btn btn-primary">Nachricht anlegen</a></div>
 <h1 class="mb-4">Systemnachrichten</h3>
 
 <div class="table-responsive">
