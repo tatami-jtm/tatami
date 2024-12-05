@@ -75,7 +75,7 @@
             {% endfor %}
             {% if current_user.has_privilege('admin') %}
             <div class="card-footer">
-                <a href="" class="btn btn-secondary btn-sm">Meldungen bearbeiten</a>
+                <a href="{{ url_for('admin.messages') }}" class="btn btn-secondary btn-sm">Meldungen bearbeiten</a>
             </div>
             {% endif %}
         </div>

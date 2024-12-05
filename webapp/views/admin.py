@@ -425,3 +425,14 @@ def escalate_ticket(id):
     db.session.commit()
 
     return redirect(url_for('admin.support_tickets'))
+
+
+@admin_view.route('/messages')
+@login_required
+def messages():
+    if not current_user.has_privilege('admin'):
+        abort(404)
+
+    messages = SystemMessage.query.filter_by(removed=False)
+    
+    return render_template("admin/messages/index.html", messages=messages)
