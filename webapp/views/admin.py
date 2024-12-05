@@ -12,9 +12,14 @@ admin_view = Blueprint('admin', __name__)
 
 @admin_view.context_processor
 def inject_support_tickets():
-    return {
-        "open_support_tickets": HelpRequest.query.filter_by(resolved=False).count()
-    }
+    if current_user.has_privilege('admin'):
+        return {
+            "open_support_tickets": HelpRequest.query.filter_by(resolved=False).count()
+        }
+    else:
+        return {
+            "open_support_tickets": HelpRequest.query.filter_by(resolved=False, escalated=False).count()
+        }
 
 
 @admin_view.route('/')
@@ -359,6 +364,7 @@ def new_support():
             resolution='',
             created_at=datetime.now(),
             resolved=False,
+            escalated=False,
             resolved_at=None,
             description=request.form['description']
         ))
@@ -378,7 +384,13 @@ def support_tickets():
     if not current_user.has_privilege('support'):
         abort(404)
 
-    support_tickets = HelpRequest.query.filter_by(resolved=False).all()
+    support_tickets = HelpRequest.query.filter_by(resolved=False)
+    support_tickets = support_tickets.order_by(HelpRequest.escalated.desc(), HelpRequest.created_at.asc())
+
+    if not current_user.has_privilege('admin'):
+        support_tickets = support_tickets.filter_by(escalated=False)
+
+    support_tickets = support_tickets.all()
     
     return render_template("admin/support/tickets.html", support_tickets=support_tickets)
 
@@ -395,6 +407,19 @@ def resolve_ticket(id):
     support_ticket.resolved_at = datetime.now()
     support_ticket.resolution = request.form['resolution']
 
+    db.session.commit()
+
+    return redirect(url_for('admin.support_tickets'))
+
+
+@admin_view.route('/support/<id>/escalate', methods=['POST'])
+@login_required
+def escalate_ticket(id):
+    if not current_user.has_privilege('support'):
+        abort(404)
+
+    support_ticket = HelpRequest.query.filter_by(resolved=False, id=id).one_or_404()
+    support_ticket.escalated = True
     db.session.commit()
 
     return redirect(url_for('admin.support_tickets'))

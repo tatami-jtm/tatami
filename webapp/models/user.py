@@ -99,6 +99,7 @@ class HelpRequest(db.Model, RoleMixin):
 
     resolved = db.Column(db.Boolean)
     resolved_at = db.Column(db.DateTime())
+    escalated = db.Column(db.Boolean)
 
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
     user = db.relationship('User', backref=db.backref('help_requests', lazy='dynamic'))
