@@ -84,6 +84,7 @@ def update_user(id):
     if current_user.has_privilege('manage_users'):
         selected_role_ids = list(
             map(Role.query.get, request.form.getlist('roles')))
+        
         for role in roles:
             if role.is_admin and not current_user.has_privilege('admin'):
                 continue
@@ -97,7 +98,7 @@ def update_user(id):
                     'create_tournaments'):
                 continue
             if role.may_alter_presets and not current_user.has_privilege(
-                    'may_alter_presets'):
+                    'alter_presets'):
                 continue
 
             if (role in selected_role_ids) and (role not in user.roles):
