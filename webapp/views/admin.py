@@ -436,3 +436,28 @@ def messages():
     messages = SystemMessage.query.filter_by(removed=False)
     
     return render_template("admin/messages/index.html", messages=messages)
+
+
+@admin_view.route('/messages/<id>', methods=['GET', 'POST'])
+@login_required
+def message(id):
+    if not current_user.has_privilege('admin'):
+        abort(404)
+
+    message = SystemMessage.query.filter_by(id=id).one_or_404()
+
+    if request.method == 'POST':
+        message.description = request.form['description']
+
+        if request.form['user_id'] == '':
+            message.user_id = None
+        else:
+            message.user_id = User.query.get_or_404(request.form['user_id']).id
+
+        db.session.commit()
+
+        flash('Systemmeldung erfolgreich gespeichert.', 'success')
+
+    users = User.query.all()
+    
+    return render_template("admin/messages/edit.html", message=message, action='edit', users=users)

@@ -2,8 +2,8 @@
 {% block title %}Administrationsbereich{% endblock %}
 {% block body %}
 
-<div class="float-end"><a href="" class="btn btn-primary">Nachricht anlegen</a></div>
-<h3 class="mb-4">Systemnachrichten</h3>
+<div class="float-end pt-2"><a href="" class="btn btn-primary">Nachricht anlegen</a></div>
+<h1 class="mb-4">Systemnachrichten</h3>
 
 <div class="table-responsive">
     <table class="table table-hover table-bordered">
@@ -25,7 +25,7 @@
                 <td>{{ msg.created_at.strftime("%d.%m.%Y") }}</td>
                 <td>
                     <form action="" method="POST" class="d-flex">
-                        <a href="" class="m-1 btn btn-secondary btn-sm">Bearbeiten</a>
+                        <a href="{{ url_for('admin.message', id=msg.id) }}" class="m-1 btn btn-secondary btn-sm">Bearbeiten</a>
                         <button type="submit" class="m-1 btn btn-outline-danger btn-sm">Entfernen</button>
                     </form>
                 </td>
