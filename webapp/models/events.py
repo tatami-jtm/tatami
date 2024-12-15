@@ -28,7 +28,7 @@ class Event(db.Model):
     
 
     scoreboard_ruleset_id = db.Column(db.Integer(), db.ForeignKey('scoreboard_ruleset.id'))
-    scoreboard_ruleset = db.relationship('ScoreboardRulset')
+    scoreboard_ruleset = db.relationship('ScoreboardRuleset')
 
     def setting(self, key, default_value=None, is_json=True):
         item = self.settings.filter_by(key=key).one_or_none()
@@ -148,6 +148,14 @@ class Event(db.Model):
         except:
             # Don't raise an error when a log attempt fails
             pass
+
+    def sb_rules(self):
+        if self.scoreboard_ruleset is not None:
+            return self.scoreboard_ruleset.get_data()
+        
+        else:
+            # TODO: implement proper default ruleset
+            ScoreboardRuleset.query.first().get_data()
 
     @classmethod
     def from_slug(cls, slug):
@@ -322,6 +330,9 @@ class ScoreboardRuleset(db.Model):
     title = db.Column(db.String(50))
     enabled = db.Column(db.Boolean)
     rules = db.Column(db.Text)
+
+    def get_data(self):
+        return json.loads(self.rules)        
 
     @classmethod
     def all_enabled(cls):
