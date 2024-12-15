@@ -6,7 +6,7 @@ from flask_babel import Babel
 from .config_base import SETTINGS
 from . import setup_data
 
-from .models import db, User, Role, Event
+from .models import db, User, Role, Event, ScoreboardRuleset
 from .views import admin_view, eventmgr_view, devices_view, mod_scoreboard_view, mod_registrations_view, mod_weighin_view, mod_placement_view, mod_global_list_view, mod_list_view, mod_beamer_view, mod_results_view
 
 app = Flask(__name__, instance_path=SETTINGS['INSTANCE_PATH'])
@@ -70,7 +70,11 @@ def api_events():
 
 @app.route("/scoreboard")
 def scoreboard():
-    return render_template("scoreboard.html")
+    if 'ruleset' in request.values:
+        rules = ScoreboardRuleset.query.get_or_404(request.values['ruleset']).get_data()
+    else:
+        rules = ScoreboardRuleset.default().get_data()
+    return render_template("scoreboard.html", rules=rules)
 
 @app.errorhandler(404)
 @app.errorhandler(405)

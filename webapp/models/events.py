@@ -154,8 +154,7 @@ class Event(db.Model):
             return self.scoreboard_ruleset.get_data()
         
         else:
-            # TODO: implement proper default ruleset
-            ScoreboardRuleset.query.first().get_data()
+            ScoreboardRuleset.default().get_data()
 
     @classmethod
     def from_slug(cls, slug):
@@ -337,3 +336,8 @@ class ScoreboardRuleset(db.Model):
     @classmethod
     def all_enabled(cls):
         return cls.query.filter_by(enabled=True)
+    
+    @classmethod
+    def default(cls):
+        # TODO: implement proper default ruleset
+        return cls.all_enabled().first()

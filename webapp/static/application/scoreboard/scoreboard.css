@@ -124,7 +124,7 @@ body {
     grid-column-end: 3;
     display: flex;
     align-items: stretch;
-    justify-content: center;
+    justify-content: flex-start;
 }
 .view-main .main-grid .main-row-score.row-white {
     grid-row: 2;
@@ -143,80 +143,94 @@ body {
     display: none;
 }
 
-.view-main .main-grid .main-row-score .score-text {
+
+.view-main .main-grid .main-row-score .score-grid {
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    display: flex;
+    position: relative;
+}
+
+.view-main .main-grid .main-row-score .score-grid .score-full_text {
     font-size: 16rem;
     font-weight: bold;
     text-align: center;
     flex-grow: 1;
-    align-self: center;
-}
-
-.view-main .main-grid .main-row-score .score-text:empty {
-    display: none;
-}
-
-
-.view-main .main-grid .main-row-score .score-grid {
-    display: none;
-    align-items: center;
-    justify-content: space-around;
+    position: absolute;
+    height: 1em;
     width: 100%;
+    line-height: 1.0;
+    background-color: white;
 }
-.view-main .main-grid .main-row-score .score-text:empty + .score-grid {
-    display: flex;
+.view-main .main-grid .main-row-score .score-grid .score-full_text:not(.show) {
+    display: none;
 }
 
-.view-main .main-grid .main-row-score .score-grid .score-wazaari {
-    width: 25rem;
+.view-main .main-grid .main-row-score .score-grid .score-counter {
     flex-grow: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 200px;
+    font-weight: bold;
+    height: 255px;
+    width: 9rem;
+    text-align: center;
+    line-height: 1.0;
+    padding-top: 27.5px;
+    border-radius: 1rem;
+    margin: 0 1.25rem;
+    margin-right: 0;
+    text-shadow: .125rem .125rem 1rem #0006;
+}
+.view-main .main-grid .main-row-score .score-grid .score-counter:empty {
+    background-color: transparent;
+    box-shadow: none;
+}
+.view-main .main-grid .main-row-score .score-grid .score-counter:empty::before {
+    content: '0';
+    opacity: 0.5;
+    text-shadow: none;
+}
+.view-main .main-grid .main-row-score .score-grid .score-counter.pending {
+    border-style: dashed;
 }
 
-.view-main .main-grid .main-row-score .score-grid .score-wazaari .token {
-    font-size: 160px;
-    font-weight: bold;
-    height: 16rem;
-    width: 16rem;
-    text-align: center;
-    border-radius: 3rem;
-    padding-top: 2.5rem;
-    opacity: 0;
-    transition: opacity .5s ease-in-out;
-    background-color: rgba(0, 0, 0, 0.05);
-}
-.view-main .main-grid .main-row-score.row-blue .score-grid .score-wazaari .token {
-    background-color: rgba(0, 0, 0, 0.25);
-}
-.view-main .main-grid .main-row-score .score-grid .score-wazaari.active .token {
-    opacity: 1.0;
-    box-shadow: 3px 3px 20px -8px rgba(0, 0, 0, 0.5);
-}
-.view-main .main-grid .main-row-score .score-grid .score-wazaari.pending .token {
-    opacity: 0.3;
-    border: 0.5rem dashed currentColor;
-    padding-top: 1.75rem;
-    background-color: transparent;
-}
-.view-main .main-grid .main-row-score.row-blue .score-grid .score-wazaari.pending .token {
-    opacity: 0.45;
+.view-main .main-grid .main-row-score .score-grid .score-counter[data-sbf-col="yuko"] {
+    transform: none;
+    font-size: 120px;
+    padding-top: 87.5px;
 }
 
 .view-main .main-grid .main-row-score .score-grid .score-osaekomi {
-    width: 15rem;
+    width: 10rem;
     flex-grow: 0;
+    padding: 0 1rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
 }
 
 
 
 .time-osaekomi {
+    border: .125em double;
+    height: 7.5rem;
+    width: 7.5rem;
+    line-height: 1;
+    padding: 1.5rem 0;
+    letter-spacing: -0.25rem;
+    padding-right: 0.25rem;
     text-align: center;
-    font-size: 100px;
+    border-radius: 50%;
+    margin: 0;
+    margin-top: 0px;
+    line-height: 0;
+    box-shadow: .25rem .25rem 1rem #0006;
+
+    text-align: center;
+    font-size: 3.75rem;
     font-family: 'Reddit Mono';
     font-weight: 500;
     line-height: 1;
-    transform: scaleY(180%);
+    position: relative;
 }
 .row-white .time-osaekomi {
     color: black;
@@ -229,26 +243,28 @@ body {
 }
 
 .view-main .main-grid .main-row-score .score-grid .score-shido {
-    flex-grow: 0;
+    flex-grow: 1;
     display: flex;
+    justify-content: flex-end;
     align-items: center;
-    width: 24rem;
+    width: 15rem;
+    margin-right: 2rem;
 }
 .view-main .main-grid .main-row-score .score-grid .score-shido .card-shido,
 .view-main .main-grid .main-row-score .score-grid .score-shido .card-hansokumake {
     height: 14rem;
-    width: 6.5rem;
+    width: 4.5rem;
     display: block;
-    border-radius: 1rem;
+    border-radius: .5rem;
     color: #600;
-    font-size: 3rem;
+    font-size: 2vw;
     font-weight: bold;
     line-height: 1;
-    padding: 4.5rem 0;
+    padding: calc((12.5rem - 2vw) / 2) 0;
     text-align: center;
-    box-shadow: 3px 3px 20px -8px rgba(0, 0, 0, 0.5);
-    margin-left: 1.5rem;
+    margin-left: .5rem;
     transition: opacity .5s ease-in-out;
+    box-shadow: .25rem .25rem 1rem #0003;
 }
 
 .view-main .main-grid .main-row-score .score-grid .score-shido .card-shido.hidden,
@@ -263,7 +279,7 @@ body {
     text-transform: uppercase;
 }
 .view-main .main-grid .main-row-score .score-grid .score-shido .card-shido.hidden + .card-shido.hidden + .card-hansokumake {
-    width: 22.5rem;
+    width: 15rem;
 }
 
 
