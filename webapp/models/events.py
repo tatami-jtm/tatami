@@ -331,6 +331,7 @@ class ScoreboardRuleset(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     title = db.Column(db.String(50))
     enabled = db.Column(db.Boolean)
+    is_default = db.Column(db.Boolean)
     rules = db.Column(db.Text)
 
     def get_data(self):
@@ -343,4 +344,4 @@ class ScoreboardRuleset(db.Model):
     @classmethod
     def default(cls):
         # TODO: implement proper default ruleset
-        return cls.all_enabled().first()
+        return cls.all_enabled().filter_by(is_default=1).first()
