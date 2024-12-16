@@ -1,7 +1,7 @@
 /* Model */
 
 const makeState = (config) => {
-    return {
+    base = {
         view: {
             screen: config.defaultScreen || 'break',
             medicalAlert: false,
@@ -23,12 +23,7 @@ const makeState = (config) => {
                 since: null,
                 wazaari_given: false
             },
-            ippon: false,
-            wazaari: false,
-            wazaari_pending: false,
-            wazaari_awasete_ippon: false,
-            shido: 0,
-            hansokumake: false
+            scores: {}
         },
         blue: {
             osaekomi: {
@@ -36,14 +31,19 @@ const makeState = (config) => {
                 since: null,
                 wazaari_given: false
             },
-            ippon: false,
-            wazaari: false,
-            wazaari_pending: false,
-            wazaari_awasete_ippon: false,
-            shido: 0,
-            hansokumake: false
+            scores: {}
         }
     }
+
+    for (const score_name in SBRULES.scores) {
+        if (Object.prototype.hasOwnProperty.call(SBRULES.scores, score_name)) {
+            const score = SBRULES.scores[score_name];
+            base.white.scores[score_name] = { value: 0, pending: false, from_osaekomi: false, value_with_accum: 0 }
+            base.blue.scores[score_name] = { value: 0, pending: false, from_osaekomi: false, value_with_accum: 0 }
+        }
+    }
+
+    return base
 }
 
 const tick = () => {
@@ -139,46 +139,24 @@ const osaekomiCheck = () => {
 const determineWinner = (always) => {
     always ||= false;
 
-    if (sbState.white.hansokumake && sbState.blue.hansokumake) {
-        return false;
-    } else if (sbState.blue.hansokumake) {
-        return ['white', 10]
-    } else if (sbState.white.hansokumake) {
-        return ['blue', 10]
-    }
+    for (const rank of SBRULES.ranking) {
+        if (!always && !SBRULES.ends_fight) continue
 
-    if (sbState.white.ippon && sbState.blue.ippon) {
-        return false;
-    } else if (sbState.white.ippon) {
-        return ['white', 10]
-    } else if (sbState.blue.ippon) {
-        return ['blue', 10]
-    }
-
-    if (sbState.white.wazaari_awasete_ippon && sbState.blue.wazaari_awasete_ippon) {
-        return false;
-    } else if (sbState.white.wazaari_awasete_ippon) {
-        return ['white', 10]
-    } else if (sbState.blue.wazaari_awasete_ippon) {
-        return ['blue', 10]
-    }
-
-    if (sbState.white.shido == 3 && sbState.blue.shido == 3) {
-        return false;
-    } else if (sbState.blue.shido == 3) {
-        return ['white', 10]
-    } else if (sbState.white.shido == 3) {
-        return ['blue', 10]
-    }
-
-    if (!always) { return false; }
-
-    if (sbState.white.wazaari && sbState.blue.wazaari) {
-        return false;
-    } else if (sbState.white.wazaari) {
-        return ['white', 7]
-    } else if (sbState.blue.wazaari) {
-        return ['blue', 7]
+        if (SBRULES.scores[rank].penalty) {
+            if (sbState.white.score[rank].value_with_accum > sbState.blue.score[rank].value_with_accum)
+                return ['blue', SBRULES.scores[rank].points]
+            else if (sbState.white.score[rank].value_with_accum < sbState.blue.score[rank].value_with_accum)
+                return ['white', SBRULES.scores[rank].points]
+            else
+                continue
+        } else {
+            if (sbState.white.score[rank].value_with_accum > sbState.blue.score[rank].value_with_accum)
+                return ['white', SBRULES.scores[rank].points]
+            else if (sbState.white.score[rank].value_with_accum < sbState.blue.score[rank].value_with_accum)
+                return ['blue', SBRULES.scores[rank].points]
+            else
+                continue
+        }
     }
 
     return false;
