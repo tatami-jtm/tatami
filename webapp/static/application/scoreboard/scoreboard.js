@@ -252,8 +252,13 @@ let updateScores = (side) => {
 
     for (const displo of SBRULES.display) {
         if (displo.style == 'counter') {
+            value = localStorage.getItem("tatami-scoreboard:" + side + ":" + displo['for'] + ":value")
+
+            if (value == 0)
+                value = ''
+
             elem = document.querySelector(query_base + '[data-sbf-col="' + displo['for'] + '"]')
-            elem.innerText = localStorage.getItem("tatami-scoreboard:" + side + ":" + displo['for'] + ":value")
+            elem.innerText = value
             if (localStorage.getItem("tatami-scoreboard:" + side + ":" + displo['for'] + ":pending") == "yes")
                 elem.classList.add('pending')
             else
@@ -278,7 +283,7 @@ let updateScores = (side) => {
                 scope.querySelector('.card-shido:nth-of-type(1)').classList.add('hidden');
                 scope.querySelector('.card-shido:nth-of-type(2)').classList.add('hidden');
                 scope.querySelector('.card-hansokumake').classList.remove('hidden');
-                scope.querySelector('.card-hansokumake').innerText = "Hansoku-Make";
+                scope.querySelector('.card-hansokumake').innerText = "H";
             } else {
                 scope.querySelector('.card-hansokumake').innerText = "";
 

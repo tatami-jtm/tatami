@@ -162,9 +162,13 @@ body {
     width: 100%;
     line-height: 1.0;
     background-color: white;
+    z-index: 2;
 }
 .view-main .main-grid .main-row-score .score-grid .score-full_text:not(.show) {
     display: none;
+}
+.view-main .main-grid .main-row-score.row-blue .score-grid .score-full_text {
+    background-color: #00f;
 }
 
 .view-main .main-grid .main-row-score .score-grid .score-counter {
@@ -261,10 +265,8 @@ body {
     display: block;
     border-radius: .5rem;
     color: #600;
-    font-size: 2vw;
     font-weight: bold;
     line-height: 1;
-    padding: calc((12.5rem - 2vw) / 2) 0;
     text-align: center;
     margin-left: .5rem;
     transition: opacity .5s ease-in-out;
@@ -284,6 +286,8 @@ body {
 }
 .view-main .main-grid .main-row-score .score-grid .score-shido .card-shido.hidden + .card-shido.hidden + .card-hansokumake {
     width: 15rem;
+    font-size: 12rem;
+    padding-top: 1rem;
 }
 
 
