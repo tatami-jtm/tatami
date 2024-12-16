@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 
 from ..models import db, Event, EventClass, DeviceRegistration, \
     DevicePosition, EventRole, Association, Registration, ListSystemRule, \
-    ListSystem, Role, User
+    ListSystem, Role, User, ScoreboardRuleset
 
 from ..helpers import _get_or_create
 
@@ -97,6 +97,7 @@ def index():
 @check_is_event_supervisor
 def config():
     system_rules = ListSystemRule.query.filter_by(event=g.event)
+    scoreboard_rulesets = ScoreboardRuleset.all_enabled()
     
     ranges = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 8), (9, 16), (17, 32)]
 
@@ -105,7 +106,7 @@ def config():
 
     return render_template("event-manager/config.html", ranges=ranges,
                            ListSystem=ListSystem, system_rules=system_rules,
-                           roles=roles, users=users)
+                           roles=roles, users=users, scoreboard_rulesets=scoreboard_rulesets)
 
 
 @eventmgr_view.route('/config', methods=['POST'])
@@ -138,6 +139,8 @@ def save_config():
         g.event.save_setting('proximity_placement.hide_name', 'proxplace_hide_name' in request.form)
         g.event.save_setting('proximity_placement.hide_club', 'proxplace_hide_club' in request.form)
 
+        g.event.scoreboard_ruleset = ScoreboardRuleset.query.get(request.form['sbid'])
+        db.session.commit()
 
         flash("Einstellungen erfolgreich gespeichert", 'success')
         g.event.log(current_user.qualified_name(), 'DEBUG', 'Allgemeine Einstellungen wurden aktualisiert.')
