@@ -109,7 +109,7 @@ if (SBRULES.controls.includes('osaekomi')) {
     white_start_osaekomi.addEventListener("click", () => {
         sbState.white.osaekomi.running = true
         sbState.white.osaekomi.since = sbState.time.globalTick
-        sbState.white.osaekomi.wazaari_given = false
+        sbState.white.osaekomi.scores_given = []
         sbState.blue.osaekomi.running = false
         white_start_osaekomi.blur()
     })
@@ -121,7 +121,7 @@ if (SBRULES.controls.includes('osaekomi')) {
     blue_start_osaekomi.addEventListener("click", () => {
         sbState.blue.osaekomi.running = true
         sbState.blue.osaekomi.since = sbState.time.globalTick
-        sbState.blue.osaekomi.wazaari_given = false
+        sbState.blue.osaekomi.scores_given = []
         sbState.white.osaekomi.running = false
         blue_start_osaekomi.blur()
     })
@@ -135,16 +135,16 @@ if (SBRULES.controls.includes('osaekomi')) {
             sbState.blue.osaekomi.running = false
             sbState.white.osaekomi.running = true
             sbState.white.osaekomi.since = sbState.blue.osaekomi.since
-            sbState.white.osaekomi.wazaari_given = false
-            if (sbState.blue.osaekomi.wazaari_given)
-                sbState.blue.wazaari_pending = false;
+            sbState.white.osaekomi.scores_given = []
+
+            // TODO: remove given scores for blue
         } else if(sbState.white.osaekomi.running) {
             sbState.white.osaekomi.running = false
             sbState.blue.osaekomi.running = true
             sbState.blue.osaekomi.since = sbState.white.osaekomi.since
-            sbState.blue.osaekomi.wazaari_given = false
-            if (sbState.white.osaekomi.wazaari_given)
-                sbState.white.wazaari_pending = false;
+            sbState.blue.osaekomi.scores_given = []
+
+            // TODO: remove given scores for white
         }
 
         toggle_osaekomi.blur()
@@ -164,12 +164,13 @@ for (const side of sides) {
                 "[data-control='" + side + ".reduce'][data-score='" + score_name + "']")
 
             up_elem.addEventListener('click', () => {
-                sbState[side].scores[score_name].pending = false
-
-                if (score.max_count && sbState[side].scores[score_name].value >= score.max_count)
-                    return
-
-                sbState[side].scores[score_name].value += 1
+                if (sbState[side].scores[score_name].pending)
+                    sbState[side].scores[score_name].pending = false
+                else
+                    if (score.max_count && sbState[side].scores[score_name].value >= score.max_count)
+                        return
+                    else
+                        sbState[side].scores[score_name].value += 1
             });
 
             down_elem.addEventListener('click', () => {
