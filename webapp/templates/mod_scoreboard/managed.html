@@ -17,4 +17,6 @@
 <script src="{{ url_for('static', filename='application/scoreboard/controller_keyboard.js') }}" defer></script>
 
 <script src="{{ url_for('static', filename='application/match_schedule_view.js') }}" defer></script>
+
+<script>var SBRULES = {{ g.event.sb_rules()|tojson }}</script>
 {% endblock custom_header %}

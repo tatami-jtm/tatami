@@ -149,12 +149,15 @@ class Event(db.Model):
             # Don't raise an error when a log attempt fails
             pass
 
-    def sb_rules(self):
+    def sb_ruleset(self):
         if self.scoreboard_ruleset is not None:
-            return self.scoreboard_ruleset.get_data()
+            return self.scoreboard_ruleset
         
         else:
-            ScoreboardRuleset.default().get_data()
+            return ScoreboardRuleset.default()
+
+    def sb_rules(self):
+        return self.sb_ruleset().get_data()
 
     @classmethod
     def from_slug(cls, slug):
