@@ -163,6 +163,7 @@ body {
     line-height: 1.0;
     background-color: white;
     z-index: 2;
+    text-shadow: .125rem .125rem 1rem #0006;
 }
 .view-main .main-grid .main-row-score .score-grid .score-full_text:not(.show) {
     display: none;
