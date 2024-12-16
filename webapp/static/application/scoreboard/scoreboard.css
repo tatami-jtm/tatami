@@ -194,8 +194,12 @@ body {
     border-style: dashed;
 }
 
-.view-main .main-grid .main-row-score .score-grid .score-counter[data-sbf-col="yuko"] {
-    transform: none;
+.view-main .main-grid .main-row-score .score-grid .score-counter.score-size-md {
+    font-size: 140px;
+    padding-top: 67.5px;
+}
+
+.view-main .main-grid .main-row-score .score-grid .score-counter.score-size-sm {
     font-size: 120px;
     padding-top: 87.5px;
 }

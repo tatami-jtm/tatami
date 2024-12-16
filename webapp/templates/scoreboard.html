@@ -28,7 +28,7 @@
                         {{ d.text }}
                     </div>
                     {% elif d.style == 'counter' %}
-                    <div class="score-counter" data-sbf-side="tatami-scoreboard:white" data-sbf-col="{{ d['for'] }}"></div>
+                    <div class="score-counter score-size-{{ d.size or 'md' }}" data-sbf-side="tatami-scoreboard:white" data-sbf-col="{{ d['for'] }}"></div>
                     {% elif d.style == 'penalty_card' %}
                     <div class="score-shido" data-sbf-side="tatami-scoreboard:white" data-sbf-hicol="{{ d['for_higher'] }}" data-sbf-locol="{{ d['for_lower'] }}">
                         <div class="card-shido hidden"></div>
@@ -55,7 +55,7 @@
                         {{ d.text }}
                     </div>
                     {% elif d.style == 'counter' %}
-                    <div class="score-counter" data-sbf-side="tatami-scoreboard:blue" data-sbf-col="{{ d['for'] }}"></div>
+                    <div class="score-counter score-size-{{ d.size or 'md' }}" data-sbf-side="tatami-scoreboard:blue" data-sbf-col="{{ d['for'] }}"></div>
                     {% elif d.style == 'penalty_card' %}
                     <div class="score-shido" data-sbf-side="tatami-scoreboard:blue" data-sbf-hicol="{{ d['for_higher'] }}" data-sbf-locol="{{ d['for_lower'] }}">
                         <div class="card-shido hidden"></div>
