@@ -68,7 +68,7 @@ const renderControls = () => {
         flash_medical.classList.remove("active")
     }
 
-    if ('osaekomi' in SBRULES.controls) {
+    if (SBRULES.controls.includes('osaekomi')) {
 
         if (sbState.white.osaekomi.running) {
             disable_btn(white_start_osaekomi, "btn-secondary")
@@ -175,11 +175,16 @@ const renderBoard = () => {
         if (Object.prototype.hasOwnProperty.call(SBRULES.scores, score_name)) {
             const score = SBRULES.scores[score_name];
 
-            setOption("white:" + score_name + ":value", sbState.white.scores[score_name].value)
             setOption("white:" + score_name + ":pending", sbState.white.scores[score_name].pending ? 'yes' : 'no')
-
-            setOption("blue:" + score_name + ":value", sbState.blue.scores[score_name].value)
             setOption("blue:" + score_name + ":pending", sbState.blue.scores[score_name].pending ? 'yes' : 'no')
+
+            if (score.is_equal_if_accumulated) {
+                setOption("white:" + score_name + ":value", sbState.white.scores[score_name].value_with_accum)
+                setOption("blue:" + score_name + ":value", sbState.blue.scores[score_name].value_with_accum)
+            } else {
+                setOption("white:" + score_name + ":value", sbState.white.scores[score_name].value)
+                setOption("blue:" + score_name + ":value", sbState.blue.scores[score_name].value)
+            }
         }
     }
 }

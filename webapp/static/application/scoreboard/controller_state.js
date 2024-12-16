@@ -50,21 +50,23 @@ const tick = () => {
     let now = Date.now()
     let differ = now - sbState.time.lastTick
     sbState.time.lastTick = now
-
+    
     if (sbState.time.running) {
         sbState.time.globalTick += differ
-
+        
         osaekomiCheck()
-
+        
         effectiveNewTime = sbState.time.displayTime + (differ * sbState.time.displayTimeDirection)
-
+        
         if (effectiveNewTime < 0)
             endOfTime()
         else if (sbState.time.goldenScore && sbState.config.maxGoldenScore && sbState.time.displayTime > sbState.config.maxGoldenScore * 1000)
             endOfTime()
         else
-            sbState.time.displayTime = effectiveNewTime
+        sbState.time.displayTime = effectiveNewTime
     }
+
+    checkForAccumulation()
 }
 
 const endOfTime = (becauseOfOseakomi) => {
@@ -131,6 +133,33 @@ const osaekomiCheck = () => {
             } else {
                 sbState.blue.wazaari_pending = true
                 sbState.blue.osaekomi.wazaari_given = true
+            }
+        }
+    }
+}
+
+const checkForAccumulation = () => {
+    let sides = ['white', 'blue']
+    for (const side of sides) {
+        for (const score_name in SBRULES.scores) {
+            if (Object.prototype.hasOwnProperty.call(SBRULES.scores, score_name)) {
+                const score = SBRULES.scores[score_name];
+
+                if (!score.accumulates) continue
+
+                let accumulates_to = score.accumulates;
+                
+                if ((sbState[side].scores[score_name].value == score.max_count) &&
+                    (!sbState[side].scores[score_name].pending)) {
+
+                    if(sbState[side].scores[accumulates_to].value < SBRULES.scores[accumulates_to].max_count) {
+                        sbState[side].scores[accumulates_to].value_with_accum = 
+                            sbState[side].scores[accumulates_to].value + 1;
+                    }
+                } else {
+                    sbState[side].scores[accumulates_to].value_with_accum = 
+                            sbState[side].scores[accumulates_to].value;
+                }
             }
         }
     }

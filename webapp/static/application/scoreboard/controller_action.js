@@ -19,16 +19,12 @@ const stop_time = document.querySelector("[data-control=\"time.main.stop\"]")
 const correct_time = document.querySelector("[data-control=\"time.main.correct\"]")
 const flash_medical = document.querySelector("[data-control=\"flash.medical\"]")
 
-if ('osaekomi' in SBRULES.controls) {
+const toggle_osaekomi = document.querySelector("[data-control=\"osaekomi.toggle\"]")
 
-    const toggle_osaekomi = document.querySelector("[data-control=\"osaekomi.toggle\"]")
-
-    const white_start_osaekomi = document.querySelector("[data-control=\"osaekomi.white.start\"]")
-    const white_stop_osaekomi = document.querySelector("[data-control=\"osaekomi.white.stop\"]")
-    const blue_start_osaekomi = document.querySelector("[data-control=\"osaekomi.blue.start\"]")
-    const blue_stop_osaekomi = document.querySelector("[data-control=\"osaekomi.blue.stop\"]")
-
-}
+const white_start_osaekomi = document.querySelector("[data-control=\"osaekomi.white.start\"]")
+const white_stop_osaekomi = document.querySelector("[data-control=\"osaekomi.white.stop\"]")
+const blue_start_osaekomi = document.querySelector("[data-control=\"osaekomi.blue.start\"]")
+const blue_stop_osaekomi = document.querySelector("[data-control=\"osaekomi.blue.stop\"]")
 
 /* *********** *
  * Controllers *
@@ -107,7 +103,7 @@ flash_medical.addEventListener("click", () => {
     flash_medical.blur()
 })
 
-if ('osaekomi' in SBRULES.controls) {
+if (SBRULES.controls.includes('osaekomi')) {
 
     /* Control: Osaekomi */
     white_start_osaekomi.addEventListener("click", () => {
