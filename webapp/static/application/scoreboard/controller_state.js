@@ -133,6 +133,15 @@ const osaekomiCheck = () => {
 const checkForAccumulation = () => {
     let sides = ['white', 'blue']
     for (const side of sides) {
+        /* Step 1: set everything as if not-accumulated */
+        for (const score_name in SBRULES.scores) {
+            if (Object.prototype.hasOwnProperty.call(SBRULES.scores, score_name)) {
+                sbState[side].scores[score_name].value_with_accum = 
+                            sbState[side].scores[score_name].value;
+            }
+        }
+
+        /* Calculate acumulations */
         for (const score_name in SBRULES.scores) {
             if (Object.prototype.hasOwnProperty.call(SBRULES.scores, score_name)) {
                 const score = SBRULES.scores[score_name];
@@ -145,12 +154,8 @@ const checkForAccumulation = () => {
                     (!sbState[side].scores[score_name].pending)) {
 
                     if(sbState[side].scores[accumulates_to].value < SBRULES.scores[accumulates_to].max_count) {
-                        sbState[side].scores[accumulates_to].value_with_accum = 
-                            sbState[side].scores[accumulates_to].value + 1;
+                        sbState[side].scores[accumulates_to].value_with_accum += 1;
                     }
-                } else {
-                    sbState[side].scores[accumulates_to].value_with_accum = 
-                            sbState[side].scores[accumulates_to].value;
                 }
             }
         }
@@ -161,7 +166,7 @@ const determineWinner = (always) => {
     always ||= false;
 
     for (const rank of SBRULES.ranking) {
-        if (!always && !SBRULES.ends_fight) continue
+        if (!always && !SBRULES.scores[rank].ends_fight) continue
 
         if (SBRULES.scores[rank].penalty) {
             if (sbState.white.scores[rank].value_with_accum > sbState.blue.scores[rank].value_with_accum)
