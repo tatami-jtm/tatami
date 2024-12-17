@@ -146,6 +146,7 @@ body {
 
 .view-main .main-grid .main-row-score .score-grid {
     align-items: center;
+    align-content: baseline;
     justify-content: flex-start;
     width: 100%;
     display: flex;
@@ -176,14 +177,13 @@ body {
     flex-grow: 0;
     font-size: 200px;
     font-weight: bold;
-    height: 255px;
     width: 9rem;
     text-align: center;
     line-height: 1.0;
-    padding-top: 27.5px;
     border-radius: 1rem;
-    margin: 0 1.25rem;
+    margin: 0 0.125em;
     margin-right: 0;
+    padding: 10px 0;
     text-shadow: .125rem .125rem 1rem #0006;
 }
 .view-main .main-grid .main-row-score .score-grid .score-counter:empty {
@@ -200,13 +200,15 @@ body {
 }
 
 .view-main .main-grid .main-row-score .score-grid .score-counter.score-size-md {
+    width: 8rem;
     font-size: 140px;
-    padding-top: 67.5px;
+    margin-top: 30px;
 }
 
 .view-main .main-grid .main-row-score .score-grid .score-counter.score-size-sm {
+    width: 6rem;
     font-size: 120px;
-    padding-top: 87.5px;
+    margin-top: 40px;
 }
 
 .view-main .main-grid .main-row-score .score-grid .score-osaekomi {
