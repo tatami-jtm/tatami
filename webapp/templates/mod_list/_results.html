@@ -1,5 +1,6 @@
 <h2 class="h4 mb-3 fw-bold">Ergebnisse eintragen</h2>
 
+{% set SBRULES = g.event.sb_rules() %}
 {% set current_match = g.mat.current_match() %}
 {% if current_match %}
 
@@ -59,63 +60,35 @@
 
     <table class="table-scoreboard mb-3">
         <tr class="row-fighters">
-            <th colspan="4" class="col-white">{{ current_match.white.full_name }}</th>
-            <th colspan="4" class="col-blue">{{ current_match.blue.full_name }}</th>
+            <th colspan="{{ SBRULES.small_display|length }}" class="col-white">{{ current_match.white.full_name }}</th>
+            <th colspan="{{ SBRULES.small_display|length }}" class="col-blue">{{ current_match.blue.full_name }}</th>
         </tr>
         <tr class="row-labels">
-            <th class="col-white col-ippon">
-                <label for="sb-white-ippon">Ippon</label>
+            {% for c in SBRULES.small_display %}
+            <th class="col-white {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                <label for="sb-white-{{ c }}">{{ SBRULES.scores[c].short_name }}</label>
             </th>
-            <th class="col-white col-wazaari">
-                <label for="sb-white-wazaari">Wazaari</label>
+            {% endfor %}
+            {% for c in SBRULES.small_display %}
+            <th class="col-blue {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                <label for="sb-blue-{{ c }}">{{ SBRULES.scores[c].short_name }}</label>
             </th>
-            <th class="col-white col-shido">
-                <label for="sb-white-shido">Shido</label>
-            </th>
-            <th class="col-white col-hansokumake">
-                <label for="sb-white-hansokumake">HM</label>
-            </th>
-
-            <th class="col-blue col-ippon">
-                <label for="sb-blue-ippon">Ippon</label>
-            </th>
-            <th class="col-blue col-wazaari">
-                <label for="sb-blue-wazaari">Wazaari</label>
-            </th>
-            <th class="col-blue col-shido">
-                <label for="sb-blue-shido">Shido</label>
-            </th>
-            <th class="col-blue col-hansokumake">
-                <label for="sb-blue-hansokumake">HM</label>
-            </th>
+            {% endfor %}
         </tr>
 
         <tr class="row-inputs">
-            <td class="col-white col-ippon">
-                <input type="numeric" id="sb-white-ippon" name="sb-white-ippon" value="0" min="0" max="1">
+            {% for c in SBRULES.small_display %}
+            {% set max_count = SBRULES.scores[c].max_count %}
+            <td class="col-white {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                <input type="numeric" id="sb-white-{{ c }}" name="sb-white-{{ c }}" value="0" min="0" {{ 'max=' ~ max_count if max_count }}>
             </td>
-            <td class="col-white col-wazaari">
-                <input type="numeric" id="sb-white-wazaari" name="sb-white-wazaari" value="0" min="0" max="2">
+            {% endfor %}
+            {% for c in SBRULES.small_display %}
+            {% set max_count = SBRULES.scores[c].max_count %}
+            <td class="col-blue {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                <input type="numeric" id="sb-blue-{{ c }}" name="sb-blue-{{ c }}" value="0" min="0" {{ 'max=' ~ max_count if max_count }}>
             </td>
-            <td class="col-white col-shido">
-                <input type="numeric" id="sb-white-shido" name="sb-white-shido" value="0" min="0" max="3">
-            </td>
-            <td class="col-white col-hansokumake">
-                <input type="numeric" id="sb-white-hansokumake" name="sb-white-hansokumake" value="0" min="0" max="1">
-            </td>
-
-            <td class="col-blue col-ippon">
-                <input type="numeric" id="sb-blue-ippon" name="sb-blue-ippon" value="0" min="0" max="1">
-            </td>
-            <td class="col-blue col-wazaari">
-                <input type="numeric" id="sb-blue-wazaari" name="sb-blue-wazaari" value="0" min="0" max="2">
-            </td>
-            <td class="col-blue col-shido">
-                <input type="numeric" id="sb-blue-shido" name="sb-blue-shido" value="0" min="0" max="3">
-            </td>
-            <td class="col-blue col-hansokumake">
-                <input type="numeric" id="sb-blue-hansokumake" name="sb-blue-hansokumake" value="0" min="0" max="1">
-            </td>
+            {% endfor %}
         </tr>
     </table>
 
