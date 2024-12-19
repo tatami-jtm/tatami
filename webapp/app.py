@@ -118,9 +118,10 @@ if SETTINGS['ALLOW_SETUP']:
             
             db.session.commit()
 
-            # Install event roles and list systems
+            # Install event roles, list systems and default scoreboard rulesets
             setup_data.setup_event_roles()
             setup_data.setup_list_systems()
+            setup_data.setup_scoreboard_rulesets()
 
             # Possibly install template classes
             if "install-class-templates" in request.form:

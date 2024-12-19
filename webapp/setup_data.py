@@ -1,4 +1,4 @@
-from .models import db, Role, EventClass, EventRole, ListSystem
+from .models import db, Role, EventClass, EventRole, ListSystem, ScoreboardRuleset
 from .helpers import _get_or_create
 
 def setup_roles():
@@ -118,3 +118,141 @@ def setup_event_roles():
                    may_use_registration=True, may_use_weigh_in=True, may_use_placement_tool=True,
                    may_use_global_list=True, may_use_results=True, may_use_assigned_lists=True,
                    may_use_scoreboard=True, may_use_beamer=True)
+
+
+def setup_scoreboard_rulesets():
+    _get_or_create(
+        ScoreboardRuleset,
+        title="IJF (2024) - 1I/2W/Y/3S/H",
+        enabled=True,
+        is_default=True,
+        rules="""
+{
+    "scores": {
+        "ippon": {
+            "name": "Ippon",
+            "short_name": "I",
+            "max_count": 1,
+            "penalty": false,
+            "points": 10,
+            "ends_fight": true,
+            "is_equal_if_accumulated": true
+        },
+        "wazaari": {
+            "name": "Wazaari",
+            "short_name": "W",
+            "max_count": 2,
+            "penalty": false,
+            "points": 7,
+            "accumulates": "ippon",
+            "ends_fight": false,
+            "is_equal_if_accumulated": false
+        },
+        "yuko": {
+            "name": "Yuko",
+            "short_name": "Y",
+            "penalty": false,
+            "points": 5,
+            "ends_fight": false,
+            "is_equal_if_accumulated": false
+        },
+        "shido": {
+            "name": "Shido",
+            "short_name": "S",
+            "max_count": 3,
+            "penalty": true,
+            "accumulates": "hansokumake",
+            "disqualifies": false,
+            "ends_fight": false,
+            "is_equal_if_accumulated": false
+        },
+        "hansokumake": {
+            "name": "Hansoku-make",
+            "short_name": "HM",
+            "max_count": 1,
+            "penalty": true,
+            "disqualifies": true,
+            "points": 10,
+            "ends_fight": true,
+            "is_equal_if_accumulated": false
+        }
+    },
+    "osaekomi": [
+        { "at": 5, "score": "yuko", "final": false },
+        { "at": 10, "score": "wazaari", "final": false },
+        { "at": 20, "score": "ippon", "final": true }
+    ],
+    "ranking": ["hansokumake", "ippon", "wazaari", "yuko"],
+    "controls": ["ippon", "wazaari", "yuko", "osaekomi", "shido", "hansokumake"],
+    "display": [
+        { "style": "full_text", "for": "ippon", "text": "IPPON" },
+        { "style": "counter", "for": "wazaari", "size": "lg" },
+        { "style": "counter", "for": "yuko", "size": "md" },
+        { "style": "penalty_card", "for_lower": "shido", "for_higher": "hansokumake" }
+    ],
+    "small_display": ["ippon", "wazaari", "yuko", "shido", "hansokumake"]
+}
+        """.strip())
+    
+    _get_or_create(
+        ScoreboardRuleset,
+        title="IJF (2018) - 1I/2W/3S/H",
+        enabled=True,
+        is_default=False,
+        rules="""
+{
+    "scores": {
+        "ippon": {
+            "name": "Ippon",
+            "short_name": "I",
+            "max_count": 1,
+            "penalty": false,
+            "points": 10,
+            "ends_fight": true,
+            "is_equal_if_accumulated": true
+        },
+        "wazaari": {
+            "name": "Wazaari",
+            "short_name": "W",
+            "max_count": 2,
+            "penalty": false,
+            "points": 7,
+            "accumulates": "ippon",
+            "ends_fight": false,
+            "is_equal_if_accumulated": false
+        },
+        "shido": {
+            "name": "Shido",
+            "short_name": "S",
+            "max_count": 3,
+            "penalty": true,
+            "accumulates": "hansokumake",
+            "disqualifies": false,
+            "ends_fight": false,
+            "is_equal_if_accumulated": false
+        },
+        "hansokumake": {
+            "name": "Hansoku-make",
+            "short_name": "HM",
+            "max_count": 1,
+            "penalty": true,
+            "disqualifies": true,
+            "points": 10,
+            "ends_fight": true,
+            "is_equal_if_accumulated": false
+        }
+    },
+    "osaekomi": [
+        { "at": 10, "score": "wazaari", "final": false },
+        { "at": 20, "score": "ippon", "final": true }
+    ],
+    "ranking": ["hansokumake", "ippon", "wazaari"],
+    "controls": ["ippon", "wazaari", "osaekomi", "shido", "hansokumake"],
+    "display": [
+        { "style": "full_text", "for": "ippon", "text": "IPPON" },
+        { "style": "counter", "for": "wazaari", "size": "lg" },
+        { "style": "penalty_card", "for_lower": "shido", "for_higher": "hansokumake" }
+    ],
+    "small_display": ["ippon", "wazaari", "shido", "hansokumake"]
+}
+        """.strip())
