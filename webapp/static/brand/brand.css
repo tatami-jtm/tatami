@@ -833,6 +833,7 @@ img {
     padding: 0.1rem;
     border: 1px solid;
     text-align: center;
+    font-size: 0.9rem;
 }
 .match-summary .match-sb .match-sb-white .match-sb-field:not(:last-child),
 .match-summary .match-sb .match-sb-blue .match-sb-field:not(:last-child) {
