@@ -113,12 +113,18 @@ const renderControls = () => {
                     "[data-control='" + side + ".expand'][data-score='" + score_name + "']")
                 let down_elem = document.querySelector(
                     "[data-control='" + side + ".reduce'][data-score='" + score_name + "']")
+                let results_elems = document.querySelectorAll(
+                    "[data-tatami-field='results." + side + "'][data-tatami-score='" + score_name + "']")
 
                 let text = "" + sbState[side].scores[score_name].value
                 if (sbState[side].scores[score_name].pending)
                     text = "(" + text + ")"
 
                 up_elem.innerText = text
+
+                results_elems.forEach((re) => {
+                    re.innerText = text
+                })
 
                 if (score.pending || sbState[side].scores[score_name].value > 0)
                     enable_btn(down_elem)

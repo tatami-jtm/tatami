@@ -927,9 +927,6 @@ img {
     color: white;
 }
 
-.table-scoreboard tr.row-inputs td {
-    padding: 0.25rem;
-}
 .table-scoreboard tr.row-inputs td input,
 .table-scoreboard tr.row-inputs td output {
     font-size: 2rem;
@@ -953,10 +950,10 @@ img {
     background-color: #00f;
     color: white;
 }
-.table-scoreboard tr.row-inputs td.col-shido input,
-.table-scoreboard tr.row-inputs td.col-shido output,
-.table-scoreboard tr.row-inputs td.col-hansokumake input,
-.table-scoreboard tr.row-inputs td.col-hansokumake output {
+.table-scoreboard tr.row-inputs td.col-penalty input,
+.table-scoreboard tr.row-inputs td.col-penalty output,
+.table-scoreboard tr.row-inputs td.col-penalty input,
+.table-scoreboard tr.row-inputs td.col-penalty output {
     color: red;
 }
 
