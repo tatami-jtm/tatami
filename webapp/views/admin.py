@@ -383,7 +383,37 @@ def scoreboard_preset(id):
 
     return render_template(
         "admin/scoreboard_rulesets/edit.html",
-        scoreboard_ruleset=scoreboard_ruleset)
+        scoreboard_ruleset=scoreboard_ruleset, action='edit')
+
+
+@admin_view.route("/templates/scoreboard/new", methods=['GET', 'POST'])
+@login_required
+def new_scoreboard_preset():
+    if not current_user.has_privilege('alter_presets'):
+        abort(404)
+
+    scoreboard_ruleset = ScoreboardRuleset()
+
+    if request.method == 'POST':
+        scoreboard_ruleset.title = request.form['title']
+        scoreboard_ruleset.enabled = 'enabled' in request.form
+        scoreboard_ruleset.is_default = 'is_default' in request.form
+
+        try:
+            scoreboard_ruleset.rules = json.dumps(json.loads(request.form['rules']), indent=4)
+        except:
+            scoreboard_ruleset.rules = request.form['rules']
+            flash("Regelwerk wurde nicht gespeichert. Grund: JSON nicht wohlgeformt.", 'danger')
+        else:
+            db.session.add(scoreboard_ruleset)
+            db.session.commit()
+            flash("Regelwerk wurde erfolgreich gespeichert.", 'success')
+
+            return redirect(url_for('admin.scoreboard_preset', id=scoreboard_ruleset.id))
+
+    return render_template(
+        "admin/scoreboard_rulesets/edit.html",
+        scoreboard_ruleset=scoreboard_ruleset, action='new')
 
 
 @admin_view.route('/support/new', methods=['GET', 'POST'])
