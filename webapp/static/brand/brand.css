@@ -637,6 +637,9 @@ body.application {
 textarea.form-control {
     min-height: 150px;
 }
+textarea.form-control.form-lg {
+    min-height: 500px;
+}
 
 .application .h-full {
     margin-top: -1rem;
