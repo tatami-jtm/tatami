@@ -121,7 +121,7 @@ const osaekomiCheck = () => {
                         sbState[side].scores[last_score].value -= 1
                 }
 
-                if (osaekomi_rule.final) {
+                if (SBRULES.scores[osaekomi_rule.score].ends_fight) {
                     sbState[side].osaekomi.running = false
                     endOfTime(true)
                 }
@@ -150,11 +150,16 @@ const checkForAccumulation = () => {
 
                 let accumulates_to = score.accumulates;
                 
-                if ((sbState[side].scores[score_name].value == score.max_count) &&
-                    (!sbState[side].scores[score_name].pending)) {
+                if (sbState[side].scores[score_name].value == score.max_count) {
 
                     if(sbState[side].scores[accumulates_to].value < SBRULES.scores[accumulates_to].max_count) {
                         sbState[side].scores[accumulates_to].value_with_accum += 1;
+
+                        if (sbState[side].osaekomi.running && SBRULES.scores[accumulates_to].ends_fight) {
+                            sbState[side].osaekomi.running = false
+                            sbState[side].scores[score_name].pending = false
+                            endOfTime(true)
+                        }
                     }
                 }
             }

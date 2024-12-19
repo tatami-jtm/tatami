@@ -120,12 +120,12 @@ const renderControls = () => {
 
                 up_elem.innerText = text
 
-                if (sbState[side].scores[score_name].value > 0)
+                if (score.pending || sbState[side].scores[score_name].value > 0)
                     enable_btn(down_elem)
                 else
                     disable_btn(down_elem)
 
-                if (score.max_count && sbState[side].scores[score_name].value >= score.max_count)
+                if (!score.pending && score.max_count && sbState[side].scores[score_name].value >= score.max_count)
                     disable_btn(up_elem)
                 else
                     enable_btn(up_elem)
