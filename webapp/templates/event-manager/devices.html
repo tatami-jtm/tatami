@@ -62,6 +62,10 @@
 
 <p>Sie können ein Offline-Scoreboard für diese Veranstaltung erzeugen und herunterladen. Das Offline-Scoreboard kann dann auch ohne Anmeldung oder Netzwerk-Verbindung verwendet werden.</p>
 
+<div class="alert alert-warning">
+    <p class="mb-0">Diese Funktion ist bislang noch experimentell und sollte nur eingeschränkt verwendet werden.</p>
+</div>
+
 <a href="{{ url_for('event_manager.offline_board', event=g.event.slug) }}" class="btn btn-secondary">Scoreboard herunterladen</a>
 
 {% endblock body %}
