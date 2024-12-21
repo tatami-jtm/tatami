@@ -19,6 +19,7 @@ def check_is_registered(func):
             if len(matching_registration) == 1:
                 if (registration := matching_registration[0]).confirmed:
                     g.device = registration
+                    g.deviceless = False
                     return func(*args, **kwargs)
 
         return redirect(url_for('devices.register', event=g.event.slug))

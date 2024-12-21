@@ -40,7 +40,7 @@
 
 @font-face {
     font-display: swap;
-    font-family: 'Reddit Mono';
+    font-family: 'Reddit Mono', monospace;
     font-style: normal;
     font-weight: 500;
     src: url('/static/fonts/reddit-mono-v1-latin-500.woff2') format('woff2');
@@ -48,7 +48,7 @@
 
 @font-face {
     font-display: swap;
-    font-family: 'Reddit Mono';
+    font-family: 'Reddit Mono', monospace;
     font-style: normal;
     font-weight: 800;
     src: url('/static/fonts/reddit-mono-v1-latin-800.woff2') format('woff2');
@@ -238,7 +238,7 @@ body {
 
     text-align: center;
     font-size: 3.75rem;
-    font-family: 'Reddit Mono';
+    font-family: 'Reddit Mono', monospace;
     font-weight: 500;
     line-height: 1;
     position: relative;
@@ -334,7 +334,7 @@ body {
     color: black;
     font-size: 200px;
     font-weight: 900;
-    font-family: 'Reddit Mono';
+    font-family: 'Reddit Mono', monospace;
 }
 .time-grid .time-main.running .time-main-box {
     background-color: #6d6;

@@ -58,6 +58,12 @@
     </div>
 </div>
 
+<h3 class="mt-5">Offline-Scoreboard</h3>
+
+<p>Sie können ein Offline-Scoreboard für diese Veranstaltung erzeugen und herunterladen. Das Offline-Scoreboard kann dann auch ohne Anmeldung oder Netzwerk-Verbindung verwendet werden.</p>
+
+<a href="{{ url_for('event_manager.offline_board', event=g.event.slug) }}" class="btn btn-secondary">Scoreboard herunterladen</a>
+
 {% endblock body %}
 
 

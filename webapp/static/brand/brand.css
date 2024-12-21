@@ -40,7 +40,7 @@
 
 @font-face {
     font-display: swap;
-    font-family: 'Reddit Mono';
+    font-family: 'Reddit Mono', monospace;
     font-style: normal;
     font-weight: 500;
     src: url('/static/fonts/reddit-mono-v1-latin-500.woff2') format('woff2');
@@ -48,7 +48,7 @@
 
 @font-face {
     font-display: swap;
-    font-family: 'Reddit Mono';
+    font-family: 'Reddit Mono', monospace;
     font-style: normal;
     font-weight: 800;
     src: url('/static/fonts/reddit-mono-v1-latin-800.woff2') format('woff2');
@@ -1113,7 +1113,7 @@ select.w-min {
 .sb .sb-time .sb-time-global {
     background-color: #dd6;
     font-size: 6rem;
-    font-family: 'Reddit Mono';
+    font-family: 'Reddit Mono', monospace;
     font-weight: 800;
     color: #000;
     text-align: center;
@@ -1246,7 +1246,7 @@ select.w-min {
     justify-content: center;
     font-size: 3.5rem;
     font-weight: 500;
-    font-family: 'Reddit Mono';
+    font-family: 'Reddit Mono', monospace;
 }
 
 .sb .sb-side .sb-cell.sb-osaekomi .sb-osaekomi-item {
@@ -1370,7 +1370,7 @@ select.w-min {
 
 .repeated-call-btn {
     font: inherit;
-    font-family: 'Reddit Mono';
+    font-family: 'Reddit Mono', monospace;
     cursor: pointer;
     line-height: 1;
     padding: 0.5rem;

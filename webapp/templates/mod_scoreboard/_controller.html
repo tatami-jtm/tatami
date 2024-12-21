@@ -11,7 +11,11 @@
                 </div>
             </div>
             <div class="col-12 col-md-4">
+                {% if not g.deviceless %}
                 <h1 class="h3 text-center m-0" data-static="mat-number">{{ g.device.position.title }}</h1>
+                {% else %}
+                <h1 class="h3 text-center m-0" data-static="mat-number"></h1>
+                {% endif %}
             </div>
             <div class="col-12 col-md-4 text-end">
                 <a href="{{ url_for('scoreboard', ruleset=g.event.sb_ruleset().id) }}" target="_new" type="button" class="btn btn-light fs-5">Scoreboard öffnen</a>
