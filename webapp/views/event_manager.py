@@ -1099,6 +1099,7 @@ Anleitung:
     cfile = cfile.replace('/static/bootstrap/css/', './assets/')
     cfile = cfile.replace('/static/bootstrap/js/', './assets/')
     cfile = cfile.replace('/scoreboard?', './_scoreboard.html?')
+    cfile = cfile.replace('/scoreboard/rules:', './_scoreboard.html?rules=')
     zip_file.writestr(f"start.html", cfile)
 
     # Write assets
@@ -1114,14 +1115,22 @@ Anleitung:
         ('brand/brand.css', 'brand.css'),
         ('bootstrap/css/bootstrap.min.css', 'bootstrap.min.css'),
         ('bootstrap/js/bootstrap.min.js', 'bootstrap.min.js'),
-        ('bootstrap/js/bootstrap.bundle.js', 'bootstrap.bundle.js')
+        ('bootstrap/js/bootstrap.bundle.js', 'bootstrap.bundle.js'),
+        ('fonts/font_copyright_notice.txt', 'font_copyright_notice.txt'),
+        ('fonts/inter-v13-latin_latin-ext-200.woff2', 'inter-v13-latin_latin-ext-200.woff2'),
+        ('fonts/inter-v13-latin_latin-ext-500.woff2', 'inter-v13-latin_latin-ext-500.woff2'),
+        ('fonts/inter-v13-latin_latin-ext-700.woff2', 'inter-v13-latin_latin-ext-700.woff2'),
+        ('fonts/inter-v13-latin_latin-ext-900.woff2', 'inter-v13-latin_latin-ext-900.woff2'),
+        ('fonts/inter-v13-latin_latin-ext-regular.woff2', 'inter-v13-latin_latin-ext-regular.woff2'),
+        ('fonts/reddit-mono-v1-latin-500.woff2', 'reddit-mono-v1-latin-500.woff2'),
+        ('fonts/reddit-mono-v1-latin-800.woff2', 'reddit-mono-v1-latin-800.woff2')
         ]:
-        print(path)
         fr = current_app.send_static_file(path)
         fr.direct_passthrough = False
         fr = fr.get_data()
         fr = fr.replace(b'/static/application/scoreboard/', b'./assets/')
         fr = fr.replace(b'/static/brand/', b'./assets/')
+        fr = fr.replace(b'/static/fonts/', b'../assets/')
         fr = fr.replace(b'/static/bootstrap/css/', b'./assets/')
         fr = fr.replace(b'/static/bootstrap/js/', b'./assets/')
         zip_file.writestr(f"assets/{fn}", fr)
