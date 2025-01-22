@@ -1,7 +1,7 @@
 /* Model */
 
 const makeState = (config) => {
-    return {
+    base = {
         view: {
             screen: config.defaultScreen || 'break',
             medicalAlert: false,
@@ -21,50 +21,52 @@ const makeState = (config) => {
             osaekomi: {
                 running: false,
                 since: null,
-                wazaari_given: false
+                scores_given: []
             },
-            ippon: false,
-            wazaari: false,
-            wazaari_pending: false,
-            wazaari_awasete_ippon: false,
-            shido: 0,
-            hansokumake: false
+            scores: {}
         },
         blue: {
             osaekomi: {
                 running: false,
                 since: null,
-                wazaari_given: false
+                scores_given: []
             },
-            ippon: false,
-            wazaari: false,
-            wazaari_pending: false,
-            wazaari_awasete_ippon: false,
-            shido: 0,
-            hansokumake: false
+            scores: {}
         }
     }
+
+    for (const score_name in SBRULES.scores) {
+        if (Object.prototype.hasOwnProperty.call(SBRULES.scores, score_name)) {
+            const score = SBRULES.scores[score_name];
+            base.white.scores[score_name] = { value: 0, pending: false, from_osaekomi: false, value_with_accum: 0 }
+            base.blue.scores[score_name] = { value: 0, pending: false, from_osaekomi: false, value_with_accum: 0 }
+        }
+    }
+
+    return base
 }
 
 const tick = () => {
     let now = Date.now()
     let differ = now - sbState.time.lastTick
     sbState.time.lastTick = now
-
+    
     if (sbState.time.running) {
         sbState.time.globalTick += differ
-
+        
         osaekomiCheck()
-
+        
         effectiveNewTime = sbState.time.displayTime + (differ * sbState.time.displayTimeDirection)
-
+        
         if (effectiveNewTime < 0)
             endOfTime()
         else if (sbState.time.goldenScore && sbState.config.maxGoldenScore && sbState.time.displayTime > sbState.config.maxGoldenScore * 1000)
             endOfTime()
         else
-            sbState.time.displayTime = effectiveNewTime
+        sbState.time.displayTime = effectiveNewTime
     }
+
+    checkForAccumulation()
 }
 
 const endOfTime = (becauseOfOseakomi) => {
@@ -93,44 +95,73 @@ const endOfTime = (becauseOfOseakomi) => {
 }
 
 const osaekomiCheck = () => {
-    if (sbState.white.osaekomi.running) {
-        white_osaekomi_time = osaekomiTimeToSeconds(sbState.white.osaekomi.since)
+    let sides = ['white', 'blue']
+    for (const side of sides) {
+        if (sbState[side].osaekomi.running) {
+            osaekomi_time = osaekomiTimeToSeconds(sbState[side].osaekomi.since)
 
-        if (white_osaekomi_time >= 20) {
-            sbState.white.osaekomi.running = false
-            sbState.white.ippon = true
-            sbState.white.wazaari_pending = false
-            endOfTime(true)
-        } else if (white_osaekomi_time >= 10 && !sbState.white.osaekomi.wazaari_given) {
-            if (sbState.white.wazaari || sbState.white.wazaari_pending) {
-                sbState.white.osaekomi.running = false
-                sbState.white.wazaari_awasete_ippon = true
-                sbState.white.wazaari_pending = false
-                endOfTime(true)
-            } else {
-                sbState.white.wazaari_pending = true
-                sbState.white.osaekomi.wazaari_given = true
+            for (const osaekomi_rule of SBRULES.osaekomi) {
+                if (osaekomi_time < osaekomi_rule.at)
+                    continue
+                if (sbState[side].osaekomi.scores_given.includes(osaekomi_rule.score))
+                    continue
+                if (sbState[side].scores[osaekomi_rule.score].value >= SBRULES.scores[osaekomi_rule.score].max_count)
+                    continue
+
+                sbState[side].scores[osaekomi_rule.score].value += 1
+                sbState[side].scores[osaekomi_rule.score].pending = !osaekomi_rule.final
+                sbState[side].osaekomi.scores_given.push(osaekomi_rule.score)
+
+                if (sbState[side].osaekomi.scores_given.length > 1) {
+
+                    let last_score = sbState[side].osaekomi.scores_given.at(-2)
+                    sbState[side].scores[last_score].pending = false
+
+                    if (sbState[side].scores[last_score].value > 0)
+                        sbState[side].scores[last_score].value -= 1
+                }
+
+                if (SBRULES.scores[osaekomi_rule.score].ends_fight) {
+                    sbState[side].osaekomi.running = false
+                    endOfTime(true)
+                }
             }
         }
     }
+}
 
-    if (sbState.blue.osaekomi.running) {
-        blue_osaekomi_time = osaekomiTimeToSeconds(sbState.blue.osaekomi.since)
+const checkForAccumulation = () => {
+    let sides = ['white', 'blue']
+    for (const side of sides) {
+        /* Step 1: set everything as if not-accumulated */
+        for (const score_name in SBRULES.scores) {
+            if (Object.prototype.hasOwnProperty.call(SBRULES.scores, score_name)) {
+                sbState[side].scores[score_name].value_with_accum = 
+                            sbState[side].scores[score_name].value;
+            }
+        }
 
-        if (blue_osaekomi_time >= 20) {
-            sbState.blue.osaekomi.running = false
-            sbState.blue.ippon = true
-            sbState.blue.wazaari_pending = false
-            endOfTime(true)
-        } else if (blue_osaekomi_time >= 10 && !sbState.blue.osaekomi.wazaari_given) {
-            if (sbState.blue.wazaari || sbState.blue.wazaari_pending) {
-                sbState.blue.osaekomi.running = false
-                sbState.blue.wazaari_awasete_ippon = true
-                sbState.blue.wazaari_pending = false
-                endOfTime(true)
-            } else {
-                sbState.blue.wazaari_pending = true
-                sbState.blue.osaekomi.wazaari_given = true
+        /* Calculate acumulations */
+        for (const score_name in SBRULES.scores) {
+            if (Object.prototype.hasOwnProperty.call(SBRULES.scores, score_name)) {
+                const score = SBRULES.scores[score_name];
+
+                if (!score.accumulates) continue
+
+                let accumulates_to = score.accumulates;
+                
+                if (sbState[side].scores[score_name].value == score.max_count) {
+
+                    if(sbState[side].scores[accumulates_to].value < SBRULES.scores[accumulates_to].max_count) {
+                        sbState[side].scores[accumulates_to].value_with_accum += 1;
+
+                        if (sbState[side].osaekomi.running && SBRULES.scores[accumulates_to].ends_fight) {
+                            sbState[side].osaekomi.running = false
+                            sbState[side].scores[score_name].pending = false
+                            endOfTime(true)
+                        }
+                    }
+                }
             }
         }
     }
@@ -139,46 +170,24 @@ const osaekomiCheck = () => {
 const determineWinner = (always) => {
     always ||= false;
 
-    if (sbState.white.hansokumake && sbState.blue.hansokumake) {
-        return false;
-    } else if (sbState.blue.hansokumake) {
-        return ['white', 10]
-    } else if (sbState.white.hansokumake) {
-        return ['blue', 10]
-    }
+    for (const rank of SBRULES.ranking) {
+        if (!always && !SBRULES.scores[rank].ends_fight) continue
 
-    if (sbState.white.ippon && sbState.blue.ippon) {
-        return false;
-    } else if (sbState.white.ippon) {
-        return ['white', 10]
-    } else if (sbState.blue.ippon) {
-        return ['blue', 10]
-    }
-
-    if (sbState.white.wazaari_awasete_ippon && sbState.blue.wazaari_awasete_ippon) {
-        return false;
-    } else if (sbState.white.wazaari_awasete_ippon) {
-        return ['white', 10]
-    } else if (sbState.blue.wazaari_awasete_ippon) {
-        return ['blue', 10]
-    }
-
-    if (sbState.white.shido == 3 && sbState.blue.shido == 3) {
-        return false;
-    } else if (sbState.blue.shido == 3) {
-        return ['white', 10]
-    } else if (sbState.white.shido == 3) {
-        return ['blue', 10]
-    }
-
-    if (!always) { return false; }
-
-    if (sbState.white.wazaari && sbState.blue.wazaari) {
-        return false;
-    } else if (sbState.white.wazaari) {
-        return ['white', 7]
-    } else if (sbState.blue.wazaari) {
-        return ['blue', 7]
+        if (SBRULES.scores[rank].penalty) {
+            if (sbState.white.scores[rank].value_with_accum > sbState.blue.scores[rank].value_with_accum)
+                return ['blue', SBRULES.scores[rank].points]
+            else if (sbState.white.scores[rank].value_with_accum < sbState.blue.scores[rank].value_with_accum)
+                return ['white', SBRULES.scores[rank].points]
+            else
+                continue
+        } else {
+            if (sbState.white.scores[rank].value_with_accum > sbState.blue.scores[rank].value_with_accum)
+                return ['white', SBRULES.scores[rank].points]
+            else if (sbState.white.scores[rank].value_with_accum < sbState.blue.scores[rank].value_with_accum)
+                return ['blue', SBRULES.scores[rank].points]
+            else
+                continue
+        }
     }
 
     return false;

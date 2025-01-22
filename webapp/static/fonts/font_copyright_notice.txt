@@ -1,0 +1,20 @@
+For the inter*.woff2 files:
+
+    Copyright 2020 The Inter Project Authors (https://github.com/rsms/inter)
+
+    This Font Software is licensed under the SIL Open Font License, Version 1.1 . This license is copied below, and is also available with a FAQ at: https://openfontlicense.org
+
+    SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+
+
+For the reddit-mono*.woff2 files:
+
+    Reddit Sans Copyright © 2020-23, Reddit, Inc. (https://github.com/reddit/redditsans)
+
+    This Font Software is licensed under the SIL Open Font License, Version 1.1 . This license is copied below, and is also available with a FAQ at: https://openfontlicense.org
+
+    SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+
+The license text for the Open Font License can be downloaded here:
+
+https://openfontlicense.org/open-font-license-official-text/

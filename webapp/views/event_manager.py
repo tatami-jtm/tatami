@@ -1,16 +1,17 @@
 from flask import Blueprint, render_template, abort, flash, session, g, \
-    request, redirect, url_for, send_file, make_response
+    request, redirect, url_for, send_file, make_response, Response, \
+    current_app
 from flask_security import login_required, current_user
 from werkzeug.utils import secure_filename
 
 from ..models import db, Event, EventClass, DeviceRegistration, \
     DevicePosition, EventRole, Association, Registration, ListSystemRule, \
-    ListSystem, Role, User
+    ListSystem, Role, User, ScoreboardRuleset
 
 from ..helpers import _get_or_create
 
 from datetime import datetime
-import time, uuid, os, csv, io
+import time, uuid, os, csv, io, zipfile
 
 eventmgr_view = Blueprint('event_manager', __name__)
 
@@ -97,6 +98,7 @@ def index():
 @check_is_event_supervisor
 def config():
     system_rules = ListSystemRule.query.filter_by(event=g.event)
+    scoreboard_rulesets = ScoreboardRuleset.all_enabled()
     
     ranges = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 8), (9, 16), (17, 32)]
 
@@ -105,7 +107,7 @@ def config():
 
     return render_template("event-manager/config.html", ranges=ranges,
                            ListSystem=ListSystem, system_rules=system_rules,
-                           roles=roles, users=users)
+                           roles=roles, users=users, scoreboard_rulesets=scoreboard_rulesets)
 
 
 @eventmgr_view.route('/config', methods=['POST'])
@@ -138,6 +140,8 @@ def save_config():
         g.event.save_setting('proximity_placement.hide_name', 'proxplace_hide_name' in request.form)
         g.event.save_setting('proximity_placement.hide_club', 'proxplace_hide_club' in request.form)
 
+        g.event.scoreboard_ruleset = ScoreboardRuleset.query.get(request.form['sbid'])
+        db.session.commit()
 
         flash("Einstellungen erfolgreich gespeichert", 'success')
         g.event.log(current_user.qualified_name(), 'DEBUG', 'Allgemeine Einstellungen wurden aktualisiert.')
@@ -1057,6 +1061,88 @@ def quick_sign_in():
     g.event.log(current_user.qualified_name(), 'DEBUG', f'Schnelleinwahl vorgenommen mit Rolle {device.event_role.name} an {device.position.title}')
 
     return redirect(url_for('devices.index', event=g.event.slug))
+
+
+
+@eventmgr_view.route('/offline-scoreboard')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def offline_board():
+    zip_io = io.BytesIO()
+    zip_file = zipfile.ZipFile(zip_io, mode='w')
+
+    # Write README.txt
+    zip_file.writestr(f"README.txt", f"""
+TATAMI - Offline Scoreboard
+für die Veranstaltung {g.event.title}
+
+Anleitung:
+
+1. Öffnen Sie die Datei `start.html` im Browser
+2. Betätigen Sie dort den Knopf `Scoreboard Öffnen`
+3. Nutzen Sie das Scoreboard wie gewohnt
+""".strip())
+    
+    sbfile = render_template("scoreboard.html", rules=g.event.sb_rules())
+    sbfile = sbfile.replace('/static/application/scoreboard/', './assets/')
+    sbfile = sbfile.replace('/static/brand/', './assets/')
+    sbfile = sbfile.replace('/static/bootstrap/css/', './assets/')
+    sbfile = sbfile.replace('/static/bootstrap/js/', './assets/')
+    zip_file.writestr(f"_scoreboard.html", sbfile)
+
+    g.deviceless = True
+
+    cfile = render_template("mod_scoreboard/standalone.html")
+    cfile = cfile.replace('/static/application/scoreboard/', './assets/')
+    cfile = cfile.replace('/static/brand/', './assets/')
+    cfile = cfile.replace('/static/bootstrap/css/', './assets/')
+    cfile = cfile.replace('/static/bootstrap/js/', './assets/')
+    cfile = cfile.replace('/scoreboard?', './_scoreboard.html?')
+    cfile = cfile.replace('/scoreboard/rules:', './_scoreboard.html?rules=')
+    zip_file.writestr(f"start.html", cfile)
+
+    # Write assets
+    for path, fn in [
+        ('application/scoreboard/scoreboard.css', 'scoreboard.css'),
+        ('application/scoreboard/scoreboard.js', 'scoreboard.js'),
+        ('application/scoreboard/controller_action.js', 'controller_action.js'),
+        ('application/scoreboard/controller_keyboard.js', 'controller_keyboard.js'),
+        ('application/scoreboard/controller_standalone.js', 'controller_standalone.js'),
+        ('application/scoreboard/controller_view.js', 'controller_view.js'),
+        ('application/scoreboard/controller_state.js', 'controller_state.js'),
+        ('application/scoreboard/alert.mp3', 'alert.mp3'),
+        ('brand/brand.css', 'brand.css'),
+        ('bootstrap/css/bootstrap.min.css', 'bootstrap.min.css'),
+        ('bootstrap/js/bootstrap.min.js', 'bootstrap.min.js'),
+        ('bootstrap/js/bootstrap.bundle.js', 'bootstrap.bundle.js'),
+        ('fonts/font_copyright_notice.txt', 'font_copyright_notice.txt'),
+        ('fonts/inter-v13-latin_latin-ext-200.woff2', 'inter-v13-latin_latin-ext-200.woff2'),
+        ('fonts/inter-v13-latin_latin-ext-500.woff2', 'inter-v13-latin_latin-ext-500.woff2'),
+        ('fonts/inter-v13-latin_latin-ext-700.woff2', 'inter-v13-latin_latin-ext-700.woff2'),
+        ('fonts/inter-v13-latin_latin-ext-900.woff2', 'inter-v13-latin_latin-ext-900.woff2'),
+        ('fonts/inter-v13-latin_latin-ext-regular.woff2', 'inter-v13-latin_latin-ext-regular.woff2'),
+        ('fonts/reddit-mono-v1-latin-500.woff2', 'reddit-mono-v1-latin-500.woff2'),
+        ('fonts/reddit-mono-v1-latin-800.woff2', 'reddit-mono-v1-latin-800.woff2')
+        ]:
+        fr = current_app.send_static_file(path)
+        fr.direct_passthrough = False
+        fr = fr.get_data()
+        fr = fr.replace(b'/static/application/scoreboard/', b'./assets/')
+        fr = fr.replace(b'/static/brand/', b'./assets/')
+        fr = fr.replace(b'/static/fonts/', b'../assets/')
+        fr = fr.replace(b'/static/bootstrap/css/', b'./assets/')
+        fr = fr.replace(b'/static/bootstrap/js/', b'./assets/')
+        zip_file.writestr(f"assets/{fn}", fr)
+    
+    zip_file.close()
+
+    now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+    return Response(zip_io.getvalue(), mimetype='application/zip', headers={
+        'Content-Disposition': f'attachment;filename=offline_scoreboard_{now}.zip'
+    })
+
 
 
 @eventmgr_view.route('/log')

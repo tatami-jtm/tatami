@@ -66,22 +66,16 @@
     </div>
     {% endif %}
     {% set result_data = result.data() %}
+    {% set SBRULES = g.event.sb_rules() %}
     {% if result_data %}
     <div class="match-sb">
         {% if "white" in result_data %}
         <div class="match-sb-white">
-            <div class="match-sb-field">
-                {{ result_data.white.ippon }}
+            {% for c in SBRULES.small_display %}
+            <div class="match-sb-field {{ 'match-sb-field-bad' if SBRULES.scores[c].penalty }}">
+                {{ result_data.white[c] }}
             </div>
-            <div class="match-sb-field">
-                {{ result_data.white.wazaari }}
-            </div>
-            <div class="match-sb-field match-sb-field-bad">
-                {{ result_data.white.shido }}
-            </div>
-            <div class="match-sb-field match-sb-field-bad">
-                {{ result_data.white.hansokumake }}
-            </div>
+            {% endfor %}
         </div>
         {% endif %}
         {% if "full_time" in result_data %}
@@ -89,18 +83,11 @@
         {% endif %}
         {% if "blue" in result_data %}
         <div class="match-sb-blue">
-            <div class="match-sb-field">
-                {{ result_data.blue.ippon }}
+            {% for c in SBRULES.small_display %}
+            <div class="match-sb-field {{ 'match-sb-field-bad' if SBRULES.scores[c].penalty }}">
+                {{ result_data.blue[c] }}
             </div>
-            <div class="match-sb-field">
-                {{ result_data.blue.wazaari }}
-            </div>
-            <div class="match-sb-field match-sb-field-bad">
-                {{ result_data.blue.shido }}
-            </div>
-            <div class="match-sb-field match-sb-field-bad">
-                {{ result_data.blue.hansokumake }}
-            </div>
+            {% endfor %}
         </div>
         {% endif %}
     </div>
@@ -141,6 +128,12 @@
                     <option disabled {{ 'selected' if not result.score() }}></option>
                     <option value="1" {{ 'selected' if result.score() == 1 }}>
                         1 WP (Shido oder Hantei)
+                    </option>
+                    <option value="3" {{ 'selected' if result.score() == 3 }}>
+                        3 WP
+                    </option>
+                    <option value="5" {{ 'selected' if result.score() == 5 }}>
+                        5 WP (Yuko)
                     </option>
                     <option value="7" {{ 'selected' if result.score() == 7 }}>
                         7 WP (Waza-ari)

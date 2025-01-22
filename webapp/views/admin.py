@@ -3,11 +3,12 @@ from flask import Blueprint, render_template, abort, redirect,\
 from flask_security import login_required, current_user
 
 from ..models import db, User, Role, Event, EventClass, ListSystem, \
-    ListSystemRule, HelpRequest, SystemMessage
+    ListSystemRule, HelpRequest, SystemMessage, ScoreboardRuleset
 
 from ..helpers import _get_or_create
 
 from datetime import datetime
+import json
 
 admin_view = Blueprint('admin', __name__)
 
@@ -331,10 +332,12 @@ def presets():
         abort(404)
 
     event_classes = EventClass.query.filter_by(is_template=True).order_by(EventClass.template_name).all()
+    scoreboard_rulesets = ScoreboardRuleset.query.order_by(ScoreboardRuleset.is_default.desc(), ScoreboardRuleset.title).all()
 
     return render_template(
         "admin/presets.html",
-        event_classes=event_classes)
+        event_classes=event_classes,
+        scoreboard_rulesets=scoreboard_rulesets)
 
 
 @admin_view.route("/template/event_class/<id>")
@@ -354,6 +357,63 @@ def event_class_template(id):
         "default_maximal_size": event_class.default_maximal_size,
         "weight_generator": event_class.weight_generator.split("\n") if event_class.weight_generator else [],
     })
+
+
+@admin_view.route("/templates/scoreboard/<id>", methods=['GET', 'POST'])
+@login_required
+def scoreboard_preset(id):
+    if not current_user.has_privilege('alter_presets'):
+        abort(404)
+
+    scoreboard_ruleset = ScoreboardRuleset.query.filter_by(id=id).one_or_404()
+
+    if request.method == 'POST':
+        scoreboard_ruleset.title = request.form['title']
+        scoreboard_ruleset.enabled = 'enabled' in request.form
+        scoreboard_ruleset.is_default = 'is_default' in request.form
+
+        try:
+            scoreboard_ruleset.rules = json.dumps(json.loads(request.form['rules']), indent=4)
+        except:
+            scoreboard_ruleset.rules = request.form['rules']
+            flash("Regelwerk wurde nicht gespeichert. Grund: JSON nicht wohlgeformt.", 'danger')
+        else:
+            db.session.commit()
+            flash("Regelwerk wurde erfolgreich gespeichert.", 'success')
+
+    return render_template(
+        "admin/scoreboard_rulesets/edit.html",
+        scoreboard_ruleset=scoreboard_ruleset, action='edit')
+
+
+@admin_view.route("/templates/scoreboard/new", methods=['GET', 'POST'])
+@login_required
+def new_scoreboard_preset():
+    if not current_user.has_privilege('alter_presets'):
+        abort(404)
+
+    scoreboard_ruleset = ScoreboardRuleset()
+
+    if request.method == 'POST':
+        scoreboard_ruleset.title = request.form['title']
+        scoreboard_ruleset.enabled = 'enabled' in request.form
+        scoreboard_ruleset.is_default = 'is_default' in request.form
+
+        try:
+            scoreboard_ruleset.rules = json.dumps(json.loads(request.form['rules']), indent=4)
+        except:
+            scoreboard_ruleset.rules = request.form['rules']
+            flash("Regelwerk wurde nicht gespeichert. Grund: JSON nicht wohlgeformt.", 'danger')
+        else:
+            db.session.add(scoreboard_ruleset)
+            db.session.commit()
+            flash("Regelwerk wurde erfolgreich gespeichert.", 'success')
+
+            return redirect(url_for('admin.scoreboard_preset', id=scoreboard_ruleset.id))
+
+    return render_template(
+        "admin/scoreboard_rulesets/edit.html",
+        scoreboard_ruleset=scoreboard_ruleset, action='new')
 
 
 @admin_view.route('/support/new', methods=['GET', 'POST'])

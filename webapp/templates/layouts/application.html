@@ -10,6 +10,9 @@
     <div class="border-bottom application-header bg-white shadow-sm">
         <div class="container-fluid py-2 d-flex justify-content-between align-items-center">
             <a href="{{ url_for('devices.index', event=g.event.slug) }}" class="splash-logo">{{ config.BRAND_NAME }}</a>
+            {% if g.deviceless %}
+            <strong>{{ g.event.title }}</strong>
+            {% else %}
             <div class="dropdown dropdown-center">
                 <button class="btn btn-light fw-bold dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     {{ g.event.title }}
@@ -80,6 +83,7 @@
                     {% endif %}
                 </ul>
             </div>
+            {% endif %}
             <div class="menu">
                 <a href="{{ url_for('devices.exit', event=g.event.slug) }}" class="btn btn-sm btn-dark">Abmelden</a>
             </div>

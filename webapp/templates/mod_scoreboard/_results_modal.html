@@ -1,3 +1,5 @@
+{% set SBRULES = g.event.sb_rules() %}
+
 <div class="modal" id="results-modal" tabindex="-1" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -25,6 +27,12 @@
                         <option value="1">
                             1 WP (Shido oder Hantei)
                         </option>
+                        <option value="3">
+                            3 WP
+                        </option>
+                        <option value="5">
+                            5 WP (Yuko)
+                        </option>
                         <option value="7">
                             7 WP (Waza-ari)
                         </option>
@@ -49,63 +57,33 @@
             <div class="modal-body border-top">
                 <table class="table-scoreboard mb-3">
                     <tr class="row-fighters">
-                        <th colspan="4" class="col-white" data-tatami-field="current.white.name">xxx</th>
-                        <th colspan="4" class="col-blue" data-tatami-field="current.blue.name">xxx</th>
+                        <th colspan="{{ SBRULES.small_display|length }}" class="col-white" data-tatami-field="current.white.name">xxx</th>
+                        <th colspan="{{ SBRULES.small_display|length }}" class="col-blue" data-tatami-field="current.blue.name">xxx</th>
                     </tr>
                     <tr class="row-labels">
-                        <th class="col-white col-ippon">
-                            <label for="sb-white-ippon">Ippon</label>
+                        {% for c in SBRULES.small_display %}
+                        <th class="col-white {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                            <label for="sb-white-{{ c }}">{{ SBRULES.scores[c].short_name }}</label>
                         </th>
-                        <th class="col-white col-wazaari">
-                            <label for="sb-white-wazaari">Wazaari</label>
+                        {% endfor %}
+                        {% for c in SBRULES.small_display %}
+                        <th class="col-blue {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                            <label for="sb-blue-{{ c }}">{{ SBRULES.scores[c].short_name }}</label>
                         </th>
-                        <th class="col-white col-shido">
-                            <label for="sb-white-shido">Shido</label>
-                        </th>
-                        <th class="col-white col-hansokumake">
-                            <label for="sb-white-hansokumake">HM</label>
-                        </th>
-            
-                        <th class="col-blue col-ippon">
-                            <label for="sb-blue-ippon">Ippon</label>
-                        </th>
-                        <th class="col-blue col-wazaari">
-                            <label for="sb-blue-wazaari">Wazaari</label>
-                        </th>
-                        <th class="col-blue col-shido">
-                            <label for="sb-blue-shido">Shido</label>
-                        </th>
-                        <th class="col-blue col-hansokumake">
-                            <label for="sb-blue-hansokumake">HM</label>
-                        </th>
+                        {% endfor %}
                     </tr>
             
                     <tr class="row-inputs">
-                        <td class="col-white col-ippon">
-                            <output data-tatami-field="results.white.ippon">0</output>
+                        {% for c in SBRULES.small_display %}
+                        <td class="col-white {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                            <output data-tatami-field="results.white" data-tatami-score="{{ c }}">0</output>
                         </td>
-                        <td class="col-white col-wazaari">
-                            <output data-tatami-field="results.white.wazaari">0</output>
+                        {% endfor %}
+                        {% for c in SBRULES.small_display %}
+                        <td class="col-blue {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                            <output data-tatami-field="results.blue" data-tatami-score="{{ c }}">0</output>
                         </td>
-                        <td class="col-white col-shido">
-                            <output data-tatami-field="results.white.shido">0</output>
-                        </td>
-                        <td class="col-white col-hansokumake">
-                            <output data-tatami-field="results.white.hansokumake">0</output>
-                        </td>
-            
-                        <td class="col-blue col-ippon">
-                            <output data-tatami-field="results.blue.ippon">0</output>
-                        </td>
-                        <td class="col-blue col-wazaari">
-                            <output data-tatami-field="results.blue.wazaari">0</output>
-                        </td>
-                        <td class="col-blue col-shido">
-                            <output data-tatami-field="results.blue.shido">0</output>
-                        </td>
-                        <td class="col-blue col-hansokumake">
-                            <output data-tatami-field="results.blue.hansokumake">0</output>
-                        </td>
+                        {% endfor %}
                     </tr>
                 </table>
             

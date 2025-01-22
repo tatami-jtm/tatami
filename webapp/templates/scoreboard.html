@@ -7,6 +7,7 @@
     <title>TATAMI Scoreboard</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='application/scoreboard/scoreboard.css') }}">
+    <script>var SBRULES = {{ rules|tojson }}</script>
     <script src="{{ url_for('static', filename='application/scoreboard/scoreboard.js') }}" defer></script>
 </head>
 <body>
@@ -17,17 +18,25 @@
                 <span class="name" data-sbf="tatami-scoreboard:white:name+club">Kämpfer*in Weiß (Verein Weiß)</span>
             </div>
             <div class="main-row-score row-white">
-                <div class="score-text" data-sbf="tatami-scoreboard:white:ippon"></div>
                 <div class="score-grid">
                     <div class="score-osaekomi">
                         <div class="time-osaekomi" data-sbf="tatami-scoreboard:time:osaekomi:white"></div>
                     </div>
-                    <div class="score-wazaari" data-sbf-id="tatami-scoreboard:white:wazaari"><div class="token">W</div></div>
-                    <div class="score-shido" data-sbf-id="tatami-scoreboard:white:shido+hansokumake">
+                    {% for d in rules.display %}
+                    {% if d.style == 'full_text' %}
+                    <div class="score-full_text" data-sbf-side="tatami-scoreboard:white" data-sbf-col="{{ d['for'] }}">
+                        {{ d.text }}
+                    </div>
+                    {% elif d.style == 'counter' %}
+                    <div class="score-counter score-size-{{ d.size or 'md' }}" data-sbf-side="tatami-scoreboard:white" data-sbf-col="{{ d['for'] }}"></div>
+                    {% elif d.style == 'penalty_card' %}
+                    <div class="score-shido" data-sbf-side="tatami-scoreboard:white" data-sbf-hicol="{{ d['for_higher'] }}" data-sbf-locol="{{ d['for_lower'] }}">
                         <div class="card-shido hidden"></div>
                         <div class="card-shido hidden"></div>
                         <div class="card-hansokumake hidden"></div>
                     </div>
+                    {% endif %}
+                    {% endfor %}
                 </div>
             </div>
 
@@ -40,12 +49,21 @@
                     <div class="score-osaekomi">
                         <div class="time-osaekomi" data-sbf="tatami-scoreboard:time:osaekomi:blue"></div>
                     </div>
-                    <div class="score-wazaari" data-sbf-id="tatami-scoreboard:blue:wazaari"><div class="token">W</div></div>
-                    <div class="score-shido" data-sbf-id="tatami-scoreboard:blue:shido+hansokumake">
+                    {% for d in rules.display %}
+                    {% if d.style == 'full_text' %}
+                    <div class="score-full_text" data-sbf-side="tatami-scoreboard:blue" data-sbf-col="{{ d['for'] }}">
+                        {{ d.text }}
+                    </div>
+                    {% elif d.style == 'counter' %}
+                    <div class="score-counter score-size-{{ d.size or 'md' }}" data-sbf-side="tatami-scoreboard:blue" data-sbf-col="{{ d['for'] }}"></div>
+                    {% elif d.style == 'penalty_card' %}
+                    <div class="score-shido" data-sbf-side="tatami-scoreboard:blue" data-sbf-hicol="{{ d['for_higher'] }}" data-sbf-locol="{{ d['for_lower'] }}">
                         <div class="card-shido hidden"></div>
                         <div class="card-shido hidden"></div>
                         <div class="card-hansokumake hidden"></div>
                     </div>
+                    {% endif %}
+                    {% endfor %}
                 </div>
             </div>
 

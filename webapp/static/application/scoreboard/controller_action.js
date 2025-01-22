@@ -26,35 +26,6 @@ const white_stop_osaekomi = document.querySelector("[data-control=\"osaekomi.whi
 const blue_start_osaekomi = document.querySelector("[data-control=\"osaekomi.blue.start\"]")
 const blue_stop_osaekomi = document.querySelector("[data-control=\"osaekomi.blue.stop\"]")
 
-const ippon_white = document.getElementById("ippon-white")
-const ippon_blue = document.getElementById("ippon-blue")
-const white_expand_ippon = document.querySelector("[data-control=\"ippon.white.expand\"]")
-const white_reduce_ippon = document.querySelector("[data-control=\"ippon.white.reduce\"]")
-const blue_expand_ippon = document.querySelector("[data-control=\"ippon.blue.expand\"]")
-const blue_reduce_ippon = document.querySelector("[data-control=\"ippon.blue.reduce\"]")
-
-const wazaari_white = document.getElementById("wazaari-white")
-const wazaari_blue = document.getElementById("wazaari-blue")
-const white_expand_wazaari = document.querySelector("[data-control=\"wazaari.white.expand\"]")
-const white_reduce_wazaari = document.querySelector("[data-control=\"wazaari.white.reduce\"]")
-const blue_expand_wazaari = document.querySelector("[data-control=\"wazaari.blue.expand\"]")
-const blue_reduce_wazaari = document.querySelector("[data-control=\"wazaari.blue.reduce\"]")
-
-const shido_white = document.getElementById("shido-white")
-const shido_blue = document.getElementById("shido-blue")
-const white_expand_shido = document.querySelector("[data-control=\"shido.white.expand\"]")
-const white_reduce_shido = document.querySelector("[data-control=\"shido.white.reduce\"]")
-const blue_expand_shido = document.querySelector("[data-control=\"shido.blue.expand\"]")
-const blue_reduce_shido = document.querySelector("[data-control=\"shido.blue.reduce\"]")
-
-const hansokumake_white = document.getElementById("hansokumake-white")
-const hansokumake_blue = document.getElementById("hansokumake-blue")
-const white_expand_hansokumake = document.querySelector("[data-control=\"hansokumake.white.expand\"]")
-const white_reduce_hansokumake = document.querySelector("[data-control=\"hansokumake.white.reduce\"]")
-const blue_expand_hansokumake = document.querySelector("[data-control=\"hansokumake.blue.expand\"]")
-const blue_reduce_hansokumake = document.querySelector("[data-control=\"hansokumake.blue.reduce\"]")
-
-
 /* *********** *
  * Controllers *
  * *********** */
@@ -132,169 +103,84 @@ flash_medical.addEventListener("click", () => {
     flash_medical.blur()
 })
 
-/* Control: Osaekomi */
-white_start_osaekomi.addEventListener("click", () => {
-    sbState.white.osaekomi.running = true
-    sbState.white.osaekomi.since = sbState.time.globalTick
-    sbState.white.osaekomi.wazaari_given = false
-    sbState.blue.osaekomi.running = false
-    white_start_osaekomi.blur()
-})
-white_stop_osaekomi.addEventListener("click", () => {
-    sbState.white.osaekomi.running = false
-    white_stop_osaekomi.blur()
-})
+if (SBRULES.controls.includes('osaekomi')) {
 
-blue_start_osaekomi.addEventListener("click", () => {
-    sbState.blue.osaekomi.running = true
-    sbState.blue.osaekomi.since = sbState.time.globalTick
-    sbState.blue.osaekomi.wazaari_given = false
-    sbState.white.osaekomi.running = false
-    blue_start_osaekomi.blur()
-})
-blue_stop_osaekomi.addEventListener("click", () => {
-    sbState.blue.osaekomi.running = false
-    blue_stop_osaekomi.blur()
-})
-
-toggle_osaekomi.addEventListener("click", () => {
-    if(sbState.blue.osaekomi.running) {
-        sbState.blue.osaekomi.running = false
+    /* Control: Osaekomi */
+    white_start_osaekomi.addEventListener("click", () => {
         sbState.white.osaekomi.running = true
-        sbState.white.osaekomi.since = sbState.blue.osaekomi.since
-        sbState.white.osaekomi.wazaari_given = false
-        if (sbState.blue.osaekomi.wazaari_given)
-            sbState.blue.wazaari_pending = false;
-    } else if(sbState.white.osaekomi.running) {
+        sbState.white.osaekomi.since = sbState.time.globalTick
+        sbState.white.osaekomi.scores_given = []
+        sbState.blue.osaekomi.running = false
+        white_start_osaekomi.blur()
+    })
+    white_stop_osaekomi.addEventListener("click", () => {
         sbState.white.osaekomi.running = false
+        white_stop_osaekomi.blur()
+    })
+
+    blue_start_osaekomi.addEventListener("click", () => {
         sbState.blue.osaekomi.running = true
-        sbState.blue.osaekomi.since = sbState.white.osaekomi.since
-        sbState.blue.osaekomi.wazaari_given = false
-        if (sbState.white.osaekomi.wazaari_given)
-            sbState.white.wazaari_pending = false;
+        sbState.blue.osaekomi.since = sbState.time.globalTick
+        sbState.blue.osaekomi.scores_given = []
+        sbState.white.osaekomi.running = false
+        blue_start_osaekomi.blur()
+    })
+    blue_stop_osaekomi.addEventListener("click", () => {
+        sbState.blue.osaekomi.running = false
+        blue_stop_osaekomi.blur()
+    })
+
+    toggle_osaekomi.addEventListener("click", () => {
+        if(sbState.blue.osaekomi.running) {
+            sbState.blue.osaekomi.running = false
+            sbState.white.osaekomi.running = true
+            sbState.white.osaekomi.since = sbState.blue.osaekomi.since
+            sbState.white.osaekomi.scores_given = []
+
+            // TODO: remove given scores for blue
+        } else if(sbState.white.osaekomi.running) {
+            sbState.white.osaekomi.running = false
+            sbState.blue.osaekomi.running = true
+            sbState.blue.osaekomi.since = sbState.white.osaekomi.since
+            sbState.blue.osaekomi.scores_given = []
+
+            // TODO: remove given scores for white
+        }
+
+        toggle_osaekomi.blur()
+    })
+
+}
+
+let sides = ['white', 'blue']
+for (const side of sides) {
+    for (const score_name in SBRULES.scores) {
+        if (Object.prototype.hasOwnProperty.call(SBRULES.scores, score_name)) {
+            const score = SBRULES.scores[score_name];
+
+            let up_elem = document.querySelector(
+                "[data-control='" + side + ".expand'][data-score='" + score_name + "']")
+            let down_elem = document.querySelector(
+                "[data-control='" + side + ".reduce'][data-score='" + score_name + "']")
+
+            up_elem.addEventListener('click', () => {
+                if (sbState[side].scores[score_name].pending)
+                    sbState[side].scores[score_name].pending = false
+                else
+                    if (score.max_count && sbState[side].scores[score_name].value >= score.max_count)
+                        return
+                    else
+                        sbState[side].scores[score_name].value += 1
+            });
+
+            down_elem.addEventListener('click', () => {
+                sbState[side].scores[score_name].pending = false
+
+                if (sbState[side].scores[score_name].value == 0)
+                    return
+
+                sbState[side].scores[score_name].value -= 1
+            });
+        }
     }
-
-    toggle_osaekomi.blur()
-})
-
-/* Control: Ippon */
-
-white_expand_ippon.addEventListener("click", () => {
-    sbState.white.ippon = true
-    white_expand_ippon.blur()
-})
-
-white_reduce_ippon.addEventListener("click", () => {
-    sbState.white.ippon = false
-    white_reduce_ippon.blur()
-})
-
-blue_expand_ippon.addEventListener("click", () => {
-    sbState.blue.ippon = true
-    blue_expand_ippon.blur()
-})
-
-blue_reduce_ippon.addEventListener("click", () => {
-    sbState.blue.ippon = false
-    blue_reduce_ippon.blur()
-})
-
-/* Control: Wazaari */
-
-white_expand_wazaari.addEventListener("click", () => {
-    if (sbState.white.wazaari)
-        sbState.white.wazaari_awasete_ippon = true
-    else
-        sbState.white.wazaari = true
-
-    sbState.white.wazaari_pending = false
-
-    white_expand_wazaari.blur()
-})
-
-white_reduce_wazaari.addEventListener("click", () => {
-    if (sbState.white.wazaari_awasete_ippon)
-        sbState.white.wazaari_awasete_ippon = false
-    else
-        sbState.white.wazaari = false
-
-    sbState.white.wazaari_pending = false
-
-    white_reduce_wazaari.blur()
-})
-
-blue_expand_wazaari.addEventListener("click", () => {
-    if (sbState.blue.wazaari)
-        sbState.blue.wazaari_awasete_ippon = true
-    else
-        sbState.blue.wazaari = true
-
-    sbState.blue.wazaari_pending = false
-
-    blue_expand_wazaari.blur()
-})
-
-blue_reduce_wazaari.addEventListener("click", () => {
-    if (sbState.blue.wazaari_awasete_ippon)
-        sbState.blue.wazaari_awasete_ippon = false
-    else
-        sbState.blue.wazaari = false
-
-    sbState.blue.wazaari_pending = false
-
-    blue_reduce_wazaari.blur()
-})
-
-/* Control: Shido */
-
-white_expand_shido.addEventListener("click", () => {
-    if (sbState.white.shido < 3)
-        sbState.white.shido += 1
-
-    white_expand_shido.blur()
-})
-
-white_reduce_shido.addEventListener("click", () => {
-    if (sbState.white.shido > 0)
-        sbState.white.shido -= 1
-
-    white_reduce_shido.blur()
-})
-
-blue_expand_shido.addEventListener("click", () => {
-    if (sbState.blue.shido < 3)
-        sbState.blue.shido += 1
-
-    blue_expand_shido.blur()
-})
-
-blue_reduce_shido.addEventListener("click", () => {
-    if (sbState.blue.shido > 0)
-        sbState.blue.shido -= 1
-
-    blue_reduce_shido.blur()
-})
-
-/* Control: Hansoku-Make */
-
-white_expand_hansokumake.addEventListener("click", () => {
-    sbState.white.hansokumake = true
-    sbState.time.running = false
-    white_expand_hansokumake.blur()
-})
-
-white_reduce_hansokumake.addEventListener("click", () => {
-    sbState.white.hansokumake = false
-    white_reduce_hansokumake.blur()
-})
-
-blue_expand_hansokumake.addEventListener("click", () => {
-    sbState.blue.hansokumake = true
-    sbState.time.running = false
-    blue_expand_hansokumake.blur()
-})
-
-blue_reduce_hansokumake.addEventListener("click", () => {
-    sbState.blue.hansokumake = false
-    blue_reduce_hansokumake.blur()
-})
+}

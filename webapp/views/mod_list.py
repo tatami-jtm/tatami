@@ -387,27 +387,26 @@ def write_match_result(id, match_id):
     has_sb_data = False
     sb_data = {
         "white": {
-            "ippon": None,
-            "wazaari": None,
-            "shido": None,
-            "hansokumake": None
         },
         "blue": {
-            "ippon": None,
-            "wazaari": None,
-            "shido": None,
-            "hansokumake": None
         }
     }
 
+    SBRULES = g.event.sb_rules()
+
     for side in ['white', 'blue']:
-        for field, limit in [('ippon', 1), ('wazaari', 2), ('shido', 3), ('hansokumake', 1)]:
+        for field, data in SBRULES['scores'].items():
             key = f"sb-{side}-{field}"
 
             if key in request.form:
                 has_sb_data = True
-
                 value = int(request.form[key])
+
+                if 'max_count' in data:
+                    limit = data['max_count']
+                else:
+                    limit = value
+
                 if 0 <= value <= limit:
                     sb_data[side][field] = value
                 elif value < 0:

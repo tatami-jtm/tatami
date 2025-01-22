@@ -40,7 +40,7 @@
 
 @font-face {
     font-display: swap;
-    font-family: 'Reddit Mono';
+    font-family: 'Reddit Mono', monospace;
     font-style: normal;
     font-weight: 500;
     src: url('/static/fonts/reddit-mono-v1-latin-500.woff2') format('woff2');
@@ -48,7 +48,7 @@
 
 @font-face {
     font-display: swap;
-    font-family: 'Reddit Mono';
+    font-family: 'Reddit Mono', monospace;
     font-style: normal;
     font-weight: 800;
     src: url('/static/fonts/reddit-mono-v1-latin-800.woff2') format('woff2');
@@ -637,6 +637,9 @@ body.application {
 textarea.form-control {
     min-height: 150px;
 }
+textarea.form-control.form-lg {
+    min-height: 500px;
+}
 
 .application .h-full {
     margin-top: -1rem;
@@ -833,6 +836,7 @@ img {
     padding: 0.1rem;
     border: 1px solid;
     text-align: center;
+    font-size: 0.9rem;
 }
 .match-summary .match-sb .match-sb-white .match-sb-field:not(:last-child),
 .match-summary .match-sb .match-sb-blue .match-sb-field:not(:last-child) {
@@ -927,9 +931,6 @@ img {
     color: white;
 }
 
-.table-scoreboard tr.row-inputs td {
-    padding: 0.25rem;
-}
 .table-scoreboard tr.row-inputs td input,
 .table-scoreboard tr.row-inputs td output {
     font-size: 2rem;
@@ -953,10 +954,10 @@ img {
     background-color: #00f;
     color: white;
 }
-.table-scoreboard tr.row-inputs td.col-shido input,
-.table-scoreboard tr.row-inputs td.col-shido output,
-.table-scoreboard tr.row-inputs td.col-hansokumake input,
-.table-scoreboard tr.row-inputs td.col-hansokumake output {
+.table-scoreboard tr.row-inputs td.col-penalty input,
+.table-scoreboard tr.row-inputs td.col-penalty output,
+.table-scoreboard tr.row-inputs td.col-penalty input,
+.table-scoreboard tr.row-inputs td.col-penalty output {
     color: red;
 }
 
@@ -1112,7 +1113,7 @@ select.w-min {
 .sb .sb-time .sb-time-global {
     background-color: #dd6;
     font-size: 6rem;
-    font-family: 'Reddit Mono';
+    font-family: 'Reddit Mono', monospace;
     font-weight: 800;
     color: #000;
     text-align: center;
@@ -1245,7 +1246,7 @@ select.w-min {
     justify-content: center;
     font-size: 3.5rem;
     font-weight: 500;
-    font-family: 'Reddit Mono';
+    font-family: 'Reddit Mono', monospace;
 }
 
 .sb .sb-side .sb-cell.sb-osaekomi .sb-osaekomi-item {
@@ -1369,7 +1370,7 @@ select.w-min {
 
 .repeated-call-btn {
     font: inherit;
-    font-family: 'Reddit Mono';
+    font-family: 'Reddit Mono', monospace;
     cursor: pointer;
     line-height: 1;
     padding: 0.5rem;

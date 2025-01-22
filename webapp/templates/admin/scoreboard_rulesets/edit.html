@@ -1,0 +1,37 @@
+{% extends "layouts/admin.html" %}
+{% block title %}Administrationsbereich{% endblock %}
+{% block body %}
+
+<h1>Scoreboard-Regelwerk {{ 'erstellen' if action == 'new' else 'bearbeiten' }}{% if action == 'edit' %}<br><span class="fs-4">{{ scoreboard_ruleset.title }}</span>{% endif %}</h1>
+
+<form action="" method="POST">
+    <div class="mb-3 d-flex gap-1">
+        <button type="submit" class="btn btn-primary">Speichern</button>
+        <a href="{{ url_for('admin.presets') }}" class="btn btn-secondary">Abbrechen</a>
+    </div>
+
+    <div class="mb-3">
+        <label for="title" class="form-label">Bezeichnung</label>
+        <input type="text" class="form-control" name="title" id="title" value="{{ scoreboard_ruleset.title or '' }}">
+    </div>
+
+    <div class="mb-3">
+        <label for="rules" class="form-label">Regelwerk (JSON, <a href="https://tatami-judo.de/docs/sb-rulesets/">Mehr Infos</a>)</label>
+        <textarea name="rules" id="rules" class="form-control font-monospace form-lg">{{ scoreboard_ruleset.rules or '' }}</textarea>
+    </div>
+
+    <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" name="enabled" id="enabled" {{ 'checked' if scoreboard_ruleset.enabled }}>
+        <label class="form-check-label mb-1" for="enabled">
+            Regelwerk ist <strong>aktiviert</strong> und kann gewählt werden
+        </label>
+    </div>
+
+    <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" name="is_default" id="is_default" {{ 'checked' if scoreboard_ruleset.is_default }}>
+        <label class="form-check-label mb-1" for="is_default">
+            Regelwerk wird <strong>standardmäßig</strong> für alle Turniere verwendet, die neu angelegt werden oder kein anderes Regelwerk ausgewählt haben
+        </label>
+    </div>
+</form>
+{% endblock body %}

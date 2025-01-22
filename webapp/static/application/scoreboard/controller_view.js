@@ -68,142 +68,75 @@ const renderControls = () => {
         flash_medical.classList.remove("active")
     }
 
-    if (sbState.white.osaekomi.running) {
-        disable_btn(white_start_osaekomi, "btn-secondary")
-        enable_btn(white_stop_osaekomi, "btn-secondary")
-        white_osaekomi.innerText = osaekomiTimeToSeconds(sbState.white.osaekomi.since)
-    } else {
-        disable_btn(white_stop_osaekomi, "btn-secondary")
-        enable_btn(white_start_osaekomi, "btn-secondary")
-        white_osaekomi.innerText = ""
+    if (SBRULES.controls.includes('osaekomi')) {
+
+        if (sbState.white.osaekomi.running) {
+            disable_btn(white_start_osaekomi, "btn-secondary")
+            enable_btn(white_stop_osaekomi, "btn-secondary")
+            white_osaekomi.innerText = osaekomiTimeToSeconds(sbState.white.osaekomi.since)
+        } else {
+            disable_btn(white_stop_osaekomi, "btn-secondary")
+            enable_btn(white_start_osaekomi, "btn-secondary")
+            white_osaekomi.innerText = ""
+        }
+
+        if (sbState.blue.osaekomi.running) {
+            disable_btn(blue_start_osaekomi, "btn-secondary")
+            enable_btn(blue_stop_osaekomi, "btn-secondary")
+            blue_osaekomi.innerText = osaekomiTimeToSeconds(sbState.blue.osaekomi.since)
+        } else {
+            disable_btn(blue_stop_osaekomi, "btn-secondary")
+            enable_btn(blue_start_osaekomi, "btn-secondary")
+            blue_osaekomi.innerText = ""
+        }
+
+        if (sbState.white.osaekomi.running) {
+            enable_btn(toggle_osaekomi, 'btn-secondary')
+            toggle_osaekomi.innerText = 'Tauschen'
+        } else if (sbState.blue.osaekomi.running) {
+            enable_btn(toggle_osaekomi, 'btn-secondary')
+            toggle_osaekomi.innerText = 'Tauschen'
+        } else {
+            disable_btn(toggle_osaekomi, 'btn-secondary')
+            toggle_osaekomi.innerText = 'Tauschen'
+        }
+
     }
 
-    if (sbState.blue.osaekomi.running) {
-        disable_btn(blue_start_osaekomi, "btn-secondary")
-        enable_btn(blue_stop_osaekomi, "btn-secondary")
-        blue_osaekomi.innerText = osaekomiTimeToSeconds(sbState.blue.osaekomi.since)
-    } else {
-        disable_btn(blue_stop_osaekomi, "btn-secondary")
-        enable_btn(blue_start_osaekomi, "btn-secondary")
-        blue_osaekomi.innerText = ""
-    }
+    let sides = ['white', 'blue']
+    for (const side of sides) {
+        for (const score_name in SBRULES.scores) {
+            if (Object.prototype.hasOwnProperty.call(SBRULES.scores, score_name)) {
+                const score = SBRULES.scores[score_name];
 
-    if (sbState.white.osaekomi.running) {
-        enable_btn(toggle_osaekomi, 'btn-secondary')
-        toggle_osaekomi.innerText = 'Tauschen'
-    } else if (sbState.blue.osaekomi.running) {
-        enable_btn(toggle_osaekomi, 'btn-secondary')
-        toggle_osaekomi.innerText = 'Tauschen'
-    } else {
-        disable_btn(toggle_osaekomi, 'btn-secondary')
-        toggle_osaekomi.innerText = 'Tauschen'
-    }
+                let up_elem = document.querySelector(
+                    "[data-control='" + side + ".expand'][data-score='" + score_name + "']")
+                let down_elem = document.querySelector(
+                    "[data-control='" + side + ".reduce'][data-score='" + score_name + "']")
+                let results_elems = document.querySelectorAll(
+                    "[data-tatami-field='results." + side + "'][data-tatami-score='" + score_name + "']")
 
-    if (sbState.white.ippon) {
-        ippon_white.innerText = "1"
-        disable_btn(white_expand_ippon, "btn-secondary")
-        enable_btn(white_reduce_ippon, "btn-secondary")
-    } else {
-        ippon_white.innerText = "0"
-        disable_btn(white_reduce_ippon, "btn-secondary")
-        enable_btn(white_expand_ippon, "btn-secondary")
-    }
+                let text = "" + sbState[side].scores[score_name].value
+                if (sbState[side].scores[score_name].pending)
+                    text = "(" + text + ")"
 
-    if (sbState.blue.ippon) {
-        ippon_blue.innerText = "1"
-        disable_btn(blue_expand_ippon, "btn-secondary")
-        enable_btn(blue_reduce_ippon, "btn-secondary")
-    } else {
-        ippon_blue.innerText = "0"
-        disable_btn(blue_reduce_ippon, "btn-secondary")
-        enable_btn(blue_expand_ippon, "btn-secondary")
-    }
+                up_elem.innerText = text
 
-    if (sbState.white.wazaari_awasete_ippon) {
-        wazaari_white.innerText = "2"
-        disable_btn(white_expand_wazaari, "btn-secondary")
-        enable_btn(white_reduce_wazaari, "btn-secondary")
-    } else if (sbState.white.wazaari) {
-        wazaari_white.innerText = "1"
-        enable_btn(white_expand_wazaari, "btn-secondary")
-        enable_btn(white_reduce_wazaari, "btn-secondary")
-    } else if (sbState.white.wazaari_pending) {
-        wazaari_white.innerText = "[1]"
-        enable_btn(white_expand_wazaari, "btn-secondary")
-        enable_btn(white_reduce_wazaari, "btn-secondary")
-    } else {
-        wazaari_white.innerText = "0"
-        disable_btn(white_reduce_wazaari, "btn-secondary")
-        enable_btn(white_expand_wazaari, "btn-secondary")
-    }
+                results_elems.forEach((re) => {
+                    re.innerText = text
+                })
 
-    if (sbState.blue.wazaari_awasete_ippon) {
-        wazaari_blue.innerText = "2"
-        disable_btn(blue_expand_wazaari, "btn-secondary")
-        enable_btn(blue_reduce_wazaari, "btn-secondary")
-    } else if (sbState.blue.wazaari) {
-        wazaari_blue.innerText = "1"
-        enable_btn(blue_expand_wazaari, "btn-secondary")
-        enable_btn(blue_reduce_wazaari, "btn-secondary")
-    } else if (sbState.blue.wazaari_pending) {
-        wazaari_blue.innerText = "[1]"
-        enable_btn(blue_expand_wazaari, "btn-secondary")
-        enable_btn(blue_reduce_wazaari, "btn-secondary")
-    } else {
-        wazaari_blue.innerText = "0"
-        disable_btn(blue_reduce_wazaari, "btn-secondary")
-        enable_btn(blue_expand_wazaari, "btn-secondary")
-    }
+                if (score.pending || sbState[side].scores[score_name].value > 0)
+                    enable_btn(down_elem)
+                else
+                    disable_btn(down_elem)
 
-    shido_white.innerText = sbState.white.shido
-    shido_blue.innerText = sbState.blue.shido
-
-    if (sbState.white.shido == 3) {
-        white_expand_shido.innerText = 3
-        disable_btn(white_expand_shido, "btn-secondary")
-        enable_btn(white_reduce_shido, "btn-secondary")
-    } else if (sbState.white.shido == 0) {
-        white_expand_shido.innerText = 0
-        disable_btn(white_reduce_shido, "btn-secondary")
-        enable_btn(white_expand_shido, "btn-secondary")
-    } else {
-        white_expand_shido.innerText = sbState.white.shido
-        enable_btn(white_expand_shido, "btn-secondary")
-        enable_btn(white_reduce_shido, "btn-secondary")
-    }
-
-    if (sbState.blue.shido == 3) {
-        blue_expand_shido.innerText = 3
-        disable_btn(blue_expand_shido, "btn-secondary")
-        enable_btn(blue_reduce_shido, "btn-secondary")
-    } else if (sbState.blue.shido == 0) {
-        blue_expand_shido.innerText = 0
-        disable_btn(blue_reduce_shido, "btn-secondary")
-        enable_btn(blue_expand_shido, "btn-secondary")
-    } else {
-        blue_expand_shido.innerText = sbState.blue.shido
-        enable_btn(blue_expand_shido, "btn-secondary")
-        enable_btn(blue_reduce_shido, "btn-secondary")
-    }
-
-    if (sbState.white.hansokumake) {
-        hansokumake_white.innerText = "1"
-        disable_btn(white_expand_hansokumake, "btn-secondary")
-        enable_btn(white_reduce_hansokumake, "btn-secondary")
-    } else {
-        hansokumake_white.innerText = "0"
-        disable_btn(white_reduce_hansokumake, "btn-secondary")
-        enable_btn(white_expand_hansokumake, "btn-secondary")
-    }
-
-    if (sbState.blue.hansokumake) {
-        hansokumake_blue.innerText = "1"
-        disable_btn(blue_expand_hansokumake, "btn-secondary")
-        enable_btn(blue_reduce_hansokumake, "btn-secondary")
-    } else {
-        hansokumake_blue.innerText = "0"
-        disable_btn(blue_reduce_hansokumake, "btn-secondary")
-        enable_btn(blue_expand_hansokumake, "btn-secondary")
+                if (!score.pending && score.max_count && sbState[side].scores[score_name].value >= score.max_count)
+                    disable_btn(up_elem)
+                else
+                    enable_btn(up_elem)
+            }
+        }
     }
 }
 
@@ -244,52 +177,20 @@ const renderBoard = () => {
         setOption("time:osaekomi:blue", -1)
     }
 
-    if (sbState.white.ippon) {
-        setOption("white:ippon", 1)
-    } else {
-        setOption("white:ippon", 0)
-    }
+    for (const score_name in SBRULES.scores) {
+        if (Object.prototype.hasOwnProperty.call(SBRULES.scores, score_name)) {
+            const score = SBRULES.scores[score_name];
 
-    if (sbState.blue.ippon) {
-        setOption("blue:ippon", 1)
-    } else {
-        setOption("blue:ippon", 0)
-    }
+            setOption("white:" + score_name + ":pending", sbState.white.scores[score_name].pending ? 'yes' : 'no')
+            setOption("blue:" + score_name + ":pending", sbState.blue.scores[score_name].pending ? 'yes' : 'no')
 
-    if (sbState.white.wazaari_awasete_ippon) {
-        setOption("white:wazaari", '')
-        setOption("white:ippon", 1)
-    } else if (sbState.white.wazaari) {
-        setOption("white:wazaari", 'active')
-    } else if (sbState.white.wazaari_pending) {
-        setOption("white:wazaari", 'pending')
-    } else {
-        setOption("white:wazaari", '')
-    }
-
-    if (sbState.blue.wazaari_awasete_ippon) {
-        setOption("blue:ippon", 1)
-        setOption("blue:wazaari", '')
-    } else if (sbState.blue.wazaari) {
-        setOption("blue:wazaari", 'active')
-    } else if (sbState.blue.wazaari_pending) {
-        setOption("blue:wazaari", 'pending')
-    } else {
-        setOption("blue:wazaari", '')
-    }
-
-    setOption("white:shido", sbState.white.shido)
-    setOption("blue:shido", sbState.blue.shido)
-
-    if (sbState.white.hansokumake) {
-        setOption("white:hansokumake", 1)
-    } else {
-        setOption("white:hansokumake", 0)
-    }
-
-    if (sbState.blue.hansokumake) {
-        setOption("blue:hansokumake", 1)
-    } else {
-        setOption("blue:hansokumake", 0)
+            if (score.is_equal_if_accumulated) {
+                setOption("white:" + score_name + ":value", sbState.white.scores[score_name].value_with_accum)
+                setOption("blue:" + score_name + ":value", sbState.blue.scores[score_name].value_with_accum)
+            } else {
+                setOption("white:" + score_name + ":value", sbState.white.scores[score_name].value)
+                setOption("blue:" + score_name + ":value", sbState.blue.scores[score_name].value)
+            }
+        }
     }
 }

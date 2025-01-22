@@ -6,7 +6,7 @@ from flask_babel import Babel
 from .config_base import SETTINGS
 from . import setup_data
 
-from .models import db, User, Role, Event
+from .models import db, User, Role, Event, ScoreboardRuleset
 from .views import admin_view, eventmgr_view, devices_view, mod_scoreboard_view, mod_registrations_view, mod_weighin_view, mod_placement_view, mod_global_list_view, mod_list_view, mod_beamer_view, mod_results_view
 
 app = Flask(__name__, instance_path=SETTINGS['INSTANCE_PATH'])
@@ -69,8 +69,15 @@ def api_events():
 
 
 @app.route("/scoreboard")
-def scoreboard():
-    return render_template("scoreboard.html")
+@app.route("/scoreboard/rules:<ruleset>")
+def scoreboard(ruleset=None):
+    if ruleset is not None:
+        rules = ScoreboardRuleset.query.get_or_404(ruleset).get_data()
+    elif 'ruleset' in request.values:
+        rules = ScoreboardRuleset.query.get_or_404(request.values['ruleset']).get_data()
+    else:
+        rules = ScoreboardRuleset.default().get_data()
+    return render_template("scoreboard.html", rules=rules)
 
 @app.errorhandler(404)
 @app.errorhandler(405)
@@ -114,9 +121,10 @@ if SETTINGS['ALLOW_SETUP']:
             
             db.session.commit()
 
-            # Install event roles and list systems
+            # Install event roles, list systems and default scoreboard rulesets
             setup_data.setup_event_roles()
             setup_data.setup_list_systems()
+            setup_data.setup_scoreboard_rulesets()
 
             # Possibly install template classes
             if "install-class-templates" in request.form:

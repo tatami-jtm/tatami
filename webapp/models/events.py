@@ -25,6 +25,10 @@ class Event(db.Model):
     supervising_role_id = db.Column(db.Integer(), db.ForeignKey('role.id'))
     supervising_role = db.relationship(
         'Role', backref=db.backref('supervised_events', lazy='dynamic'))
+    
+
+    scoreboard_ruleset_id = db.Column(db.Integer(), db.ForeignKey('scoreboard_ruleset.id'))
+    scoreboard_ruleset = db.relationship('ScoreboardRuleset')
 
     def setting(self, key, default_value=None, is_json=True):
         item = self.settings.filter_by(key=key).one_or_none()
@@ -144,6 +148,16 @@ class Event(db.Model):
         except:
             # Don't raise an error when a log attempt fails
             pass
+
+    def sb_ruleset(self):
+        if self.scoreboard_ruleset is not None:
+            return self.scoreboard_ruleset
+        
+        else:
+            return ScoreboardRuleset.default()
+
+    def sb_rules(self):
+        return self.sb_ruleset().get_data()
 
     @classmethod
     def from_slug(cls, slug):
@@ -311,3 +325,23 @@ class EventLogItem(db.Model):
     log_value = db.Column(db.Text)
     log_creator = db.Column(db.String(150))
     created_at = db.Column(db.DateTime())
+
+
+class ScoreboardRuleset(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    title = db.Column(db.String(50))
+    enabled = db.Column(db.Boolean)
+    is_default = db.Column(db.Boolean)
+    rules = db.Column(db.Text)
+
+    def get_data(self):
+        return json.loads(self.rules)        
+
+    @classmethod
+    def all_enabled(cls):
+        return cls.query.filter_by(enabled=True)
+    
+    @classmethod
+    def default(cls):
+        # TODO: implement proper default ruleset
+        return cls.all_enabled().filter_by(is_default=1).first()

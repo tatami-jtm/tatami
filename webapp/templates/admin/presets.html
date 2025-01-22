@@ -13,6 +13,13 @@
             Kampfklassen
         </button>
     </div>
+    <div class="nav-item">
+        <button class="nav-link" id="scoreboard_rulesets-tab"
+                data-bs-toggle="tab" type="button" role="tab"
+                data-bs-target="#scoreboard_rulesets" aria-controls="scoreboard_rulesets">
+            Scoreboard
+        </button>
+    </div>
 </div>
 <div class="tab-content" id="presets-tabContent">
     <div class="tab-pane show active" role="tabpanel" tabindex="0"
@@ -38,6 +45,26 @@
             {% endfor %}
         </div>
     </div>
-</div>
+    <div class="tab-pane" role="tabpanel" tabindex="0"
+    id="scoreboard_rulesets" aria-labelledby="scoreboard_rulesets-tab">
+        <h3 class="fw-bold mt-4 mb-3">Scoreboard</h3>
 
+        <div class="list-group mb-3">
+            {% for sr in scoreboard_rulesets %}
+            <a href="{{ url_for('admin.scoreboard_preset', id=sr.id) }}" class="list-group-item list-group-item-action" target="_blank">
+                <div>
+                    <strong>{{ sr.title }}</strong>
+                </div>
+                <div>
+                    {% if sr.enabled %}<div class="badge text-bg-secondary">Aktiviert</div>{% endif %}
+                    {% if sr.is_default %}<div class="badge text-bg-primary">Standard-Scoreboard</div>{% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+        <a href="{{ url_for('admin.new_scoreboard_preset') }}" class="btn btn-sm btn-secondary mb-3">Scoreboard hinzufügen</a>
+    </div>
+</div>
+    
 {% endblock body %}
