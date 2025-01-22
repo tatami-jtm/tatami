@@ -123,7 +123,7 @@ def setup_event_roles():
 def setup_scoreboard_rulesets():
     _get_or_create(
         ScoreboardRuleset,
-        title="IJF (2024) - 1I/2W/Y/3S/H",
+        title="IJF (2025) - 1I/2W/Y/3S/H",
         enabled=True,
         is_default=True,
         rules="""
