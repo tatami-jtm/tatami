@@ -69,8 +69,11 @@ def api_events():
 
 
 @app.route("/scoreboard")
-def scoreboard():
-    if 'ruleset' in request.values:
+@app.route("/scoreboard/rules:<ruleset>")
+def scoreboard(ruleset=None):
+    if ruleset is not None:
+        rules = ScoreboardRuleset.query.get_or_404(ruleset).get_data()
+    elif 'ruleset' in request.values:
         rules = ScoreboardRuleset.query.get_or_404(request.values['ruleset']).get_data()
     else:
         rules = ScoreboardRuleset.default().get_data()
