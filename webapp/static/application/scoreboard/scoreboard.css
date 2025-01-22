@@ -288,7 +288,7 @@ body {
     text-transform: uppercase;
 }
 .view-main .main-grid .main-row-score .score-grid .score-shido .card-shido.hidden + .card-shido.hidden + .card-hansokumake {
-    width: 15rem;
+    width: 14.5rem;
     font-size: 12rem;
     padding-top: 1rem;
 }
@@ -303,6 +303,7 @@ body {
     color: white;
 }
 .time-grid {
+    position: relative;
     height: 100%;
     width: 100%;
     display: flex;
@@ -315,6 +316,10 @@ body {
     padding-top: 3rem;
     height: 120px;
     margin-bottom: 9.875rem;
+    position: absolute;
+    top: 0;
+    left: 0; right: 0;
+    text-align: center;
 }
 .time-grid .time-main {
     display: flex;
@@ -322,9 +327,14 @@ body {
     justify-content: center;
     background-color: #111;
     padding: 0.5rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
 }
 .time-grid .time-main.lit {
     background-color: #fa2;
+    transform: translateY(calc(22px - 50%));
 }
 .time-grid .time-main .time-main-box {
     padding: 1rem 0;
@@ -341,6 +351,7 @@ body {
 }
 .time-grid .time-main .time-main-label {
     padding: 0.5rem;
+    padding-bottom: 0;
     width: 525px;
     text-align: center;
     color: black;
@@ -351,7 +362,8 @@ body {
     display: none;
 }
 .time-grid .time-lower {
-    margin-bottom: 1rem;
+    position: absolute;
+    bottom: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
