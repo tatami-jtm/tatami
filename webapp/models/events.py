@@ -317,7 +317,7 @@ class DevicePosition(db.Model):
     
     @classmethod
     def administrative(cls):
-        return cls(title="Administration", is_mat=False)
+        return cls(title="", is_mat=False)
 
 
 class EventSetting(db.Model):
