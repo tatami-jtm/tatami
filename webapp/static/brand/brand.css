@@ -259,8 +259,8 @@ html, body {
     color: #333;
 }
 .btn-group .btn.btn-outline-primary.active {
-    background-color: var(--primary);
-    color: white;
+    background-color: #ccc;
+    color: #111;
 }
 
 .btn-group.btn-group-xs .btn {
