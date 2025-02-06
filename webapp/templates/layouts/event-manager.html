@@ -60,42 +60,5 @@
             </div>
         </div>
     </div>
-
-    <button class="btn btn-dark btn-sidecta" type="button" data-bs-toggle="offcanvas" data-bs-target="#quick-sign-in-offcanvas" aria-controls="quick-sign-in-offcanvas">
-        Schnelleinwahl
-    </button>
-      
-
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="quick-sign-in-offcanvas" aria-labelledby="quick-sign-in-offcanvas-label">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="quick-sign-in-offcanvas-label">Schnelleinwahl</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <form action="{{ url_for('event_manager.quick_sign_in', event=g.event.slug) }}" method="POST" target="_blank">
-                <p>Für dieses Gerät folgende Freigabe erteilen:</p>
-                <div class="mb-3">
-                    <label for="quick-dev-role" class="mb-1">Aufgabe</label>
-                    <select name="role" id="quick-dev-role" class="form-select">
-                        <option disabled selected></option>
-                        {% for role in device_roles %}
-                        <option value="{{ role.id }}">{{ role.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="quick-dev-pos" class="mb-1">Position</label>
-                    <select name="position" id="quick-dev-pos" class="form-select">
-                        <option disabled selected></option>
-                        {% for pos in device_positions %}
-                        <option value="{{ pos.id }}">{{ pos.title }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-dark" data-bs-dismiss="offcanvas">In neuem Tab starten</button>
-            </form>
-        </div>
-      </div>
 </body>
 </html>
