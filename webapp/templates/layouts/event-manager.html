@@ -6,43 +6,11 @@
     {% block custom_header %}{% endblock custom_header %}
 </head>
 <body class="admin" data-tatami-event="{{ g.event.slug }}">
-    <nav class="navbar navbar-admin navbar-expand-lg navbar-light bg-white shadow-sm mb-2">
-        <div class="container-fluid py-2">
-            <a class="navbar-brand" href="{{ url_for('event_manager.index', event=g.event.slug) }}">
-                <div class="splash-logo first-part">
-                    {{ config.BRAND_NAME }}
-                </div>
-                <div class="splash-logo second-part">
-                    Event Administration
-                </div>
-            </a>
-            <button class="navbar-toggler" type="button"
-                data-bs-toggle="collapse" data-bs-target="#adminMainNav"
-                aria-controls="adminMainNav" aria-expanded="false"
-                aria-label="Navigation ein-/ausblenden">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="adminMainNav">
-                <div class="d-flex justify-content-end w-100">
-                    <div class="navbar-nav">
-                        <div class="nav-item">
-                            <a class="nav-link" href="{{ url_for('admin.index') }}">Ansicht schließen</a>
-                        </div>
-                        <div class="nav-item">
-                            <a class="nav-link" href="{{ url_for('splash') }}">Zur Einwahl</a>
-                        </div>
-                        <div class="nav-item">
-                            <a class="nav-link" href="{{ url_for('security.logout') }}">Abmelden</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+    {% set mode="evmgr" %}
+    {% include "layouts/_appheader.html" %}
     <div class="container-fluid event-container">
         <div class="row">
             <div class="col event-sidebar bg-light shadow-sm">
-                <h3>{{ g.event.title }}</h3>
                 <div class="nav flex-column mb-4">
                     <div class="nav-item">
                         <a class="nav-link {{ 'active' if event_page=='dashboard' }}" href="{{ url_for('event_manager.index', event=g.event.slug) }}">📊 Übersicht</a>

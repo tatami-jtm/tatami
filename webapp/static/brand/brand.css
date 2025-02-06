@@ -239,6 +239,35 @@ html, body {
     margin-top: 3.55rem;
 }
 
+.btn-group .btn.btn-outline-primary {
+    border-color: #ddd !important;
+    color: #666;
+    border-radius: 0;
+    box-shadow: 0 0 0 0.15rem #fff inset;
+}
+
+.btn-group .btn.btn-outline-primary:not(:last-of-type) {
+    border-right: none;
+}
+
+.btn-group .btn.btn-outline-primary:not(:first-of-type) {
+    border-left: none;
+}
+
+.btn-group .btn.btn-outline-primary:hover {
+    background-color: #eee;
+    color: #333;
+}
+.btn-group .btn.btn-outline-primary.active {
+    background-color: var(--primary);
+    color: white;
+}
+
+.btn-group.btn-group-xs .btn {
+    font-size: 0.9rem;
+    padding: 0.25rem 0.65rem;
+}
+
 /** ** Splash page (/) ** */
 body.splash {
     position: absolute;

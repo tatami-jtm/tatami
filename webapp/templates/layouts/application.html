@@ -1,94 +1,14 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-    {% include "layouts/_header.html" %}
-    <title>TATAMI | {% block title %}{% endblock title %}</title>
-    {% block custom_header %}{% endblock custom_header %}
-</head>
-<body class="application" data-tatami-event="{{ g.event.slug }}">
+    <head>
+        {% include "layouts/_header.html" %}
+        <title>TATAMI | {% block title %}{% endblock title %}</title>
+        {% block custom_header %}{% endblock custom_header %}
+    </head>
+    <body class="application" data-tatami-event="{{ g.event.slug }}">
     {% if not popup %}
-    <div class="border-bottom application-header bg-white shadow-sm">
-        <div class="container-fluid py-2 d-flex justify-content-between align-items-center">
-            <a href="{{ url_for('devices.index', event=g.event.slug) }}" class="splash-logo">{{ config.BRAND_NAME }}</a>
-            {% if g.deviceless %}
-            <strong>{{ g.event.title }}</strong>
-            {% else %}
-            <div class="dropdown dropdown-center">
-                <button class="btn btn-light fw-bold dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ g.event.title }}
-                </button>
-                <ul class="dropdown-menu">
-                    {% if g.device.event_role.may_use_registration %}
-                    <li>
-                        <a class="dropdown-item" href="{{ url_for('mod_registrations.index', event=g.event.slug) }}">
-                            📝 Anmeldungen
-                        </a>
-                    </li>
-                    {% endif %}
-                    {% if g.device.event_role.may_use_weigh_in %}
-                    <li>
-                        <a class="dropdown-item" href="{{ url_for('mod_weighin.index', event=g.event.slug) }}">
-                            ⚖️ Waage
-                        </a>
-                    </li>
-                    {% endif %}
-                    {% if g.device.event_role.may_use_placement_tool %}
-                    <li>
-                        <a class="dropdown-item" href="{{ url_for('mod_placement.index', event=g.event.slug) }}">
-                            🎲 Einteilung
-                        </a>
-                    </li>
-                    {% endif %}
-                    {% if g.device.event_role.may_use_global_list %}
-                    <li>
-                        <a class="dropdown-item" href="{{ url_for('mod_global_list.index', event=g.event.slug) }}">
-                            📜 Hauptliste
-                        </a>
-                    </li>
-                    {% endif %}
-                    {% if g.device.event_role.may_use_assigned_lists %}
-                    <li>
-                        <a class="dropdown-item" href="{{ url_for('mod_list.index', event=g.event.slug) }}">
-                            🗒️ Listen
-                        </a>
-                    </li>
-                    {% endif %}
-                    {% if g.device.event_role.may_use_scoreboard %}
-                    <li>
-                        <a class="dropdown-item" href="{{ url_for('mod_scoreboard.standalone', event=g.event.slug) }}">
-                            🖥️ Scoreboard (nur Anzeige)
-                        </a>
-                    </li>
-                    {% endif %}
-                    {% if g.device.event_role.may_use_assigned_lists and g.device.event_role.may_use_scoreboard %}
-                    <li>
-                        <a class="dropdown-item" href="{{ url_for('mod_scoreboard.managed', event=g.event.slug) }}">
-                            🖥️ Scoreboard (🗒️ mit Liste)
-                        </a>
-                    </li>
-                    {% endif %}
-                    {% if g.device.event_role.may_use_beamer %}
-                    <li>
-                        <a class="dropdown-item" href="{{ url_for('mod_beamer.index', event=g.event.slug) }}">
-                            📽️ Listenanzeige
-                        </a>
-                    </li>
-                    {% endif %}
-                    {% if g.device.event_role.may_use_results %}
-                    <li>
-                        <a class="dropdown-item" href="{{ url_for('mod_results.individual', event=g.event.slug) }}">
-                            🏅 Ergebnisse
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-            {% endif %}
-            <div class="menu">
-                <a href="{{ url_for('devices.exit', event=g.event.slug) }}" class="btn btn-sm btn-dark">Abmelden</a>
-            </div>
-        </div>
-    </div>
+    {% set mode="app" %}
+    {% include "layouts/_appheader.html" %}
     {% block pre_messages %}{% endblock pre_messages %}
     {% with messages = get_flashed_messages(with_categories=True) %}
     {% if messages %}
