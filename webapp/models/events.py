@@ -231,6 +231,7 @@ class EventRole(db.Model):
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
 
+    may_use_participants = db.Column(db.Boolean)
     may_use_registration = db.Column(db.Boolean)
     may_use_weigh_in = db.Column(db.Boolean)
     may_use_placement_tool = db.Column(db.Boolean)
@@ -242,7 +243,8 @@ class EventRole(db.Model):
 
     @classmethod
     def administrative(cls):
-        return cls(may_use_registration=True,
+        return cls(may_use_participants=True,
+                   may_use_registration=True,
                    may_use_weigh_in=True,
                    may_use_placement_tool=True,
                    may_use_global_list=True,

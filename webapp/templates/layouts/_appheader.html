@@ -25,8 +25,15 @@
             <ul class="dropdown-menu">
                 {% if g.device.event_role.may_use_registration %}
                 <li>
+                    <a class="dropdown-item" href="{{ url_for('mod_participants.index', event=g.event.slug) }}">
+                        👥 Teilnehmende
+                    </a>
+                </li>
+                {% endif %}
+                {% if g.device.event_role.may_use_registration %}
+                <li>
                     <a class="dropdown-item" href="{{ url_for('mod_registrations.index', event=g.event.slug) }}">
-                        📝 Anmeldungen
+                        📝 Akkreditierung
                     </a>
                 </li>
                 {% endif %}

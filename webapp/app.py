@@ -7,7 +7,7 @@ from .config_base import SETTINGS
 from . import setup_data
 
 from .models import db, User, Role, Event, ScoreboardRuleset
-from .views import admin_view, eventmgr_view, devices_view, mod_scoreboard_view, mod_registrations_view, mod_weighin_view, mod_placement_view, mod_global_list_view, mod_list_view, mod_beamer_view, mod_results_view
+from .views import admin_view, eventmgr_view, devices_view, mod_scoreboard_view, mod_registrations_view, mod_weighin_view, mod_placement_view, mod_global_list_view, mod_list_view, mod_beamer_view, mod_results_view, mod_participants_view
 
 app = Flask(__name__, instance_path=SETTINGS['INSTANCE_PATH'])
 app.config['BRAND_NAME'] = "TATAMI 2024"
@@ -141,7 +141,8 @@ app.register_blueprint(eventmgr_view, url_prefix='/event-manager/<event>')
 app.register_blueprint(devices_view, url_prefix='/go/<event>')
 
 app.register_blueprint(mod_scoreboard_view, url_prefix="/go/<event>/mod_scoreboard")
-app.register_blueprint(mod_registrations_view, url_prefix="/go/<event>/mod_registrations")
+app.register_blueprint(mod_participants_view, url_prefix="/go/<event>/mod_participants")
+app.register_blueprint(mod_registrations_view, url_prefix="/go/<event>/mod_registration")
 app.register_blueprint(mod_weighin_view, url_prefix="/go/<event>/mod_weighin")
 app.register_blueprint(mod_placement_view, url_prefix="/go/<event>/mod_placement")
 app.register_blueprint(mod_global_list_view, url_prefix="/go/<event>/mod_global_list")

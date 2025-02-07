@@ -1,0 +1,133 @@
+{% extends "layouts/application.html" %}
+{% block title %}Anmeldung{% endblock %}
+{% block body %}
+
+<div class="container">
+    <h1 class="mb-3 h2 fw-bold">Teilnehmende</h1>
+
+    <div class="card mb-4 shadow-none">
+        <div class="card-body">
+            <form action="" method="GET" id="filterform" class="row gx-1 align-items-end">
+                <div class="col-auto">
+                    <label for="class_filter" class="form-label mb-1">Kampfklasse</label>
+                    <select name="class_filter" id="class_filter" class="form-select w-min">
+                        <option value="">(alle anzeigen)</option>
+                        <optgroup label="Einzelne Kampfklassen">
+                            {% for cl in g.event.classes.order_by('title') %}
+                            <option value="{{ cl.id }}"{{ ' selected' if class_filter=='single' and cl.id == filtered_class.id }}>{{ cl.title }}</option>
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="Nach Fortschritt">
+                            <option value="pending"{{ ' selected' if class_filter == 'pending' }}>Ausstehend</option>
+                            <option value="weighing_in"{{ ' selected' if class_filter == 'weighing_in' }}>In Waage</option>
+                            <option value="weighed_in"{{ ' selected' if class_filter == 'weighed_in' }}>Wiegen beendet</option>
+                            <option value="fighting"{{ ' selected' if class_filter == 'fighting' }}>Kämpft</option>
+                            <option value="completed"{{ ' selected' if class_filter == 'completed' }}>Beendet</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <label for="status_filter" class="form-label mb-1">Status</label>
+                    <select name="status_filter" id="status_filter" class="form-select w-min">
+                        <option value="">(alle anzeigen)</option>
+                        <option value="not_yet_confirmed"{{ ' selected' if status_filter == 'not_yet_confirmed' }}>Nicht bestätigt</option>
+                        <option value="confirmed"{{ ' selected' if status_filter == 'confirmed' }}>Bestätigt</option>
+                        <option value="not_yet_registered"{{ ' selected' if status_filter == 'not_yet_registered' }}>Nicht akkreditiert</option>
+                        <option value="registered"{{ ' selected' if status_filter == 'registered' }}>Akkreditiert</option>
+                        <option value="registered_not_weighed_in"{{ ' selected' if status_filter == 'registered_not_weighed_in' }}>Akkreditiert, nicht Eingewogen</option>
+                        <option value="weighed_in"{{ ' selected' if status_filter == 'weighed_in' }}>Eingewogen</option>
+                        <option value="weighed_in_without_registration"{{ ' selected' if status_filter == 'weighed_in_without_registration' }}>Eingewogen, nicht Akkreditiert</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <label for="name_filter" class="form-label mb-1">Name</label>
+                    <input type="text" class="form-control" id="name_filter" name="name_filter" value="{{ name_filter or '' }}">
+                </div>
+                <div class="col-auto">
+                    <label for="club_filter" class="form-label mb-1">Verein</label>
+                    <input type="text" class="form-control" id="club_filter" name="club_filter" value="{{ club_filter or '' }}">
+                </div>
+                <div class="col-auto">
+                    <label for="externalid_filter" class="form-label mb-1">Ext. ID</label>
+                    <input type="text" class="form-control w-min" id="externalid_filter" name="externalid_filter" value="{{ externalid_filter or '' }}">
+                </div>
+                <div class="col-auto">
+                    <label for="order_by" class="form-label mb-1">Sortieren nach</label>
+                    <select name="order_by" id="order_by" class="form-select w-min">
+                        <option value="">(Nach-, Vorname, Verein)</option>
+                        <option value="first_name"{{ ' selected' if order_by == 'first_name' }}>Vorname</option>
+                        <option value="last_name"{{ ' selected' if order_by == 'last_name' }}>Nachname</option>
+                        <option value="club"{{ ' selected' if order_by == 'club' }}>Verein</option>
+                        <option value="verified_weight"{{ ' selected' if order_by == 'verified_weight' }}>Gewicht</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col col-auto">
+                    <button type="submit" form="filterform" class="btn btn-primary">Filtern</button>
+                    <a href="?" class="btn btn-secondary">Zurücksetzen</a>
+                    <a href="{{ url_for('event_manager.print_registrations', event=g.event.slug) }}" class="btn btn-secondary" target="_blank">TN/Wiegeliste drucken</a>
+                </div>
+                <div class="col"></div>
+                <div class="col col-auto">
+                    <a href="{{ url_for('event_manager.create_registration', event=g.event.slug) }}" class="btn btn-outline-dark">TN hinzufügen</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% if filtered %}
+    <h2 class="h4 mb-3 fw-bold">{{ g.event.registrations.count() }} Teilnehmende (ausgewählt: {{ query|length }} TN)</h2>
+    {% else %}
+    <h2 class="h4 mb-3 fw-bold">{{ g.event.registrations.count() }} Teilnehmende</h2>
+    {% endif %}
+
+    <table class="table table-hover table-bordered admin-style">
+        <thead>
+            <tr>
+                <th>Kampfklasse</th>
+                <th>Nachname</th>
+                <th>Vorname</th>
+                <th>Ext. ID</th>
+                <th>Verein</th>
+                <th>Verband</th>
+                <th>Status</th>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reg in query %}
+            <tr>
+                <td>{{ reg.event_class.title }}</td>
+                <td>{{ reg.last_name }}</td>
+                <td>{{ reg.first_name }}</td>
+                <td>{{ reg.external_id or '-' }}</td>
+                <td>{{ reg.club }}</td>
+                <td>{{ reg.association.short_name if reg.association else "-" }}</td>
+                <td>
+                    {% if reg.weighed_in %}
+                    Eingewogen auf:<br>
+                    <strong>{{ reg.verified_weight / 1000 }} kg</strong>.
+                    {% if not reg.registered %}<br><span class="text-danger">TN wurde noch nicht angemeldet.</span>{% endif %}
+                    {% elif reg.registered %}
+                    <strong>Angemeldet</strong>.<br>
+                    Warten auf Wiegedaten.
+                    {% elif reg.confirmed %}
+                    Voranmeldung <strong>bestätigt</strong>.
+                    {% else %}
+                    Voranmeldung erhalten.
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('event_manager.edit_registration', event=g.event.slug, id=reg.id) }}" class="btn btn-sm btn-secondary">Bearbeiten</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock body %}

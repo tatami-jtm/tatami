@@ -72,6 +72,8 @@ html, body {
 }
 .btn[href], .btn[href]:hover { color: white; }
 .btn[href].btn-light, .btn[href].btn-light:hover { color: black; }
+.btn[href].btn-outline-dark { color: black; }
+.btn[href].btn-outline-dark:hover { color: white; }
 .btn.btn-sm {
     padding: 0.125rem 0.35rem;
 }
@@ -299,7 +301,8 @@ body.admin {
 body.admin .main-container {
     margin-bottom: 2rem;
 }
-body.admin table {
+body.admin table,
+body table.admin-style {
     background-color: white;
     border-color: #aaaaaa;
 }
