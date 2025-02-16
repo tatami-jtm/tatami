@@ -110,7 +110,7 @@
                 <td>{{ reg.external_id or '-' }}</td>
                 <td>{{ reg.club or '-' }}</td>
                 <td>{{ reg.association.short_name if reg.association else "-" }}</td>
-                <td>{% if reg.weighed_in %}{{ reg.verified_weight / 1000 }} kg{% else %}-{% endif %}</td>
+                <td>{% if reg.weighed_in and reg.verified_weight %}{{ reg.verified_weight / 1000 }} kg{% else %}-{% endif %}</td>
                 <td>
                     {% if reg.weighed_in %}
                     <span class="text-success fw-bold">Eingewogen</span>
