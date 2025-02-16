@@ -672,6 +672,9 @@ textarea.form-control {
 textarea.form-control.form-lg {
     min-height: 500px;
 }
+textarea.form-control.form-sm {
+    min-height: 80px;
+}
 
 .application .h-full {
     margin-top: -1rem;
@@ -1451,6 +1454,12 @@ select.w-min {
 
 .modal-content.modal-border-red {
     border: 1rem solid var(--bs-danger);
+}
+
+.form-label.label-with-hint::after {
+    content: 'ℹ️';
+    margin-left: 0.8rem;
+    opacity: 0.5;
 }
 
 img.img-spinner {

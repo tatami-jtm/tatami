@@ -1,8 +1,8 @@
 {% extends "layouts/application.html" %}
-{% block title %}Anmeldung{% endblock %}
+{% block title %}Teilnehmende{% endblock %}
 {% block body %}
 
-<div class="container">
+<div class="container pt-3">
     <h1 class="mb-3 h2 fw-bold">Teilnehmende</h1>
 
     <div class="card mb-4 shadow-none">
@@ -58,6 +58,8 @@
                         <option value="first_name"{{ ' selected' if order_by == 'first_name' }}>Vorname</option>
                         <option value="last_name"{{ ' selected' if order_by == 'last_name' }}>Nachname</option>
                         <option value="club"{{ ' selected' if order_by == 'club' }}>Verein</option>
+                        <option value="association"{{ ' selected' if order_by == 'association' }}>Verband</option>
+                        <option value="event_class"{{ ' selected' if order_by == 'event_class' }}>Kampfklasse</option>
                         <option value="verified_weight"{{ ' selected' if order_by == 'verified_weight' }}>Gewicht</option>
                     </select>
                 </div>
@@ -72,7 +74,7 @@
                 </div>
                 <div class="col"></div>
                 <div class="col col-auto">
-                    <a href="{{ url_for('event_manager.create_registration', event=g.event.slug) }}" class="btn btn-outline-dark">TN hinzufügen</a>
+                    <a href="{{ url_for('mod_participants.new', event=g.event.slug) }}" class="btn btn-outline-dark">TN hinzufügen</a>
                 </div>
             </div>
         </div>
@@ -88,12 +90,13 @@
     <table class="table table-hover table-bordered admin-style">
         <thead>
             <tr>
-                <th>Kampfklasse</th>
-                <th>Nachname</th>
-                <th>Vorname</th>
+                <th><a href="?order_by=event_class" class="link-dark">Kampfklasse</a></th>
+                <th><a href="?order_by=last_name" class="link-dark">Nachname</a></th>
+                <th><a href="?order_by=first_name" class="link-dark">Vorname</a></th>
                 <th>Ext. ID</th>
-                <th>Verein</th>
-                <th>Verband</th>
+                <th><a href="?order_by=club" class="link-dark">Verein</a></th>
+                <th><a href="?order_by=association" class="link-dark">Verband</a></th>
+                <th><a href="?order_by=verified_weight" class="link-dark">Gewicht</a></th>
                 <th>Status</th>
                 <td></td>
             </tr>
@@ -105,24 +108,22 @@
                 <td>{{ reg.last_name }}</td>
                 <td>{{ reg.first_name }}</td>
                 <td>{{ reg.external_id or '-' }}</td>
-                <td>{{ reg.club }}</td>
+                <td>{{ reg.club or '-' }}</td>
                 <td>{{ reg.association.short_name if reg.association else "-" }}</td>
+                <td>{% if reg.weighed_in %}{{ reg.verified_weight / 1000 }} kg{% else %}-{% endif %}</td>
                 <td>
                     {% if reg.weighed_in %}
-                    Eingewogen auf:<br>
-                    <strong>{{ reg.verified_weight / 1000 }} kg</strong>.
-                    {% if not reg.registered %}<br><span class="text-danger">TN wurde noch nicht angemeldet.</span>{% endif %}
+                    <span class="text-success fw-bold">Eingewogen</span>
                     {% elif reg.registered %}
-                    <strong>Angemeldet</strong>.<br>
-                    Warten auf Wiegedaten.
+                    <span class="text-warning fw-bold">Akkreditiert</span>
                     {% elif reg.confirmed %}
-                    Voranmeldung <strong>bestätigt</strong>.
+                    <span class="text-danger fw-bold">Anmeldung bestätigt</span>
                     {% else %}
-                    Voranmeldung erhalten.
+                    Nicht bestätigt
                     {% endif %}
                 </td>
                 <td>
-                    <a href="{{ url_for('event_manager.edit_registration', event=g.event.slug, id=reg.id) }}" class="btn btn-sm btn-secondary">Bearbeiten</a>
+                    <a href="{{ url_for('mod_participants.edit', event=g.event.slug, id=reg.id) }}" class="btn btn-sm btn-outline-dark">Bearbeiten</a>
                 </td>
             </tr>
             {% endfor %}
