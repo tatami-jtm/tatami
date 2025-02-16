@@ -1,91 +1,109 @@
 <form action="" method="POST">
-    <div class="mt-3 mb-5 d-flex gap-1">
-        <button type="submit" class="btn btn-primary">Speichern</button>
-        <a href="{{ url_for('event_manager.registrations', event=g.event.slug) }}" class="btn btn-secondary">Abbrechen</a>
-    </div>
-
-    <h3 class="fw-bold mt-5 mb-3">Allgemeines</h3>
-
-    <div class="mb-3">
-        <div class="row g-2">
-            <div class="col-12 col-md-6">
-                <label for="first_name" class="form-label">Vorname</label>
-                <input name="first_name" id="first_name" value="{{ registration.first_name or '' }}" class="form-control fs-4">
+    <div class="card card-semidialog">
+        <div class="card-body">
+            <div class="row g-2">
+                <div class="col-12 col-md-8">
+                    <div class="mb-2">
+                        <div class="row pt-0 g-2">
+                            <div class="col-12 col-md-6">
+                                <label for="first_name" class="form-label">Vorname</label>
+                                <input name="first_name" id="first_name" value="{{ registration.first_name or '' }}" class="form-control bg-warning-subtle">
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label for="last_name" class="form-label">Nachname</label>
+                                <input name="last_name" id="last_name" value="{{ registration.last_name or '' }}" class="form-control bg-warning-subtle">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label for="contact_details" class="form-label">Kontaktinformationen</label>
+                        <textarea name="contact_details" id="contact_details" class="form-control form-sm font-monospace">{{ registration.contact_details or '' }}</textarea>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="mb-2">
+                        <label for="club" class="form-label">Verein</label>
+                        <input name="club" id="club" value="{{ registration.club or '' }}" class="form-control bg-warning-subtle">
+                    </div>
+                    <div class="mb-2">
+                        <label for="association" class="form-label">Verband</label>
+                        <select name="association" id="association" class="form-select">
+                            <option value=""></option>
+                            {% for assoc in g.event.associations.order_by("short_name") %}
+                            <option value="{{ assoc.id }}"{{ " selected" if assoc.id == registration.association_id }}>{{ assoc.name }}</option>
+                            {% endfor %} 
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label for="external_id" class="form-label">Externe ID (z. B. Pass-ID)</label>
+                        <input name="external_id" id="external_id" value="{{ registration.external_id or '' }}" class="form-control">
+                    </div>
+                </div>
             </div>
-            <div class="col-12 col-md-6">
-                <label for="last_name" class="form-label">Nachname</label>
-                <input name="last_name" id="last_name" value="{{ registration.last_name or '' }}" class="form-control fs-4">
+
+            <div class="row mt-3">
+                <div class="col-12 col-md-8">
+                    <div class="mb-2">
+                        <div class="row g-2">
+                            <div class="col-12 col-md-4">
+                                <label for="event_class" class="form-label">Kampfklasse</label>
+                                <select name="event_class" id="event_class" class="form-select">
+                                    {% for cl in g.event.classes.order_by("title") %}
+                                    <option value="{{ cl.id }}"{{ " selected" if cl.id == registration.event_class_id }}>{{ cl.title }}</option>
+                                    {% endfor %} 
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <label for="suggested_group" class="form-label label-with-hint" title="Hier können ein mit der Voranmeldung mitgeteiles Gewicht sowie ähnliche Informationen zur Einteilung eingegeben werden.">Gemeldet für</label>
+                                <input name="suggested_group" id="suggested_group" value="{{ registration.suggested_group or '' }}" class="form-control">
+                                <div class="form-text"></div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <label for="verified_weight" class="form-label label-with-hint" title="Hier ist das an der Waage kontrollierte Gewicht anzugeben, das für die Einteilung verwendet wird. Dieser Eintrag sollte in der Regel über das Waage-Modul und nicht hier in der Event-Administration gesetzt werden.">Kontr. Gewicht</label>
+
+                                <div class="input-group">
+                                    <input name="verified_weight" id="verified_weight" value="{{ registration.verified_weight / 1000 if registration.verified_weight else '' }}" class="form-control bg-warning-subtle" type="number" step="0.01">
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <p class="fw-bold mb-2">Status</p>
+                    <div class="form-check mb-0">
+                        <input class="form-check-input" type="checkbox" name="confirmed" id="status-confirmed" {{ 'checked' if registration.confirmed }}>
+                        <label class="form-check-label mb-1 {{ 'text-danger fw-bold' if not registration.confirmed else 'text-success' }}" for="status-confirmed">Anmeldung bestätigt</label>
+                    </div>
+                    <div class="form-check mb-0">
+                        <input class="form-check-input" type="checkbox" name="registered" id="status-registered" {{ 'checked' if registration.registered }}>
+                        <label class="form-check-label mb-1 {{ 'text-danger fw-bold' if not registration.registered else 'text-success' }}" for="status-registered">Akkreditiert</label>
+                    </div>
+                    <div class="form-check mb-0">
+                        <input class="form-check-input" type="checkbox" name="weighed_in" id="status-weighed_in" {{ 'checked' if registration.weighed_in }}>
+                        <label class="form-check-label mb-1 {{ 'text-danger fw-bold' if not registration.weighed_in else 'text-success' }}" for="status-weighed_in">Eingewogen</label>
+                    </div>
+                    <div class="form-check mb-0">
+                        <input class="form-check-input" type="checkbox" name="placed" id="status-placed" {{ 'checked' if registration.placed }} disabled aria-disabled="true">
+                        <label class="form-check-label mb-1" for="status-weighed_in">Platziert</label>
+                    </div>
+
+                    {% if registration.participants.count() >= 1 %}
+                    <p class="fw-bold mt-3 mb-2">Gruppen</p>
+                    <ul class="list-unstyled mb-1">
+                        {% for p in registration.participants.all() %}
+                        <li>{{ p.group.title }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="mb-3">
-        <label for="contact_details" class="form-label">Kontaktinformationen</label>
-        <textarea name="contact_details" id="contact_details" class="form-control">{{ registration.contact_details or '' }}</textarea>
-    </div>
-
-    <div class="mb-3">
-        <div class="row g-2">
-            <div class="col-12 col-md-4">
-                <label for="club" class="form-label">Verein</label>
-                <input name="club" id="club" value="{{ registration.club or '' }}" class="form-control">
-            </div>
-            <div class="col-12 col-md-4">
-                <label for="association" class="form-label">Verband</label>
-                <select name="association" id="association" class="form-select">
-                    <option value=""></option>
-                    {% for assoc in g.event.associations.order_by("short_name") %}
-                    <option value="{{ assoc.id }}"{{ " selected" if assoc.id == registration.association_id }}>{{ assoc.name }}</option>
-                    {% endfor %} 
-                </select>
-            </div>
-            <div class="col-12 col-md-4">
-                <label for="external_id" class="form-label">Externe ID (z. B. Pass-ID)</label>
-                <input name="external_id" id="external_id" value="{{ registration.external_id or '' }}" class="form-control">
+        <div class="card-footer">
+            <div class="d-flex gap-1">
+                <button type="submit" class="btn btn-primary">Speichern</button>
+                <a href="{{ url_for('event_manager.registrations', event=g.event.slug) }}" class="btn btn-secondary">Abbrechen</a>
             </div>
         </div>
-    </div>
-
-    <h3 class="fw-bold mt-5 mb-3">Einteilung</h3>
-
-    <div class="mb-3">
-        <label for="event_class" class="form-label">Kampfklasse</label>
-        <select name="event_class" id="event_class" class="form-select">
-            {% for cl in g.event.classes.order_by("title") %}
-            <option value="{{ cl.id }}"{{ " selected" if cl.id == registration.event_class_id }}>{{ cl.title }}</option>
-            {% endfor %} 
-        </select>
-    </div>
-
-    <div class="mb-3">
-        <label for="suggested_group" class="form-label">Vorgeschlagene Einteilung</label>
-        <input name="suggested_group" id="suggested_group" value="{{ registration.suggested_group or '' }}" class="form-control">
-        <div class="form-text">Hier können ein mit der Voranmeldung mitgeteiles Gewicht sowie ähnliche Informationen zur Einteilung eingegeben werden.</div>
-    </div>
-
-    <div class="mb-3">
-        <label for="verified_weight" class="form-label">Kontrolliertes Gewicht (in kg)</label>
-        <input name="verified_weight" id="verified_weight" value="{{ registration.verified_weight / 1000 if registration.verified_weight else '' }}" class="form-control" type="number" step="0.01">
-        <div class="form-text">Hier ist das an der Waage kontrollierte Gewicht anzugeben, das für die Einteilung verwendet wird. Dieser Eintrag sollte in der Regel über das Waage-Modul und nicht hier in der Event-Administration gesetzt werden.</div>
-    </div>
-
-    <h3 class="fw-bold mt-5 mb-3">Status</h3>
-
-
-    <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" name="confirmed" id="status-confirmed" {{ 'checked' if registration.confirmed }}>
-        <label class="form-check-label mb-1" for="status-confirmed">Voranmeldung bestätigt (inkl. ggf. Zahlung der Anmeldegebühr)</label>
-    </div>
-    <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" name="registered" id="status-registered" {{ 'checked' if registration.registered }}>
-        <label class="form-check-label mb-1" for="status-registered">Akkreditiert</label>
-    </div>
-    <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" name="weighed_in" id="status-weighed_in" {{ 'checked' if registration.weighed_in }}>
-        <label class="form-check-label mb-1" for="status-weighed_in">Eingewogen</label>
-    </div>
-    <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" name="placed" id="status-placed" {{ 'checked' if registration.placed }} disabled aria-disabled="true">
-        <label class="form-check-label mb-1" for="status-weighed_in">Platziert</label>
     </div>
 </form>

@@ -381,7 +381,7 @@ body.application {
     background-color: #e5e9de;
 }
 
-.event-container .row>.col {    
+.event-container>.row>.col {    
     min-height: calc(100vh - 2.55rem);
 }
 
