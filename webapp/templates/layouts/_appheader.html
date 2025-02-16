@@ -9,9 +9,9 @@
             {% endif %}
             {% if has_current_user %}
             <div class="btn-group mx-2 btn-group-xs" role="group">
-                <a href="{{ url_for('event_manager.index', event=g.event.slug) }}" class="btn btn-outline-primary {{ 'active' if mode == 'evmgr' }}">EventManager</a>
+                <a href="{{ url_for('event_manager.index', event=g.event.slug) }}" class="btn btn-outline-primary {{ 'active' if mode == 'evmgr' }}">Vorbereitung</a>
 
-                <a href="{{ url_for('devices.index', event=g.event.slug) }}" class="btn btn-outline-primary {{ 'active' if mode == 'app' }}">Anwendung</a>
+                <a href="{{ url_for('devices.index', event=g.event.slug) }}" class="btn btn-outline-primary {{ 'active' if mode == 'app' }}">Veranstaltung</a>
             </div>
             {% endif %}
         </div>
