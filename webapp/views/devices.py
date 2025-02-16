@@ -30,6 +30,7 @@ def check_is_registered(func):
 
         if _check_if_registration_is_not_required():
             g.device = DeviceRegistration()
+            g.device.title = current_user.qualified_name()
             g.device.is_admin = True
             g.device.event_role = EventRole.administrative()
             g.device.position = DevicePosition.administrative()
