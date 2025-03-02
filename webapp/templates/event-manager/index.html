@@ -28,14 +28,14 @@
 {% call layout.Grid() %}
     {% call layout.GridColumn(large_span=4) %}
         {% call cards.Card() %}
-            {% call cards.CardBody() %}
+            {% call cards.CardBody(class="py-4") %}
                 {% if g.event.first_day.date() == g.event.last_day.date() %}
-                    <d<iv class="fs-1 text-center">
+                    <div class="fs-1 mb-1 text-center">
                         <strong>{{ g.event.last_day.strftime("%d.%m.%Y") }}</strong>
                     </div>
                     <div> class="text-center fw-bold">Tag der Veranstaltung</div>
                 {% else %}
-                    <div class="fs-1 text-center">
+                    <div class="fs-1 mb-1 text-center">
                         <strong title="{{ g.event.first_day.strftime("%d.%m.%Y") }}">{{ g.event.first_day.strftime("%d.%m.") }}</strong>
                         &ndash;
                         <strong>{{ g.event.last_day.strftime("%d.%m.%Y") }}</strong>
@@ -48,8 +48,8 @@
 
     {% call layout.GridColumn(large_span=2) %}
         {% call cards.Card() %}
-            {% call cards.CardBody() %}
-                <div class="fs-1 text-center fw-bold">{{ stat.classes }}</div>
+            {% call cards.CardBody(class="py-4") %}
+                <div class="fs-1 mb-1 text-center fw-bold">{{ stat.classes }}</div>
                 <div class="text-center fw-bold">{{ 'Klassen' if stat.classes != 1 else 'Klasse' }}</div>
             {% endcall %}
         {% endcall %}
@@ -57,8 +57,8 @@
 
     {% call layout.GridColumn(large_span=2) %}
         {% call cards.Card() %}
-            {% call cards.CardBody() %}
-                <div class="fs-1 text-center fw-bold">{{ stat.registrations }}</div>
+            {% call cards.CardBody(class="py-4") %}
+                <div class="fs-1 mb-1 text-center fw-bold">{{ stat.registrations }}</div>
                 <div class="text-center fw-bold">{{ 'Voranmeldungen' if stat.registrations != 1 else 'Anmeldung' }}</div>
             {% endcall %}
         {% endcall %}
@@ -66,8 +66,8 @@
 
     {% call layout.GridColumn(large_span=2) %}
         {% call cards.Card() %}
-            {% call cards.CardBody() %}
-                <div class="fs-1 text-center fw-bold">{{ stat.confirmed_registrations }}</div>
+            {% call cards.CardBody(class="py-4") %}
+                <div class="fs-1 mb-1 text-center fw-bold">{{ stat.confirmed_registrations }}</div>
                 <div class="text-center fw-bold">davon bestätigt</div>
             {% endcall %}
         {% endcall %}
@@ -75,8 +75,8 @@
 
     {% call layout.GridColumn(large_span=2) %}
         {% call cards.Card() %}
-            {% call cards.CardBody() %}
-                <div class="fs-1 text-center fw-bold">{{ stat.mats }}</div>
+            {% call cards.CardBody(class="py-4") %}
+                <div class="fs-1 mb-1 text-center fw-bold">{{ stat.mats }}</div>
                 <div class="text-center fw-bold">{{ 'Matten' if stat.mats != 1 else 'Matte' }}</div>
             {% endcall %}
         {% endcall %}
@@ -88,8 +88,8 @@
 {% call layout.Grid() %}
     {% call layout.GridColumn(large_span=3) %}
         {% call cards.Card() %}
-            {% call cards.CardBody() %}
-                <div class="fs-1 text-center fw-bold">{{ stat.started_classes }}</div>
+            {% call cards.CardBody(class="py-4") %}
+                <div class="fs-1 mb-1 text-center fw-bold">{{ stat.started_classes }}</div>
                 <div class="text-center fw-bold">Angefangene {{ 'Klassen' if stat.started_classes != 1 else 'Klasse' }}</div>
             {% endcall %}
         {% endcall %}
@@ -97,8 +97,8 @@
 
     {% call layout.GridColumn(large_span=3) %}
         {% call cards.Card() %}
-            {% call cards.CardBody() %}
-                <div class="fs-1 text-center fw-bold">{{ stat.registered_ratio }}</div>
+            {% call cards.CardBody(class="py-4") %}
+                <div class="fs-1 mb-1 text-center fw-bold">{{ stat.registered_ratio }}</div>
                 <div class="text-center fw-bold">TN Angemeldet</div>
             {% endcall %}
         {% endcall %}
@@ -106,8 +106,8 @@
 
     {% call layout.GridColumn(large_span=3) %}
         {% call cards.Card() %}
-            {% call cards.CardBody() %}
-                <div class="fs-1 text-center fw-bold">{{ stat.weighed_in_ratio }}</div>
+            {% call cards.CardBody(class="py-4") %}
+                <div class="fs-1 mb-1 text-center fw-bold">{{ stat.weighed_in_ratio }}</div>
                 <div class="text-center fw-bold">TN Eingewogen</div>
             {% endcall %}
         {% endcall %}
@@ -115,8 +115,8 @@
 
     {% call layout.GridColumn(large_span=3) %}
         {% call cards.Card() %}
-            {% call cards.CardBody() %}
-                <div class="fs-1 text-center fw-bold">{{ stat.placed_ratio }}%</div>
+            {% call cards.CardBody(class="py-4") %}
+                <div class="fs-1 mb-1 text-center fw-bold">{{ stat.placed_ratio }}%</div>
                 <div class="text-center fw-bold">Eingeteilt</div>
             {% endcall %}
         {% endcall %}
@@ -124,8 +124,8 @@
 
     {% call layout.GridColumn(large_span=3) %}
         {% call cards.Card() %}
-            {% call cards.CardBody() %}
-                <div class="fs-1 text-center fw-bold">{{ stat.open_matches }}</div>
+            {% call cards.CardBody(class="py-4") %}
+                <div class="fs-1 mb-1 text-center fw-bold">{{ stat.open_matches }}</div>
                 <div class="text-center fw-bold">Offene Kämpfe</div>
             {% endcall %}
         {% endcall %}
@@ -133,8 +133,8 @@
 
     {% call layout.GridColumn(large_span=3) %}
         {% call cards.Card() %}
-            {% call cards.CardBody() %}
-                <div class="fs-1 text-center fw-bold">{{ stat.scheduled_matches }}</div>
+            {% call cards.CardBody(class="py-4") %}
+                <div class="fs-1 mb-1 text-center fw-bold">{{ stat.scheduled_matches }}</div>
                 <div class="text-center fw-bold">Angesetzte Kämpfe</div>
             {% endcall %}
         {% endcall %}
@@ -142,8 +142,8 @@
 
     {% call layout.GridColumn(large_span=3) %}
         {% call cards.Card() %}
-            {% call cards.CardBody() %}
-                <div class="fs-1 text-center fw-bold">{{ stat.completed_matches }}</div>
+            {% call cards.CardBody(class="py-4") %}
+                <div class="fs-1 mb-1 text-center fw-bold">{{ stat.completed_matches }}</div>
                 <div class="text-center fw-bold">Erledigte Kämpfe</div>
             {% endcall %}
         {% endcall %}
@@ -151,8 +151,8 @@
 
     {% call layout.GridColumn(large_span=3) %}
         {% call cards.Card() %}
-            {% call cards.CardBody() %}
-                <div class="fs-1 text-center fw-bold">{{ stat.estimated_current_end.strftime("%H:%M") }}</div>
+            {% call cards.CardBody(class="py-4") %}
+                <div class="fs-1 mb-1 text-center fw-bold">{{ stat.estimated_current_end.strftime("%H:%M") }}</div>
                 <div class="text-center fw-bold">Voraussichtliches Ende (Angefangene Klassen)</div>
             {% endcall %}
         {% endcall %}
