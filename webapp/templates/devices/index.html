@@ -1,118 +1,60 @@
+{%- import "components/cover.html" as cover -%}
+{%- import "components/layout.html" as layout -%}
 {% extends "layouts/application.html" %}
 {% block title %}Willkommen!{% endblock %}
+
 {% block body %}
 
-<div class="container my-5">
+{% call layout.Container() %}
     <h1>Willkommen!</h1>
-
+    
     {% if not g.device.is_admin %}
-    <p class="lead mb-0">Sie haben von Ihrer/m Administrator/in die Aufgabe <strong>{{ g.device.event_role.name }}</strong> an {{ g.device.position.title }} zugewiesen bekommen.</p>
-    <p class="lead mb-0">Wählen Sie eine der Ihnen zugewiesenen Systemkomponenten aus, um loszulegen.</p>
+    <p>Sie haben von Ihrer/m Administrator/in die Aufgabe <strong>{{ g.device.event_role.name }}</strong> an {{ g.device.position.title }} zugewiesen bekommen.</p>
+    <p>Wählen Sie eine der Ihnen zugewiesenen Systemkomponenten aus, um loszulegen.</p>
     {% else %}
-    <p class="lead mb-0">Als Event Manager/in haben Sie Zugriff auf die folgenden Systemkomponenten:</p>
+    <p>Als Event Manager/in haben Sie Zugriff auf die folgenden Systemkomponenten:</p>
     {% endif %}
 
-    <div class="row g-3 mt-3">
-        {% if g.device.event_role.may_use_registration %}
-        <div class="col-12 col-md-6 col-lg-3">
-            <a href="{{ url_for('mod_participants.index', event=g.event.slug) }}" class="card card-link">
-                <div class="card-body p-3">
-                    <div class="cll-icon">👥</div>
-                    <h3>Teilnehmende</h3>
-                </div>
-            </a>
-        </div>
-        {% endif %}
-        {% if g.device.event_role.may_use_registration %}
-        <div class="col-12 col-md-6 col-lg-3">
-            <a href="{{ url_for('mod_registrations.index', event=g.event.slug) }}" class="card card-link">
-                <div class="card-body p-3">
-                    <div class="cll-icon">📝</div>
-                    <h3>Akkreditierung</h3>
-                </div>
-            </a>
-        </div>
-        {% endif %}
-        {% if g.device.event_role.may_use_weigh_in %}
-        <div class="col-12 col-md-6 col-lg-3">
-            <a href="{{ url_for('mod_weighin.index', event=g.event.slug) }}" class="card card-link">
-                <div class="card-body p-3">
-                    <div class="cll-icon">⚖️</div>
-                    <h3>Waage</h3>
-                </div>
-            </a>
-        </div>
-        {% endif %}
-        {% if g.device.event_role.may_use_placement_tool %}
-        <div class="col-12 col-md-6 col-lg-3">
-            <a href="{{ url_for('mod_placement.index', event=g.event.slug) }}" class="card card-link">
-                <div class="card-body p-3">
-                    <div class="cll-icon">🎲</div>
-                    <h3>Einteilung</h3>
-                </div>
-            </a>
-        </div>
-        {% endif %}
-        {% if g.device.event_role.may_use_global_list %}
-        <div class="col-12 col-md-6 col-lg-3">
-            <a href="{{ url_for('mod_global_list.index', event=g.event.slug) }}" class="card card-link">
-                <div class="card-body p-3">
-                    <div class="cll-icon">📜</div>
-                    <h3>Hauptliste</h3>
-                </div>
-            </a>
-        </div>
-        {% endif %}
-        {% if g.device.event_role.may_use_assigned_lists %}
-        <div class="col-12 col-md-6 col-lg-3">
-            <a href="{{ url_for('mod_list.index', event=g.event.slug) }}" class="card card-link">
-                <div class="card-body p-3">
-                    <div class="cll-icon">🗒️</div>
-                    <h3>Listen</h3>
-                </div>
-            </a>
-        </div>
-        {% endif %}
-        {% if g.device.event_role.may_use_scoreboard %}
-        <div class="col-12 col-md-6 col-lg-3">
-            <a href="{{ url_for('mod_scoreboard.standalone', event=g.event.slug) }}" class="card card-link">
-                <div class="card-body p-3">
-                    <div class="cll-icon">🖥️</div>
-                    <h3>Scoreboard<br>(nur Anzeige)</h3>
-                </div>
-            </a>
-        </div>
-        {% endif %}
-        {% if g.device.event_role.may_use_assigned_lists and g.device.event_role.may_use_scoreboard %}
-        <div class="col-12 col-md-6 col-lg-3">
-            <a href="{{ url_for('mod_scoreboard.managed', event=g.event.slug) }}" class="card card-link">
-                <div class="card-body p-3">
-                    <div class="cll-icon">🗒️🖥️</div>
-                    <h3>Scoreboard<br>(mit Liste)</h3>
-                </div>
-            </a>
-        </div>
-        {% endif %}
-        {% if g.device.event_role.may_use_beamer %}
-        <div class="col-12 col-md-6 col-lg-3">
-            <a href="{{ url_for('mod_beamer.index', event=g.event.slug) }}" class="card card-link">
-                <div class="card-body p-3">
-                    <div class="cll-icon">📽️</div>
-                    <h3>Listenanzeige</h3>
-                </div>
-            </a>
-        </div>
-        {% endif %}
-        {% if g.device.event_role.may_use_results %}
-        <div class="col-12 col-md-6 col-lg-3">
-            <a href="{{ url_for('mod_results.individual', event=g.event.slug) }}" class="card card-link">
-                <div class="card-body p-3">
-                    <div class="cll-icon">🏅</div>
-                    <h3>Ergebnisse</h3>
-                </div>
-            </a>
-        </div>
-        {% endif %}
-    </div>
-</div>
+    {%- call cover.Cover() -%}
+        {{ cover.CoverItem(href=url_for('mod_participants.index', event=g.event.slug),
+            icons=["user-square"], label="Teilnehmende")
+            if g.device.event_role.may_use_registration }}
+
+        {{ cover.CoverItem(href=url_for('mod_registrations.index', event=g.event.slug),
+            icons=["check"], color="blue", label="Akkreditierung")
+            if g.device.event_role.may_use_registration }}
+
+        {{ cover.CoverItem(href=url_for('mod_weighin.index', event=g.event.slug),
+            icons=["weight"], color="blue", label="Waage")
+            if g.device.event_role.may_use_weigh_in }}
+
+        {{ cover.CoverItem(href=url_for('mod_placement.index', event=g.event.slug),
+            icons=["dice-six"], color="yellow", label="Einteilung")
+            if g.device.event_role.may_use_placement_tool }}
+
+        {{ cover.CoverItem(href=url_for('mod_global_list.index', event=g.event.slug),
+            icons=["report-columns"], color="yellow", label="Hauptliste")
+            if g.device.event_role.may_use_global_list }}
+
+        {{ cover.CoverItem(href=url_for('mod_list.index', event=g.event.slug),
+            icons=["tournament"], color="red", label="Listen")
+            if g.device.event_role.may_use_assigned_lists }}
+
+        {{ cover.CoverItem(href=url_for('mod_scoreboard.standalone', event=g.event.slug),
+            icons=["computer"], color="red", label="Scoreboard", detail="(nur Anzeige)")
+            if g.device.event_role.may_use_scoreboard }}
+
+        {{ cover.CoverItem(href=url_for('mod_scoreboard.managed', event=g.event.slug),
+            icons=["tournament", "computer"], color="red", label="Scoreboard", detail="(mit Liste)")
+            if g.device.event_role.may_use_assigned_lists and g.device.event_role.may_use_scoreboard }}
+
+        {{ cover.CoverItem(href=url_for('mod_beamer.index', event=g.event.slug),
+            icons=["video-projector"], color="black", label="Listenanzeige")
+            if g.device.event_role.may_use_beamer }}
+
+        {{ cover.CoverItem(href=url_for('mod_results.individual', event=g.event.slug),
+            icons=["medal"], color="green", label="Ergebnisse")
+            if g.device.event_role.may_use_results }}
+    {%- endcall -%}
+{% endcall %}
 {% endblock body %}
