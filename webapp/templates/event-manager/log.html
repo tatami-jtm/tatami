@@ -17,8 +17,16 @@
     {% endif %}
     <li class="list-group-item">
         <p class="fs-small text-body-tertiary mb-0">{{ item.log_creator }} {{ item.created_at.strftime("am %d.%m.%Y um %H:%M") }}:</p>
-        <p class="mb-0 {{ 'text-danger' if item.log_type == 'ERROR' }} {{ 'text-warning' if item.log_type == 'WARNING' }}">
-            {{ item.log_value }}</p>
+        {% if item.log_type == 'ERROR' %}
+            {% if current_user.has_privilege('admin') %}
+                <p class="mb-0 text-danger fw-bold">Der folgende Fehler ist aufgetreten:</p>
+                <pre class="mb-0 {{ 'text-danger' if item.log_type == 'ERROR' }} {{ 'text-warning' if item.log_type == 'WARNING' }}">{{ item.log_value }}</pre>
+            {% else %}
+                <p class="mb-0 text-danger">Ein Fehler ist aufgetreten. Bitte wenden Sie sich an d. Systemadministrator/in.</p>
+            {% endif %}
+        {% else %}
+            <p class="mb-0 {{ 'text-danger' if item.log_type == 'ERROR' }} {{ 'text-warning' if item.log_type == 'WARNING' }}">{{ item.log_value }}</p>
+        {% endif %}
     </li>
     {% endfor %}
 </ul>

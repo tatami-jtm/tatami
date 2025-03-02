@@ -6,43 +6,11 @@
     {% block custom_header %}{% endblock custom_header %}
 </head>
 <body class="admin" data-tatami-event="{{ g.event.slug }}">
-    <nav class="navbar navbar-admin navbar-expand-lg navbar-light bg-white shadow-sm mb-2">
-        <div class="container-fluid py-2">
-            <a class="navbar-brand" href="{{ url_for('event_manager.index', event=g.event.slug) }}">
-                <div class="splash-logo first-part">
-                    {{ config.BRAND_NAME }}
-                </div>
-                <div class="splash-logo second-part">
-                    Event Administration
-                </div>
-            </a>
-            <button class="navbar-toggler" type="button"
-                data-bs-toggle="collapse" data-bs-target="#adminMainNav"
-                aria-controls="adminMainNav" aria-expanded="false"
-                aria-label="Navigation ein-/ausblenden">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="adminMainNav">
-                <div class="d-flex justify-content-end w-100">
-                    <div class="navbar-nav">
-                        <div class="nav-item">
-                            <a class="nav-link" href="{{ url_for('admin.index') }}">Ansicht schließen</a>
-                        </div>
-                        <div class="nav-item">
-                            <a class="nav-link" href="{{ url_for('splash') }}">Zur Einwahl</a>
-                        </div>
-                        <div class="nav-item">
-                            <a class="nav-link" href="{{ url_for('security.logout') }}">Abmelden</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+    {% set mode="evmgr" %}
+    {% include "layouts/_appheader.html" %}
     <div class="container-fluid event-container">
         <div class="row">
             <div class="col event-sidebar bg-light shadow-sm">
-                <h3>{{ g.event.title }}</h3>
                 <div class="nav flex-column mb-4">
                     <div class="nav-item">
                         <a class="nav-link {{ 'active' if event_page=='dashboard' }}" href="{{ url_for('event_manager.index', event=g.event.slug) }}">📊 Übersicht</a>
@@ -92,42 +60,5 @@
             </div>
         </div>
     </div>
-
-    <button class="btn btn-dark btn-sidecta" type="button" data-bs-toggle="offcanvas" data-bs-target="#quick-sign-in-offcanvas" aria-controls="quick-sign-in-offcanvas">
-        Schnelleinwahl
-    </button>
-      
-
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="quick-sign-in-offcanvas" aria-labelledby="quick-sign-in-offcanvas-label">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="quick-sign-in-offcanvas-label">Schnelleinwahl</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <form action="{{ url_for('event_manager.quick_sign_in', event=g.event.slug) }}" method="POST" target="_blank">
-                <p>Für dieses Gerät folgende Freigabe erteilen:</p>
-                <div class="mb-3">
-                    <label for="quick-dev-role" class="mb-1">Aufgabe</label>
-                    <select name="role" id="quick-dev-role" class="form-select">
-                        <option disabled selected></option>
-                        {% for role in device_roles %}
-                        <option value="{{ role.id }}">{{ role.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="quick-dev-pos" class="mb-1">Position</label>
-                    <select name="position" id="quick-dev-pos" class="form-select">
-                        <option disabled selected></option>
-                        {% for pos in device_positions %}
-                        <option value="{{ pos.id }}">{{ pos.title }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-dark" data-bs-dismiss="offcanvas">In neuem Tab starten</button>
-            </form>
-        </div>
-      </div>
 </body>
 </html>

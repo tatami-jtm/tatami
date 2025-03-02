@@ -131,6 +131,10 @@ class Registration(db.Model):
             query = query.order_by('club')
         elif order_by == 'verified_weight':
             query = query.order_by('verified_weight')
+        elif order_by == 'event_class':
+            query = query.order_by('event_class_id')
+        elif order_by == 'association':
+            query = query.order_by('association_id')
         else:
             query = query.order_by('last_name', 'first_name', 'club')
 

@@ -1,13 +1,14 @@
-from flask import Flask, render_template, request, flash, abort, jsonify
+from flask import Flask, render_template, request, flash, abort, jsonify, g
 from flask_migrate import Migrate
 from flask_security import Security, SQLAlchemyUserDatastore, user_registered
 from flask_babel import Babel
 
 from .config_base import SETTINGS
 from . import setup_data
+import traceback
 
 from .models import db, User, Role, Event, ScoreboardRuleset
-from .views import admin_view, eventmgr_view, devices_view, mod_scoreboard_view, mod_registrations_view, mod_weighin_view, mod_placement_view, mod_global_list_view, mod_list_view, mod_beamer_view, mod_results_view
+from .views import admin_view, eventmgr_view, devices_view, mod_scoreboard_view, mod_registrations_view, mod_weighin_view, mod_placement_view, mod_global_list_view, mod_list_view, mod_beamer_view, mod_results_view, mod_participants_view
 
 app = Flask(__name__, instance_path=SETTINGS['INSTANCE_PATH'])
 app.config['BRAND_NAME'] = "TATAMI 2024"
@@ -92,7 +93,13 @@ def error_401(e=None): return render_template('error/forbidden.html'), 401
 @app.errorhandler(500)
 @app.errorhandler(400)
 @app.route('/error')
-def error_500(e=None): return render_template('error/error.html', err=e), 500
+def error_500(e=None):
+    if 'event' in g:
+        try:
+            g.event.log('TATAMI-System', 'ERROR', "".join(traceback.format_exception(e)))
+        except: pass
+
+    return render_template('error/error.html', err=e), 500
 
 @app.errorhandler(503)
 @app.route('/offline')
@@ -141,7 +148,8 @@ app.register_blueprint(eventmgr_view, url_prefix='/event-manager/<event>')
 app.register_blueprint(devices_view, url_prefix='/go/<event>')
 
 app.register_blueprint(mod_scoreboard_view, url_prefix="/go/<event>/mod_scoreboard")
-app.register_blueprint(mod_registrations_view, url_prefix="/go/<event>/mod_registrations")
+app.register_blueprint(mod_participants_view, url_prefix="/go/<event>/mod_participants")
+app.register_blueprint(mod_registrations_view, url_prefix="/go/<event>/mod_registration")
 app.register_blueprint(mod_weighin_view, url_prefix="/go/<event>/mod_weighin")
 app.register_blueprint(mod_placement_view, url_prefix="/go/<event>/mod_placement")
 app.register_blueprint(mod_global_list_view, url_prefix="/go/<event>/mod_global_list")

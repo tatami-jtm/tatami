@@ -72,6 +72,8 @@ html, body {
 }
 .btn[href], .btn[href]:hover { color: white; }
 .btn[href].btn-light, .btn[href].btn-light:hover { color: black; }
+.btn[href].btn-outline-dark { color: black; }
+.btn[href].btn-outline-dark:hover { color: white; }
 .btn.btn-sm {
     padding: 0.125rem 0.35rem;
 }
@@ -239,6 +241,35 @@ html, body {
     margin-top: 3.55rem;
 }
 
+.btn-group .btn.btn-outline-primary {
+    border-color: #ddd !important;
+    color: #666;
+    border-radius: 0;
+    box-shadow: 0 0 0 0.15rem #fff inset;
+}
+
+.btn-group .btn.btn-outline-primary:not(:last-of-type) {
+    border-right: none;
+}
+
+.btn-group .btn.btn-outline-primary:not(:first-of-type) {
+    border-left: none;
+}
+
+.btn-group .btn.btn-outline-primary:hover {
+    background-color: #eee;
+    color: #333;
+}
+.btn-group .btn.btn-outline-primary.active {
+    background-color: #ccc;
+    color: #111;
+}
+
+.btn-group.btn-group-xs .btn {
+    font-size: 0.9rem;
+    padding: 0.25rem 0.65rem;
+}
+
 /** ** Splash page (/) ** */
 body.splash {
     position: absolute;
@@ -270,7 +301,8 @@ body.admin {
 body.admin .main-container {
     margin-bottom: 2rem;
 }
-body.admin table {
+body.admin table,
+body table.admin-style {
     background-color: white;
     border-color: #aaaaaa;
 }
@@ -349,7 +381,7 @@ body.application {
     background-color: #e5e9de;
 }
 
-.event-container .row>.col {    
+.event-container>.row>.col {    
     min-height: calc(100vh - 2.55rem);
 }
 
@@ -639,6 +671,9 @@ textarea.form-control {
 }
 textarea.form-control.form-lg {
     min-height: 500px;
+}
+textarea.form-control.form-sm {
+    min-height: 80px;
 }
 
 .application .h-full {
@@ -1419,6 +1454,12 @@ select.w-min {
 
 .modal-content.modal-border-red {
     border: 1rem solid var(--bs-danger);
+}
+
+.form-label.label-with-hint::after {
+    content: 'ℹ️';
+    margin-left: 0.8rem;
+    opacity: 0.5;
 }
 
 img.img-spinner {

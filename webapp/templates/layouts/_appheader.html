@@ -1,0 +1,110 @@
+{% set has_current_user = current_user.is_authenticated and (g.event.is_supervisor(current_user) or current_user.has_privilege('admin')) %}
+<div class="border-bottom {{ 'navbar-admin' if mode == 'evmgr' }} application-header bg-white shadow-sm">
+    <div class="container-fluid py-2 d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            {% if mode == 'evmgr' %}
+            <a href="{{ url_for('event_manager.index', event=g.event.slug) }}" class="splash-logo">{{ config.BRAND_NAME }}</a>
+            {% else %}
+            <a href="{{ url_for('devices.index', event=g.event.slug) }}" class="splash-logo">{{ config.BRAND_NAME }}</a>
+            {% endif %}
+            {% if has_current_user %}
+            <div class="btn-group mx-2 btn-group-xs" role="group">
+                <a href="{{ url_for('event_manager.index', event=g.event.slug) }}" class="btn btn-outline-primary {{ 'active' if mode == 'evmgr' }}">Vorbereitung</a>
+
+                <a href="{{ url_for('devices.index', event=g.event.slug) }}" class="btn btn-outline-primary {{ 'active' if mode == 'app' }}">Veranstaltung</a>
+            </div>
+            {% endif %}
+        </div>
+        {% if g.deviceless or mode == 'evmgr' %}
+        <strong>{{ g.event.title }}</strong>
+        {% else %}
+        <div class="dropdown dropdown-center">
+            <button class="btn btn-light fw-bold dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ g.event.title }}
+            </button>
+            <ul class="dropdown-menu">
+                {% if g.device.event_role.may_use_registration %}
+                <li>
+                    <a class="dropdown-item" href="{{ url_for('mod_participants.index', event=g.event.slug) }}">
+                        👥 Teilnehmende
+                    </a>
+                </li>
+                {% endif %}
+                {% if g.device.event_role.may_use_registration %}
+                <li>
+                    <a class="dropdown-item" href="{{ url_for('mod_registrations.index', event=g.event.slug) }}">
+                        📝 Akkreditierung
+                    </a>
+                </li>
+                {% endif %}
+                {% if g.device.event_role.may_use_weigh_in %}
+                <li>
+                    <a class="dropdown-item" href="{{ url_for('mod_weighin.index', event=g.event.slug) }}">
+                        ⚖️ Waage
+                    </a>
+                </li>
+                {% endif %}
+                {% if g.device.event_role.may_use_placement_tool %}
+                <li>
+                    <a class="dropdown-item" href="{{ url_for('mod_placement.index', event=g.event.slug) }}">
+                        🎲 Einteilung
+                    </a>
+                </li>
+                {% endif %}
+                {% if g.device.event_role.may_use_global_list %}
+                <li>
+                    <a class="dropdown-item" href="{{ url_for('mod_global_list.index', event=g.event.slug) }}">
+                        📜 Hauptliste
+                    </a>
+                </li>
+                {% endif %}
+                {% if g.device.event_role.may_use_assigned_lists %}
+                <li>
+                    <a class="dropdown-item" href="{{ url_for('mod_list.index', event=g.event.slug) }}">
+                        🗒️ Listen
+                    </a>
+                </li>
+                {% endif %}
+                {% if g.device.event_role.may_use_scoreboard %}
+                <li>
+                    <a class="dropdown-item" href="{{ url_for('mod_scoreboard.standalone', event=g.event.slug) }}">
+                        🖥️ Scoreboard (nur Anzeige)
+                    </a>
+                </li>
+                {% endif %}
+                {% if g.device.event_role.may_use_assigned_lists and g.device.event_role.may_use_scoreboard %}
+                <li>
+                    <a class="dropdown-item" href="{{ url_for('mod_scoreboard.managed', event=g.event.slug) }}">
+                        🖥️ Scoreboard (🗒️ mit Liste)
+                    </a>
+                </li>
+                {% endif %}
+                {% if g.device.event_role.may_use_beamer %}
+                <li>
+                    <a class="dropdown-item" href="{{ url_for('mod_beamer.index', event=g.event.slug) }}">
+                        📽️ Listenanzeige
+                    </a>
+                </li>
+                {% endif %}
+                {% if g.device.event_role.may_use_results %}
+                <li>
+                    <a class="dropdown-item" href="{{ url_for('mod_results.individual', event=g.event.slug) }}">
+                        🏅 Ergebnisse
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+        {% endif %}
+        <div class="menu">
+            {% if has_current_user %}
+            <a href="{{ url_for('admin.index') }}" class="btn btn-sm btn-dark">Ansicht schließen</a>
+            {% endif %}
+            {% if mode == 'evmgr' %}
+            <a href="{{ url_for('security.logout') }}" class="btn btn-sm btn-dark">Abmelden</a>
+            {% else %}
+            <a href="{{ url_for('devices.exit', event=g.event.slug) }}" class="btn btn-sm btn-dark">Abmelden</a>
+            {% endif %}
+        </div>
+    </div>
+</div>

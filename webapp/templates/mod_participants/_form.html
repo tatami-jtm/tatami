@@ -17,7 +17,7 @@
                     </div>
                     <div class="mb-2">
                         <label for="contact_details" class="form-label">Kontaktinformationen</label>
-                        <textarea name="contact_details" id="contact_details" class="form-control form-sm font-monospace">{{ registration.contact_details or '' }}</textarea>
+                        <textarea name="contact_details" id="contact_details" class="form-control form-sm form-sm font-monospace">{{ registration.contact_details or '' }}</textarea>
                     </div>
                 </div>
                 <div class="col-12 col-md-4">
@@ -102,7 +102,7 @@
         <div class="card-footer">
             <div class="d-flex gap-1">
                 <button type="submit" class="btn btn-primary">Speichern</button>
-                <a href="{{ url_for('event_manager.registrations', event=g.event.slug) }}" class="btn btn-secondary">Abbrechen</a>
+                <a href="{{ url_for('mod_participants.index', event=g.event.slug) }}" class="btn btn-secondary">Abbrechen</a>
             </div>
         </div>
     </div>

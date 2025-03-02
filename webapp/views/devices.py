@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, flash, g, session, \
     request, redirect, url_for, abort, jsonify
+from flask_security import current_user
 
-from ..models import db, DeviceRegistration
+from ..models import db, DeviceRegistration, EventRole, DevicePosition
 from .event_manager import check_and_apply_event
 
 import uuid
@@ -9,6 +10,11 @@ from datetime import datetime
 
 devices_view = Blueprint('devices', __name__)
 
+
+def _check_if_registration_is_not_required():
+    return current_user.is_authenticated and \
+        (g.event.is_supervisor(current_user) or \
+         current_user.has_privilege('admin'))
 
 def check_is_registered(func):
     def inner_func(*args, **kwargs):
@@ -22,6 +28,15 @@ def check_is_registered(func):
                     g.deviceless = False
                     return func(*args, **kwargs)
 
+        if _check_if_registration_is_not_required():
+            g.device = DeviceRegistration()
+            g.device.title = current_user.qualified_name()
+            g.device.is_admin = True
+            g.device.event_role = EventRole.administrative()
+            g.device.position = DevicePosition.administrative()
+            g.deviceless = False
+            return func(*args, **kwargs)
+
         return redirect(url_for('devices.register', event=g.event.slug))
 
     inner_func.__name__ = func.__name__
@@ -31,6 +46,9 @@ def check_is_registered(func):
 @devices_view.route('/register')
 @check_and_apply_event
 def register():
+    if _check_if_registration_is_not_required():
+        return redirect(url_for('devices.index', event=g.event.slug))
+
     if "device_token" in session:
         matching_registration = DeviceRegistration.query.filter_by(
             event=g.event, token=session["device_token"]).all()

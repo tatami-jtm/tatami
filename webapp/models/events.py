@@ -231,6 +231,7 @@ class EventRole(db.Model):
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
 
+    may_use_participants = db.Column(db.Boolean)
     may_use_registration = db.Column(db.Boolean)
     may_use_weigh_in = db.Column(db.Boolean)
     may_use_placement_tool = db.Column(db.Boolean)
@@ -239,6 +240,18 @@ class EventRole(db.Model):
     may_use_scoreboard = db.Column(db.Boolean)
     may_use_beamer = db.Column(db.Boolean)
     may_use_results = db.Column(db.Boolean)
+
+    @classmethod
+    def administrative(cls):
+        return cls(may_use_participants=True,
+                   may_use_registration=True,
+                   may_use_weigh_in=True,
+                   may_use_placement_tool=True,
+                   may_use_global_list=True,
+                   may_use_assigned_lists=False,
+                   may_use_scoreboard=True,
+                   may_use_beamer=True,
+                   may_use_results=True)
 
 
 class DeviceRegistration(db.Model):
@@ -265,6 +278,8 @@ class DeviceRegistration(db.Model):
     position_id = db.Column(db.Integer(), db.ForeignKey('device_position.id'))
     position = db.relationship(
         'DevicePosition', backref=db.backref('devices', lazy='dynamic'))
+    
+    is_admin = False
 
     def get_human_readable_code(self):
         token_hash = hashlib.md5(self.token.encode()).hexdigest()
@@ -301,6 +316,10 @@ class DevicePosition(db.Model):
             query = query.filter(Match.called_up!=True)
         
         return query.all()
+    
+    @classmethod
+    def administrative(cls):
+        return cls(title="", is_mat=False)
 
 
 class EventSetting(db.Model):
