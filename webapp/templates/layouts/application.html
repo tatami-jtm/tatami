@@ -15,13 +15,12 @@
         {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}
         {% for category, message in messages %}
-            <div class="alert alert-{{ category or 'light' }} alert-dismissible fade show" role="alert">
+            <div class="alert alert-{{ category or 'secondary' }}" role="alert">
                 {% if ":" in message %}
-                <p class="mb-0"><strong>{{ message.split(":", 1)[0] }}:</strong> {{ message.split(":", 1)[1] }}</p>
+                <p><strong>{{ message.split(":", 1)[0] }}:</strong> {{ message.split(":", 1)[1] }}</p>
                 {% else %}
-                <p class="mb-0">{{ message }}</p>
+                <p>{{ message }}</p>
                 {% endif %}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schließen"></button>
             </div>
         {% endfor %}
         {% endif %}
