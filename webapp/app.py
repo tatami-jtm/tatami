@@ -11,7 +11,7 @@ from .models import db, User, Role, Event, ScoreboardRuleset
 from .views import admin_view, eventmgr_view, devices_view, mod_scoreboard_view, mod_registrations_view, mod_weighin_view, mod_placement_view, mod_global_list_view, mod_list_view, mod_beamer_view, mod_results_view, mod_participants_view
 
 app = Flask(__name__, instance_path=SETTINGS['INSTANCE_PATH'])
-app.config['BRAND_NAME'] = "TATAMI 2024"
+app.config['BRAND_NAME'] = "TATAMI 2025"
 
 # SQLAlchemy and Migrate
 app.config['SQLALCHEMY_DATABASE_URI'] = SETTINGS['SQL_URL']
