@@ -1,8 +1,8 @@
-{%- macro Input(type="text", value=None, class="", name=None, id=None, required=False, disabled=False, readonly=False, placeholder=None, attr=None) -%}
+{%- macro Input(type="text", value=None, class="", name=None, id=None, required=False, disabled=False, readonly=False, placeholder="", attr=None) -%}
 <input type="{{ type }}" name="{{ name or '' }}" class="form-control {{ class }} {{ 'required' if required }} {{ 'disabled' if disabled }}" id="{{ id or '' }}" value="{{ value or '' }}" placeholder="{{ placeholder }}" {{ 'disabled' if disabled }} {{ 'readonly' if readonly }} {{ attr or '' }}>
 {%- endmacro -%}
 
-{%- macro Textarea(value=None, class="", name=None, id=None, required=False, disabled=False, readonly=False, placeholder=None, size=None) -%}
+{%- macro Textarea(value=None, class="", name=None, id=None, required=False, disabled=False, readonly=False, placeholder="", size=None) -%}
 <textarea name="{{ name or '' }}" class="form-control {{ class }} {{ size or '' }} {{ 'required' if required }} {{ 'disabled' if disabled }}" id="{{ id or '' }}" placeholder="{{ placeholder }}" {{ 'disabled' if disabled }} {{ 'readonly' if readonly }}>{{ value or '' }}</textarea>
 {%- endmacro -%}
 
