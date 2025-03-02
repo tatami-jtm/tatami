@@ -1,0 +1,210 @@
+.match {
+    background-color: #eaeaea;
+    margin: var(--tatami-base-spacing) 0;
+    padding: calc(0.5 * var(--tatami-base-spacing));
+    border: 1px solid var(--tatami-color-secondary);
+    display: flex;
+    line-height: 1.0;
+    align-items: flex-start;
+}
+
+.match .match-sidebar {
+    width: 2.5rem;
+}
+.match .match-sidebar .match-schedule {
+    text-align: center;
+    font-size: 0.9rem;
+    overflow: hidden;
+    padding: 0.5rem 0;
+    padding-right: 0.75rem;
+    position: relative;
+    z-index: 1;
+    margin-top: 0.25rem;
+    font-weight: 500;
+    user-select: none;
+}
+.match .match-sidebar .match-schedule::before {
+    content: '';
+    position: absolute;
+    top: -0.525rem;
+    left: -1.35rem;
+    height: 3rem; width: 3rem;
+    transform: rotate(45deg);
+    background-color: var(--tatami-color-secondary-subtle);
+    z-index: -1;
+}
+.match .match-sidebar .match-schedule.scheduled {
+    color: white;
+}
+.match .match-sidebar .match-schedule.scheduled::before {
+    background-color: var(--tatami-color-secondary-dark);
+}
+.match .match-sidebar .match-schedule.pending::before {
+    background-color: var(--tatami-color-warning);
+}
+.match .match-sidebar .match-schedule.running {
+    color: white;
+}
+.match .match-sidebar .match-schedule.running::before {
+    background-color: var(--tatami-color-danger);
+}
+.match .match-sidebar .match-schedule.done {
+    color: white;
+}
+.match .match-sidebar .match-schedule.done::before {
+    background-color: var(--tatami-color-success);
+}
+.match .match-sidebar .match-schedule-label {
+    margin-top: calc(0.5 * var(--tatami-base-spacing));
+    font-size: 0.7em;
+    user-select: none;
+}
+
+.match .match-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.match .match-body .match-lineup {
+    display: flex;
+}
+
+.match .match-body .match-lineup .match-lineup-white,
+.match .match-body .match-lineup .match-lineup-blue {
+    padding: var(--tatami-base-spacing);
+    width: 0;
+    flex-grow: 1;
+    border-top: .35em solid;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.match .match-body .match-lineup .match-lineup-white {
+    border-top-color: var(--tatami-color-judowhite-accent);
+    background-color: var(--tatami-color-judowhite)
+}
+.match .match-body .match-lineup .match-lineup-blue {
+    border-top-color: var(--tatami-color-judoblue-accent);
+    background-color: var(--tatami-color-judoblue);
+    color: white;
+}
+.match .match-body .match-lineup .match-lineup-white .match-fighter,
+.match .match-body .match-lineup .match-lineup-blue .match-fighter {
+    font-weight: 500;
+    margin-bottom: calc(0.25 * var(--tatami-base-spacing));
+    margin-right: var(--tatami-base-spacing);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    flex-grow: 1;
+}
+.match .match-body .match-lineup .match-lineup-white .match-association,
+.match .match-body .match-lineup .match-lineup-blue .match-association {
+    font-size: 0.8em;
+    font-weight: 400;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.match .match-body .match-lineup .match-lineup-white.winner .match-fighter,
+.match .match-body .match-lineup .match-lineup-blue.winner .match-fighter {
+    font-weight: 900;
+}
+
+.match .match-body .match-lineup:has(.winner) .match-lineup-white:not(.winner),
+.match .match-body .match-lineup:has(.winner) .match-lineup-blue:not(.winner) {
+    opacity: 0.4;
+}
+
+.match .match-body .match-lineup .match-lineup-white.winner .match-association,
+.match .match-body .match-lineup .match-lineup-blue.winner .match-association {
+    font-weight: 600;
+}
+
+.match .match-body .match-results {
+    display: flex;
+    align-items: center;
+    margin-top: var(--tatami-base-spacing);
+    justify-content: center;
+}
+.match .match-body .match-results:empty {
+    display: none;
+}
+
+.match .match-body .match-results .match-result-white,
+.match .match-body .match-results .match-result-blue {
+    width: 0;
+    flex-grow: 1;
+    display: flex;
+    padding: calc(0.5 * var(--tatami-base-spacing));
+    max-width: 200px;
+}
+.match .match-body .match-results .match-result-white {
+    background-color: var(--tatami-color-judowhite-accent);
+}
+.match .match-body .match-results .match-result-blue {
+    background-color: var(--tatami-color-judoblue-accent);
+    color: white;
+}
+
+.match .match-body .match-results .match-result-timer {
+    padding: 0 calc(0.75 * var(--tatami-base-spacing));
+    font-weight: 900;
+}
+
+.match .match-body .match-results .match-result-white .match-result-item,
+.match .match-body .match-results .match-result-blue .match-result-item {
+    padding: calc(0.5 * var(--tatami-base-spacing)) 0;
+    border: 1px solid;
+    width: 0;
+    font-weight: 500;
+    flex-grow: 1;
+    text-align: center;
+}
+.match .match-body .match-results .match-result-white .match-result-item:not(:first-child),
+.match .match-body .match-results .match-result-blue .match-result-item:not(:first-child) {
+    border-left: none;
+}
+.match .match-body .match-results .match-result-white .match-result-item.penalty {
+    border-color: black;
+    color: white;
+    background-color: var(--tatami-color-danger);
+}
+.match .match-body .match-results .match-result-blue .match-result-item.penalty {
+    color: white;
+    background-color: var(--tatami-color-danger);
+    border-color: white;
+}
+
+.match .match-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin: calc(-0.25 * var(--tatami-base-spacing));
+    margin-left: calc(0.25 * var(--tatami-base-spacing));
+    margin-top: 0;
+}
+.match .match-menu .match-menu-item {
+    flex-grow: 1;
+    font: inherit;
+    width: 1.2em;
+    font-size: 1.1em;
+    text-align: center;
+    padding: calc(0.125 * var(--tatami-base-spacing));
+    padding-bottom: 0;
+    color: inherit;
+    text-decoration: none;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    border-radius: var(--tatami-base-rounding);
+    transition: all var(--tatami-base-transition);
+}
+.match .match-menu .match-menu-item:hover {
+    background-color: #00000022;
+}
+.match .match-menu .match-menu-item:active {
+    background-color: #00000022;
+    box-shadow: var(--tatami-button-active-shadow);
+}

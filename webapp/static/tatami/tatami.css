@@ -1,0 +1,26 @@
+@import url(./_fonts.css);
+@import url(./_variables.css);
+
+@import url(./_base.css);
+@import url(./_typography.css);
+@import url(./_layout.css);
+
+@import url(./_buttons.css);
+@import url(./_form.css);
+@import url(./_alerts.css);
+@import url(./_cards.css);
+@import url(./_switches.css);
+@import url(./_brand.css);
+@import url(./_navbar.css);
+@import url(./_toolbar.css);
+@import url(./_dataset.css);
+@import url(./_match.css);
+@import url(./_colboard.css);
+@import url(./_list.css);
+@import url(./_pagination.css);
+@import url(./_cover.css);
+
+@import url(./_helpers.css);
+
+/* Include the iconoir icon library */
+@import url(./iconoir.css);

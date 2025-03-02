@@ -1,0 +1,26 @@
+{%- macro Card(title=None, class="") -%}
+<div class="card {{ class }}">
+    {%- if title -%}
+    <div class="card-header">{{ title }}</div>
+    {%- endif -%}
+    {{ caller() }}
+</div>
+{%- endmacro -%}
+
+{%- macro CardHeader(class="") -%}
+<div class="card-header {{ class }}">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
+
+{%- macro CardBody(class="") -%}
+<div class="card-body {{ class }}">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
+
+{%- macro CardFooter(class="") -%}
+<div class="card-footer {{ class }}">
+    {{ caller() }}
+</div>
+{%- endmacro -%}

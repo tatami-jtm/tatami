@@ -1,0 +1,36 @@
+{%- macro Colboard() -%}
+<div class="colboard">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
+
+{%- macro ColboardColumn(span=None) -%}
+<div class="colboard-column {{ 'span-' ~ span if span }}">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
+
+{%- macro ColboardColumnHeader(title="") -%}
+<div class="colboard-column-header">
+    {%- if title -%}
+    <div class="colboard-column-title">{{ title }}</div>
+    {%- endif -%}
+    {{ caller() if caller is defined }}
+</div>
+{%- endmacro -%}
+
+{%- macro ColboardColumnTitle(title="") -%}
+<div class="colboard-column-title">{{ title or caller() }}</div>
+{%- endmacro -%}
+
+{%- macro ColboardEmptyColumn(span=None, text="") -%}
+<div class="colboard-column empty {{ 'span-' ~ span if span }}">
+    {%- if text or caller is defined -%}
+    <div class="colboard-empty-column-text">{{ text or caller() }}</div>
+    {%- endif -%}
+</div>
+{%- endmacro -%}
+
+{%- macro ColboardColumnBody() -%}
+<div class="colboard-column-body">{{ caller() }}</div>
+{%- endmacro -%}

@@ -1,0 +1,87 @@
+.navbar {
+    padding: calc(var(--tatami-base-spacing)) 0;
+    margin-bottom: var(--tatami-base-spacing);
+    background-color: var(--tatami-navbar-background);
+    border-bottom: var(--tatami-navbar-border);
+    box-shadow: var(--tatami-navbar-shadow);
+    z-index: 100;
+    position: relative;
+}
+
+.navbar .navbar-container {
+    display: flex;
+    align-items: center;
+}
+
+.navbar .navbar-container>* {
+    margin: 0 calc(var(--tatami-base-spacing));
+}
+
+.navbar .navbar-container .switch {
+    font-size: 0.9rem;
+}
+
+.navbar .navbar-centered-text {
+    flex-grow: 1;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 0;
+    overflow: hidden;
+}
+
+.navbar .navbar-filler { flex-grow: 1; margin: 0; }
+
+.navbar .navbar-nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.navbar .navbar-nav.nowrap {
+    flex-wrap: nowrap;
+}
+
+.navbar .navbar-nav .navbar-nav-item {
+    color: var(--tatami-navbar-item-color);
+    text-decoration: none;
+    margin: 0 var(--tatami-base-spacing);
+    padding: calc(1 * var(--tatami-base-spacing)) calc(0.25 * var(--tatami-base-spacing));
+    transition: color var(--tatami-base-transition);
+}
+
+.navbar .navbar-nav .navbar-nav-item:hover {
+    color: var(--tatami-navbar-hover-color)
+}
+
+.navbar .navbar-nav .navbar-nav-item.navbar-nav-item-with-icon {
+    display: flex;
+    align-items: center;
+}
+.navbar .navbar-nav .navbar-nav-item.navbar-nav-item-with-icon i {
+    font-size: 1.25rem;
+    margin-right: calc(0.5 * var(--tatami-base-spacing))
+}
+.navbar .navbar-nav .navbar-nav-item.navbar-nav-item-with-icon .navbar-nav-item-icon-label {
+    font-size: 0.85rem;
+}
+
+.navbar .brand.for-small { display: none; }
+.navbar .brand.brand-icon { font-size: 1.5rem; }
+
+@media all and (max-width: 1248px) {
+    .navbar .brand.for-large { display: none; }
+    .navbar .brand.for-small { display: block; }
+
+    .navbar .navbar-container>* {
+        margin: 0 calc(0.5 * var(--tatami-base-spacing));
+    }
+
+    .navbar .navbar-nav .navbar-nav-item.navbar-nav-item-with-icon .navbar-nav-item-icon-label {
+        display: none;
+    }
+
+    .navbar .navbar-centered-text,
+    .navbar .navbar-container .switch {
+        font-size: 0.8rem;
+    }
+}

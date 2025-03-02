@@ -1,0 +1,93 @@
+.btn {
+    display: inline-block;
+    font: inherit;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    border-radius: calc(2 * var(--tatami-base-rounding));
+    padding: calc(1.25 * var(--tatami-base-spacing)) calc(2 * var(--tatami-base-spacing));
+    margin: 0 calc(0.25 * var(--tatami-base-spacing));
+    font-weight: var(--tatami-button-font-weight);
+    transition: all var(--tatami-base-transition);
+    user-select: none;
+    line-height: 1;
+    text-decoration: none;
+}
+.btn:hover {
+    box-shadow: var(--tatami-button-hover-shadow);
+}
+.btn:active, .btn.active {
+    box-shadow: var(--tatami-button-hover-shadow), var(--tatami-button-active-shadow);
+}
+.btn[disabled], .btn.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.btn.btn-primary {
+    background-color: var(--tatami-color-primary);
+    color: #ffffff;
+}
+
+.btn.btn-secondary {
+    background-color: var(--tatami-color-secondary);
+    color: #000000;
+}
+
+.btn.btn-danger {
+    background-color: var(--tatami-color-danger);
+    color: #ffffff;
+}
+
+.btn.btn-subtle {
+    background-color: transparent;
+    color: #000000;
+}
+
+.btn.btn-danger-subtle {
+    background-color: transparent;
+    color: var(--tatami-color-danger);
+}
+
+.btn.btn-inverted-subtle {
+    background-color: transparent;
+    color: #ffffff;
+}
+
+.btn.btn-primary-cta {
+    background-color: var(--tatami-color-primary);
+    font-size: 1.25rem;
+    color: #ffffff;
+    border-radius: calc(6 * var(--tatami-base-rounding));
+    padding: calc(2 * var(--tatami-base-spacing)) calc(2.5 * var(--tatami-base-spacing));
+    box-shadow: var(--tatami-button-cta-shadow);
+}
+.btn.btn-primary-cta:hover {
+    box-shadow: var(--tatami-button-cta-shadow), var(--tatami-button-hover-shadow);
+}
+.btn.btn-primary-cta:active, .btn.active {
+    box-shadow: var(--tatami-button-cta-shadow), var(--tatami-button-hover-shadow), var(--tatami-button-active-shadow);
+}
+
+.btn.btn-inline {
+    font-size: 0.85rem;
+    padding: calc(0.5 * var(--tatami-base-spacing)) calc(0.75 * var(--tatami-base-spacing));
+}
+
+.button-icon {
+    display: flex;
+    align-items: center;
+    margin: -0.125em 0;
+    text-align: center;
+}
+.button-icon i {
+    font-size: 1.25em;
+    margin-right: var(--tatami-base-spacing)
+}
+.button-icon i:first-child:last-child {
+    margin: 0 calc(-1 * var(--tatami-base-spacing));
+}
+
+.btn.btn-inline .button-icon i:first-child:last-child {
+    margin: 0 calc(-0.5 * var(--tatami-base-spacing));
+}

@@ -1,0 +1,168 @@
+input.form-control,
+textarea.form-control,
+select.form-control,
+.form-component {
+    display: block;
+    font: inherit;
+    background-color: #ffffff;
+    margin-bottom: calc(2 * var(--tatami-base-spacing));
+    padding: var(--tatami-base-spacing);
+    border: 1px solid var(--tatami-color-secondary);
+    border-radius: var(--tatami-base-rounding);
+    width: 100%;
+    transition: border-color var(--tatami-base-transition), outline var(--tatami-base-transition);
+    outline: 0 solid #00000011;
+    line-height: 1.0;
+}
+input.form-control:focus,
+textarea.form-control:focus,
+select.form-control:focus {
+    border-color: var(--tatami-color-secondary-dark);
+    outline: calc(0.5 * var(--tatami-base-spacing)) solid #00000011;
+}
+input.form-control.required,
+textarea.form-control.required,
+select.form-control.required {
+    background-color: var(--tatami-color-warning-subtle);
+}
+input.form-control[readonly],
+textarea.form-control[readonly] {
+    background-color: transparent;
+    border: none;
+    color: inherit;
+    padding: calc(0.5 * var(--tatami-base-spacing)) 0;
+    outline: none !important;
+}
+input.form-control.disabled,
+textarea.form-control.disabled,
+select.form-control.disabled,
+input.form-control[disabled],
+textarea.form-control[disabled],
+select.form-control[disabled] {
+    opacity: 0.4;
+}
+textarea.form-control {
+    font-family: monospace;
+    min-height: 6em;
+    resize: vertical;
+}
+textarea.form-control.small {
+    min-height: 3em;
+}
+textarea.form-control.large {
+    min-height: 9em;
+}
+
+input[type=file].form-control {
+    cursor: pointer;
+    outline: none;
+    /* border: none; */
+    background-color: transparent;
+}
+input[type=file].form-control::file-selector-button {
+    display: inline-block;
+    font: inherit;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    border-radius: calc(2 * var(--tatami-base-rounding));
+    padding: calc(1.25 * var(--tatami-base-spacing)) calc(2 * var(--tatami-base-spacing));
+    margin: 0;
+    margin-right: var(--tatami-base-spacing);
+    font-weight: var(--tatami-button-font-weight);
+    transition: all var(--tatami-base-transition);
+    user-select: none;
+    line-height: 1;
+    text-decoration: none;
+    background-color: var(--tatami-color-secondary);
+    color: #000000;
+}
+input[type=file].form-control::file-selector-button:hover {
+    box-shadow: var(--tatami-button-hover-shadow);
+}
+input[type=file].form-control::file-selector-button:active {
+    box-shadow: var(--tatami-button-hover-shadow), var(--tatami-button-active-shadow);
+}
+
+label.form-label,
+.form-check-label {
+    display: block;
+    margin-top: var(--tatami-base-spacing);
+    margin-bottom: var(--tatami-base-spacing);
+    font-weight: 500;
+    user-select: none;
+    cursor: pointer;
+}
+
+.form-check-label {
+    cursor: default;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    padding: calc(0.25 * var(--tatami-base-spacing)) calc(0.125 * var(--tatami-base-spacing));
+    background-color: #00000011;
+    border-radius: var(--tatami-base-rounding);
+    margin-bottom: var(--tatami-base-spacing);
+}
+.form-check input.form-check-input {
+    margin-right: var(--tatami-base-spacing);
+    position: relative;
+    height: 1em; width: 1em;
+    top: 0.1em;
+}
+.form-check input.form-check-input[type=radio] {
+    top: 0;
+    left: -0.1em;
+
+}
+.form-check label.form-label {
+    cursor: pointer;
+    flex-grow: 1;
+    user-select: none;
+    margin: 0;
+    font-weight: normal;
+}
+
+.form-notice {
+    margin-top: calc(-0.25 * var(--tatami-base-spacing));
+    margin-bottom: calc(1 * var(--tatami-base-spacing));
+    font-size: 0.8em;
+    color: var(--tatami-color-secondary-dark);
+}
+.form-notice:last-child {
+    margin-bottom: 0;
+}
+
+.form-component {
+    display: flex;
+    align-items: stretch;
+    padding: 0;
+}
+
+.form-component .form-control {
+    margin: 0;
+    border: none;
+}
+.form-component .form-component-label {
+    padding: calc(1.2 * var(--tatami-base-spacing)) calc(2 * var(--tatami-base-spacing));
+    font-weight: bold;
+    white-space: nowrap;
+    background-color: var(--tatami-color-secondary-subtle);
+    border-left: 1px solid var(--tatami-color-secondary);
+    border-right: 1px solid var(--tatami-color-secondary);
+}
+.form-component label.form-component-label {
+    cursor: pointer;
+}
+.form-component .form-component-label:last-child {
+    border-top-right-radius: var(--tatami-base-rounding);
+    border-bottom-right-radius: var(--tatami-base-rounding);
+    border-right: none;
+}
+.form-component .form-component-label:first-child {
+    border-top-left-radius: var(--tatami-base-rounding);
+    border-bottom-left-radius: var(--tatami-base-rounding);
+    border-left: none;
+}

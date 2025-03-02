@@ -1,0 +1,65 @@
+{%- macro Input(type="text", value=None, class="", name=None, id=None, required=False, disabled=False, readonly=False, placeholder=None, attr=None) -%}
+<input type="{{ type }}" name="{{ name or '' }}" class="form-control {{ class }} {{ 'required' if required }} {{ 'disabled' if disabled }}" id="{{ id or '' }}" value="{{ value or '' }}" placeholder="{{ placeholder }}" {{ 'disabled' if disabled }} {{ 'readonly' if readonly }} {{ attr or '' }}>
+{%- endmacro -%}
+
+{%- macro Textarea(value=None, class="", name=None, id=None, required=False, disabled=False, readonly=False, placeholder=None, size=None) -%}
+<textarea name="{{ name or '' }}" class="form-control {{ class }} {{ size or '' }} {{ 'required' if required }} {{ 'disabled' if disabled }}" id="{{ id or '' }}" placeholder="{{ placeholder }}" {{ 'disabled' if disabled }} {{ 'readonly' if readonly }}>{{ value or '' }}</textarea>
+{%- endmacro -%}
+
+{%- macro Label(for_id="", text=None) -%}
+<label for="{{ for_id }}" class="form-label">{{ text or caller() }}</label>
+{%- endmacro -%}
+
+{%- macro Select(type="text", value=None, class="", name=None, id=None, required=False, disabled=False) -%}
+<select name="{{ name or '' }}" class="form-control {{ class }} {{ 'required' if required }} {{ 'disabled' if disabled }}" id="{{ id or '' }}" {{ 'disabled' if disabled }}>
+    {{ caller() }}
+</select>
+{%- endmacro -%}
+
+{%- macro SelectOption(value="", text="", selected=False, disabled=False) -%}
+<option value="{{ value }}" {{ 'disabled' if disabled }} {{ 'selected' if selected }}>{{ text or caller() }}</option>
+{%- endmacro -%}
+
+{%- macro SelectDefaultOption(value="", text="", selected=True) -%}
+<option value="{{ value }}" disabled {{ 'selected' if selected }}>{{ text or (caller() if caller is defined else '') }}</option>
+{%- endmacro -%}
+
+{%- macro FormNotice(text=None) -%}
+<div class="form-notice">{{ text or caller() }}</div>
+{%- endmacro -%}
+
+{%- macro FormCheckLabel(text=None) -%}
+<div class="form-check-label">{{ text or caller() }}</div>
+{%- endmacro -%}
+
+{%- macro FormCheck(name="", id="", label=None, class="", checked=False, disabled=False) -%}
+<div class="form-check {{ class }}">
+    <input type="checkbox" id="{{ id }}" name="{{ name }}" class="form-check-input {{ 'disabled' if disabled }}" {{ 'disabled' if disabled }} {{ 'checked' if checked }}>
+    <label for="{{ id }}" class="form-label">{{ label or caller() }}</label>
+</div>
+{%- endmacro -%}
+
+{%- macro FormRadio(name="", id="", label=None, class="", checked=False, disabled=False) -%}
+<div class="form-check {{ class }}">
+    <input type="radio" id="{{ id }}" name="{{ name }}" class="form-check-input {{ 'disabled' if disabled }}" {{ 'disabled' if disabled }} {{ 'checked' if checked }}>
+    <label for="{{ id }}" class="form-label">{{ label or caller() }}</label>
+</div>
+{%- endmacro -%}
+
+{%- macro FileInput(value=None, class="", name=None, id=None, required=False, disabled=False, readonly=False) -%}
+<input type="file" name="{{ name or '' }}" class="form-control {{ class }} {{ 'required' if required }} {{ 'disabled' if disabled }}" id="{{ id or '' }}" value="{{ value or '' }}" {{ 'disabled' if disabled }}>
+{%- endmacro -%}
+
+{%- macro InputWithSuffix(type="text", value=None, class="", name=None, id=None, required=False, disabled=False, readonly=False, placeholder="", suffix=None, attr=None) -%}
+<div class="form-component">
+    {{ Input(type=type, value=value, class=class, name=name, id=id, required=required, disabled=disbaled, readonly=readonly, placeholder=placeholder, attr=attr) }}
+    <label for="{{ id or '' }}" class="form-component-label">{{ suffix or caller() }}</label>
+</div>
+{%- endmacro -%}
+
+{%- macro InputWithPrefix(type="text", value=None, class="", name=None, id=None, required=False, disabled=False, readonly=False, placeholder="", prefix=None, attr=None) -%}
+<div class="form-component">
+    <label for="{{ id or '' }}" class="form-component-label">{{ prefix or caller() }}</label>
+    {{ Input(type=type, value=value, class=class, name=name, id=id, required=required, disabled=disbaled, readonly=readonly, placeholder=placeholder, attr=attr) }}
+</div>
+{%- endmacro -%}

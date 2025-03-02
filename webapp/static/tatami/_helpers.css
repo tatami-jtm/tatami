@@ -1,0 +1,224 @@
+/* Padding helper */
+
+.p-0 { padding: calc(0 * var(--tatami-base-spacing)); }
+.p-1 { padding: calc(1 * var(--tatami-base-spacing)); }
+.p-2 { padding: calc(2 * var(--tatami-base-spacing)); }
+.p-3 { padding: calc(3 * var(--tatami-base-spacing)); }
+.p-4 { padding: calc(4 * var(--tatami-base-spacing)); }
+.p-5 { padding: calc(5 * var(--tatami-base-spacing)); }
+
+.pt-0, .py-0 { padding-top: calc(0 * var(--tatami-base-spacing)); }
+.pt-1, .py-1 { padding-top: calc(1 * var(--tatami-base-spacing)); }
+.pt-2, .py-2 { padding-top: calc(2 * var(--tatami-base-spacing)); }
+.pt-3, .py-3 { padding-top: calc(3 * var(--tatami-base-spacing)); }
+.pt-4, .py-4 { padding-top: calc(4 * var(--tatami-base-spacing)); }
+.pt-5, .py-5 { padding-top: calc(5 * var(--tatami-base-spacing)); }
+
+.pb-0, .py-0 { padding-bottom: calc(0 * var(--tatami-base-spacing)); }
+.pb-1, .py-1 { padding-bottom: calc(1 * var(--tatami-base-spacing)); }
+.pb-2, .py-2 { padding-bottom: calc(2 * var(--tatami-base-spacing)); }
+.pb-3, .py-3 { padding-bottom: calc(3 * var(--tatami-base-spacing)); }
+.pb-4, .py-4 { padding-bottom: calc(4 * var(--tatami-base-spacing)); }
+.pb-5, .py-5 { padding-bottom: calc(5 * var(--tatami-base-spacing)); }
+
+.pl-0, .px-0 { padding-left: calc(0 * var(--tatami-base-spacing)); }
+.pl-1, .px-1 { padding-left: calc(1 * var(--tatami-base-spacing)); }
+.pl-2, .px-2 { padding-left: calc(2 * var(--tatami-base-spacing)); }
+.pl-3, .px-3 { padding-left: calc(3 * var(--tatami-base-spacing)); }
+.pl-4, .px-4 { padding-left: calc(4 * var(--tatami-base-spacing)); }
+.pl-5, .px-5 { padding-left: calc(5 * var(--tatami-base-spacing)); }
+
+.pr-0, .py-0 { padding-right: calc(0 * var(--tatami-base-spacing)); }
+.pr-1, .py-1 { padding-right: calc(1 * var(--tatami-base-spacing)); }
+.pr-2, .py-2 { padding-right: calc(2 * var(--tatami-base-spacing)); }
+.pr-3, .py-3 { padding-right: calc(3 * var(--tatami-base-spacing)); }
+.pr-4, .py-4 { padding-right: calc(4 * var(--tatami-base-spacing)); }
+.pr-5, .py-5 { padding-right: calc(5 * var(--tatami-base-spacing)); }
+
+/* Margin helper */
+
+.m-0 { margin: calc(0 * var(--tatami-base-spacing)); }
+.m-1 { margin: calc(1 * var(--tatami-base-spacing)); }
+.m-2 { margin: calc(2 * var(--tatami-base-spacing)); }
+.m-3 { margin: calc(3 * var(--tatami-base-spacing)); }
+.m-4 { margin: calc(4 * var(--tatami-base-spacing)); }
+.m-5 { margin: calc(5 * var(--tatami-base-spacing)); }
+
+.mt-0, .my-0 { margin-top: calc(0 * var(--tatami-base-spacing)); }
+.mt-1, .my-1 { margin-top: calc(1 * var(--tatami-base-spacing)); }
+.mt-2, .my-2 { margin-top: calc(2 * var(--tatami-base-spacing)); }
+.mt-3, .my-3 { margin-top: calc(3 * var(--tatami-base-spacing)); }
+.mt-4, .my-4 { margin-top: calc(4 * var(--tatami-base-spacing)); }
+.mt-5, .my-5 { margin-top: calc(5 * var(--tatami-base-spacing)); }
+
+.mb-0, .my-0 { margin-bottom: calc(0 * var(--tatami-base-spacing)); }
+.mb-1, .my-1 { margin-bottom: calc(1 * var(--tatami-base-spacing)); }
+.mb-2, .my-2 { margin-bottom: calc(2 * var(--tatami-base-spacing)); }
+.mb-3, .my-3 { margin-bottom: calc(3 * var(--tatami-base-spacing)); }
+.mb-4, .my-4 { margin-bottom: calc(4 * var(--tatami-base-spacing)); }
+.mb-5, .my-5 { margin-bottom: calc(5 * var(--tatami-base-spacing)); }
+
+.ml-0, .mx-0 { margin-left: calc(0 * var(--tatami-base-spacing)); }
+.ml-1, .mx-1 { margin-left: calc(1 * var(--tatami-base-spacing)); }
+.ml-2, .mx-2 { margin-left: calc(2 * var(--tatami-base-spacing)); }
+.ml-3, .mx-3 { margin-left: calc(3 * var(--tatami-base-spacing)); }
+.ml-4, .mx-4 { margin-left: calc(4 * var(--tatami-base-spacing)); }
+.ml-5, .mx-5 { margin-left: calc(5 * var(--tatami-base-spacing)); }
+
+.mr-0, .my-0 { margin-right: calc(0 * var(--tatami-base-spacing)); }
+.mr-1, .my-1 { margin-right: calc(1 * var(--tatami-base-spacing)); }
+.mr-2, .my-2 { margin-right: calc(2 * var(--tatami-base-spacing)); }
+.mr-3, .my-3 { margin-right: calc(3 * var(--tatami-base-spacing)); }
+.mr-4, .my-4 { margin-right: calc(4 * var(--tatami-base-spacing)); }
+.mr-5, .my-5 { margin-right: calc(5 * var(--tatami-base-spacing)); }
+
+/* Width helper */
+
+.w-0 { width: 0%; }
+.w-10 { width: 10%; }
+.w-20 { width: 20%; }
+.w-25 { width: 25%; }
+.w-30 { width: 30%; }
+.w-40 { width: 40%; }
+.w-50 { width: 50%; }
+.w-60 { width: 60%; }
+.w-70 { width: 70%; }
+.w-75 { width: 75%; }
+.w-80 { width: 80%; }
+.w-90 { width: 90%; }
+.w-100 { width: 100%; }
+
+/* Height helper */
+
+.h-0 { height: 0%; }
+.h-10 { height: 10%; }
+.h-20 { height: 20%; }
+.h-25 { height: 25%; }
+.h-30 { height: 30%; }
+.h-40 { height: 40%; }
+.h-50 { height: 50%; }
+.h-60 { height: 60%; }
+.h-70 { height: 70%; }
+.h-75 { height: 75%; }
+.h-80 { height: 80%; }
+.h-90 { height: 90%; }
+.h-100 { height: 100%; }
+
+/* Display helper */
+
+.d-inline { display: inline; }
+.d-block { display: block; }
+.d-inline-block { display: inline-block; }
+
+/* Visibility and hidden helpers */
+.hidden { display: none !important; }
+
+.visible-yes { visibility: visible; }
+.visible-no { visibility: hidden; }
+
+/* Color helpers */
+
+/** Primary **/
+.bg-primary { background-color: var(--tatami-color-primary); }
+.bg-primary-subtle { background-color: var(--tatami-color-primary-subtle); }
+.bg-primary-dark { background-color: var(--tatami-color-primary-dark); }
+.text-primary { color: var(--tatami-color-primary); }
+.text-primary-subtle { color: var(--tatami-color-primary-subtle); }
+.text-primary-dark { color: var(--tatami-color-primary-dark); }
+.text-bg-primary { background-color: var(--tatami-color-primary); color: white; }
+.text-bg-primary-subtle { background-color: var(--tatami-color-primary-subtle); }
+.text-bg-primary-dark { background-color: var(--tatami-color-primary-dark); color: white; }
+
+/** Secondary **/
+.bg-secondary { background-color: var(--tatami-color-secondary); }
+.bg-secondary-subtle { background-color: var(--tatami-color-secondary-subtle); }
+.bg-secondary-dark { background-color: var(--tatami-color-secondary-dark); }
+.text-secondary { color: var(--tatami-color-secondary); }
+.text-secondary-subtle { color: var(--tatami-color-secondary-subtle); }
+.text-secondary-dark { color: var(--tatami-color-secondary-dark); }
+.text-bg-secondary { background-color: var(--tatami-color-secondary); }
+.text-bg-secondary-subtle { background-color: var(--tatami-color-secondary-subtle); }
+.text-bg-secondary-dark { background-color: var(--tatami-color-secondary-dark); color: white; }
+
+/** Danger **/
+.bg-danger { background-color: var(--tatami-color-danger); }
+.bg-danger-subtle { background-color: var(--tatami-color-danger-subtle); }
+.bg-danger-dark { background-color: var(--tatami-color-danger-dark); }
+.text-danger { color: var(--tatami-color-danger); }
+.text-danger-subtle { color: var(--tatami-color-danger-subtle); }
+.text-danger-dark { color: var(--tatami-color-danger-dark); }
+.text-bg-danger { background-color: var(--tatami-color-danger); color: white; }
+.text-bg-danger-subtle { background-color: var(--tatami-color-danger-subtle); }
+.text-bg-danger-dark { background-color: var(--tatami-color-danger-dark); color: white; }
+
+/** Success **/
+.bg-success { background-color: var(--tatami-color-success); }
+.bg-success-subtle { background-color: var(--tatami-color-success-subtle); }
+.bg-success-dark { background-color: var(--tatami-color-success-dark); }
+.text-success { color: var(--tatami-color-success); }
+.text-success-subtle { color: var(--tatami-color-success-subtle); }
+.text-success-dark { color: var(--tatami-color-success-dark); }
+.text-bg-success { background-color: var(--tatami-color-success); color: white; }
+.text-bg-success-subtle { background-color: var(--tatami-color-success-subtle); }
+.text-bg-success-dark { background-color: var(--tatami-color-success-dark); color: white; }
+
+/** Info **/
+.bg-info { background-color: var(--tatami-color-info); }
+.bg-info-subtle { background-color: var(--tatami-color-info-subtle); }
+.bg-info-dark { background-color: var(--tatami-color-info-dark); }
+.text-info { color: var(--tatami-color-info); }
+.text-info-subtle { color: var(--tatami-color-info-subtle); }
+.text-info-dark { color: var(--tatami-color-info-dark); }
+.text-bg-info { background-color: var(--tatami-color-info); color: white; }
+.text-bg-info-subtle { background-color: var(--tatami-color-info-subtle); }
+.text-bg-info-dark { background-color: var(--tatami-color-info-dark); color: white; }
+
+/** Warning **/
+.bg-warning { background-color: var(--tatami-color-warning); }
+.bg-warning-subtle { background-color: var(--tatami-color-warning-subtle); }
+.bg-warning-dark { background-color: var(--tatami-color-warning-dark); }
+.text-warning { color: var(--tatami-color-warning); }
+.text-warning-subtle { color: var(--tatami-color-warning-subtle); }
+.text-warning-dark { color: var(--tatami-color-warning-dark); }
+.text-bg-warning { background-color: var(--tatami-color-warning); }
+.text-bg-warning-subtle { background-color: var(--tatami-color-warning-subtle); }
+.text-bg-warning-dark { background-color: var(--tatami-color-warning-dark); color: white; }
+
+/** Judoblue **/
+.bg-judoblue { background-color: var(--tatami-color-judoblue); }
+.bg-judoblue-accent { background-color: var(--tatami-color-judoblue-accent); }
+.text-judoblue { color: var(--tatami-color-judoblue); }
+.text-judoblue-accent { color: var(--tatami-color-judoblue-accent); }
+.text-bg-judoblue { background-color: var(--tatami-color-judoblue); color: white; }
+.text-bg-judoblue-accent { background-color: var(--tatami-color-judoblue-accent); color: white; }
+
+/** Judowhite **/
+.bg-judowhite { background-color: var(--tatami-color-judowhite); }
+.bg-judowhite-accent { background-color: var(--tatami-color-judowhite-accent); }
+.text-judowhite { color: var(--tatami-color-judowhite); }
+.text-judowhite-accent { color: var(--tatami-color-judowhite-accent); }
+.text-bg-judowhite { background-color: var(--tatami-color-judowhite); }
+.text-bg-judowhite-accent { background-color: var(--tatami-color-judowhite-accent); }
+
+
+/** Dark **/
+.bg-dark { background-color: var(--tatami-color-dark); }
+.bg-dark-accent { background-color: var(--tatami-color-dark-accent); }
+.text-dark { color: var(--tatami-color-dark); }
+.text-dark-accent { color: var(--tatami-color-dark-accent); }
+.text-bg-dark { background-color: var(--tatami-color-dark); color: white; }
+.text-bg-dark-accent { background-color: var(--tatami-color-dark-accent); color: white; }
+
+/** White **/
+.bg-white { background-color: var(--tatami-color-white); }
+.text-white { color: var(--tatami-color-white); }
+.text-bg-white { background-color: var(--tatami-color-white); }
+
+
+
+/* Font Helpers */
+
+.fw-bold { font-weight: 700; }
+.fw-black { font-weight: 900; }
+.fw-thin { font-weight: 200; }
+.fw-normal { font-weight: 400; }

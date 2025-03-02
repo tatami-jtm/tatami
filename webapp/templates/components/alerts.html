@@ -1,0 +1,10 @@
+{%- macro _Alert(style="info", text=None) -%}
+<div class="alert alert-{{ style }}">
+    {{ text or caller() }}
+</div>
+{%- endmacro -%}
+
+{%- macro InfoAlert(text=None) -%}{{ _Alert("info", text or caller()) }}{%- endmacro -%}
+{%- macro DangerAlert(text=None) -%}{{ _Alert("danger", text or caller()) }}{%- endmacro -%}
+{%- macro WarningAlert(text=None) -%}{{ _Alert("warning", text or caller()) }}{%- endmacro -%}
+{%- macro SuccessAlert(text=None) -%}{{ _Alert("success", text or caller()) }}{%- endmacro -%}

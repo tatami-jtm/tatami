@@ -1,0 +1,69 @@
+{%- macro Match() -%}
+<div class="match">
+    {{ caller() }}    
+</div>
+{%- endmacro -%}
+
+{%- macro MatchSchedule(no=-1, status="", label="") -%}
+<div class="match-sidebar">
+    <div class="match-schedule {{ status }}">{{ no }}</div>
+    {%- if label -%}
+    <div class="match-schedule-label">{{ label }}</div>
+    {%- endif -%}
+</div>
+{%- endmacro -%}
+
+{%- macro MatchBody() -%}
+<div class="match-body">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
+
+{%- macro MatchLineup(white_name, white_association, blue_name, blue_association, winner=None) -%}
+<div class="match-lineup">
+    <div class="match-lineup-white {{ 'winner' if winner == 'white' }}">
+        <div class="match-fighter">{{ white_name }}</div>
+        <div class="match-association">{{ white_association }}</div>
+    </div>
+    <div class="match-lineup-blue {{ 'winner' if winner == 'blue' }}">
+        <div class="match-fighter">{{ blue_name }}</div>
+        <div class="match-association">{{ blue_association }}</div>
+    </div>
+</div>
+{%- endmacro -%}
+
+{%- macro MatchResult(white, white_penalty, timer, blue, blue_penalty) -%}
+<div class="match-results">
+    <div class="match-result-white">
+        {%- for item in white -%}
+        <div class="match-result-item">{{ item }}</div>
+        {%- endfor -%}
+        {%- for item in white_penalty -%}
+        <div class="match-result-item penalty">{{ item }}</div>
+        {%- endfor -%}
+    </div>
+    <div class="match-result-timer">{{ timer }}</div>
+    <div class="match-result-blue">
+        {%- for item in blue -%}
+        <div class="match-result-item">{{ item }}</div>
+        {%- endfor -%}
+        {%- for item in blue_penalty -%}
+        <div class="match-result-item penalty">{{ item }}</div>
+        {%- endfor -%}
+    </div>
+</div>
+{%- endmacro -%}
+
+{%- macro MatchMenu() -%}
+<div class="match-menu">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
+
+{%- macro MatchMenuItem(href=None, id="", icon="", class="", title="") -%}
+{%- if href != None -%}
+<a href="{{ href }}" class="match-menu-item {{ class }}" id="{{ id }}" title="{{ title }}"><i class="iconoir-{{ icon }}"></i></a>
+{%- else -%}
+<button class="match-menu-item {{ class }}" id="{{ id }}" title="{{ title }}"><i class="iconoir-{{ icon }}"></i></button>
+{%- endif -%}
+{%- endmacro -%}

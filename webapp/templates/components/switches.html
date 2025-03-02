@@ -1,0 +1,16 @@
+{%- macro Switch(style=None) -%}
+<div class="switch {{ 'switch-' + style if style }}">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
+
+{%- macro Tab() -%}
+{%- set content = caller() -%}
+{%- call Switch("tab") -%}{{ content }}{%- endcall -%}
+{%- endmacro -%}
+
+{%- macro SwitchItem(href="", label=None, active=False, disabled=False) -%}
+<a href="{{ href }}" class="switch-item {{ 'active' if active }} {{ 'disabled' if disabled }}" {{ 'disabled' if disabled }}>{{ label or caller() }}</a>
+{%- endmacro -%}
+
+{% set TabItem = SwitchItem %}

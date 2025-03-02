@@ -1,0 +1,59 @@
+{%- macro Dataset(size="") -%}
+<div class="dataset {{ size }}">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
+
+{%- macro Table() -%}
+<table class="table">
+    {{ caller() }}
+</table>
+{%- endmacro -%}
+
+{%- macro TableHead() -%}
+<thead>
+    <tr>
+        {{ caller() }}
+    </tr>
+</thead>
+{%- endmacro -%}
+
+{%- macro TableHeadColumn(text=None, href=None) -%}
+{%- if href != None -%}
+<th><a href="{{ href }}">{{ text or caller() }}</a></th>
+{%- else -%}
+<th>{{ text or caller() }}</th>
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro TableHeadEmptyColumn() -%}
+<th></th>
+{%- endmacro -%}
+
+{%- macro TableBody() -%}
+<tbody>
+    {{ caller() }}
+</tbody>
+{%- endmacro -%}
+
+{%- macro TableRow() -%}
+<tr>
+    {{ caller() }}
+</tr>
+{%- endmacro -%}
+
+{%- macro TableCheckColumn(name="", id="", type="checkbox") -%}
+<td class="table-check-container"><input type="{{ type }}" name="{{ name }}" id="{{ id }}"></td>
+{%- endmacro -%}
+
+{%- macro TableColumn(text=None, check_id=None) -%}
+{%- if check_id != None -%}
+<td><label for="{{ check_id }}">{{ text or caller() }}</label></td>
+{%- else -%}
+<td>{{ text or caller() }}</td>
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro TableButtonsColumn() -%}
+<td class="table-buttons">{{ caller() }}</td>
+{%- endmacro -%}

@@ -1,0 +1,55 @@
+@font-face {
+    font-display: swap;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 200;
+    src: url('/static/fonts/inter-v13-latin_latin-ext-200.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    src: url('/static/fonts/inter-v13-latin_latin-ext-regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    src: url('/static/fonts/inter-v13-latin_latin-ext-500.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    src: url('/static/fonts/inter-v13-latin_latin-ext-700.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 900;
+    src: url('/static/fonts/inter-v13-latin_latin-ext-900.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Reddit Mono', monospace;
+    font-style: normal;
+    font-weight: 500;
+    src: url('/static/fonts/reddit-mono-v1-latin-500.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Reddit Mono', monospace;
+    font-style: normal;
+    font-weight: 800;
+    src: url('/static/fonts/reddit-mono-v1-latin-800.woff2') format('woff2');
+}
