@@ -7,7 +7,7 @@
 {%- endmacro -%}
 
 {%- macro PrimaryButton(mode="semantic", text=None, inline=False) -%}
-{%- if mode == "link" %}
+{%- if mode == "link" or "href" in kwargs %}
 {{ _LinkButton(style="primary", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
 {%- else -%}
 {{ _SemanticButton(style="primary", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
@@ -15,7 +15,7 @@
 {%- endmacro -%}
 
 {%- macro SecondaryButton(mode="semantic", text=None, inline=False) -%}
-{%- if mode == "link" %}
+{%- if mode == "link" or "href" in kwargs %}
 {{ _LinkButton(style="secondary", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
 {%- else -%}
 {{ _SemanticButton(style="secondary", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
@@ -25,7 +25,7 @@
 {% set Button = SecondaryButton %}
 
 {%- macro SubtleButton(mode="semantic", text=None, inline=False) -%}
-{%- if mode == "link" %}
+{%- if mode == "link" or "href" in kwargs %}
 {{ _LinkButton(style="subtle", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
 {%- else -%}
 {{ _SemanticButton(style="subtle", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
@@ -33,7 +33,7 @@
 {%- endmacro -%}
 
 {%- macro InvertedSubtleButton(mode="semantic", text=None, inline=False) -%}
-{%- if mode == "link" %}
+{%- if mode == "link" or "href" in kwargs %}
 {{ _LinkButton(style="inverted-subtle", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
 {%- else -%}
 {{ _SemanticButton(style="inverted-subtle", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
@@ -41,7 +41,7 @@
 {%- endmacro -%}
 
 {%- macro DangerButton(mode="semantic", text=None, inline=False) -%}
-{%- if mode == "link" %}
+{%- if mode == "link" or "href" in kwargs %}
 {{ _LinkButton(style="danger", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
 {%- else -%}
 {{ _SemanticButton(style="danger", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
@@ -49,7 +49,7 @@
 {%- endmacro -%}
 
 {%- macro SubtleDangerButton(mode="semantic", text=None, inline=False) -%}
-{%- if mode == "link" %}
+{%- if mode == "link" or "href" in kwargs %}
 {{ _LinkButton(style="danger-subtle", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
 {%- else -%}
 {{ _SemanticButton(style="danger-subtle", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
@@ -57,7 +57,7 @@
 {%- endmacro -%}
 
 {%- macro PrimaryCTA(mode="semantic", text=None) -%}
-{%- if mode == "link" %}
+{%- if mode == "link" or "href" in kwargs %}
 {{ _LinkButton(style="primary", text=(text or caller()), size="cta", **kwargs) }}
 {%- else -%}
 {{ _SemanticButton(style="primary", text=(text or caller()), size="cta", **kwargs) }}

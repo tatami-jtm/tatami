@@ -27,7 +27,7 @@
 {%- endmacro -%}
 
 {%- macro GridColumn(span=12, large_span=None, class="") -%}
-<div class="col col-{{ span }} {{ 'col-lg-' + large_span if large_span }} {{ class }}">
+<div class="col col-{{ span }} {{ 'col-lg-' ~ large_span if large_span }} {{ class }}">
     {{ caller() }}
 </div>
 {%- endmacro -%}

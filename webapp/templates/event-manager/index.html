@@ -1,3 +1,8 @@
+{%- import "components/alerts.html" as alerts -%}
+{%- import "components/layout.html" as layout -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/cards.html" as cards -%}
+
 {% set event_page="dashboard" %}
 {% extends "layouts/event-manager.html" %}
 {% block title %}{{ g.event.title }}{% endblock %}
@@ -8,146 +13,156 @@
 
 {% if invalid_registration_state_query.count() %}
 
-<div class="alert alert-danger mb-4">
-    <h4 class="mb-3 h5">Warnung: Ungültige Anmeldungen</h4>
-    <p class="mb-1">Es gibt in dieser Veranstaltung Teilnehmende, die eingewogen, aber <strong>nicht akkreditiert</strong> sind.</p>
+{% call alerts.DangerAlert() %}
+    <h4 class="mt-0">Warnung: Ungültige Anmeldungen</h4>
+    <p>Es gibt in dieser Veranstaltung Teilnehmende, die eingewogen, aber <strong>nicht akkreditiert</strong> sind.</p>
     <p>Diese Teilnehmenden werden aus diesem Grund bei der Einteilung der Kampfgruppen <strong>nicht berücksichtigt</strong>, solange das Problem nicht behoben wird.</p>
 
-    <a href="{{ url_for('event_manager.registrations', event=g.event.slug, status_filter='weighed_in_without_registration') }}" class="btn btn-dark">Betroffene TN anzeigen</a>
-</div>
-
+    {{ buttons.SecondaryButton(text="Betroffene TN anzeigen", href=url_for('event_manager.registrations', event=g.event.slug, status_filter='weighed_in_without_registration')) }}
+{% endcall %}
 {% endif %}
 {% endif %}
 
 <h2>Vorbereitung</h2>
-<div class="row mt-3 mb-5">
-    <div class="col-12 col-lg-4">
-        <div class="card">
-            {% if g.event.first_day.date() == g.event.last_day.date() %}
-            <div class="card-body p-4 px-0">
-                <div class="fs-1 text-center">
-                    <strong>{{ g.event.last_day.strftime("%d.%m.%Y") }}</strong>
-                </div>
-                <div class="text-center fw-bold">Tag der Veranstaltung</div>
-            </div>
-            {% else %}
-            <div class="card-body p-4 px-0">
-                <div class="fs-1 text-center">
-                    <strong title="{{ g.event.first_day.strftime("%d.%m.%Y") }}">{{ g.event.first_day.strftime("%d.%m.") }}</strong>
-                    &ndash;
-                    <strong>{{ g.event.last_day.strftime("%d.%m.%Y") }}</strong>
-                </div>
-                <div class="text-center fw-bold">Zeitraum der Veranstaltung</div>
-            </div>
-            {% endif %}
-        </div>
-    </div>
-    <div class="col-12 col-lg-2">
-        <div class="card">
-            <div class="card-body p-4">
+
+{% call layout.Grid() %}
+    {% call layout.GridColumn(large_span=4) %}
+        {% call cards.Card() %}
+            {% call cards.CardBody() %}
+                {% if g.event.first_day.date() == g.event.last_day.date() %}
+                    <d<iv class="fs-1 text-center">
+                        <strong>{{ g.event.last_day.strftime("%d.%m.%Y") }}</strong>
+                    </div>
+                    <div> class="text-center fw-bold">Tag der Veranstaltung</div>
+                {% else %}
+                    <div class="fs-1 text-center">
+                        <strong title="{{ g.event.first_day.strftime("%d.%m.%Y") }}">{{ g.event.first_day.strftime("%d.%m.") }}</strong>
+                        &ndash;
+                        <strong>{{ g.event.last_day.strftime("%d.%m.%Y") }}</strong>
+                    </div>
+                    <div class="text-center fw-bold">Zeitraum der Veranstaltung</div>
+                {% endif %}
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+
+    {% call layout.GridColumn(large_span=2) %}
+        {% call cards.Card() %}
+            {% call cards.CardBody() %}
                 <div class="fs-1 text-center fw-bold">{{ stat.classes }}</div>
                 <div class="text-center fw-bold">{{ 'Klassen' if stat.classes != 1 else 'Klasse' }}</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-lg-2">
-        <div class="card">
-            <div class="card-body p-4">
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+
+    {% call layout.GridColumn(large_span=2) %}
+        {% call cards.Card() %}
+            {% call cards.CardBody() %}
                 <div class="fs-1 text-center fw-bold">{{ stat.registrations }}</div>
                 <div class="text-center fw-bold">{{ 'Voranmeldungen' if stat.registrations != 1 else 'Anmeldung' }}</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-lg-2">
-        <div class="card">
-            <div class="card-body p-4">
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+
+    {% call layout.GridColumn(large_span=2) %}
+        {% call cards.Card() %}
+            {% call cards.CardBody() %}
                 <div class="fs-1 text-center fw-bold">{{ stat.confirmed_registrations }}</div>
                 <div class="text-center fw-bold">davon bestätigt</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-lg-2">
-        <div class="card">
-            <div class="card-body p-4">
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+
+    {% call layout.GridColumn(large_span=2) %}
+        {% call cards.Card() %}
+            {% call cards.CardBody() %}
                 <div class="fs-1 text-center fw-bold">{{ stat.mats }}</div>
                 <div class="text-center fw-bold">{{ 'Matten' if stat.mats != 1 else 'Matte' }}</div>
-            </div>
-        </div>
-    </div>
-</div>
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+{% endcall %}
 
 <h2>Durchführung</h2>
-<div class="row mt-3 mb-3">
-    <div class="col-12 col-lg-3">
-        <div class="card">
-            <div class="card-body p-4">
+
+{% call layout.Grid() %}
+    {% call layout.GridColumn(large_span=3) %}
+        {% call cards.Card() %}
+            {% call cards.CardBody() %}
                 <div class="fs-1 text-center fw-bold">{{ stat.started_classes }}</div>
                 <div class="text-center fw-bold">Angefangene {{ 'Klassen' if stat.started_classes != 1 else 'Klasse' }}</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-lg-3">
-        <div class="card">
-            <div class="card-body p-4">
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+
+    {% call layout.GridColumn(large_span=3) %}
+        {% call cards.Card() %}
+            {% call cards.CardBody() %}
                 <div class="fs-1 text-center fw-bold">{{ stat.registered_ratio }}</div>
                 <div class="text-center fw-bold">TN Angemeldet</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-lg-3">
-        <div class="card">
-            <div class="card-body p-4">
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+
+    {% call layout.GridColumn(large_span=3) %}
+        {% call cards.Card() %}
+            {% call cards.CardBody() %}
                 <div class="fs-1 text-center fw-bold">{{ stat.weighed_in_ratio }}</div>
                 <div class="text-center fw-bold">TN Eingewogen</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-lg-3">
-        <div class="card">
-            <div class="card-body p-4">
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+
+    {% call layout.GridColumn(large_span=3) %}
+        {% call cards.Card() %}
+            {% call cards.CardBody() %}
                 <div class="fs-1 text-center fw-bold">{{ stat.placed_ratio }}%</div>
                 <div class="text-center fw-bold">Eingeteilt</div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-12 col-lg-3">
-        <div class="card">
-            <div class="card-body p-4">
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+
+    {% call layout.GridColumn(large_span=3) %}
+        {% call cards.Card() %}
+            {% call cards.CardBody() %}
                 <div class="fs-1 text-center fw-bold">{{ stat.open_matches }}</div>
                 <div class="text-center fw-bold">Offene Kämpfe</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-lg-3">
-        <div class="card">
-            <div class="card-body p-4">
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+
+    {% call layout.GridColumn(large_span=3) %}
+        {% call cards.Card() %}
+            {% call cards.CardBody() %}
                 <div class="fs-1 text-center fw-bold">{{ stat.scheduled_matches }}</div>
                 <div class="text-center fw-bold">Angesetzte Kämpfe</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-lg-3">
-        <div class="card">
-            <div class="card-body p-4">
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+
+    {% call layout.GridColumn(large_span=3) %}
+        {% call cards.Card() %}
+            {% call cards.CardBody() %}
                 <div class="fs-1 text-center fw-bold">{{ stat.completed_matches }}</div>
                 <div class="text-center fw-bold">Erledigte Kämpfe</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-lg-3">
-        <div class="card">
-            <div class="card-body p-4">
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+
+    {% call layout.GridColumn(large_span=3) %}
+        {% call cards.Card() %}
+            {% call cards.CardBody() %}
                 <div class="fs-1 text-center fw-bold">{{ stat.estimated_current_end.strftime("%H:%M") }}</div>
                 <div class="text-center fw-bold">Voraussichtliches Ende (Angefangene Klassen)</div>
-            </div>
-        </div>
-    </div>
-</div>
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+{% endcall %}
 
 {% if g.event.setting('write_activity_log', True) %}
-<a class="btn btn-dark" href="{{ url_for('event_manager.log', event=g.event.slug) }}">🧾 Veranstaltungsprotokoll anzeigen</a>
+{% call buttons.SecondaryButton(href=url_for('event_manager.log', event=g.event.slug)) %}
+    {{ buttons.ButtonIcon(icon="book-lock", label="Veranstaltungsprotokoll anzeigen")}}
+{% endcall %}
 {% endif %}
 
 {% endblock body %}
