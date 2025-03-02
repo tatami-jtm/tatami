@@ -28,8 +28,8 @@
 <div class="form-notice">{{ text or caller() }}</div>
 {%- endmacro -%}
 
-{%- macro FormCheckLabel(text=None) -%}
-<div class="form-check-label">{{ text or caller() }}</div>
+{%- macro FormCheckLabel(text=None, class="") -%}
+<div class="form-check-label {{ class }}">{{ text or caller() }}</div>
 {%- endmacro -%}
 
 {%- macro FormCheck(name="", id="", label=None, class="", checked=False, disabled=False) -%}

@@ -14,7 +14,7 @@
 
     <form action="" method="GET" id="filterform">
         {% call cards.Card() %}
-        {% call cards.CardBody(class="pb-0") %}
+            {% call cards.CardBody(class="pb-0") %}
                 {% call layout.Grid() %}
                     {% call layout.GridColumn(large_span=2) %}
                         {{ form.Label(for_id='class_filter', text='Kampfklasse') }}
@@ -100,17 +100,12 @@
                         {{ buttons.SecondaryButton(href="?", text="Zurücksetzen") }}
                         {% if filtered_class %}
                             {{ buttons.SecondaryButton(href=url_for('event_manager.print_registrations', event=g.event.slug, id=filtered_class.id), text=("TN/Wiegeliste drucken")) }}
-                            {{ buttons.SecondaryButton(href=url_for('event_manager.class_registrations_as_csv', event=g.event.slug, id=filtered_class.id), text="CSV exportieren") }}
                         {% else %}
                             {{ buttons.SecondaryButton(href=url_for('event_manager.print_registrations', event=g.event.slug), text=("TN/Wiegeliste drucken")) }}
-                            {{ buttons.SecondaryButton(href=url_for('event_manager.class_registrations_as_csv', event=g.event.slug), text=("CSV exportieren")) }}
                         {% endif %}
                     {% endcall %}
                     {% call layout.GridColumn(large_span=4, class="text-right") %}
-                        {{ buttons.SecondaryButton(href=url_for('event_manager.create_registration', event=g.event.slug),
-                            text="TN hinzufügen") }}
-                        {{ buttons.SecondaryButton(href=url_for('event_manager.import_registrations_index',
-                            event=g.event.slug), text="TN importieren") }}
+                        {{ buttons.SecondaryButton(href=url_for('mod_participants.new', event=g.event.slug), text="TN hinzufügen") }}
                     {% endcall %}
                 {% endcall %}
             {% endcall %}
@@ -167,7 +162,7 @@
                             {% endif %}
                         {% endcall %}
                         {% call datasets.TableButtonsColumn() %}
-                            {% call buttons.SubtleButton(href=url_for('event_manager.edit_registration', event=g.event.slug, id=reg.id), inline=True) %}
+                            {% call buttons.SubtleButton(href=url_for('mod_participants.edit', event=g.event.slug, id=reg.id), inline=True) %}
                                 {{ buttons.ButtonIcon(icon="edit-pencil")}}
                             {% endcall %}
                         {% endcall %}
