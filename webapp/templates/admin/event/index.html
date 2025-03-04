@@ -1,29 +1,33 @@
+{%- import "components/list.html" as list -%}
+{%- import "components/buttons.html" as buttons -%}
+
 {% extends "layouts/admin.html" %}
 {% block title %}Administrationsbereich | Veranstaltungen{% endblock %}
 {% block body %}
 <h1>Veranstaltungen</h1>
 
 {% if current_user.has_privilege('create_tournaments') %}
-    <a href="{{ url_for('admin.new_event') }}" class="btn btn-primary">Veranstaltung hinzufügen</a>
+    {{ buttons.PrimaryButton(href=url_for('admin.new_event'), text='Veranstaltung hinzufügen') }}
 {% endif %}
 
-{% if events == [] %}
-<p class="mt-3">Du hast keine aktuellen Veranstaltungen.</p>
+{% if events|length == 0 %}
+<p>Du hast keine Veranstaltungen.</p>
 {% else %}
-<div class="list-group mt-3 list-group-flush">
-{% for evt in events %}
-    <a href="{{ url_for('event_manager.index', event=evt.slug) }}" class="list-group-item list-group-item-action p-3">
-        <div>
-            <strong>{{ evt.title }}</strong>
-            ({{ evt.first_day.strftime("%d.%m.%Y") }} &ndash; {{ evt.last_day.strftime("%d.%m.%Y") }})
-        </div>
-        <div class="font-monospace small">{{ evt.slug }}</div>
-        {% if current_user.has_privilege('admin') and evt in current_user_events %}
-        <div class="small"><span class="badge text-bg-secondary">Meine Veranstaltung</span></div>
-        {% endif %}
-    </a>
-{% endfor %}
-</div>
+
+{% call list.List() %}
+    {% for event in events %}
+        {% call list.ListItem(href=url_for('event_manager.index', event=event.slug)) %}
+            {% call list.ListItemBody() %}
+                {{ list.ListItemBodyHeader(event.title) }}
+                {{ list.ListItemBodyDetail(event.first_day.strftime("%d.%m.%Y") ~ " – " ~ event.last_day.strftime("%d.%m.%Y")) }}
+                {{ list.ListItemBodyDetail(event.slug) }}
+                {% if current_user.has_privilege('admin') and event in current_user_events %}
+                    <div class="fs-xs mt-1"><span class="badge text-bg-secondary">Meine Veranstaltung</span></div>
+                {% endif %}
+            {% endcall %}
+        {% endcall %}
+    {% endfor %}
+{% endcall %}
 {% endif %}
 
 {% endblock body %}
