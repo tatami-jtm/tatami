@@ -61,7 +61,7 @@
                         {% endcall %}
                         {% call layout.GridColumn(large_span=4) %}
                             {{ form.Label(for_id='verified_weight', text='Kontr. Gewicht') }}
-                            {{ form.Input(id='verified_weight', name='verified_weight', value=(registration.verified_weight / 1000 if registration.verified_weight else ''), type="number", attr=('step="0.01" min="0"'|safe)) }}
+                            {{ form.InputWithSuffix(id='verified_weight', name='verified_weight', value=(registration.verified_weight / 1000 if registration.verified_weight else ''), type="number", attr=('step="0.01" min="0"'|safe), suffix="kg") }}
                         {% endcall %}
                     {% endcall %}
                 {% endcall %}
