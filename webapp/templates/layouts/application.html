@@ -27,8 +27,6 @@
         {% endwith %}
         {% endif %}
 
-        {% call layout.Container(width="full") %}
-            {% block body %}{% endblock body %}
-        {% endcall %}
+        {% block body %}{% endblock body %}
     </body>
 </html>
