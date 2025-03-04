@@ -1,0 +1,18 @@
+{%- macro Segmentation() %}
+<ol class="segmentation">
+    {{ caller() }}
+</ol>
+{%- endmacro %}
+
+{%- macro SegmentationControl(id='', name='', value='', checked=False, aria_label="Hier abgrenzen") %}
+<li class="segmentation-control">
+    <input type="checkbox" id="{{ id }}" name="{{ name }}" value="{{ i }}" class="segmentation-checkbox" {{ 'checked' if checked }}>
+    <label for="{{ id }}" class="segmentation-label">{{ aria_label }}</label>
+</li>
+{%- endmacro %}
+
+{%- macro SegmentationItem(text="") %}
+<li class="segmentation-item">
+    {{ text or caller() }}
+</li>
+{%- endmacro %}
