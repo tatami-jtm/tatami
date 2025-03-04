@@ -1,11 +1,13 @@
+{%- import "components/error.html" as error -%}
+
 {% extends "layouts/error.html" %}
-{% block title %}Seite nicht gefunden.{% endblock %}
 {% block body %}
-<div class="container">
-    <h1>Wartungsmodus</h1>
-    <p>Diese TATAMI-Instanz wird gerade gewartet. Bitte kommen Sie später wieder.</p>
-    {% if offr %}
-    <p>Grund: {{ offr }}</p>
-    {% endif %}
-</div>
+
+{{ error.ErrorHeading("Wartungsmodus") }}
+{{ error.ErrorExplanation("Diese TATAMI-Instanz wird gerade gewartet. Bitte kommen Sie später wieder.") }}
+
+{% if offr %}
+{{ error.ErrorExplanation("Grund: " ~ offr) }}
+{% endif %} 
+
 {% endblock body %}
