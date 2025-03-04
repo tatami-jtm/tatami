@@ -4,6 +4,12 @@
 </div>
 {%- endmacro -%}
 
+{%- macro DatasetMenu() -%}
+<div class="dataset-menu">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
+
 {%- macro Table() -%}
 <table class="table">
     {{ caller() }}
