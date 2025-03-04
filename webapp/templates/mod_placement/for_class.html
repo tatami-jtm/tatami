@@ -86,6 +86,9 @@
                 {%- call buttons.SubtleButton(href=url_for('mod_placement.place_all', event=g.event.slug, id=event_class.id, group_id=current_group.id), disabled=current_group.marked_ready) -%}
                     {{ buttons.ButtonIcon(icon="dice-three") }}
                 {%- endcall -%}
+                {%- call buttons.SubtleButton(href=url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id, draft=(1 if not current_group.marked_ready else None))) -%}
+                    {{ buttons.ButtonIcon(icon="empty-page") }}
+                {%- endcall -%}
             {%- endcall -%}
 
             {%- call colboard.Colboard() -%}
