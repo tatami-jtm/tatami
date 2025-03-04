@@ -6,7 +6,7 @@
 
 {%- macro SegmentationControl(id='', name='', value='', checked=False, aria_label="Hier abgrenzen") %}
 <li class="segmentation-control">
-    <input type="checkbox" id="{{ id }}" name="{{ name }}" value="{{ i }}" class="segmentation-checkbox" {{ 'checked' if checked }}>
+    <input type="checkbox" id="{{ id }}" name="{{ name }}" value="{{ value }}" class="segmentation-checkbox" {{ 'checked' if checked }}>
     <label for="{{ id }}" class="segmentation-label">{{ aria_label }}</label>
 </li>
 {%- endmacro %}
