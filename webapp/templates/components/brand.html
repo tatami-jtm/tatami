@@ -1,13 +1,13 @@
 {%- macro _Brand(name="TATAMI", label=None, size=None, href=None, class="") -%}
 {%- if href == None -%}
-<span class="brand {{ 'brand-' + size if size }} {{ class }}">
+<span class="brand {{ 'brand-' + size if size else '' }} {{ class }}">
     <span class="brand-name">{{ name }}</span>
     {%- if label -%}
     <span class="brand-label">{{ label }}</span>
     {%- endif -%}
 </span>
 {%- else -%}
-<a href="{{ href }}" class="brand {{ 'brand-' + size if size }}  {{ class }}">
+<a href="{{ href }}" class="brand {{ 'brand-' + size if size else '' }}  {{ class }}">
     <span class="brand-name">{{ name }}</span>
     {%- if label -%}
     <span class="brand-label">{{ label }}</span>

@@ -1,32 +1,41 @@
+{%- import "components/layout.html" as layout -%}
+{%- import "components/brand.html" as brand -%}
+{%- import "components/cards.html" as cards -%}
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    {% include "layouts/_header.html" %}
+    {% include "layouts/_shared-header.html" %}
     <title>TATAMI</title>
     {% block custom_header %}{% endblock custom_header %}
 </head>
-<body class="splash">
-    <div class="splash-container">
-        <a href="{{ url_for('splash') }}" class="splash-logo">{{ config.BRAND_NAME }}</a>
-    </div>
-    <div class="container">
+<body>
+    {% call layout.Container(width='medium') %}
+        <div class="mb-3 fs-1 text-center p-3">
+            {{ brand.Brand(href=url_for('splash'), name=config.BRAND_NAME, class='inline') }}
+        </div>
         {% block pre_messages %}{% endblock pre_messages %}
         {% with messages = get_flashed_messages(with_categories=True) %}
-        {% if messages %}
-        {% for category, message in messages %}
-            {% set category = 'danger' if category == 'error' else category %}
-            <div class="alert alert-{{ category or 'dark' }} alert-dismissible fade show" role="alert">
-                {% if ":" in message %}
-                <p class="mb-0"><strong>{{ message.split(":", 1)[0] }}:</strong> {{ message.split(":", 1)[1] }}</p>
-                {% else %}
-                <p class="mb-0">{{ message }}</p>
-                {% endif %}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schließen"></button>
-            </div>
-        {% endfor %}
-        {% endif %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% set category = 'danger' if category == 'error' else category %}
+                    <div class="alert alert-{{ category or 'dark' }} mb-3" role="alert">
+                        {% if ":" in message %}
+                        <p class="mb-0"><strong>{{ message.split(":", 1)[0] }}:</strong> {{ message.split(":", 1)[1] }}</p>
+                        {% else %}
+                        <p class="mb-0">{{ message }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% endif %}
         {% endwith %}
+
         {% block body %}{% endblock body %}
-    </div>
+
+        {# call cards.Card() %}
+            {% call cards.CardBody() %}
+            {% endcall %}
+        {% endcall #}
+    {% endcall %}
 </body>
 </html>
