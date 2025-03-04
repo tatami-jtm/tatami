@@ -1,3 +1,4 @@
+from ..listslib import compile_list
 from . import db
 import base64
 import re
@@ -168,6 +169,12 @@ class ListSystem(db.Model):
     break_count = db.Column(db.Integer())
     display_page_count = db.Column(db.Integer(), default=1)
     enabled = db.Column(db.Boolean)
+    _list_class = None
+
+    def list_class(self):
+        if self._list_class is None:
+            self._list_class = compile_list(self.list_file)
+        return self._list_class
 
     @classmethod
     def all_enabled(cls):

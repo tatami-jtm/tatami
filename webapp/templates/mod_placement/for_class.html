@@ -63,7 +63,11 @@
                 {%- call list.ListItem(href="?group=" ~ group.id, active=(group == current_group)) -%}
                     {%- call list.ListItemBody() -%}
                         {{ list.ListItemBodyHeader(group.title) }}
-                        {{ list.ListItemBodyDetail(group.participants.count() ~ " TN - " ~ (group.list_system().title if group.list_system() else "KEIN LISTENSYSTEM")) }}
+                        {% if group.participants.count() == 0 %}
+                            {{ list.ListItemBodyDetail("0 TN") }}
+                        {% else %}
+                            {{ list.ListItemBodyDetail(group.participants.count() ~ " TN - " ~ (group.list_system().title if group.list_system() else "KEIN LISTENSYSTEM")) }}
+                        {% endif %}
                     {%- endcall -%}
                 {%- endcall -%}
             {% endfor %}
@@ -118,7 +122,8 @@
                         {% set list_system = current_group.list_system() %}
                         {% if list_system %}
                             {% call cards.Card(title=list_system.title) %}
-                                {% for i in range(list_system.mandatory_maximum) %}
+                                {% for prei in range(list_system.mandatory_maximum) %}
+                                    {% set i = list_system.list_class().meta._allocation_order[prei] - 1 %}
                                     {% set participant = current_group.participants.filter_by(placement_index=i).first() %}
                                     {% call cards.CardBody(class="p-1") %}
                                         {% call layout.Grid(class="align-center") %}
