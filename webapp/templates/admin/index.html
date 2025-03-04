@@ -2,6 +2,7 @@
 {%- import "components/cards.html" as cards -%}
 {%- import "components/list.html" as list -%}
 {%- import "components/buttons.html" as buttons -%}
+{%- import "components/badges.html" as badges -%}
 
 {% extends "layouts/admin.html" %}
 {% block title %}Administrationsbereich{% endblock %}
@@ -17,9 +18,11 @@
             {% endcall %}
             {% call cards.CardBody() %}
                 <h6 class="mb-0">Deine Rollen</h6>
-                {% for role in current_user.roles %}
-                    <span class="badge text-bg-{{ 'secondary' if not role.is_admin else 'primary' }}" title="{{ role.description }}">{{ role.name }}</span>
-                {% endfor %}
+                {% call badges.BadgeList() %}
+                    {% for role in current_user.roles %}
+                        {{ badges.Badge(text=role.name, style='secondary' if not role.is_admin else 'primary') }}
+                    {% endfor %}
+                {% endcall %}
             {% endcall %}
             {% call cards.CardFooter() %}
                 {{ buttons.SecondaryButton(href=url_for('admin.edit_user_me'), text="Profil bearbeiten", inline=True) }}

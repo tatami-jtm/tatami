@@ -35,9 +35,9 @@
 {%- if icon != None -%}
 <a href="{{ href }}" class="navbar-nav-item navbar-nav-item-with-icon">
     <i class="iconoir-{{ icon }}"></i>
-    <span class="navbar-nav-item-icon-label">{{ label }}</span>
+    <span class="navbar-nav-item-icon-label">{{ label or caller() }}</span>
 </a>
 {%- else -%}
-<a href="{{ href }}" class="navbar-nav-item">{{ label }}</a>
+<a href="{{ href }}" class="navbar-nav-item">{{ label or caller() }}</a>
 {%- endif -%}
 {%- endmacro -%}

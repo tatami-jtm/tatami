@@ -1,5 +1,6 @@
 {%- import "components/layout.html" as layout -%}
 {%- import "components/navbar.html" as navbar -%}
+{%- import "components/badges.html" as badges -%}
 
 <!DOCTYPE html>
 <html lang="de">
@@ -21,7 +22,9 @@
                     if current_user.has_privilege('alter_presets') }}
                 {% if current_user.has_privilege('support') %}
                     {% if open_support_tickets > 0 %}
-                        {{ navbar.NavbarNavItem(href=url_for('admin.support_tickets'), label="Support (" ~ open_support_tickets ~ ")") }}
+                        {% call navbar.NavbarNavItem(href=url_for('admin.support_tickets')) %}
+                            Support {{ badges.Badge(text=open_support_tickets, style="danger") }}
+                        {% endcall %}
                     {% else %}
                         {{ navbar.NavbarNavItem(href=url_for('admin.support_tickets'), label="Support") }}
                     {% endif %}
