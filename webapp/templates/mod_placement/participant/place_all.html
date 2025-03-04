@@ -1,37 +1,40 @@
+{%- import "components/layout.html" as layout -%}
+{%- import "components/cards.html" as cards -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/form.html" as form -%}
+
 {% extends "layouts/application.html" %}
 {% set page=event_class %}
 {% block title %}Einteilung - {{ event_class.title }}{% endblock %}
 {% block pre_messages %}{% include "mod_placement/_header.html" %}{% endblock %}
 {% block body %}
-<div class="container-fluid">
-    <h1 class="h2 fw-bold mb-4">{{ event_class.title }} &ndash; {{ 'Gewichtsklassen' if not proximity else 'Gewichtsnahe Gruppen' }}</h1>
 
-    
-    <h3 class="h4 fw-bold mb-2">Verbleibende Gruppen-TN losen</h3>
+{% call layout.Container(width='small') %}
+
+    <h1>Kampfklasse {{ event_class.title }}</h1>    
+    <h2 class="fs-3">Verbleibende Gruppen-TN losen</h2>
+
     <form action="" method="POST">
-        <div class="card card-semidialog">
-            <div class="card-body pb-0">
+        {% call cards.Card() %}
+            {% call cards.CardBody() %}
                 <p>Wollen Sie alle verbleibenden (nicht gesetzten) TN der Gruppe {{ group.title }} losen?</p>
                 {% if not group.system_id %}
                 <p>Diese Aktion wird das verwendete Listensystem auf <strong>{{ group.list_system().title }}</strong> festsetzen. Die Festsetzung kann in den Gruppeneinstellungen bearbeitet werden.</p>
                 {% endif %}
 
-                <div class="mb-3">
-                    <label for="method" class="form-label">Losverfahren</label>
-                    <select class="form-select" id="method" name="method">
-                        <option value="random" selected>Zufällig</option>
-                        <option value="smallest_weight">Nach Gewicht (niedrigstes zuerst)</option>
-                        <option value="largest_weight">Nach Gewicht (höchstes zuerst)</option>
-                    </select>
-                    <div class="form-text">Erfolgt die Losung nach Gewicht, werden TN, für die kein Gewicht eingetragen ist, nicht gelost.</div>
-                </div>
-            </div>
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary" autofocus="true">Losen</button>
-                <a href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id) }}" class="btn btn-secondary">Abbrechen</a>
-            </div>
-        </div>
+                {{ form.Label(for_id='method', text='Losverfahren') }}
+                {% call form.Select(id='method', name='method') %}
+                    {{ form.SelectOption(value='random', text='Zufällig', selected=True) }}
+                    {{ form.SelectOption(value='smallest_weight', text='Nach Gewicht (niedrigstes zuerst)') }}
+                    {{ form.SelectOption(value='largest_weight', text='Nach Gewicht (höchstes zuerst)') }}
+                {% endcall %}
+                {{ form.FormNotice(text='Erfolgt die Losung nach Gewicht, werden TN, für die kein Gewicht eingetragen ist, nicht gelost.') }}
+            {% endcall %}
+            {% call cards.CardFooter() %}
+                {{ buttons.PrimaryButton(type='submit', text='Losen') }}
+                {{ buttons.SecondaryButton(href=url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id), text='Abbrechen') }}
+            {% endcall %}
+        {% endcall %}
     </form>
-</div>
-
+{% endcall %}
 {% endblock body %}
