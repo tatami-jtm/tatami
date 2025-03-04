@@ -18,12 +18,13 @@ def index():
         flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
         return redirect(url_for('devices.index', event=g.event.slug))
     
-    query = g.event.registrations.filter_by(confirmed=True, weighed_in=False)
+    query = g.event.registrations.filter_by(confirmed=True)
     quarg = None
 
     if "query" in request.values:
         query = query.filter(Registration.last_name.ilike(f"{request.values['query']}%") |
-                             Registration.external_id.ilike(f"{request.values['query']}%"))
+                             Registration.external_id.ilike(f"{request.values['query']}%") |
+                             Registration.club.ilike(f"{request.values['query']}%"))
         quarg = request.values['query']
 
     query = query.order_by('weighed_in', 'registered', 'last_name', 'first_name').all()
@@ -57,9 +58,38 @@ def for_participant(id):
         db.session.commit()
         g.event.log(g.device.title, 'DEBUG', f'{registration.short_name()} auf {registration.verified_weight / 1000} kg eingewogen')
 
-        return redirect(url_for("mod_weighin.index", event=g.event.slug))
+        query = None
+
+        if 'query' in request.args:
+            query = request.args['query']
+
+        return redirect(url_for('mod_weighin.index', event=g.event.slug, query=query))
     
     return render_template("mod_weighin/for_participant.html", registration=registration)
+
+
+@mod_weighin_view.route('/for/<id>/correct')
+@check_and_apply_event
+@check_is_registered
+def correct_for_participant(id):
+    if not g.device.event_role.may_use_weigh_in:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+    
+    registration = Registration.query.filter_by(event=g.event, id=id, confirmed=True, weighed_in=True).one_or_404()
+
+    registration.weighed_in = False
+    registration.weighed_in_at = None
+
+    db.session.commit()
+    g.event.log(g.device.title, 'DEBUG', f'Waage für {registration.short_name()} zurückgenommen')
+
+    query = None
+
+    if 'query' in request.args:
+        query = request.args['query']
+
+    return redirect(url_for('mod_weighin.index', event=g.event.slug, query=query))
 
 
 @mod_weighin_view.route('/api', methods=['POST'])
