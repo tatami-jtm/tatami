@@ -35,7 +35,7 @@
                         {{ list.ListItemBodyDetail(reg.verified_weight / 1000 ~ ' kg') }}
                     {%- endcall -%}
                     {%- call list.ListItemMenu() -%}
-                        {{ list.ListItemMenuItem(href=url_for('mod_placement.assign', event=g.event.slug, id=event_class.id, registration=reg.id), icon="plus-circle") }}
+                        {{ list.ListItemMenuItem(href=url_for('mod_placement.assign', event=g.event.slug, id=event_class.id, registration=reg.id, group=(current_group.id if current_group else None)), icon="plus-circle") }}
                     {%- endcall -%}
                 {%- endcall -%}
             {% endfor %}

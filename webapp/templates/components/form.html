@@ -32,16 +32,16 @@
 <div class="form-check-label {{ class }}">{{ text or caller() }}</div>
 {%- endmacro -%}
 
-{%- macro FormCheck(name="", id="", label=None, class="", checked=False, disabled=False) -%}
+{%- macro FormCheck(name="", id="", label=None, class="", checked=False, disabled=False, value="") -%}
 <div class="form-check {{ class }}">
-    <input type="checkbox" id="{{ id }}" name="{{ name }}" class="form-check-input {{ 'disabled' if disabled }}" {{ 'disabled' if disabled }} {{ 'checked' if checked }}>
+    <input type="checkbox" id="{{ id }}" name="{{ name }}" class="form-check-input {{ 'disabled' if disabled }}" value="{{ value }}" {{ 'disabled' if disabled }} {{ 'checked' if checked }}>
     <label for="{{ id }}" class="form-label">{{ label or caller() }}</label>
 </div>
 {%- endmacro -%}
 
-{%- macro FormRadio(name="", id="", label=None, class="", checked=False, disabled=False) -%}
+{%- macro FormRadio(name="", id="", label=None, class="", checked=False, disabled=False, value="") -%}
 <div class="form-check {{ class }}">
-    <input type="radio" id="{{ id }}" name="{{ name }}" class="form-check-input {{ 'disabled' if disabled }}" {{ 'disabled' if disabled }} {{ 'checked' if checked }}>
+    <input type="radio" id="{{ id }}" name="{{ name }}" class="form-check-input {{ 'disabled' if disabled }}" value="{{ value }}" {{ 'disabled' if disabled }} {{ 'checked' if checked }}>
     <label for="{{ id }}" class="form-label">{{ label or caller() }}</label>
 </div>
 {%- endmacro -%}

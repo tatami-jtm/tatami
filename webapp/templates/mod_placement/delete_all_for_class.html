@@ -1,35 +1,40 @@
-{% extends "layouts/application.html" %}
-{% block title %}Hauptliste{% endblock %}
-{% block body %}
-<div class="container-fluid">
-    <h1 class="h2 fw-bold mb-4">Kampfklasse {{ event_class.title }}</h1>
+{%- import "components/layout.html" as layout -%}
+{%- import "components/cards.html" as cards -%}
+{%- import "components/alerts.html" as alerts -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/form.html" as form -%}
 
-    
-    <h3 class="h4 fw-bold mb-2">Gesamte Einteilung löschen</h3>
+{% extends "layouts/application.html" %}
+{% set page=event_class %}
+{% block title %}Hauptliste{% endblock %}
+{% block pre_messages %}{% include "mod_placement/_header.html" %}{% endblock %}
+{% block body %}
+
+{% call layout.Container(width='small') %}
+
+    <h1>Kampfklasse {{ event_class.title }}</h1>    
+    <h2 class="fs-3">Gesamte Einteilung löschen</h2>
+
     <form action="" method="POST">
-        <div class="card card-semidialog">
-            <div class="card-body pb-0">
+        {% call cards.Card() %}
+            {% call cards.CardBody() %}
                 <p>Wollen Sie die Einteilung der Kampfklasse {{ event_class.title }} <strong>vollständig löschen</strong>?</p>
                 <p>Diese Aktion wird protokolliert.</p>
 
-                <div class="alert alert-danger">
+                {% call alerts.DangerAlert() %}
                     <p>Achtung: Dies kann <strong>nicht</strong> rückgängig gemacht werden. Die gesamte Einteilung, jedweder Kampffortschritt und alle bereits eingetragenen Ergebnisse werden verloren gehen. Diese Operation sollte nur in Ausnahmefällen und nur bei genügender Sachkunde bzgl. der möglichen Folgen vorgenommen werden.</p>
-                </div>
-            </div>
-            <div class="card-body border-top">
+                {% endcall %}
+            {% endcall %}
+            {% call cards.CardBody() %}
                 <p>Bestätigen Sie die Operation durch Betätigung dieser Checkbox:</p>
 
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="confirm" name="confirm" value="oopsie">
-                    <label class="form-check-label" for="confirm">Ich habe die obenstehenden Informationen gelesen, verstanden und bin damit einverstanden, die persönliche Verantwortung für alle möglichen Folgen zu übernehmen.</label>
-                </div>
-            </div>
-            <div class="card-footer">
-                <button type="submit" class="btn btn-danger btn-3d">Einteilung löschen</button>
-                <a href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id) }}" class="btn btn-secondary">Abbrechen</a>
-            </div>
-        </div>
+                {{ form.FormCheck(name='confirm', id='confirm', value='oopsie', label="Ich habe die obenstehenden Informationen gelesen, verstanden und bin damit einverstanden, die persönliche Verantwortung für alle möglichen Folgen zu übernehmen.", class='p-1 align-start') }}
+            {% endcall %}
+            {% call cards.CardFooter() %}
+                {{ buttons.DangerButton(type='submit', text='Einteilung löschen') }}
+                {{ buttons.SecondaryButton(href=url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id), text='Abbrechen') }}
+            {% endcall %}
+        {% endcall %}
     </form>
-</div>
-
+{% endcall %}
 {% endblock body %}

@@ -15,11 +15,11 @@
 {%- endmacro -%}
 
 {%- macro ListItemBodyHeader(text="") -%}
-<div class="list-item-header">{{ text or caller() }}</div>
+<div class="list-item-header">{{ text or (caller() if caller is defined else '-') }}</div>
 {%- endmacro -%}
 
 {%- macro ListItemBodyDetail(text="") -%}
-<div class="list-item-detail">{{ text or caller() }}</div>
+<div class="list-item-detail">{{ text or (caller() if caller is defined else '-') }}</div>
 {%- endmacro -%}
 
 {%- macro ListItemMenu() -%}
