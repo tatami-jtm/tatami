@@ -9,22 +9,26 @@
     </head>
     <body class="application" data-tatami-event="{{ g.event.slug }}">
         {% if not popup %}
-        {% set mode="app" %}
-        {% include "layouts/_appheader.html" %}
-        {% block pre_messages %}{% endblock pre_messages %}
-        {% with messages = get_flashed_messages(with_categories=True) %}
-        {% if messages %}
-        {% for category, message in messages %}
-            <div class="alert alert-{{ category or 'secondary' }}" role="alert">
-                {% if ":" in message %}
-                <p><strong>{{ message.split(":", 1)[0] }}:</strong> {{ message.split(":", 1)[1] }}</p>
-                {% else %}
-                <p>{{ message }}</p>
+            {% set mode="app" %}
+            {% include "layouts/_appheader.html" %}
+
+            {% block pre_messages %}{% endblock pre_messages %}
+
+            {% with messages = get_flashed_messages(with_categories=True) %}
+                {% if messages %}
+                    {% call layout.Container(width='full') %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category or 'secondary' }}" role="alert">
+                                {% if ":" in message %}
+                                <p><strong>{{ message.split(":", 1)[0] }}:</strong> {{ message.split(":", 1)[1] }}</p>
+                                {% else %}
+                                <p>{{ message }}</p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% endcall %}
                 {% endif %}
-            </div>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
+            {% endwith %}
         {% endif %}
 
         {% block body %}{% endblock body %}
