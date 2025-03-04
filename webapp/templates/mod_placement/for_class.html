@@ -153,6 +153,11 @@
                                     {%- endcall -%}
                                 {% endfor %}
                             {%- endcall -%}
+                        {% elif current_group.participants.count() == 0 %}
+                            {%- call alerts.InfoAlert() %}
+                                <p>Noch kein Listensystem zugewiesen.</p>
+                                <p>Dieser Gruppe wurden noch keine Teilnehmenden hinzugefügt, sodass noch kein Listensystem bestimmt werden kann.</p>
+                            {%- endcall -%}
                         {% else %}
                             {%- call alerts.DangerAlert() %}
                                 <p>Noch kein Listensystem zugewiesen.</p>
