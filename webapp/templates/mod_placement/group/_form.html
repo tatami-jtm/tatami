@@ -1,43 +1,34 @@
+{%- import "components/cards.html" as cards -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/form.html" as form -%}
+
 <form action="" method="POST">
-    <div class="card card-semidialog">
-        <div class="card-body">
-            <div class="mb-3">
-                <label for="name" class="form-label">Bezeichnung</label>
-                <div class="input-group">
-                    <div class="input-group-text">{{ event_class.short_title }}</div>
-                    <input name="name" id="name" class="form-control" value="{{ group.cut_title() }}">
-                </div>
-            </div>
-            <div class="mb-3">
-                <label for="system" class="form-label">Listensystem</label>
-                <select class="form-select" id="system" name="system">
-                    <option value="" {{ 'selected' if not group.system }}>(automatisch bestimmen &ndash; empfohlen)</option>
-                    {% for system in systems %}
-                    <option value="{{ system.id }}" {{ 'selected' if group.system_id == system.id }}>{{ system.title }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
-        <div class="card-body border-top">
-            <div class="mb-3">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="assign_by_logic" name="assign_by_logic" {{ 'checked' if group.assign_by_logic }}>
-                    <label class="form-check-label fw-bold" for="assign_by_logic">Teilnehmenden anhand ihres Gewichts automatisch zuteilen</label>
-                </div>
-            </div>
-            <p class="mb-3">Wenn ausgewählt:</p>
-            <div class="mb-3">
-                <label for="min_weight" class="form-label">Mindesgewicht (in kg) - nicht mehr enthalten -</label>
-                <input name="min_weight" id="min_weight" type="number" min="0" step="0.1" max="500" class="form-control" value="{{ group.min_weight / 1000 if group.min_weight }}">
-            </div>
-            <div class="mb-3">
-                <label for="max_weight" class="form-label">Höchstgewicht (in kg) - noch enthalten -</label>
-                <input name="max_weight" id="max_weight" type="number" min="0" step="0.1" max="500" class="form-control"value="{{ group.max_weight / 1000 if group.max_weight }}">
-            </div>
-        </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-primary">Speichern</button>
-            <a href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id) }}" class="btn btn-secondary">Abbrechen</a>
-        </div>
-    </div>
+    {% call cards.Card() %}
+        {% call cards.CardBody() %}
+            {{ form.Label(for_id='name', text='Bezeichnung') }}
+            {{ form.Input(id='name', name='name', value=group.cut_title()) }}
+            {{ form.Label(for_id='system', text='Listensystem') }}
+            {% call form.Select(id='system', name='system', value=group.cut_title()) %}
+                {{ form.SelectOption(value='', selected=not group.system, text='(automatisch bestimmen – empfohlen)') }}
+                {% for system in systems %}
+                    {{ form.SelectOption(value=system.id, selected=(group.system_id == system.id), text=system.title) }}
+                {% endfor %}
+            {% endcall %}
+        {% endcall %}
+        {% call cards.CardBody() %}
+            {{ form.FormCheck(id='assign_by_logic', name='assign_by_logic', checked=group.assign_by_logic, label='Teilnehmenden anhand ihres Gewichts automatisch zuteilen') }}
+
+            <p>Wenn ausgewählt:</p>
+
+            {{ form.Label(for_id='min_weight', text='Mindesgewicht - nicht mehr enthalten -') }}
+            {{ form.InputWithSuffix(id='min_weight', name='min_weight', value=(group.min_weight / 1000 if group.min_weight else ''), type="number", attr=('step="0.1" min="0"'|safe), suffix="kg") }}
+
+            {{ form.Label(for_id='max_weight', text='Höchstgewicht - noch enthalten -') }}
+            {{ form.InputWithSuffix(id='max_weight', name='max_weight', value=(group.max_weight / 1000 if group.max_weight else ''), type="number", attr=('step="0.1" min="0"'|safe), suffix="kg") }}
+        {% endcall %}
+        {% call cards.CardFooter() %}
+            {{ buttons.PrimaryButton(type='submit', text='Speichern') }}
+            {{ buttons.SecondaryButton(href=url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=(group.id if group else None)), text='Abbrechen') }}
+        {% endcall %}
+    {% endcall %}
 </form>
