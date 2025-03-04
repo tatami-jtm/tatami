@@ -484,18 +484,15 @@ def unplace(id, participant_id):
     participant = g.event.participants.filter_by(id=participant_id).one_or_404()
     group = participant.group
 
-    if request.method == 'POST':
-        participant.placement_index = None
-        participant.manually_placed = False
+    participant.placement_index = None
+    participant.manually_placed = False
 
-        db.session.commit()
+    db.session.commit()
 
-        flash(f"TN {participant.full_name} erfolgreich abgesetzt.", 'success')
-        g.event.log(g.device.title, 'DEBUG', f'TN {participant.full_name} abgesetzt.')
+    flash(f"TN {participant.full_name} erfolgreich abgesetzt.", 'success')
+    g.event.log(g.device.title, 'DEBUG', f'TN {participant.full_name} abgesetzt.')
 
-        return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
-
-    return render_template("mod_placement/participant/unplace.html", event_class=event_class, group=group, participant=participant)
+    return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
 
 
 @mod_placement_view.route('/class/<id>/group/<group_id>/place_all', methods=['GET', 'POST'])
