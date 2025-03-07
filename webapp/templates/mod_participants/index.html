@@ -96,16 +96,16 @@
             {% call cards.CardFooter() %}
                 {% call layout.Grid() %}
                     {% call layout.GridColumn(large_span=8) %}
-                        {{ buttons.PrimaryButton(type="submit", text="Filtern") }}
-                        {{ buttons.SecondaryButton(href="?", text="Zurücksetzen") }}
+                        {{ buttons.SecondaryButton(type="submit", text="Filtern") }}
+                        {{ buttons.SubtleButton(href="?", text="Zurücksetzen") }}
                         {% if filtered_class %}
-                            {{ buttons.SecondaryButton(href=url_for('event_manager.print_registrations', event=g.event.slug, id=filtered_class.id), text=("TN/Wiegeliste drucken")) }}
+                            {{ buttons.SubtleButton(href=url_for('event_manager.print_registrations', event=g.event.slug, id=filtered_class.id), text=("TN/Wiegeliste drucken")) }}
                         {% else %}
-                            {{ buttons.SecondaryButton(href=url_for('event_manager.print_registrations', event=g.event.slug), text=("TN/Wiegeliste drucken")) }}
+                            {{ buttons.SubtleButton(href=url_for('event_manager.print_registrations', event=g.event.slug), text=("TN/Wiegeliste drucken")) }}
                         {% endif %}
                     {% endcall %}
                     {% call layout.GridColumn(large_span=4, class="text-right") %}
-                        {{ buttons.SecondaryButton(href=url_for('mod_participants.new', event=g.event.slug), text="TN hinzufügen") }}
+                        {{ buttons.PrimaryButton(href=url_for('mod_participants.new', event=g.event.slug), text="TN hinzufügen") }}
                     {% endcall %}
                 {% endcall %}
             {% endcall %}

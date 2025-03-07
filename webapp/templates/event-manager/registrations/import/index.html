@@ -1,3 +1,6 @@
+{%- import "components/form.html" as form -%}
+{%- import "components/buttons.html" as buttons -%}
+
 {% set event_page="registrations" %}
 {% extends "layouts/event-manager.html" %}
 {% block title %}{{ g.event.title }}{% endblock %}
@@ -11,12 +14,10 @@
 <p>Alle üblichen Tabellenkalkulationsprogramme bieten die Möglichkeit, eine Tabellendatei im Format .CSV abzuspeichern. Sie können die Warnungen, dass einige Funktionen ggf. nicht übertragen werden, für die Zwecke des Imports ignorieren.</p>
 
 <form action="" method="post" enctype="multipart/form-data">
-    <div class="mb-3">
-        <label for="csvfile" class="form-label">CSV-Datei</label>
-        <input type="file" name="csvfile" id="csvfile" class="form-control">
-    </div>
+    {{ form.Label(for_id='csvfile', text='CSV-Datei') }}
+    {{ form.Input(id='csvfile', name='csvfile', type='file') }}
 
-    <button type="submit" class="btn btn-primary">Weiter &raquo;</button>
+    {{ buttons.PrimaryButton(type='submit', text='Weiter »') }}
 </form>
 
 

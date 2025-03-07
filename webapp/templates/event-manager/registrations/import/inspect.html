@@ -1,49 +1,49 @@
+{%- import "components/form.html" as form -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/datasets.html" as datasets -%}
+
+
 {% set event_page="registrations" %}
 {% extends "layouts/event-manager.html" %}
 {% block title %}{{ g.event.title }}{% endblock %}
 
 {% block body %}
-{% set ROW_LIMIT = 15 %}
 <h1>TN importieren</h1>
 
 <p>Es wurde eine CSV-Datei mit dem folgenden Inhalt eingelesen:</p>
 
-<table class="csv-table">
-    <thead>
-        <tr class="csv-table-firstrow">
-            <th class="csv-table-firstcol"></th>
+{% call datasets.Dataset(size='medium') %}
+    {% call datasets.Table() %}
+        {% call datasets.TableHead() %}
+            {{ datasets.TableHeadEmptyColumn() }}
             {% for col in range(colcount) %}
-            <th>Spalte {{ loop.index }}</th>
+                {{ datasets.TableHeadColumn(text='Spalte ' ~ loop.index) }}
             {% endfor %}
-        </tr>
-    </thead>
-    {% for row in data[:ROW_LIMIT] %}
-    <tr>
-        <th class="csv-table-firstcol">Zeile {{ loop.index }}</th>
-        {% for col in row %}
-        <td>{{ col }}</td>
-        {% endfor %}
-    </tr>
-    {% endfor %}
-    {% if rowcount > ROW_LIMIT %}
-    <tr>
-        <td colspan="{{ colcount + 1 }}" class="csv-table-abbreviated">&hellip; und {{ rowcount - ROW_LIMIT }} weitere Zeilen</td>
-    </tr>
-    {% endif %}
-</table>
+        {% endcall %}
+        {% call datasets.TableBody() %}
+            {% for row in data %}
+                {% call datasets.TableRow() %}
+                    {{ datasets.TableHeadColumn(text='Zeile ' ~ loop.index) }}
+                    {% for col in row %}
+                        {{ datasets.TableColumn(text=col or '-') }}
+                    {% endfor %}
+                {% endcall %}
+            {% endfor %}
+        {% endcall %}
+    {% endcall %}
+{% endcall %}
 
 <p>Damit TATAMI diese Datei richtig einlesen kann, müssen Sie die folgenden Angaben ausfüllen:</p>
 
 <form action="" method="post">
-    <div class="mb-3">
-        <label for="start-row" class="form-label">Erste Zeile mit TN-Daten</label>
-        <select name="start-row" id="start-row" class="form-select">
-            {% for row in range(rowcount) %}
-            <option value="{{ row }}">Zeile {{ loop.index }}</option>
-            {% endfor %}
-        </select>
-        <div class="form-text">Wählen Sie die erste Zeile aus, in der TN-Daten sind (d. h. keine Überschriften oder Leerstellen)</div>
-    </div>
+
+    {{ form.Label(for_id='start-row', text='Erste Zeile mit TN-Daten') }}
+    {% call form.Select(id='start-row', name='start-row') %}
+        {% for row in range(rowcount) %}
+            {{ form.SelectOption(value=row, text='Zeile ' ~ loop.index) }}
+        {% endfor %}
+    {% endcall %}
+    {{ form.FormNotice('Wählen Sie die erste Zeile aus, in der TN-Daten sind (d. h. keine Überschriften oder Leerstellen)') }}
 
     {{ col_chooser(colcount, 'first_name', 'Vorname') }}
     {{ col_chooser(colcount, 'last_name', 'Nachname') }}
@@ -53,31 +53,33 @@
     {{ col_chooser(colcount, 'event_class', 'Kampfklasse') }}
     {{ col_chooser(colcount, 'suggested_group', 'Vorgeschlagene Einteilung', optional=True) }}
 
-    <div class="mt-3 mb-3">
-        <label for="confirm_all" class="form-label">Voranmeldung für importierte TN bestätigen</label>
-        <select name="confirm_all" id="confirm_all" class="form-select">
-            <option value="yes">Ja</option>
-            <option value="no">Nein</option>
-        </select>
-    </div>
+    {{ form.Label(for_id='confirm_all', text='Voranmeldung für importierte TN bestätigen') }}
+    {% call form.Select(id='confirm_all', name='confirm_all') %}
+        {{ form.SelectOption(value='yes', text='Ja') }}
+        {{ form.SelectOption(value='no', text='no') }}
+    {% endcall %}
 
-    <button type="submit" class="btn btn-primary">TN importieren</button>
+    {{ buttons.PrimaryButton(type='submit', text='TN importieren')}}
 </form>
 {% endblock body %}
 
 
 {% macro col_chooser(colcount, form_column, form_label, optional=False) %}
-<div class="mb-1 d-flex align-items-center">
-    <label for="{{ form_column }}" class="form-label w-25 mb-0">{{ form_label }} ist in:</label>
-    <select name="{{ form_column }}" id="{{ form_column }}" class="form-select w-75">
-        {% if optional %}
-        <option value="null">(ggf. auswählen &ndash; optional)</option>
-        {% else %}
-        <option value="null" selected disabled>(bitte auswählen)</option>
-        {% endif %}
-        {% for col in range(colcount) %}
-        <option value="{{ col }}">Spalte {{ loop.index }}</option>
-        {% endfor %}
-    </select>
-</div>
+{% call layout.Grid() %}
+    {% call layout.GridColumn(large_span=3) %}
+        {{ form.Label(for_id=form_column, text=form_label ~ ' ist in:') }}
+    {% endcall %}
+    {% call layout.GridColumn(large_span=9) %}
+        {% call form.Select(id=form_column, name=form_column) %}
+            {% if optional %}
+                {{ form.SelectOption(value='null', text='(ggf. auswählen -- optional)') }}
+            {% else %}
+                {{ form.SelectDefaultOption(value='null', text='(bitte auswählen)') }}
+            {% endif %}
+            {% for col in range(colcount) %}
+                {{ form.SelectOption(value=col, text='Spalte ' ~ loop.index) }}
+            {% endfor %}
+        {% endcall %}
+    {% endcall %}
+{% endcall %}
 {% endmacro %}
