@@ -1,9 +1,9 @@
-{%- macro _LinkButton(style="info", size=None, href="#", text=None, active=False, disabled=False, class="") -%}
-<a href="{{ href }}" class="btn btn-{{ style }}{{ '-cta' if size == 'cta' else '' if size == None else ' btn-' + size }}{{ ' active' if active }}{{ ' disabled' if disabled }} {{ class }}"{{ ' disabled' if disabled }}>{{ text or caller() }}</a>
+{%- macro _LinkButton(style="info", size=None, href="#", text=None, active=False, disabled=False, class="", download="", attr="") -%}
+<a href="{{ href }}" class="btn btn-{{ style }}{{ '-cta' if size == 'cta' else '' if size == None else ' btn-' + size }}{{ ' active' if active }}{{ ' disabled' if disabled }} {{ class }}"{{ ' disabled' if disabled }} {% if download %}download="{{ download }}"{% endif %} {{ attr|safe if attr }}>{{ text or caller() }}</a>
 {%- endmacro -%}
 
-{%- macro _SemanticButton(style="info", size=None, id=None, type="button", text=None, active=False, disabled=False, class="") -%}
-<button {% if id != None %}id="{{ id }}"{% endif %} type="{{ type }}" class="btn btn-{{ style }}{{ '-cta' if size == 'cta' else '' if size == None else ' btn-' + size }}{{ ' active' if active }}{{ ' disabled' if disabled }} {{ class }}"{{ ' disabled' if disabled }}>{{ text or caller() }}</button>
+{%- macro _SemanticButton(style="info", size=None, id=None, type="button", text=None, active=False, disabled=False, class="", attr="") -%}
+<button {% if id != None %}id="{{ id }}"{% endif %} type="{{ type }}" class="btn btn-{{ style }}{{ '-cta' if size == 'cta' else '' if size == None else ' btn-' + size }}{{ ' active' if active }}{{ ' disabled' if disabled }} {{ class }}"{{ ' disabled' if disabled }} {{ attr|safe if attr }}>{{ text or caller() }}</button>
 {%- endmacro -%}
 
 {%- macro PrimaryButton(mode="semantic", text=None, inline=False) -%}
