@@ -1,5 +1,5 @@
-{%- macro Match() -%}
-<div class="match">
+{%- macro Match(slim=False, large=False) -%}
+<div class="match {{ 'slim' if slim }} {{ 'large' if large }}">
     {{ caller() }}    
 </div>
 {%- endmacro -%}

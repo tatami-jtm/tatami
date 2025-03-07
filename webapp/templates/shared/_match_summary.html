@@ -1,0 +1,20 @@
+{%- import "components/match.html" as match -%}
+
+{# TODO #}
+
+{% macro match_summary(mobj) %}
+    {% call match.Match(large=True) %}
+        {{ match.MatchSchedule(status=('done' if mobj.completed else
+                                       'running' if mobj.running else
+                                       'pending' if mobj.called_up else
+                                       'scheduled' if mobj.scheduled else None),
+                               label=('jetzt' if mobj.running else ''),
+                               no=mobj.match_schedule_key) }}
+        {% call match.MatchBody() %}
+            {{ match.MatchLineup(white_name=mobj.white.full_name,
+                                 white_association=mobj.white.association_name,
+                                 blue_name=mobj.blue.full_name,
+                                 blue_association=mobj.blue.association_name) }}
+        {% endcall %}
+    {% endcall %}
+{% endmacro %}

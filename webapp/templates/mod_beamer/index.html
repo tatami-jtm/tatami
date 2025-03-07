@@ -1,57 +1,56 @@
+{%- import "components/layout.html" as layout -%}
+
+{% set popup=True %}
 {% extends "layouts/application.html" %}
 {% block title %}Listenanzeige{% endblock %}
-{% from "mod_global_list/_match_summary.html" import small_match_summary %}
+{% from "shared/_match_summary.html" import match_summary %}
 {% block custom_header %}
-<meta http-equiv="refresh" content="5">
+<meta http-equiv="refresh" content="5000000000">
 {% endblock %}
 {% block body %}
-<div class="dropdown float-end">
-    <button
-        class="btn btn-outline-light"
-        type="button"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-        data-bs-auto-close="outside">
-        ⋮
-    </button>
 
-    <div class="dropdown-menu dropdown-wide">
-        <form action="" method="GET" class="px-3 py-2">
-            <div class="mb-3">
-                <label for="mats" class="form-label">Angezeigte Matten</label>
-                <select name="mats" id="mats" multiple class="form-select">
-                    {% for mat in assigned_mats %}
-                    <option value="{{ mat.id }}" {{ 'selected' if mat.id in shown_mat_ids }}>{{ mat.title }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary btn-sm">Speichern</button>
-        </form>
-    </div>
-</div>
+{# TODO: add back dropdown
+    
 
-<div class="p-3">
-    <div class="row">
-        {% for mat in assigned_mats if mat.id in shown_mat_ids %}
-        <div class="col">
-            <h2 class="fw-bold display-3 text-center mb-3">{{ mat.title }}</h2>
-
-            {% for match in mat.scheduled_matches()[:5] %}
-            {% if loop.index == 1 %}
-            <div class="bg-white p-3 mb-3 shadow border border-5 border-danger">
-            {% elif loop.index == 2 %}
-            <div class="bg-white p-3 mb-3 shadow border border-5 border-warning">
-            {% else %}
-            <div class="bg-white p-3 mb-3 shadow border border-5 border-white">
-            {% endif %}
-                {% set first_three = loop.index <= 3 %}
-                {{ small_match_summary(match, large_fs=first_three, compact=not first_three) }}
-            </div>
-            {% else %}
-            <p class="text-center fs-3">n. n.</p>
-            {% endfor %}
+    <div class="dropdown float-end">
+        <button
+            class="btn btn-outline-light"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            data-bs-auto-close="outside">
+            ⋮
+        </button>
+    
+        <div class="dropdown-menu dropdown-wide">
+            <form action="" method="GET" class="px-3 py-2">
+                <div class="mb-3">
+                    <label for="mats" class="form-label">Angezeigte Matten</label>
+                    <select name="mats" id="mats" multiple class="form-select">
+                        {% for mat in assigned_mats %}
+                        <option value="{{ mat.id }}" {{ 'selected' if mat.id in shown_mat_ids }}>{{ mat.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm">Speichern</button>
+            </form>
         </div>
-        {% endfor %}
     </div>
-</div>
-{% endblock body %}
+    
+#}
+
+{% call layout.Container(width="full") %}
+    {% call layout.Grid() %}
+        {% for mat in assigned_mats if mat.id in shown_mat_ids %}
+            {% call layout.GridColumn(span="") %}
+                <h2 class="fw-bold fs-1 text-center mb-3">{{ mat.title }}</h2>
+                {% for match in mat.scheduled_matches()[:5] %}
+                    {{ match_summary(match) }}
+                {% else %}
+                    <p class="text-center fs-3">n. n.</p>
+                {% endfor %}
+            {% endcall %}
+        {% endfor %}
+    {% endcall %}
+{% endcall %}
+{% endblock %}
