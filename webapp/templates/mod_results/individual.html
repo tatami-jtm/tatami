@@ -24,7 +24,8 @@
             {% endcall %}
         {% endcall %}
         {% for group in evcl.groups.filter_by(completed=True) %}
-            {% call datasets.Table(class="mt-2" if not loop.first) %}
+            <h3 class="fs-4 {{ 'mt-0' if loop.first }}">{{ group.title }}</h3>
+            {% call datasets.Table() %}
                 {% call datasets.TableHead() %}
                     {{ datasets.TableHeadColumn(text="Gruppe") }}
                     {{ datasets.TableHeadColumn(text="Platz") }}
