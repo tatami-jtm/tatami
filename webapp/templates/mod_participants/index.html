@@ -99,9 +99,9 @@
                         {{ buttons.SecondaryButton(type="submit", text="Filtern") }}
                         {{ buttons.SubtleButton(href="?", text="Zurücksetzen") }}
                         {% if filtered_class %}
-                            {{ buttons.SubtleButton(href=url_for('event_manager.print_registrations', event=g.event.slug, id=filtered_class.id), text=("TN/Wiegeliste drucken")) }}
+                            {{ buttons.SubtleButton(href=url_for('event_manager.print_registrations', event=g.event.slug, id=filtered_class.id), text=("TN/Wiegeliste drucken"), target='_blank') }}
                         {% else %}
-                            {{ buttons.SubtleButton(href=url_for('event_manager.print_registrations', event=g.event.slug), text=("TN/Wiegeliste drucken")) }}
+                            {{ buttons.SubtleButton(href=url_for('event_manager.print_registrations', event=g.event.slug), text=("TN/Wiegeliste drucken"), target='_blank') }}
                         {% endif %}
                     {% endcall %}
                     {% call layout.GridColumn(large_span=4, class="text-right") %}
