@@ -10,8 +10,8 @@
 </div>
 {%- endmacro -%}
 
-{%- macro Table() -%}
-<table class="table">
+{%- macro Table(class="") -%}
+<table class="table {{ class }}">
     {{ caller() }}
 </table>
 {%- endmacro -%}

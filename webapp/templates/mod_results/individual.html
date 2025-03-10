@@ -23,16 +23,15 @@
                 {{ buttons.ButtonIcon(icon='download', label='CSV herunterladen') }}
             {% endcall %}
         {% endcall %}
-
-        {% call datasets.Table() %}
-            {% call datasets.TableHead() %}
-                {{ datasets.TableHeadColumn(text="Gruppe") }}
-                {{ datasets.TableHeadColumn(text="Platz") }}
-                {{ datasets.TableHeadColumn(text="Teilnehmer/in") }}
-                {{ datasets.TableHeadColumn(text="Verein") }}
-            {% endcall %}
-            {% call datasets.TableBody() %}
-                {% for group in evcl.groups.filter_by(completed=True) %}
+        {% for group in evcl.groups.filter_by(completed=True) %}
+            {% call datasets.Table(class="mt-2" if not loop.first) %}
+                {% call datasets.TableHead() %}
+                    {{ datasets.TableHeadColumn(text="Gruppe") }}
+                    {{ datasets.TableHeadColumn(text="Platz") }}
+                    {{ datasets.TableHeadColumn(text="Teilnehmer/in") }}
+                    {{ datasets.TableHeadColumn(text="Verein") }}
+                {% endcall %}
+                {% call datasets.TableBody() %}
                     {% for participant in group.placements() %}
                         {% call datasets.TableRow() %}
                             {{ datasets.TableColumn(text=group.cut_title()) }}
@@ -41,9 +40,9 @@
                             {{ datasets.TableColumn(text=participant.association_name) }}
                         {% endcall %}
                     {% endfor %}
-                {% endfor %}
+                {% endcall %}
             {% endcall %}
-        {% endcall %}
+        {% endfor %}
     {% endcall %}
 {% endfor %}
 
