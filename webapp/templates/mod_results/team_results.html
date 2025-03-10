@@ -1,8 +1,12 @@
+{%- import "components/layout.html" as layout -%}
+
 {% extends "layouts/application.html" %}
 {% block title %}Ergebnisse{% endblock %}
 {% set page = "teams" %}
 {% from "mod_global_list/_match_summary.html" import small_match_summary %}
 {% block body %}
+{% call layout.Container() %}
+
 {% include "mod_results/_header.html" %}
 
 {% for evcl in event_classes %}
@@ -34,4 +38,5 @@
 {% endfor %}
 {% endfor %}
 
+{% endcall %}
 {% endblock body %}
