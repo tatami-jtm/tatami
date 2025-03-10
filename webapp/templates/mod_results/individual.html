@@ -14,7 +14,7 @@
 {% for evcl in g.event.classes if evcl.groups.filter_by(completed=True).count() > 0 %}
     <h2>{{ evcl.title }}</h2>
 
-    {% call datasets.Dataset(size='small') %}
+    {% call datasets.Dataset(size="large") %}
         {% call datasets.DatasetMenu() %}
             {% call buttons.SubtleButton(href=url_for('mod_results.print_class', event=g.event.slug, id=evcl.id), target='_blank', inline=True) %}
                 {{ buttons.ButtonIcon(icon='printer', label='Ausdrucken') }}
