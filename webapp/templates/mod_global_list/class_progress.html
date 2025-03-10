@@ -1,50 +1,54 @@
+{%- import "components/layout.html" as layout -%}
+{%- import "components/badges.html" as badges -%}
+{%- import "components/buttons.html" as buttons -%}
+
 {% extends "layouts/application.html" %}
 {% block title %}Hauptliste | Kampfklassen-Fortschritt{% endblock %}
 {% block body %}
-<div class="container-fluid">
-    <h1 class="h2 fw-bold mb-4">Hauptliste</h1>    
-    <h3 class="h4 fw-bold mb-4">Kampfklassen-Fortschritt</h3>
+{% call layout.Container() %}
 
-    {% for cl in g.event.classes.order_by('title') %}
-    <ul class="list-group list-group-horizontal mb-1">
-        <li class="list-group-item fw-bold w-label">{{ cl.title }}</li>
+<h1>Hauptliste</h1>
+<h2>Kampfklassen-Fortschritt</h2>
 
+{% for cl in g.event.classes.order_by('title') %}
+    <h3 class="fs-4 my-2">{{ cl.title }}</h3>
+
+    {% call badges.BadgeControl() %}
         {% if not cl.begin_weigh_in %}
-        <li class="list-group-item text-bg-secondary">Ausstehend</li>
-        <a href="{{ url_for('mod_global_list.class_step_forward', event=g.event.slug, id=cl.id) }}" class="list-group-item list-group-item-action">In Waage</a>
-        <li class="list-group-item text-secondary">Wiegen beendet</li>
-        <li class="list-group-item text-secondary">Kämpft</li>
-        <li class="list-group-item text-secondary">Beendet</li>
+            {{ badges.Badge(text='Ausstehend', style='secondary') }}
+            {{ badges.Badge(text='In Waage', style='inactive', href=url_for('mod_global_list.class_step_forward', event=g.event.slug, id=cl.id)) }}
+            {{ badges.Badge(text='Einteilung', style='inactive') }}
+            {{ badges.Badge(text='Kämpft', style='inactive') }}
+            {{ badges.Badge(text='Beendet', style='inactive') }}
         {% elif not cl.begin_placement %}
-        <a href="{{ url_for('mod_global_list.class_step_back', event=g.event.slug, id=cl.id) }}" class="list-group-item list-group-item-action">Ausstehend</a>
-        <li class="list-group-item text-bg-warning">In Waage</li>
-        <a href="{{ url_for('mod_global_list.class_step_forward', event=g.event.slug, id=cl.id) }}" class="list-group-item list-group-item-action">Wiegen beendet</a>
-        <li class="list-group-item text-secondary">Kämpft</li>
-        <li class="list-group-item text-secondary">Beendet</li>
+            {{ badges.Badge(text='Ausstehend', style='inactive', href=url_for('mod_global_list.class_step_back', event=g.event.slug, id=cl.id)) }}
+            {{ badges.Badge(text='In Waage', style='info') }}
+            {{ badges.Badge(text='Einteilung', style='inactive', href=url_for('mod_global_list.class_step_forward', event=g.event.slug, id=cl.id)) }}
+            {{ badges.Badge(text='Kämpft', style='inactive') }}
+            {{ badges.Badge(text='Beendet', style='inactive') }}
         {% elif not cl.begin_fighting %}
-        <li class="list-group-item text-secondary">Ausstehend</li>
-        <a href="{{ url_for('mod_global_list.class_step_back', event=g.event.slug, id=cl.id) }}" class="list-group-item list-group-item-action">In Waage</a>
-        <li class="list-group-item text-bg-dark">Wiegen beendet</li>
-        <a href="{{ url_for('mod_global_list.class_step_forward', event=g.event.slug, id=cl.id) }}" class="list-group-item list-group-item-action">Kämpft</a>
-        <li class="list-group-item text-secondary">Beendet</li>
+            {{ badges.Badge(text='Ausstehend', style='inactive') }}
+            {{ badges.Badge(text='In Waage', style='inactive', href=url_for('mod_global_list.class_step_back', event=g.event.slug, id=cl.id)) }}
+            {{ badges.Badge(text='Einteilung', style='warning') }}
+            {{ badges.Badge(text='Kämpft', style='inactive', href=url_for('mod_global_list.class_step_forward', event=g.event.slug, id=cl.id)) }}
+            {{ badges.Badge(text='Beendet', style='inactive') }}
         {% elif not cl.ended_fighting %}
-        <li class="list-group-item text-secondary">Ausstehend</li>
-        <li class="list-group-item text-secondary">In Waage</li>
-        <a href="{{ url_for('mod_global_list.class_step_back', event=g.event.slug, id=cl.id) }}" class="list-group-item list-group-item-action">Wiegen beendet</a>
-        <li class="list-group-item text-bg-danger">Kämpft</li>
-        <a href="{{ url_for('mod_global_list.class_step_forward', event=g.event.slug, id=cl.id) }}" class="list-group-item list-group-item-action">Beendet</a>
+            {{ badges.Badge(text='Ausstehend', style='inactive') }}
+            {{ badges.Badge(text='In Waage', style='inactive') }}
+            {{ badges.Badge(text='Einteilung', style='inactive', href=url_for('mod_global_list.class_step_back', event=g.event.slug, id=cl.id)) }}
+            {{ badges.Badge(text='Kämpft', style='danger') }}
+            {{ badges.Badge(text='Beendet', style='inactive', href=url_for('mod_global_list.class_step_forward', event=g.event.slug, id=cl.id)) }}
         {% else %}
-        <li class="list-group-item text-secondary">Ausstehend</li>
-        <li class="list-group-item text-secondary">In Waage</li>
-        <li class="list-group-item text-secondary">Wiegen beendet</li>
-        <a href="{{ url_for('mod_global_list.class_step_back', event=g.event.slug, id=cl.id) }}" class="list-group-item list-group-item-action">Kämpft</a>
-        <li class="list-group-item text-bg-success">Beendet</li>
+            {{ badges.Badge(text='Ausstehend', style='inactive') }}
+            {{ badges.Badge(text='In Waage', style='inactive') }}
+            {{ badges.Badge(text='Einteilung', style='inactive') }}
+            {{ badges.Badge(text='Kämpft', style='inactive', href=url_for('mod_global_list.class_step_back', event=g.event.slug, id=cl.id)) }}
+            {{ badges.Badge(text='Beendet', style='success') }}
         {% endif %}
-    </ul>      
-    {% endfor %}
+    {% endcall %}
+{% endfor %}
 
+{{ buttons.SecondaryButton(text="Zurück", href=url_for('mod_global_list.index', event=g.event.slug), class="mt-4") }}
 
-    <a href="{{ url_for('mod_global_list.index', event=g.event.slug) }}" class="btn btn-secondary mt-3">Zurück</a>
-</div>
-
+{% endcall %}
 {% endblock body %}
