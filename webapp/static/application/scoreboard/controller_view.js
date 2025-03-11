@@ -7,15 +7,11 @@ const setOption = (key, value) => {
         localStorage.removeItem("tatami-scoreboard:" + key)
 }
 
-const disable_btn = (btn, active_color) => {
-    btn.classList.remove(active_color)
-    btn.classList.add("btn-outline-secondary")
+const disable_btn = (btn) => {
     btn.setAttribute("disabled", true)
 }
 
-const enable_btn = (btn, active_color) => {
-    btn.classList.add(active_color)
-    btn.classList.remove("btn-outline-secondary")
+const enable_btn = (btn) => {
     btn.removeAttribute("disabled")
 }
 
@@ -25,41 +21,37 @@ const renderControls = () => {
     global_time.innerText = new Date(properIntegralConversion(sbState.time.displayTime / 1000) * 1000).toISOString().substr(15, 4)
 
     if (sbState.time.running) {
-        disable_btn(start_time, "btn-success")
-        enable_btn(stop_time, "btn-danger")
-        global_time.parentNode.classList.add('running')
+        disable_btn(start_time)
+        enable_btn(stop_time)
+        global_time.classList.add('running')
     } else {
-        disable_btn(stop_time, "btn-danger")
-        enable_btn(start_time, "btn-success")
-        global_time.parentNode.classList.remove('running')
+        disable_btn(stop_time)
+        enable_btn(start_time)
+        global_time.classList.remove('running')
     }
 
     if (sbState.time.goldenScore) {
-        global_time.parentNode.classList.add("goldenscore")
+        global_time.classList.add("goldenscore")
     } else {
-        global_time.parentNode.classList.remove("goldenscore")
+        global_time.classList.remove("goldenscore")
     }
 
     if (sbState.view.screen == 'main') {
         main_view.classList.add("active")
         callup_view.classList.remove("active")
         break_view.classList.remove("active")
-        current_screen.innerText = "- Kampf -"
     } else if (sbState.view.screen == 'callup') {
         main_view.classList.remove("active")
         callup_view.classList.add("active")
         break_view.classList.remove("active")
-        current_screen.innerText = "- Aufruf -"
     } else if (sbState.view.screen == 'break') {
         main_view.classList.remove("active")
         callup_view.classList.remove("active")
         break_view.classList.add("active")
-        current_screen.innerText = "- Pause -"
     } else if (sbState.view.screen == 'winner:white' || sbState.view.screen == 'winner:blue') {
         main_view.classList.remove("active")
         callup_view.classList.remove("active")
         break_view.classList.add("active")
-        current_screen.innerText = "- Gewinner*in wird angezeigt -"
     }
 
     if (sbState.view.medical) {
@@ -71,33 +63,33 @@ const renderControls = () => {
     if (SBRULES.controls.includes('osaekomi')) {
 
         if (sbState.white.osaekomi.running) {
-            disable_btn(white_start_osaekomi, "btn-secondary")
-            enable_btn(white_stop_osaekomi, "btn-secondary")
+            disable_btn(white_start_osaekomi)
+            enable_btn(white_stop_osaekomi)
             white_osaekomi.innerText = osaekomiTimeToSeconds(sbState.white.osaekomi.since)
         } else {
-            disable_btn(white_stop_osaekomi, "btn-secondary")
-            enable_btn(white_start_osaekomi, "btn-secondary")
+            disable_btn(white_stop_osaekomi)
+            enable_btn(white_start_osaekomi)
             white_osaekomi.innerText = ""
         }
 
         if (sbState.blue.osaekomi.running) {
-            disable_btn(blue_start_osaekomi, "btn-secondary")
-            enable_btn(blue_stop_osaekomi, "btn-secondary")
+            disable_btn(blue_start_osaekomi)
+            enable_btn(blue_stop_osaekomi)
             blue_osaekomi.innerText = osaekomiTimeToSeconds(sbState.blue.osaekomi.since)
         } else {
-            disable_btn(blue_stop_osaekomi, "btn-secondary")
-            enable_btn(blue_start_osaekomi, "btn-secondary")
+            disable_btn(blue_stop_osaekomi)
+            enable_btn(blue_start_osaekomi)
             blue_osaekomi.innerText = ""
         }
 
         if (sbState.white.osaekomi.running) {
-            enable_btn(toggle_osaekomi, 'btn-secondary')
+            enable_btn(toggle_osaekomi)
             toggle_osaekomi.innerText = 'Tauschen'
         } else if (sbState.blue.osaekomi.running) {
-            enable_btn(toggle_osaekomi, 'btn-secondary')
+            enable_btn(toggle_osaekomi)
             toggle_osaekomi.innerText = 'Tauschen'
         } else {
-            disable_btn(toggle_osaekomi, 'btn-secondary')
+            disable_btn(toggle_osaekomi)
             toggle_osaekomi.innerText = 'Tauschen'
         }
 
