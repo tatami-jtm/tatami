@@ -4,7 +4,7 @@
 
 {% set SBRULES = g.event.sb_rules() %}
 
-{% call modals.Modal(id="results-modal") %}
+{% call modals.Modal(id="results-modal", centered=True) %}
     {% call modals.ModalContainer(width="small") %}
         {{ modals.ModalHeader(text="Ergebnisse eintragen", close_btn=True, modal="#results-modal") }}
 

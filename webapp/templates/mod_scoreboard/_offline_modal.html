@@ -1,59 +1,61 @@
+{%- import "components/modals.html" as modals -%}
+{%- import "components/buttons.html" as buttons -%}
+
 {% set SBRULES = g.event.sb_rules() %}
 
-<div class="modal" id="offline-modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content modal-border-red">
-            <div class="modal-header">
-                <h1 class="modal-title h3 fw-bold text-danger">Ein Fehler ist aufgetreten!</h1>
+{% call modals.Modal(id="offline-modal", centered=True) %}
+    {% call modals.ModalContainer(width="normal") %}
+        {{ modals.ModalHeader(text="Ein Fehler ist aufgetreten!") }}
+
+        {% call modals.ModalBody() %}
+            <p>Es konnte keine Verbindung zu TATAMI aufgebaut werden oder ein schwerwiegender technischer Fehler ist aufgetreten. <strong>Das Kampfergebnis wurde noch nicht gespeichert!</strong></p>
+            <p>Informieren Sie die Wettkampfleitung.</p>
+            <p>Fehlermeldung:</p>
+            <pre><code id="offline-error-message">unbekannt</code></pre>
+        {% endcall %}
+
+        {% call modals.ModalBody() %}
+            <p>Zur Vermeidung von Datenverlusten wird hier das aktuelle Ergebnis angezeigt:</p>
+            <table class="table-scoreboard mb-3">
+                <tr class="row-fighters">
+                    <th colspan="{{ SBRULES.small_display|length }}" class="col-white" data-tatami-field="current.white.name">xxx</th>
+                    <th colspan="{{ SBRULES.small_display|length }}" class="col-blue" data-tatami-field="current.blue.name">xxx</th>
+                </tr>
+                <tr class="row-labels">
+                    {% for c in SBRULES.small_display %}
+                    <th class="col-white {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                        <label for="sb-white-{{ c }}">{{ SBRULES.scores[c].short_name }}</label>
+                    </th>
+                    {% endfor %}
+                    {% for c in SBRULES.small_display %}
+                    <th class="col-blue {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                        <label for="sb-blue-{{ c }}">{{ SBRULES.scores[c].short_name }}</label>
+                    </th>
+                    {% endfor %}
+                </tr>
+        
+                <tr class="row-inputs">
+                    {% for c in SBRULES.small_display %}
+                    <td class="col-white {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                        <output data-tatami-field="results.white" data-tatami-score="{{ c }}">0</output>
+                    </td>
+                    {% endfor %}
+                    {% for c in SBRULES.small_display %}
+                    <td class="col-blue {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                        <output data-tatami-field="results.blue" data-tatami-score="{{ c }}">0</output>
+                    </td>
+                    {% endfor %}
+                </tr>
+            </table>
+        
+            <div class="d-flex mb-3 align-items-center">
+                <label class="fw-bold me-3">Kampfzeit:</label>
+                <output data-tatami-field="results.full_time">0min 0s</output>
             </div>
-            <div class="modal-body">
-                <p>Es konnte keine Verbindung zu TATAMI aufgebaut werden oder ein schwerwiegender technischer Fehler ist aufgetreten. <strong>Das Kampfergebnis wurde noch nicht gespeichert!</strong></p>
-                <p>Informieren Sie die Wettkampfleitung.</p>
-                <p>Fehlermeldung:</p>
-<pre><code id="offline-error-message">unbekannt</code></pre>
-            </div>
-            <div class="modal-body border-top">
-                <p>Zur Vermeidung von Datenverlusten wird hier das aktuelle Ergebnis angezeigt:</p>
-                <table class="table-scoreboard mb-3">
-                    <tr class="row-fighters">
-                        <th colspan="{{ SBRULES.small_display|length }}" class="col-white" data-tatami-field="current.white.name">xxx</th>
-                        <th colspan="{{ SBRULES.small_display|length }}" class="col-blue" data-tatami-field="current.blue.name">xxx</th>
-                    </tr>
-                    <tr class="row-labels">
-                        {% for c in SBRULES.small_display %}
-                        <th class="col-white {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
-                            <label for="sb-white-{{ c }}">{{ SBRULES.scores[c].short_name }}</label>
-                        </th>
-                        {% endfor %}
-                        {% for c in SBRULES.small_display %}
-                        <th class="col-blue {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
-                            <label for="sb-blue-{{ c }}">{{ SBRULES.scores[c].short_name }}</label>
-                        </th>
-                        {% endfor %}
-                    </tr>
-            
-                    <tr class="row-inputs">
-                        {% for c in SBRULES.small_display %}
-                        <td class="col-white {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
-                            <output data-tatami-field="results.white" data-tatami-score="{{ c }}">0</output>
-                        </td>
-                        {% endfor %}
-                        {% for c in SBRULES.small_display %}
-                        <td class="col-blue {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
-                            <output data-tatami-field="results.blue" data-tatami-score="{{ c }}">0</output>
-                        </td>
-                        {% endfor %}
-                    </tr>
-                </table>
-            
-                <div class="d-flex mb-3 align-items-center">
-                    <label class="fw-bold me-3">Kampfzeit:</label>
-                    <output data-tatami-field="results.full_time">0min 0s</output>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-3d w-100 btn-lg" data-tatami-enter-results>Erneut versuchen</button>
-            </div>
-        </div>
-    </div>
-</div>
+        {% endcall %}
+
+        {% call modals.ModalFooter() %}
+            {{ buttons.DangerButton(text="Erneut versuchen", class="w-100", attr='data-tatami-enter-results')}}
+        {% endcall %}
+    {% endcall %}
+{% endcall %}
