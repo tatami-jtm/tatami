@@ -2,22 +2,22 @@
 <input type="{{ type }}" name="{{ name or '' }}" class="form-control {{ class }} {{ 'required' if required }} {{ 'disabled' if disabled }}" id="{{ id or '' }}" value="{{ value or '' }}" placeholder="{{ placeholder }}" {{ 'disabled' if disabled }} {{ 'readonly' if readonly }} {{ attr|safe if attr }}>
 {%- endmacro -%}
 
-{%- macro Textarea(value=None, class="", name=None, id=None, required=False, disabled=False, readonly=False, placeholder="", size=None) -%}
-<textarea name="{{ name or '' }}" class="form-control {{ class }} {{ size or '' }} {{ 'required' if required }} {{ 'disabled' if disabled }}" id="{{ id or '' }}" placeholder="{{ placeholder }}" {{ 'disabled' if disabled }} {{ 'readonly' if readonly }}>{{ value or '' }}</textarea>
+{%- macro Textarea(value=None, class="", name=None, id=None, required=False, disabled=False, readonly=False, placeholder="", size=None, attr=None) -%}
+<textarea name="{{ name or '' }}" class="form-control {{ class }} {{ size or '' }} {{ 'required' if required }} {{ 'disabled' if disabled }}" id="{{ id or '' }}" placeholder="{{ placeholder }}" {{ 'disabled' if disabled }} {{ 'readonly' if readonly }} {{ attr|safe if attr }}>{{ value or '' }}</textarea>
 {%- endmacro -%}
 
 {%- macro Label(for_id="", text=None) -%}
 <label for="{{ for_id }}" class="form-label">{{ text or caller() }}</label>
 {%- endmacro -%}
 
-{%- macro Select(type="text", value=None, class="", name=None, id=None, required=False, disabled=False) -%}
-<select name="{{ name or '' }}" class="form-control {{ class }} {{ 'required' if required }} {{ 'disabled' if disabled }}" id="{{ id or '' }}" {{ 'disabled' if disabled }}>
+{%- macro Select(type="text", value=None, class="", name=None, id=None, required=False, disabled=False, attr=None) -%}
+<select name="{{ name or '' }}" class="form-control {{ class }} {{ 'required' if required }} {{ 'disabled' if disabled }}" id="{{ id or '' }}" {{ 'disabled' if disabled }} {{ attr|safe if attr }}>
     {{ caller() }}
 </select>
 {%- endmacro -%}
 
-{%- macro SelectOption(value="", text="", selected=False, disabled=False) -%}
-<option value="{{ value }}" {{ 'disabled' if disabled }} {{ 'selected' if selected }}>{{ text or caller() }}</option>
+{%- macro SelectOption(value="", text="", selected=False, disabled=False, attr=None) -%}
+<option value="{{ value }}" {{ 'disabled' if disabled }} {{ 'selected' if selected }} {{ attr|safe if attr }}>{{ text or caller() }}</option>
 {%- endmacro -%}
 
 {%- macro SelectDefaultOption(value="", text="", selected=True) -%}

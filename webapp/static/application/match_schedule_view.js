@@ -271,12 +271,10 @@ document.querySelectorAll("[data-tatami-enter-results]").forEach((btn) => {
                 document.getElementById('match-loser-removed').checked = false;
 
                 callup_again.innerText = 'Kampf aufrufen'
-                callup_again.classList.add('btn-dark')
-                callup_again.classList.remove('btn-outline-danger')
+                callup_again.classList.add('btn-secondary')
+                callup_again.classList.remove('btn-danger-subtle')
 
-                enter_results.setAttribute('disabled', 'disabled');
-                enter_results.classList.remove('btn-dark')
-                enter_results.classList.add('btn-light');
+                enter_results.classList.add('disabled')
             }
         } else {
             document.getElementById('offline-error-message').innerText = response.status + " " + response.statusText
@@ -300,7 +298,7 @@ enter_results.addEventListener('click', () => {
         document.getElementById('match-winner').value = winner
     }
 
-    winnerShownModal.classList.add('shown')
+    resultsModal.classList.add('shown')
 })
 
 let do_callup = () => {
@@ -309,9 +307,10 @@ let do_callup = () => {
 
     callup_again.innerText = 'Erneut aufrufen'
     callup_again.classList.remove('btn-secondary')
-    callup_again.classList.add('btn-subtle')
+    callup_again.classList.add('btn-danger-subtle')
 
     enter_results.classList.remove('disabled');
+    console.log(enter_results)
 }
 
 callup_now.addEventListener('click', do_callup);

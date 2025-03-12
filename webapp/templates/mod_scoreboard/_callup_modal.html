@@ -33,7 +33,7 @@
             <div class="callup-next-has">
                 <p class="fw-bold fs-5">Es bereiten sich vor: <span data-tatami-field="waiting.group">Gruppe</span> &middot; <span data-tatami-field="waiting.progress">Fortschritt</span></p>
                 
-                {% call match.Match(slim=True) %}
+                {% call match.Match() %}
                     {{ match.MatchSchedule(no="-", status="pending") }}
 
                     {% call match.MatchBody() %}

@@ -1,100 +1,80 @@
+{%- import "components/modals.html" as modals -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/form.html" as form -%}
+
 {% set SBRULES = g.event.sb_rules() %}
 
-<div class="modal" id="results-modal" tabindex="-1" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title h4 fw-bold">Ergebnisse eintragen</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Dialog schließen"></button>
+{% call modals.Modal(id="results-modal") %}
+    {% call modals.ModalContainer(width="small") %}
+        {{ modals.ModalHeader(text="Ergebnisse eintragen", close_btn=True, modal="#results-modal") }}
+
+        {% call modals.ModalBody() %}
+            {{ form.Label(for_id="match-winner", text="Gewinner/in ist:") }}
+            {% call form.Select(id="match-winner") %}
+                {{ form.SelectDefaultOption() }}
+                {{ form.SelectOption(value="white", text="Weiß (xxx)", attr='data-tatami-field="results.white.entry"') }}
+                {{ form.SelectOption(value="blue", text="Blau (xxx)", attr='data-tatami-field="results.blue.entry"') }}
+            {% endcall %}
+
+            {{ form.Label(for_id="match-score", text="Unterpunkte:") }}
+            {% call form.Select(id="match-score") %}
+                {{ form.SelectDefaultOption() }}
+                {{ form.SelectOption(value="1", text="1 WP (Shido oder Hantei)") }}
+                {{ form.SelectOption(value="3", text="3 WP") }}
+                {{ form.SelectOption(value="5", text="5 WP (Yuko)") }}
+                {{ form.SelectOption(value="7", text="7 WP (Wazaari)") }}
+                {{ form.SelectOption(value="10", text="10 WP (Ippon oder Wazaari-awasete)") }}
+            {% endcall %}
+
+            {{ form.FormCheck(
+                id="match-loser-disqualified", value="yes",
+                label="Verlierer/in disqualifiziert (direkter Hansoku-make)"
+            ) }}
+
+            {{ form.FormCheck(
+                id="match-loser-removed", value="yes",
+                label="Verlierer/in scheidet aus (bspw. Verletzung oder eigener Wunsch)"
+            ) }}
+        {% endcall %}
+        {% call modals.ModalBody() %}
+            <table class="table-scoreboard mb-3">
+                <tr class="row-fighters">
+                    <th colspan="{{ SBRULES.small_display|length }}" class="col-white" data-tatami-field="current.white.name">xxx</th>
+                    <th colspan="{{ SBRULES.small_display|length }}" class="col-blue" data-tatami-field="current.blue.name">xxx</th>
+                </tr>
+                <tr class="row-labels">
+                    {% for c in SBRULES.small_display %}
+                    <th class="col-white {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                        <label for="sb-white-{{ c }}">{{ SBRULES.scores[c].short_name }}</label>
+                    </th>
+                    {% endfor %}
+                    {% for c in SBRULES.small_display %}
+                    <th class="col-blue {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                        <label for="sb-blue-{{ c }}">{{ SBRULES.scores[c].short_name }}</label>
+                    </th>
+                    {% endfor %}
+                </tr>
+        
+                <tr class="row-inputs">
+                    {% for c in SBRULES.small_display %}
+                    <td class="col-white {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                        <output data-tatami-field="results.white" data-tatami-score="{{ c }}">0</output>
+                    </td>
+                    {% endfor %}
+                    {% for c in SBRULES.small_display %}
+                    <td class="col-blue {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                        <output data-tatami-field="results.blue" data-tatami-score="{{ c }}">0</output>
+                    </td>
+                    {% endfor %}
+                </tr>
+            </table>
+            <div class="d-flex mb-3 align-items-center">
+                <label class="fw-bold me-3">Kampfzeit:</label>
+                <output data-tatami-field="results.full_time">0min 0s</output>
             </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="match-winner">Gewinner/in ist:</label>
-                    <select class="form-select" id="match-winner">
-                        <option disabled selected></option>
-                        <option value="white" data-tatami-field="results.white.entry">
-                            Weiß (xxx)
-                        </option>
-                        <option value="blue" data-tatami-field="results.blue.entry">
-                            Blau (xxx)
-                        </option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="match-score">Unterpunkte:</label>
-                    <select class="form-select" id="match-score">
-                        <option disabled selected></option>
-                        <option value="1">
-                            1 WP (Shido oder Hantei)
-                        </option>
-                        <option value="3">
-                            3 WP
-                        </option>
-                        <option value="5">
-                            5 WP (Yuko)
-                        </option>
-                        <option value="7">
-                            7 WP (Waza-ari)
-                        </option>
-                        <option value="10">
-                            10 WP (Ippon, Hansokumake oder Waza-ari-awasete)
-                        </option>
-                    </select>
-                </div>
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" value="yes" name="loser_disqualified" id="match-loser-disqualified">
-                    <label class="form-check-label mb-1" for="match-loser-disqualified">
-                        Verlierer/in disqualifiziert (direkter Hansoku-make)
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="yes" name="loser_removed" id="match-loser-removed">
-                    <label class="form-check-label mb-1" for="match-loser-removed">
-                        Verlierer/in scheidet aus (bspw. Verletzung oder eigener Wunsch)
-                    </label>
-                </div>
-            </div>
-            <div class="modal-body border-top">
-                <table class="table-scoreboard mb-3">
-                    <tr class="row-fighters">
-                        <th colspan="{{ SBRULES.small_display|length }}" class="col-white" data-tatami-field="current.white.name">xxx</th>
-                        <th colspan="{{ SBRULES.small_display|length }}" class="col-blue" data-tatami-field="current.blue.name">xxx</th>
-                    </tr>
-                    <tr class="row-labels">
-                        {% for c in SBRULES.small_display %}
-                        <th class="col-white {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
-                            <label for="sb-white-{{ c }}">{{ SBRULES.scores[c].short_name }}</label>
-                        </th>
-                        {% endfor %}
-                        {% for c in SBRULES.small_display %}
-                        <th class="col-blue {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
-                            <label for="sb-blue-{{ c }}">{{ SBRULES.scores[c].short_name }}</label>
-                        </th>
-                        {% endfor %}
-                    </tr>
-            
-                    <tr class="row-inputs">
-                        {% for c in SBRULES.small_display %}
-                        <td class="col-white {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
-                            <output data-tatami-field="results.white" data-tatami-score="{{ c }}">0</output>
-                        </td>
-                        {% endfor %}
-                        {% for c in SBRULES.small_display %}
-                        <td class="col-blue {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
-                            <output data-tatami-field="results.blue" data-tatami-score="{{ c }}">0</output>
-                        </td>
-                        {% endfor %}
-                    </tr>
-                </table>
-            
-                <div class="d-flex mb-3 align-items-center">
-                    <label class="fw-bold me-3">Kampfzeit:</label>
-                    <output data-tatami-field="results.full_time">0min 0s</output>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary w-100 btn-lg" data-tatami-enter-results>Ergebnis eintragen und anzeigen</button>
-            </div>
-        </div>
-    </div>
-</div>
+        {% endcall %}
+        {% call modals.ModalFooter() %}
+            {{ buttons.PrimaryButton(text="Ergebnis eintragen und anzeigen", class="w-100", attr="data-tatami-enter-results")}}
+        {% endcall %}
+    {% endcall %}
+{% endcall %}
