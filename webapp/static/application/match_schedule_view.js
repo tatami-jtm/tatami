@@ -19,10 +19,10 @@ const callup_now = document.querySelector("[data-control=\"callup\"]")
 const repeated_call_btn = document.querySelector("[data-tatami-repeated-call]")
 
 const scheduledArea = document.querySelector('[data-scheduled-area]')
-const resultsModal = new bootstrap.Modal('#results-modal')
-const callupModal = new bootstrap.Modal('#callup-modal')
-const winnerShownModal = new bootstrap.Modal('#winner-shown-modal')
-const offlineModal = new bootstrap.Modal('#offline-modal')
+const resultsModal = document.querySelector('#results-modal')
+const callupModal = document.querySelector('#callup-modal')
+const winnerShownModal = document.querySelector('#winner-shown-modal')
+const offlineModal = document.querySelector('#offline-modal')
 
 scheduledArea.addEventListener('click', async (e) => {
     let event = document.body.getAttribute("data-tatami-event")
@@ -82,11 +82,11 @@ const updateFromSource = () => {
         updateField("waiting.group", document.querySelector("[data-tatami-source=\"waiting_match.group\"]").value)
         updateField("waiting.progress", document.querySelector("[data-tatami-source=\"waiting_match.progress\"]").value)
 
-        document.querySelector('.callup-next-hasnot').classList.add('d-none')
-        document.querySelector('.callup-next-has').classList.remove('d-none')
+        document.querySelector('.callup-next-hasnot').classList.add('hidden')
+        document.querySelector('.callup-next-has').classList.remove('hidden')
     } else {
-        document.querySelector('.callup-next-hasnot').classList.remove('d-none')
-        document.querySelector('.callup-next-has').classList.add('d-none')
+        document.querySelector('.callup-next-hasnot').classList.remove('hidden')
+        document.querySelector('.callup-next-has').classList.add('hidden')
     }
 
 }
@@ -173,7 +173,7 @@ const startNewMatch = () => {
     repeated_call.running_since = Date.now()
 
     if (document.querySelector("[data-tatami-source=\"current_match.any\"]").value == '1') {
-        callupModal.show()
+        callupModal.classList.add('shown')
         document.querySelector("[data-tatami-end-callup]").focus()
     } else {
         sbState.view.screen = 'break'
@@ -183,12 +183,12 @@ const startNewMatch = () => {
 document.querySelector("[data-tatami-end-callup]").addEventListener("click", () => {
     sbState.view.screen = 'main'
     repeated_call.running = false
-    callupModal.hide()
+    callupModal.classList.remove('shown')
 })
 
 document.querySelectorAll("[data-tatami-enter-results]").forEach((btn) => {
     btn.addEventListener("click", async () => {
-        offlineModal.hide()
+        offlineModal.classList.remove('shown')
         if (document.getElementById('match-winner').value == 'white') {
             sbState.view.screen = 'winner:white'
             setOption('winner:name', document.querySelector("[data-tatami-source=\"current_match.white.name\"]").value)
@@ -257,11 +257,11 @@ document.querySelectorAll("[data-tatami-enter-results]").forEach((btn) => {
             let reply = await response.json()
             if (reply.status == 'error') {
                 document.getElementById('offline-error-message').innerText = reply.message || 'unbekannt'
-                resultsModal.hide()
-                offlineModal.show()
+                resultsModal.classList.remove('shown')
+                offlineModal.classList.add('shown')
             } else if (reply.status == 'success') {
-                resultsModal.hide()
-                winnerShownModal.show()
+                resultsModal.classList.remove('shown')
+                winnerShownModal.classList.add('shown')
 
                 await update_schedule()
 
@@ -280,8 +280,8 @@ document.querySelectorAll("[data-tatami-enter-results]").forEach((btn) => {
             }
         } else {
             document.getElementById('offline-error-message').innerText = response.status + " " + response.statusText
-            resultsModal.hide()
-            offlineModal.show()
+            resultsModal.classList.remove('shown')
+            offlineModal.classList.add('shown')
         }
     })
 })
@@ -300,19 +300,18 @@ enter_results.addEventListener('click', () => {
         document.getElementById('match-winner').value = winner
     }
 
+    winnerShownModal.classList.add('shown')
 })
 
 let do_callup = () => {
-    winnerShownModal.hide()
+    winnerShownModal.classList.remove('shown')
     startNewMatch()
 
     callup_again.innerText = 'Erneut aufrufen'
-    callup_again.classList.remove('btn-dark')
-    callup_again.classList.add('btn-outline-danger')
+    callup_again.classList.remove('btn-secondary')
+    callup_again.classList.add('btn-subtle')
 
-    enter_results.removeAttribute('disabled');
-    enter_results.classList.remove('btn-light');
-    enter_results.classList.add('btn-dark');
+    enter_results.classList.remove('disabled');
 }
 
 callup_now.addEventListener('click', do_callup);
