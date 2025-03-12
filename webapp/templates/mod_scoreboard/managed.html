@@ -4,8 +4,8 @@
 {% block title %}Scoreboard (mit Liste){% endblock %}
 
 {% block body %}
-{% call layout.Grid() %}
-    {% call layout.GridColumn(large_span=3) %}
+{% call layout.Grid(class="h-full-with-navbar mh-full-with-navbar") %}
+    {% call layout.GridColumn(large_span=3, scrollable=True) %}
         {% include "mod_scoreboard/_lists_manager.html" %}
     {% endcall %}
     {% call layout.GridColumn(large_span=9) %}
