@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{%- if title -%} TATAMI | {{ title }} {%- else -%} TATAMI {%- endif -%}</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='tatami/tatami.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='tatami/css/tatami.css') }}">
+    <script src="{{ url_for('static', filename='tatami/js/tatami.js') }}" defer></script>
 </head>
 <body>
     {{ caller() }}
@@ -22,7 +23,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TATAMI</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='tatami/tatami.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='tatami/css/tatami.css') }}">
+    <script src="{{ url_for('static', filename='tatami/js/tatami.js') }}" defer></script>
 </head>
 <body class="error">
     {{ caller() }}
