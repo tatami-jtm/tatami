@@ -2,8 +2,8 @@
 
 {# TODO #}
 
-{% macro match_summary(mobj) %}
-    {% call match.Match(large=True) %}
+{% macro match_summary(mobj, large=False) %}
+    {% call match.Match(large=large) %}
         {{ match.MatchSchedule(status=('done' if mobj.completed else
                                        'running' if mobj.running else
                                        'pending' if mobj.called_up else

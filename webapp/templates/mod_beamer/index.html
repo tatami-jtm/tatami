@@ -45,7 +45,7 @@
             {% call layout.GridColumn(span="") %}
                 <h2 class="fw-bold fs-1 text-center mb-3">{{ mat.title }}</h2>
                 {% for match in mat.scheduled_matches()[:5] %}
-                    {{ match_summary(match) }}
+                    {{ match_summary(match, large=True) }}
                 {% else %}
                     <p class="text-center fs-3">n. n.</p>
                 {% endfor %}
