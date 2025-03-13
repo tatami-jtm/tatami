@@ -1,48 +1,49 @@
+{% import "components/datasets.html" as datasets %}
+{% import "components/buttons.html" as buttons %}
+
 {% extends "layouts/admin.html" %}
 {% set curpage = "roles" %}
 {% block title %}Administrationsbereich | Rollen{% endblock %}
 {% block body %}
 {% include "admin/user/_header.html" %}
 
-<div class="float-end"><a href="{{ url_for('admin.new_role') }}" class="btn btn-primary">Rolle erstellen</a></div>
-<h3 class="mb-4">Rollen</h3>
+<h2>Rollen</h2>
 
+{% call datasets.Dataset() %}
+    {% call datasets.Table() %}
+        {% call datasets.TableHead() %}
+            {{ datasets.TableHeadColumn(text="ID") }}
+            {{ datasets.TableHeadColumn(text="Name") }}
+            {{ datasets.TableHeadColumn(text="Beschreibung") }}
+            {{ datasets.TableHeadColumn(text="Berechtigungen") }}
+            {{ datasets.TableHeadEmptyColumn() }}
+        {% endcall %}
+        {% call datasets.TableBody() %}
+            {% for role in all_roles %}
+                {% call datasets.TableRow() %}
+                    {{ datasets.TableColumn(text=role.id) }}
+                    {{ datasets.TableColumn(text=role.name) }}
+                    {{ datasets.TableColumn(text=role.description or '-') }}
+                    {% call datasets.TableColumn() %}
+                        <ul class="list-unstyled">
+                            {% if role.is_admin %}<li class="my-0">alle (Admin-Rechte)</li>{% endif %}
+                            {% if role.is_support %}<li class="my-0">Support</li>{% endif %}
+                            {% if role.may_create_tournaments %}<li class="my-0">Turniere erstellen</li>{% endif %}
+                            {% if role.may_manage_users %}<li class="my-0">Benutzerverwaltung</li>{% endif %}
+                            {% if role.may_alter_presets %}<li class="my-0">Voreinstellungen</li>{% endif %}
+                        </ul>
+                    {% endcall %}
+                    {% call datasets.TableButtonsColumn() %}
+                        {% call buttons.SubtleButton(href=url_for('admin.edit_role', id=role.id), inline=True) %}
+                            {{ buttons.ButtonIcon(icon="edit-pencil") }}
+                        {% endcall %}
+                    {% endcall %}
+                {% endcall %}
+            {% endfor %}
+        {% endcall %}
+    {% endcall %}
+{% endcall %}
 
-<div class="table-responsive">
-    <table class="table table-hover table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Beschreibung</th>
-                <th>Berechtigungen</th>
-                <td></td>
-            </tr>
-        </thead>
-        <tbody class="table-group-divider">
-        {% for role in all_roles %}
-            <tr>
-                <td>{{ role.id }}</td>
-                <td><span class="fs-6 badge text-bg-{{ 'secondary' if not role.is_admin else 'primary' }}" title="{{ role.description }}">{{ role.name }}</span>
-                </td>
-                <td><p style="max-width: 400px;">{{ role.description }}</p></td>
-                <td>
-                    <ul class="ps-3">
-                        {% if role.is_admin %}<li>alle (Admin-Rechte)</li>{% endif %}
-                        {% if role.is_support %}<li>Support</li>{% endif %}
-                        {% if role.may_create_tournaments %}<li>Turniere erstellen</li>{% endif %}
-                        {% if role.may_manage_users %}<li>Benutzerverwaltung</li>{% endif %}
-                        {% if role.may_alter_presets %}<li>Voreinstellungen</li>{% endif %}
-                    </ul>
-                </td>
-                <td>
-                    <div class="d-flex">
-                        <a href="{{ url_for('admin.edit_role', id=role.id) }}" class="m-1 btn btn-secondary btn-sm">Rolle bearbeiten</a>
-                    </form>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+{{ buttons.PrimaryButton(href=url_for('admin.new_role'), text="Rolle erstellen") }}
+
 {% endblock body %}
