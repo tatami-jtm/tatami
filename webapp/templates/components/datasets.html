@@ -26,9 +26,9 @@
 
 {%- macro TableHeadColumn(text=None, href=None) -%}
 {%- if href != None -%}
-<th><a href="{{ href }}">{{ text or caller() }}</a></th>
+<th><a href="{{ href }}">{{ text or (caller() if caller is defined) }}</a></th>
 {%- else -%}
-<th>{{ text or caller() }}</th>
+<th>{{ text or (caller() if caller is defined) }}</th>
 {%- endif -%}
 {%- endmacro -%}
 
@@ -54,9 +54,9 @@
 
 {%- macro TableColumn(text=None, check_id=None) -%}
 {%- if check_id != None -%}
-<td><label for="{{ check_id }}">{{ text or caller() }}</label></td>
+<td><label for="{{ check_id }}">{{ text or (caller() if caller is defined) }}</label></td>
 {%- else -%}
-<td>{{ text or caller() }}</td>
+<td>{{ text or (caller() if caller is defined) }}</td>
 {%- endif -%}
 {%- endmacro -%}
 

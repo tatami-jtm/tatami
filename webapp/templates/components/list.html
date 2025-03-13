@@ -4,9 +4,9 @@
 
 {%- macro ListItem(text="", href="", active=False) -%}
 {%- if href -%}
-<a href="{{ href }}" class="list-item {{ 'active' if active }}">{{ text or caller() }}</a>
+<a href="{{ href }}" class="list-item {{ 'active' if active }}">{{ text or (caller() if caller is defined) }}</a>
 {%- else -%}
-<div class="list-item {{ 'active' if active }}">{{ text or caller() }}</div>
+<div class="list-item {{ 'active' if active }}">{{ text or (caller() if caller is defined) }}</div>
 {%- endif -%}
 {%- endmacro -%}
 

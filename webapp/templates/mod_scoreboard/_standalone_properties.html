@@ -1,147 +1,116 @@
-<div class="clearfix mb-3">
-    <button type="button" class="btn btn-dark float-end" data-control="prepare.goto">Folgender Kampf</button>
+{% import "components/buttons.html" as buttons %}
+{% import "components/cards.html" as cards %}
+{% import "components/form.html" as form %}
+{% import "components/layout.html" as layout %}
+
+<div class="d-flex justify-end">
+    {{ buttons.SecondaryButton(text='Folgender Kampf', attr='data-control="prepare.goto"') }}
 </div>
 
-<div class="accordion" id="standalonePropsFightersAccordion">
-    <div class="accordion-item">
-        <h4 class="accordion-header">
-            <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#standalonePropsFightersAccordion-current" aria-expanded="true" aria-control="standalonePropsFightersAccordion-current">Aktueller Kampf</button>
-        </h4>
-        <div id="standalonePropsFightersAccordion-current" class="accordion-collapse collapse show" data-bs-parent="#standalonePropsFightersAccordion">
-            <div class="accordion-body">
-                <div class="row mb-3">
-                    <div class="col-6">
-                        <label for="class" class="mb-1">Kampfklasse</label>
-                        <input type="text" id="class" class="form-control" data-control="class">
-                    </div>
-                    <div class="col-6">
-                        <label for="progress" class="mb-1">Fortschritt</label>
-                        <select id="progress" data-control="progress" class="form-select">
-                            <option>Hauptrunde</option>
-                            <option>Halbfinale</option>
-                            <option>Finale</option>
-                            <option>Trostrunde</option>
-                            <option>Kampf um Platz 3</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="card card-light mb-3">
-                    <div class="card-header">Weiß</div>
-                    <div class="card-body">
-                        <div class="mb-1 input-group">
-                            <label for="white-name" class="input-group-text w-25">Name</label>
-                            <input type="text" id="white-name" class="form-control" data-control="white.name">
-                        </div>
-                        <div class="input-group">
-                            <label for="white-club" class="input-group-text w-25">Verein</label>
-                            <input type="text" id="white-club" class="form-control" data-control="white.club">
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">Blau</div>
-                    <div class="card-body">
-                        <div class="mb-1 input-group">
-                            <label for="blue-name" class="input-group-text w-25">Name</label>
-                            <input type="text" id="blue-name" class="form-control" data-control="blue.name">
-                        </div>
-                        <div class="input-group">
-                            <label for="blue-club" class="input-group-text w-25">Verein</label>
-                            <input type="text" id="blue-club" class="form-control" data-control="blue.club">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="accordion-item">
-        <h4 class="accordion-header">
-            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#standalonePropsFightersAccordion-next" aria-expanded="false" aria-control="standalonePropsFightersAccordion-next">Folgender Kampf</button>
-        </h4>
-        <div id="standalonePropsFightersAccordion-next" class="accordion-collapse collapse" data-bs-parent="#standalonePropsFightersAccordion">
-            <div class="accordion-body">
-                <div class="row mb-3">
-                    <div class="col-6">
-                        <label for="class" class="mb-1">Kampfklasse</label>
-                        <input type="text" id="class" class="form-control" data-control="prepare.class">
-                    </div>
-                    <div class="col-6">
-                        <label for="progress" class="mb-1">Fortschritt</label>
-                        <select id="progress" data-control="prepare.progress" class="form-select">
-                            <option>Hauptrunde</option>
-                            <option>Halbfinale</option>
-                            <option>Finale</option>
-                            <option>Trostrunde</option>
-                            <option>Kampf um Platz 3</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="card mb-3">
-                    <div class="card-header">Weiß</div>
-                    <div class="card-body">
-                        <div class="mb-1 input-group">
-                            <label for="white-name" class="input-group-text w-25">Name</label>
-                            <input type="text" id="white-name" class="form-control" data-control="prepare.white.name">
-                        </div>
-                        <div class="input-group">
-                            <label for="white-club" class="input-group-text w-25">Verein</label>
-                            <input type="text" id="white-club" class="form-control" data-control="prepare.white.club">
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">Blau</div>
-                    <div class="card-body">
-                        <div class="mb-1 input-group">
-                            <label for="blue-name" class="input-group-text w-25">Name</label>
-                            <input type="text" id="blue-name" class="form-control" data-control="prepare.blue.name">
-                        </div>
-                        <div class="input-group">
-                            <label for="blue-club" class="input-group-text w-25">Verein</label>
-                            <input type="text" id="blue-club" class="form-control" data-control="prepare.blue.club">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="accordion-item">
-        <h4 class="accordion-header">
-            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#standalonePropsFightersAccordion-config" aria-expanded="false" aria-control="standalonePropsFightersAccordion-config">Einstellungen</button>
-        </h4>
-        <div id="standalonePropsFightersAccordion-config" class="accordion-collapse collapse" data-bs-parent="#standalonePropsFightersAccordion">
-            <div class="accordion-body">
-                <p class="mb-3 text-secondary">Änderungen an diesen Einstellungen werden erst nach einem Klick auf <span class="text-black">Folgender Kampf</span> wirksam.</p>
+{% call cards.Card() %}
+    {{ cards.CardHeader(text="Aktueller Kampf", class="tj-staprop-btn active", actionable=True, attr='data-tj-oneof=\'{"common": ".tj-staprop-element", "unique": "#current-fight", "class": "hidden", "classWhen": "off", "ownClass": "active", "ownCommon": ".tj-staprop-btn"}\'') }}
+    {% call cards.CardBody(class="tj-staprop-element", id="current-fight") %}
+        {% call layout.Grid() %}
+            {% call layout.GridColumn(span=6) %}
+                {{ form.Label(for_id="class", text="Kampfklasse") }}
+                {{ form.Input(id="class", attr='data-control="class"') }}
+            {% endcall %}
+            {% call layout.GridColumn(span=6) %}
+                {{ form.Label(for_id="progress", text="Fortschritt") }}
+                {% call form.Select(id="progress", attr='data-control="progress"') %}
+                    {{ form.SelectOption(text="", value="") }}
+                    {{ form.SelectOption(text="Hauptrunde") }}
+                    {{ form.SelectOption(text="Halbfinale") }}
+                    {{ form.SelectOption(text="Finale") }}
+                    {{ form.SelectOption(text="Trostrunde") }}
+                    {{ form.SelectOption(text="Kampf um Platz 3") }}
+                {% endcall %}
+            {% endcall %}
+        {% endcall %}
 
-                <div class="mb-3">
-                    <label for="fighting_time" class="mb-1">Kampfzeit (in Sekunden)</label>
-                    <input type="number" id="fighting_time" class="form-control" data-control="config.fighting_time" value="240">
-                    <button class="btn btn-sm btn-link" type="button" onclick="fighting_time.value=120;">2 min</button>
-                    <button class="btn btn-sm btn-link" type="button" onclick="fighting_time.value=180;">3 min</button>
-                    <button class="btn btn-sm btn-link" type="button" onclick="fighting_time.value=240;">4 min</button>
-                </div>
+        {% call cards.Card() %}
+            {{ cards.CardHeader(text="Weiß") }}
+            {% call cards.CardBody() %}
+                {{ form.InputWithPrefix(id="white-name", prefix="Name", attr='data-control="white.name"') }}
+                {{ form.InputWithPrefix(id="white-club", prefix="Verein", attr='data-control="white.club"') }}
+            {% endcall %}
+        {% endcall %}
 
-                <div class="mb-3">
-                    <label for="golden_score_time" class="mb-1">Golden Score-Zeit (in Sekunden)</label>
-                    <input type="number" id="golden_score_time" class="form-control" data-control="config.golden_score_time" value="0">
-                    <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=0;">ohne</button>
-                    <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=120;">2 min</button>
-                    <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=180;">3 min</button>
-                    <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=240;">4 min</button>
-                    <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=-1;">unbegrenzt</button>
-                </div>
+        {% call cards.Card() %}
+            {{ cards.CardHeader(text="Blau") }}
+            {% call cards.CardBody() %}
+                {{ form.InputWithPrefix(id="blue-name", prefix="Name", attr='data-control="blue.name"') }}
+                {{ form.InputWithPrefix(id="blue-club", prefix="Verein", attr='data-control="blue.club"') }}
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
 
-                <div class="mb-3">
-                    <label for="goto_goes_to" class="mb-1">Nächster Kampf geht zu...</label>
-                    <select id="goto_goes_to" data-control="prepare.goto.where" class="form-select">
-                        <option value="main">Kampf</option>
-                        <option value="callup">Aufruf</option>
-                        <option value="break">Pause</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    {{ cards.CardHeader(text="Folgender Kampf", class="tj-staprop-btn", actionable=True, attr='data-tj-oneof=\'{"common": ".tj-staprop-element", "unique": "#next-fight", "class": "hidden", "classWhen": "off", "ownClass": "active", "ownCommon": ".tj-staprop-btn"}\'') }}
+    {% call cards.CardBody(class="tj-staprop-element hidden", id="next-fight") %}
+        {% call layout.Grid() %}
+            {% call layout.GridColumn(span=6) %}
+                {{ form.Label(for_id="prepare-class", text="Kampfklasse") }}
+                {{ form.Input(id="prepare-class", attr='data-control="prepare.class"') }}
+            {% endcall %}
+            {% call layout.GridColumn(span=6) %}
+                {{ form.Label(for_id="prepare-progress", text="Fortschritt") }}
+                {% call form.Select(id="prepare-progress", attr='data-control="prepare.progress"') %}
+                    {{ form.SelectOption(text="", value="") }}
+                    {{ form.SelectOption(text="Hauptrunde") }}
+                    {{ form.SelectOption(text="Halbfinale") }}
+                    {{ form.SelectOption(text="Finale") }}
+                    {{ form.SelectOption(text="Trostrunde") }}
+                    {{ form.SelectOption(text="Kampf um Platz 3") }}
+                {% endcall %}
+            {% endcall %}
+        {% endcall %}
+
+        {% call cards.Card() %}
+            {{ cards.CardHeader(text="Weiß") }}
+            {% call cards.CardBody() %}
+                {{ form.InputWithPrefix(id="prepare-white-name", prefix="Name", attr='data-control="prepare.white.name"') }}
+                {{ form.InputWithPrefix(id="prepare-white-club", prefix="Verein", attr='data-control="prepare.white.club"') }}
+            {% endcall %}
+        {% endcall %}
+
+        {% call cards.Card() %}
+            {{ cards.CardHeader(text="Blau") }}
+            {% call cards.CardBody() %}
+                {{ form.InputWithPrefix(id="prepare-blue-name", prefix="Name", attr='data-control="prepare.blue.name"') }}
+                {{ form.InputWithPrefix(id="prepare-blue-club", prefix="Verein", attr='data-control="prepare.blue.club"') }}
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+
+    {{ cards.CardHeader(text="Einstellungen", class="tj-staprop-btn", actionable=True, attr='data-tj-oneof=\'{"common": ".tj-staprop-element", "unique": "#staprop-config", "class": "hidden", "classWhen": "off", "ownClass": "active", "ownCommon": ".tj-staprop-btn"}\'') }}
+    {% call cards.CardBody(class="tj-staprop-element hidden", id="staprop-config") %}
+        <p>Änderungen an diesen Einstellungen werden erst nach einem Klick auf <span class="text-black">Folgender Kampf</span> wirksam.</p>
+
+        {{ form.Label(for_id="fighting_time", text="Kampfzeit") }}
+        {{ form.InputWithSuffix(id="fighting_time", suffix="Sekunden", attr='data-control="config.fighting_time"', value=240, type='number') }}
+
+        {% call form.FormPresets() %}
+            {{ buttons.SubtleButton(inline=True, text='2 min', attr='onclick="fighting_time.value=120;"') }}
+            {{ buttons.SubtleButton(inline=True, text='3 min', attr='onclick="fighting_time.value=180;"') }}
+            {{ buttons.SubtleButton(inline=True, text='4 min', attr='onclick="fighting_time.value=240;"') }}
+        {% endcall %}
+
+        {{ form.Label(for_id="golden_score_time", text="Golden Score-Zeit") }}
+        {{ form.InputWithSuffix(id="golden_score_time", suffix="Sekunden", attr='data-control="config.golden_score_time"', value=0, type='number') }}
+
+        {% call form.FormPresets() %}
+            {{ buttons.SubtleButton(inline=True, text='ohne', attr='onclick="golden_score_time.value=0;"') }}
+            {{ buttons.SubtleButton(inline=True, text='2 min', attr='onclick="golden_score_time.value=120;"') }}
+            {{ buttons.SubtleButton(inline=True, text='3 min', attr='onclick="golden_score_time.value=180;"') }}
+            {{ buttons.SubtleButton(inline=True, text='4 min', attr='onclick="golden_score_time.value=240;"') }}
+            {{ buttons.SubtleButton(inline=True, text='unbegrenzt', attr='onclick="golden_score_time.value=-1;"') }}
+        {% endcall %}
+
+        {{ form.Label(for_id="goto_goes_to", text="Nächster Kampf geht zu...") }}
+        {% call form.Select(id="goto_goes_to", attr='data-control="prepare.goto.where"') %}
+            {{ form.SelectOption(text="Kampf", value="main") }}
+            {{ form.SelectOption(text="Aufruf", value="callup") }}
+            {{ form.SelectOption(text="Pause", value="break") }}
+        {% endcall %}
+    {% endcall %}
+{% endcall %}

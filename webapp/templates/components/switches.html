@@ -10,7 +10,7 @@
 {%- endmacro -%}
 
 {%- macro SwitchItem(href="", label=None, active=False, disabled=False, class="", attr="") -%}
-<a href="{{ href }}" class="switch-item {{ 'active' if active }} {{ 'disabled' if disabled }} {{ class }}" {{ 'disabled' if disabled }} {{ attr|safe if attr }}>{{ label or caller() }}</a>
+<a href="{{ href }}" class="switch-item {{ 'active' if active }} {{ 'disabled' if disabled }} {{ class }}" {{ 'disabled' if disabled }} {{ attr|safe if attr }}>{{ label or (caller() if caller is defined) }}</a>
 {%- endmacro -%}
 
 {% set TabItem = SwitchItem %}

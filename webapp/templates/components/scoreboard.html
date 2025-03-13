@@ -58,7 +58,7 @@
 
 {% macro ScoreboardLabelItem(text='') %}
 <div class="scoreboard-item">
-    <div class="scoreboard-item-label">{{ text or caller() }}</div>
+    <div class="scoreboard-item-label">{{ text or (caller() if caller is defined) }}</div>
 </div>
 {% endmacro %}
 

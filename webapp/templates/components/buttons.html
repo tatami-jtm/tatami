@@ -1,9 +1,9 @@
 {%- macro _LinkButton(style="info", size=None, href="#", text=None, active=False, disabled=False, class="", download="", attr="", target="") -%}
-<a href="{{ href }}" class="btn btn-{{ style }}{{ '-cta' if size == 'cta' else '' if size == None else ' btn-' + size }}{{ ' active' if active }}{{ ' disabled' if disabled }} {{ class }}"{{ ' disabled' if disabled }} {% if download %}download="{{ download }}"{% endif %} {% if target %}target="{{ target }}"{% endif %} {{ attr|safe if attr }}>{{ text or caller() }}</a>
+<a href="{{ href }}" class="btn btn-{{ style }}{{ '-cta' if size == 'cta' else '' if size == None else ' btn-' + size }}{{ ' active' if active }}{{ ' disabled' if disabled }} {{ class }}"{{ ' disabled' if disabled }} {% if download %}download="{{ download }}"{% endif %} {% if target %}target="{{ target }}"{% endif %} {{ attr|safe if attr }}>{{ text or (caller() if caller is defined) }}</a>
 {%- endmacro -%}
 
 {%- macro _SemanticButton(style="info", size=None, id=None, type="button", text=None, active=False, disabled=False, class="", attr="") -%}
-<button {% if id != None %}id="{{ id }}"{% endif %} type="{{ type }}" class="btn btn-{{ style }}{{ '-cta' if size == 'cta' else '' if size == None else ' btn-' + size }}{{ ' active' if active }}{{ ' disabled' if disabled }} {{ class }}"{{ ' disabled' if disabled }} {{ attr|safe if attr }}>{{ text or caller() }}</button>
+<button {% if id != None %}id="{{ id }}"{% endif %} type="{{ type }}" class="btn btn-{{ style }}{{ '-cta' if size == 'cta' else '' if size == None else ' btn-' + size }}{{ ' active' if active }}{{ ' disabled' if disabled }} {{ class }}"{{ ' disabled' if disabled }} {{ attr|safe if attr }}>{{ text or (caller() if caller is defined) }}</button>
 {%- endmacro -%}
 
 {%- macro PrimaryButton(mode="semantic", text=None, inline=False) -%}
@@ -68,7 +68,7 @@
 {%- if label or caller is defined -%}
 <div class="button-icon">
     <i class="iconoir-{{ icon }}"></i>
-    <span class="button-icon-label">{{ label or caller() }}</span>
+    <span class="button-icon-label">{{ label or (caller() if caller is defined) }}</span>
 </div>
 {% else %}
 <div class="button-icon"><i class="iconoir-{{ icon }}"></i></div>

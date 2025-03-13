@@ -7,14 +7,14 @@
 </div>
 {%- endmacro -%}
 
-{%- macro CardHeader(class="") -%}
-<div class="card-header {{ class }}">
-    {{ caller() }}
+{%- macro CardHeader(text="", class="", actionable=False, attr=None) -%}
+<div class="card-header {{ class }} {{ 'actionable' if actionable }}" {{ attr|safe if attr }}>
+    {{ text or (caller() if caller is defined) }}
 </div>
 {%- endmacro -%}
 
-{%- macro CardBody(class="") -%}
-<div class="card-body {{ class }}">
+{%- macro CardBody(class="", id="") -%}
+<div class="card-body {{ class }}" id="{{ id }}">
     {{ caller() }}
 </div>
 {%- endmacro -%}

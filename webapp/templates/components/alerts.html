@@ -1,6 +1,6 @@
 {%- macro _Alert(style="info", text=None) -%}
 <div class="alert alert-{{ style }}">
-    {{ text or caller() }}
+    {{ text or (caller() if caller is defined) }}
 </div>
 {%- endmacro -%}
 

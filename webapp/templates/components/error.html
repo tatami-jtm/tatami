@@ -5,11 +5,11 @@
 {%- endmacro -%}
 
 {%- macro ErrorHeading(text="") -%}
-<h1 class="error-heading">{{ text or caller() }}</h1>
+<h1 class="error-heading">{{ text or (caller() if caller is defined) }}</h1>
 {%- endmacro -%}
 
 {%- macro ErrorExplanation(text="") -%}
-<p class="error-explanation">{{ text or caller() }}</p>
+<p class="error-explanation">{{ text or (caller() if caller is defined) }}</p>
 {%- endmacro -%}
 
 {%- macro ErrorOptions() -%}

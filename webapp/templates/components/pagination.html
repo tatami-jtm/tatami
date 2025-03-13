@@ -4,8 +4,8 @@
 
 {%- macro PaginationItem(href="", id="", active=False, label="") -%}
 {%- if href -%}
-<a href="{{ href }}" id="{{ id }}" class="pagination-item {{ 'active' if active }}">{{ label or caller() }}</a>
+<a href="{{ href }}" id="{{ id }}" class="pagination-item {{ 'active' if active }}">{{ label or (caller() if caller is defined) }}</a>
 {%- else -%}
-<button id="{{ id }}" class="pagination-item {{ 'active' if active }}">{{ label or caller() }}</button>
+<button id="{{ id }}" class="pagination-item {{ 'active' if active }}">{{ label or (caller() if caller is defined) }}</button>
 {%- endif -%}
 {%- endmacro -%}

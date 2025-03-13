@@ -13,6 +13,6 @@
 
 {%- macro SegmentationItem(text="") %}
 <li class="segmentation-item">
-    {{ text or caller() }}
+    {{ text or (caller() if caller is defined) }}
 </li>
 {%- endmacro %}

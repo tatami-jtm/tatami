@@ -26,7 +26,7 @@
 {%- macro ColboardEmptyColumn(span=None, text="") -%}
 <div class="colboard-column empty {{ 'span-' ~ span if span }}">
     {%- if text or caller is defined -%}
-    <div class="colboard-empty-column-text">{{ text or caller() }}</div>
+    <div class="colboard-empty-column-text">{{ text or (caller() if caller is defined) }}</div>
     {%- endif -%}
 </div>
 {%- endmacro -%}

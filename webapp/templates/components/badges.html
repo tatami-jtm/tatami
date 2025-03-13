@@ -1,8 +1,8 @@
 {%- macro Badge(text="", style="", class="", href=None) -%}
 {% if href != None %}
-<a href="{{ href }}" class="badge {{ 'text-bg-' ~  style if style != 'inactive' else 'badge-inactive' }} {{ class }}">{{ text or caller() }}</a>
+<a href="{{ href }}" class="badge {{ 'text-bg-' ~  style if style != 'inactive' else 'badge-inactive' }} {{ class }}">{{ text or (caller() if caller is defined) }}</a>
 {% else %}
-<span class="badge {{ 'text-bg-' ~  style if style != 'inactive' else 'badge-inactive' }} {{ class }}">{{ text or caller() }}</span>
+<span class="badge {{ 'text-bg-' ~  style if style != 'inactive' else 'badge-inactive' }} {{ class }}">{{ text or (caller() if caller is defined) }}</span>
 {% endif %}
 {%- endmacro -%}
 
@@ -21,7 +21,7 @@
 {%- macro BadgeIcon(icon="", label="") -%}
 {%- if label or caller is defined -%}
 <i class="iconoir-{{ icon }} badge-icon"></i>
-<span class="button-icon-label">{{ label or caller() }}</span>
+<span class="button-icon-label">{{ label or (caller() if caller is defined) }}</span>
 {% else %}
 <i class="iconoir-{{ icon }} badge-icon"></i>
 {%- endif -%}
