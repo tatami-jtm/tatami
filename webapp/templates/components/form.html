@@ -16,8 +16,8 @@
 </select>
 {%- endmacro -%}
 
-{%- macro SelectOption(value="", text="", selected=False, disabled=False, attr=None) -%}
-<option {% if value %}value="{{ value }}"{% endif %} {{ 'disabled' if disabled }} {{ 'selected' if selected }} {{ attr|safe if attr }}>{{ text or (caller() if caller is defined) }}</option>
+{%- macro SelectOption(value=None, text="", selected=False, disabled=False, attr=None) -%}
+<option {% if value != None %}value="{{ value }}"{% endif %} {{ 'disabled' if disabled }} {{ 'selected' if selected }} {{ attr|safe if attr }}>{{ text or (caller() if caller is defined) }}</option>
 {%- endmacro -%}
 
 {%- macro SelectDefaultOption(value="", text="", selected=True) -%}

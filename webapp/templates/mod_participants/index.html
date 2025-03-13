@@ -19,7 +19,7 @@
                     {% call layout.GridColumn(large_span=2) %}
                         {{ form.Label(for_id='class_filter', text='Kampfklasse') }}
                         {% call form.Select(id='class_filter', name='class_filter') %}
-                            {{ form.SelectOption(text="(alle anzeigen)") }}
+                            {{ form.SelectOption(text="(alle anzeigen)", value="") }}
                             <optgroup label="Einzelne Kampfklassen">
                                 {% for cl in g.event.classes.order_by('title') %}
                                 {{ form.SelectOption(text=cl.title, value=cl.id,
@@ -55,7 +55,7 @@
                     {% call layout.GridColumn(large_span=2) %}
                         {{ form.Label(for_id='status_filter', text='Status') }}
                         {% call form.Select(id='status_filter', name='status_filter') %}
-                            {{ form.SelectOption(text="(alle anzeigen)") }}
+                            {{ form.SelectOption(text="(alle anzeigen)", value="") }}
                             {{ form.SelectOption(text="Nicht bestätigt", value="not_yet_confirmed",
                                 selected=(status_filter == 'not_yet_confirmed')) }}
                             {{ form.SelectOption(text="Bestätigt", value="confirmed",
@@ -76,7 +76,7 @@
                     {% call layout.GridColumn(large_span=2) %}
                         {{ form.Label(for_id='order_by', text='Sortieren nach') }}
                         {% call form.Select(id='order_by', name='order_by') %}
-                            {{ form.SelectOption(text="(Nach-, Vorname, Verein)") }}
+                            {{ form.SelectOption(text="(Nach-, Vorname, Verein)", value="") }}
                             {{ form.SelectOption(text="Vorname", value="first_name",
                                 selected=(order_by == 'first_name')) }}
                             {{ form.SelectOption(text="Nachname", value="last_name",
