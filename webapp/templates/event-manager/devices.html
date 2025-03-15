@@ -22,7 +22,7 @@
     {% endfor %}
 {% endcall %}
 
-{{ buttons.PrimaryButton(href=url_for('event_manager.device_position_create', event=g.event.slug, mat=1), text="Neue Position") }}
+{{ buttons.SecondaryButton(href=url_for('event_manager.device_position_create', event=g.event.slug, mat=1), text="Neue Position") }}
 
 <h3>Verwaltung</h3>
 
@@ -34,7 +34,7 @@
     {% endfor %}
 {% endcall %}
 
-{{ buttons.PrimaryButton(href=url_for('event_manager.device_position_create', event=g.event.slug), text="Neue Position") }}
+{{ buttons.SecondaryButton(href=url_for('event_manager.device_position_create', event=g.event.slug), text="Neue Position") }}
 
 <h3>Geräteanmeldungen</h3>
 
