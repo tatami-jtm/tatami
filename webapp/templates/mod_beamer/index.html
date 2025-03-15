@@ -31,6 +31,10 @@
             </form>
         {% endcall %}
     {% endcall %}
+
+    {% call buttons.SubtleButton(href=url_for('devices.index', event=g.event.slug)) %}
+        {{ buttons.ButtonIcon(icon="xmark") }}
+    {% endcall %}
 </div>
 
 {% call layout.Container(width="full") %}
