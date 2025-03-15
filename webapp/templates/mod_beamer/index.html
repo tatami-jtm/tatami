@@ -1,4 +1,7 @@
 {%- import "components/layout.html" as layout -%}
+{%- import "components/dropdown.html" as dropdown -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/form.html" as form -%}
 
 {% set popup=True %}
 {% extends "layouts/application.html" %}
@@ -9,35 +12,26 @@
 {% endblock %}
 {% block body %}
 
-{# TODO: add back dropdown
-    
-
-    <div class="dropdown float-end">
-        <button
-            class="btn btn-outline-light"
-            type="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-            data-bs-auto-close="outside">
-            ⋮
-        </button>
-    
-        <div class="dropdown-menu dropdown-wide">
+<div class="d-flex justify-end p-1">
+    {% call dropdown.Dropdown(right=True) %}
+        {% call dropdown.DropdownButton() %}
+            {% call buttons.SubtleButton(attr=dropdown.ToggleDropdownAttr(dropdown='#config-dropdown')) %}
+                {{ buttons.ButtonIcon(icon="more-horiz") }}
+            {% endcall %}
+        {% endcall %}
+        {% call dropdown.DropdownDialog(id="config-dropdown") %}
             <form action="" method="GET" class="px-3 py-2">
-                <div class="mb-3">
-                    <label for="mats" class="form-label">Angezeigte Matten</label>
-                    <select name="mats" id="mats" multiple class="form-select">
-                        {% for mat in assigned_mats %}
-                        <option value="{{ mat.id }}" {{ 'selected' if mat.id in shown_mat_ids }}>{{ mat.title }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary btn-sm">Speichern</button>
+                {{ form.Label(for_id="mats", text="Angezeigte Matten") }}
+                {% call form.Select(id="mats", name="mats", multiple=True) %}
+                    {% for mat in assigned_mats %}
+                        {{ form.SelectOption(value=mat.id, text=mat.title, selected=mat.id in shown_mat_ids) }}
+                    {% endfor %}
+                {% endcall %}
+                {{ buttons.PrimaryButton(type="submit", text="Speichern") }}
             </form>
-        </div>
-    </div>
-    
-#}
+        {% endcall %}
+    {% endcall %}
+</div>
 
 {% call layout.Container(width="full") %}
     {% call layout.Grid() %}

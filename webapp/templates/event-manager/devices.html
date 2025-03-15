@@ -120,7 +120,7 @@
         {% call list.ListItemMenu() %}
             {% call dropdown.Dropdown(right=True) %}
                 {% call dropdown.DropdownButton() %}
-                    {{ list.ListItemMenuItem(icon="menu", attr=dropdown.ToggleDropdownAttr(dropdown='#dev-dropown-' ~ dev.id)) }}
+                    {{ list.ListItemMenuItem(icon="more-vert", attr=dropdown.ToggleDropdownAttr(dropdown='#dev-dropown-' ~ dev.id)) }}
                 {% endcall %}
                 {% call dropdown.DropdownDialog(id="dev-dropown-" ~ dev.id) %}
                     <form action="{{ url_for('event_manager.device_update', event=g.event.slug, id=dev.id) }}" method="POST">

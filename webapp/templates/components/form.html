@@ -10,8 +10,8 @@
 <label for="{{ for_id }}" class="form-label">{{ text or (caller() if caller is defined) }}</label>
 {%- endmacro -%}
 
-{%- macro Select(type="text", value=None, class="", name=None, id=None, required=False, disabled=False, attr=None) -%}
-<select name="{{ name or '' }}" class="form-control {{ class }} {{ 'required' if required }} {{ 'disabled' if disabled }}" id="{{ id or '' }}" {{ 'disabled' if disabled }} {{ attr|safe if attr }}>
+{%- macro Select(type="text", value=None, class="", name=None, id=None, required=False, disabled=False, attr=None, multiple=False) -%}
+<select name="{{ name or '' }}" class="form-control {{ class }} {{ 'required' if required }} {{ 'disabled' if disabled }}" id="{{ id or '' }}" {{ 'disabled' if disabled }} {{ attr|safe if attr }} {{ 'multiple' if multiple }}>
     {{ caller() }}
 </select>
 {%- endmacro -%}
