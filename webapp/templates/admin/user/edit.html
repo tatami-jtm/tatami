@@ -1,43 +1,47 @@
+{% import "components/cards.html" as cards %}
+{% import "components/form.html" as form %}
+{% import "components/buttons.html" as buttons %}
+{% import "components/badges.html" as badges %}
+
 {% extends "layouts/admin.html" %}
 {% set curpage = "accts" %}
 {% block title %}Administrationsbereich | Konto bearbeiten: {{ user.email }}{% endblock %}
 {% block body %}
 
-<h1>Konto bearbeiten<br><span class="fs-4">{{ user.email }}</span></h1>
+<h1>Konto bearbeiten</h1>
 
 <form action="" method="POST">
-    <div class="mb-3 d-flex gap-1">
-        <button type="submit" class="btn btn-primary">Speichern</button>
-        <a href="{{ url_for('admin.index' if not current_user.has_privilege('manage_users') else 'admin.user') }}" class="btn btn-secondary">Abbrechen</a>
-    </div>
-    <h3 class="fw-bold mt-4 mb-3">Profil</h3>
-    <div class="mb-3">
-        <label for="display_name" class="form-label">Name</label>
-        <input name="display_name" id="display_name" value="{{ user.display_name or '' }}" class="form-control" placeholder="(leer)">
-    </div>
+    {% call cards.Card() %}
+        {% call cards.CardBody() %}
+            <h3>Profil</h3>
 
-    <h3 class="fw-bold mt-4 mb-3">Kontodaten</h3>
-    <div class="mb-3">
-        <label for="email" class="form-label">E-Mail-Adresse</label>
-        <input type="email" name="email" id="email" value="{{ user.email }}" class="form-control">
-    </div>
-    <div class="mb-3">
-        <label for="password" class="form-label">Passwort</label>
-        <input type="password" name="password" id="password" class="form-control" value="" autocomplete="new-password">
-        <div id="password_help" class="form-text">Das Passwort wird nicht verändert, wenn das Feld leer bleibt.</div>
-    </div>
+            {{ form.Label(for_id="display_name", text="Name") }}
+            {{ form.Input(id="display_name", name="display_name", value=user.display_name or '', placeholder='(leer)') }}
+        
+            <h3>Kontodaten</h3>
 
-    <h3 class="fw-bold mt-4 mb-3">Rollen</h3>
-    {% for role in roles %}
-    <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" value="{{ role.id }}" name="roles" id="role-{{ role.id }}" {{ 'checked' if role in user.roles }} {{ 'disabled' if not current_user.has_privilege('manage_users') or role.is_admin and not current_user.has_privilege('admin') or role.may_manage_users and not current_user.has_privilege('manage_users') or role.may_create_tournaments and not current_user.has_privilege('create_tournaments') }}>
-        <label class="form-check-label mb-1" for="role-{{ role.id }}">
-            <span class="badge text-bg-{{ 'secondary' if not role.is_admin else 'primary' }}">{{ role.name }}</span>
-        </label>
-    {% if role.description %}
-        <div class="form-text mt-0">{{ role.description }}</div>
-    {% endif %}
-    </div>      
-    {% endfor %}
+            {{ form.Label(for_id="email", text="E-Mail-Adresse") }}
+            {{ form.Input(id="email", name="email", value=user.email, type="email") }}
+
+            {{ form.Label(for_id="password", text="Passwort") }}
+            {{ form.Input(id="password", name="password", attr='autocomplete="new-password"', value="", type="password") }}
+            {{ form.FormNotice(text="Das Passwort wird nicht verändert, wenn das Feld leer bleibt.") }}
+
+            <h3>Rollen</h3>
+
+            {% for role in roles %}
+                {% call form.FormCheck(id="role-"~role.id, value=role.id, name="roles", checked=role in user.roles, disabled=(not current_user.has_privilege('manage_users') or role.is_admin and not current_user.has_privilege('admin') or role.may_manage_users and not current_user.has_privilege('manage_users') or role.may_create_tournaments and not current_user.has_privilege('create_tournaments')), class="p-1") %}
+                    <div class="m-0">{{ badges.Badge(text=role.name, style='secondary' if not role.is_admin else 'primary') }}</div>
+                    {% if role.description %}
+                        <div class="fs-small m-0 mt-1">{{ role.description }}</div>
+                    {% endif %}
+                {% endcall %} 
+            {% endfor %}
+        {% endcall %}
+        {% call cards.CardFooter() %}
+            {{ buttons.PrimaryButton(type="submit", text="Speichern") }}
+            {{ buttons.SecondaryButton(href=url_for('admin.index' if not current_user.has_privilege('manage_users') else 'admin.user'), text="Abbrechen") }}
+        {% endcall %}
+    {% endcall %}
 </form>
 {% endblock body %}
