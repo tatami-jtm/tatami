@@ -1,39 +1,39 @@
+{%- import "components/cards.html" as cards -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/alerts.html" as alerts -%}
+{%- import "components/form.html" as form -%}
+
 {% set event_page="classes" %}
 {% extends "layouts/event-manager.html" %}
 {% block title %}{{ g.event.title }} | Kampfklassen zusammenführen{% endblock %}
 {% block body %}
-<h1 class="h3 fw-bold mb-4">Kampfklassen zusammenführen</h1>
+<h1>Kampfklassen zusammenführen</h1>
 <form action="" method="POST">
-    <div class="card card-semidialog">
-        <div class="card-body pb-0">
-            <div class="mb-3">
-                <label for="merge_source" class="form-label">Quelle</label>
-                <select name="source" id="merge_source" class="form-select">
-                    <option value="" disabled selected></option>
-                    {% for cl in classes %}
-                    <option value="{{ cl.id }}">{{ cl.title }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+    {% call cards.Card() %}
+        {% call cards.CardBody() %}
+            {{ form.Label(for_id="merge_source", text="Quelle") }}
+            {% call form.Select(name="source", id="merge_source") %}
+                {{ form.SelectDefaultOption() }}
+                {% for cl in classes %}
+                    {{ form.SelectOption(value=cl.id, text=cl.title) }}
+                {% endfor %}
+            {% endcall %}
 
-            <div class="mb-3">
-                <label for="merge_target" class="form-label">Ziel</label>
-                <output id="merge_target" class="form-control">{{ event_class.title }}</output>
-            </div>
+            {{ form.Label(for_id="merge_target", text="Ziel") }}
+            {{ form.Input(id="merge_target", value=event_class.title, readonly=True) }}
 
             <p>Alle TN, Gruppen, Kämpfe, etc. der Quelle werden in die Kampfklasse <strong>{{ event_class.title }}</strong> überführt; die andere Kampfklasse wird sodann gelöscht.</p>
 
             <p>Diese Aktion wird protokolliert.</p>
 
-
-            <div class="alert alert-danger">
+            {% call alerts.DangerAlert() %}
                 <p>Achtung: Dies kann <strong>nicht</strong> rückgängig gemacht werden.</p>
-            </div>
-        </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-danger btn-3d">Kampfklassen zusammenführen</button>
-            <a href="{{ url_for('event_manager.classes', event=g.event.slug) }}" class="btn btn-secondary">Abbrechen</a>
-        </div>
-    </div>
+            {% endcall %}
+        {% endcall %}
+        {% call cards.CardFooter() %}
+            {{ buttons.DangerButton(type="submit", text="Kampfklassen zusammenführen") }}
+            {{ buttons.SecondaryButton(href=url_for('event_manager.classes', event=g.event.slug), text="Abbrechen") }}
+        {% endcall %}
+    {% endcall %}
 </form>
 {% endblock %}
