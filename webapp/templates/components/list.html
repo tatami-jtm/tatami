@@ -26,10 +26,10 @@
 <div class="list-item-menu">{{ caller() }}</div>
 {%- endmacro -%}
 
-{%- macro ListItemMenuItem(href="", id="", icon="") -%}
+{%- macro ListItemMenuItem(href="", id="", icon="", type="button", active=False, disabled=False, class="", attr="") -%}
 {%- if href -%}
-<a href="{{ href }}" id="{{ id }}" class="list-item-menu-item"><i class="iconoir-{{ icon }}"></i></a>
+<a href="{{ href }}" id="{{ id }}" class="list-item-menu-item {{ class }} {{ 'active' if active }} {{ 'disabled' if disabled }}" {{ attr|safe }}><i class="iconoir-{{ icon }}"></i></a>
 {%- else -%}
-<button id="{{ id }}" class="list-item-menu-item"><i class="iconoir-{{ icon }}"></i></button>
+<button id="{{ id }}" type="{{ type }}" class="list-item-menu-item {{ class }} {{ 'active' if active }} {{ 'disabled' if disabled }}" {{ attr|safe }}><i class="iconoir-{{ icon }}"></i></button>
 {%- endif -%}
 {%- endmacro -%}

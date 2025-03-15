@@ -74,3 +74,9 @@
 <div class="button-icon"><i class="iconoir-{{ icon }}"></i></div>
 {%- endif -%}
 {%- endmacro -%}
+
+{%- macro ButtonList() -%}
+<div class="button-list">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
