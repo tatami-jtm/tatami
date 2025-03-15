@@ -14,10 +14,10 @@
     {% call cards.Card() %}
         {% call cards.CardBody() %}
             <h3>Profil</h3>
-
             {{ form.Label(for_id="display_name", text="Name") }}
             {{ form.Input(id="display_name", name="display_name", value=user.display_name or '', placeholder='(leer)') }}
-        
+        {% endcall %}
+        {% call cards.CardBody() %}
             <h3>Kontodaten</h3>
 
             {{ form.Label(for_id="email", text="E-Mail-Adresse") }}
@@ -25,10 +25,10 @@
 
             {{ form.Label(for_id="password", text="Passwort") }}
             {{ form.Input(id="password", name="password", attr='autocomplete="new-password"', value="", type="password") }}
-            {{ form.FormNotice(text="Das Passwort wird nicht verändert, wenn das Feld leer bleibt.") }}
-
+            {{ form.FormNotice(text="Das Passwort wird nicht verändert, wenn das Feld leer bleibt.") }}        
+        {% endcall %}
+        {% call cards.CardBody() %}
             <h3>Rollen</h3>
-
             {% for role in roles %}
                 {% call form.FormCheck(id="role-"~role.id, value=role.id, name="roles", checked=role in user.roles, disabled=(not current_user.has_privilege('manage_users') or role.is_admin and not current_user.has_privilege('admin') or role.may_manage_users and not current_user.has_privilege('manage_users') or role.may_create_tournaments and not current_user.has_privilege('create_tournaments')), class="p-1") %}
                     <div class="m-0">{{ badges.Badge(text=role.name, style='secondary' if not role.is_admin else 'primary') }}</div>
