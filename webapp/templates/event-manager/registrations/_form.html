@@ -78,7 +78,7 @@
 
                     <ul class="list-unstyled">
                         {% for p in registration.participants.all() %}
-                        <li>{{ p.group.title }}</li>
+                        <li>{{ p.group.title }}{% if p.final_placement %} ({{ p.final_placement }}. Platz){% endif %}</li>
                         {% endfor %}
                     </ul>
                     {% endif %}
