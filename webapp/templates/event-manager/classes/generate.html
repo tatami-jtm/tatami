@@ -9,7 +9,7 @@
 <h1>Kampfklassen generieren</h1>
 
 <form action="" method="POST">
-    {% call cards.Card() %}
+    {% call cards.Card(class="width-medium mx-0") %}
         {% call cards.CardBody() %}
             {{ form.Label(for_id="template", text="Eine Vorlage auswählen") }}
             {% call form.Select(name="template", id="template") %}

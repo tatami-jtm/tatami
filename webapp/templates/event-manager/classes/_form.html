@@ -16,7 +16,7 @@
         {{ switches.TabItem(label="Verhalten", active=False, class="tj-tab-button", attr='data-tj-oneof=\'{"common": ".tj-tab", "unique": "#tab-behavior", "class": "hidden", "classWhen": "off", "ownClass": "active", "ownCommon": ".tj-tab-button"}\'') }}
         {% if not new %}
             {{ switches.TabItem(label="Fortschritt", active=False, class="tj-tab-button", attr='data-tj-oneof=\'{"common": ".tj-tab", "unique": "#tab-progress", "class": "hidden", "classWhen": "off", "ownClass": "active", "ownCommon": ".tj-tab-button"}\'') }}
-            {{ switches.TabItem(label="Merge", active=False, href=url_for('event_manager.merge_into_class', event=g.event.slug, id=event_class.id)) }}
+            {{ switches.TabItem(label="Merge", href=url_for('event_manager.merge_into_class', event=g.event.slug, id=event_class.id)) }}
         {% endif %}
     {% endcall %}
 
@@ -32,15 +32,21 @@
 
         <h3>Voreinstellungen</h3>
 
-        {{ form.Label(for_id="name", text="Vorlage auswählen") }}
-        {% call form.Select(name="template", id="template", attr="data-event_class-template") %}
-            {{ form.SelectDefaultOption() }}
-            {% for tpl in templates %}
-                {{ form.SelectOption(value=tpl.id, text=tpl.template_name) }}
-            {% endfor %}
+        {% call cards.Card(class="mt-2") %}
+            {% call cards.CardBody() %}
+                {{ form.Label(for_id="name", text="Vorlage auswählen") }}
+                {% call form.Select(name="template", id="template", attr="data-event_class-template") %}
+                    {{ form.SelectDefaultOption() }}
+                    {% for tpl in templates %}
+                        {{ form.SelectOption(value=tpl.id, text=tpl.template_name) }}
+                    {% endfor %}
+                {% endcall %}
+            {% endcall %}
+            {% call cards.CardFooter() %}
+                {{ buttons.Button(text="Anwenden", attr="data-event_class-call") }}
+            {% endcall %}
         {% endcall %}
 
-        {{ buttons.Button(text="Anwenden", attr="data-event_class-call") }}
 
         {% if current_user.has_privilege('alter_presets') %}
             {% call cards.Card(class="mt-2") %}
@@ -53,117 +59,84 @@
         {% endif %}
     </div>
     <div class="tj-tab hidden" id="tab-groups">
-        <h3 class="fw-bold mt-4 mb-3">Gruppen</h3>
-        <p class="fw-bold">Die Gruppen werden eingeteilt &hellip;</p>
-        <div class="form-check mb-1">
-            <input class="form-check-input" type="radio" value="predefined" name="weight_mode" id="perm-weight_mode-predefined" {{ 'checked' if not event_class.use_proximity_weight_mode }}>
-            <label class="form-check-label mb-1 fw-bold" for="perm-weight_mode-predefined">
-                in die folgenden Gewichtsklassen:
-            </label>
+        <h3>Gruppen</h3>
+
+        <p>Die Gruppen werden eingeteilt &hellip;</p>
+
+        {{ form.FormRadio(id="weight_mode-predefined", value="predefined", name="weight_mode", label="in die folgenden Gewichtsklassen", checked=not event_class.use_proximity_weight_mode) }}
+
+        <div class="ml-4 mb-3">
+            {{ form.Textarea(name="weight_generator", id="weight_generator", value=event_class.weight_generator or '') }}
+            {{ form.FormNotice(text='Jeweils eine Gewichtsklasse pro Zeile; Bezeichner können mit "-" beginnen, Plusklasse muss mit "+" beginnen') }}
         </div>
-        <div class="mb-2 ms-5">
-            <textarea name="weight_generator" id="weight_generator" class="form-control font-monospace">{{ event_class.weight_generator or '' }}</textarea>
-            <div class="form-text">Jeweils eine Gewichtsklasse pro Zeile; Bezeichner können mit "-" beginnen, Plusklasse muss mit "+" beginnen</div>
-        </div>
-    
-        <div class="form-check mb-3">
-            <input class="form-check-input" type="radio" value="proximity" name="weight_mode" id="perm-weight_mode-proximity" {{ 'checked' if event_class.use_proximity_weight_mode }}>
-            <label class="form-check-label mb-1 fw-bold" for="perm-weight_mode-proximity">
-                nach gewichtsnahen Gruppen
-            </label>
-        </div>
-        <div class="mb-2 ms-5">
-            <label for="default_maximal_proximity" class="form-label fw-normal">mit einem Höchstabstand von</label>
-            <div class="input-group">
-                <input name="default_maximal_proximity" id="default_maximal_proximity" value="{{ event_class.default_maximal_proximity or '' }}" class="form-control w-75" type="number">
-                <select name="proximity_unit" id="proximity_unit" class="form-select w-25">
-                    <option value="absolute" {{ 'selected' if not event_class.proximity_uses_percentage_instead_of_absolute }}>Gramm</option>
-                    <option value="relative" {{ 'selected' if event_class.proximity_uses_percentage_instead_of_absolute }}>Prozent</option>
-                </select>
+
+        {{ form.FormRadio(id="weight_mode-proximity", value="proximity", name="weight_mode", label="nach gewichtsnahen Gruppen", checked=event_class.use_proximity_weight_mode) }}
+
+        <div class="ml-4">
+
+            {{ form.Label(for_id="default_maximal_proximity", text="mit einem Höchstabstand von") }}
+
+            <div class="form-component">
+                {{ form.Input(id="default_maximal_proximity", name="default_maximal_proximity", value=event_class.default_maximal_proximity or '') }}
+                {% call form.Select(id="proximity_unit", name="proximity_unit") %}
+                    {{ form.SelectOption(value="absolute", text="Gramm", selected=not event_class.proximity_uses_percentage_instead_of_absolute) }}
+                    {{ form.SelectOption(value="relative", text="Prozent", selected=event_class.proximity_uses_percentage_instead_of_absolute) }}
+                {% endcall %}
             </div>
-            <div class="form-text">
-                <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=2000; proximity_unit.value='absolute';">2 kg</button>
-                <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=3000; proximity_unit.value='absolute';">3 kg</button>
-                <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=4000; proximity_unit.value='absolute';">4 kg</button>
-                <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=5000; proximity_unit.value='absolute';">5 kg</button>
-                <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=5; proximity_unit.value='relative';">5 %</button>
-                <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=10; proximity_unit.value='relative';">10 %</button>
-            </div>
-        </div>
-        <div class="mb-2 ms-5">
-            <label for="default_maximal_size" class="form-label fw-normal">sowie mit je höchstens</label>
-            <div class="input-group">
-                <input name="default_maximal_size" id="default_maximal_size" value="{{ event_class.default_maximal_size or '' }}" class="form-control w-75" type="number">
-                <div class="input-group-text w-25">Kämpfer*innen</div>
-            </div>
-        </div>
-        <div class="mb-2 ms-5">
-            <label for="default_maximal_group_count" class="form-label fw-normal">sowie mit insgesamt höchstens</label>
-            <div class="input-group">
-                <input name="default_maximal_group_count" id="default_maximal_group_count" value="{{ event_class.default_maximal_group_count or '' }}" class="form-control w-75" type="number">
-                <div class="input-group-text w-25">Gruppen</div>
-            </div>
-        </div>
-        <div class="mb-2 ms-5">
-            <label for="default_maximal_size" class="form-label fw-normal">Führen diese Kriterien dazu, dass eine Einteilung nicht möglich ist, setzt sich durch:</label>
-            <div class="form-check mb-1">
-                <input class="form-check-input" type="radio" value="no" name="prefer_group_count" id="pref_grpc-no" {{ 'checked' if not event_class.proximity_prefer_group_count_over_proximity }}>
-                <label class="form-check-label mb-1" for="pref_grpc-no">
-                    Höchstanzahl von Kämpfer*innen
-                </label>
-            </div>
-            <div class="form-check mb-1">
-                <input class="form-check-input" type="radio" value="yes" name="prefer_group_count" id="pref_grpc-yes" {{ 'checked' if event_class.proximity_prefer_group_count_over_proximity }}>
-                <label class="form-check-label mb-1" for="pref_grpc-yes">
-                    Höchstanzahl von Gruppen
-                </label>
-            </div>
+
+            {% call form.FormPresets() %}
+                {{ buttons.SubtleButton(inline=True, text="2 kg", attr="onclick=\"default_maximal_proximity.value=2000; proximity_unit.value='absolute';\"")}}
+                {{ buttons.SubtleButton(inline=True, text="3 kg", attr="onclick=\"default_maximal_proximity.value=3000; proximity_unit.value='absolute';\"")}}
+                {{ buttons.SubtleButton(inline=True, text="4 kg", attr="onclick=\"default_maximal_proximity.value=4000; proximity_unit.value='absolute';\"")}}
+                {{ buttons.SubtleButton(inline=True, text="5 kg", attr="onclick=\"default_maximal_proximity.value=5000; proximity_unit.value='absolute';\"")}}
+                {{ buttons.SubtleButton(inline=True, text="5 %", attr="onclick=\"default_maximal_proximity.value=5; proximity_unit.value='relative';\"")}}
+                {{ buttons.SubtleButton(inline=True, text="10 %", attr="onclick=\"default_maximal_proximity.value=10; proximity_unit.value='relative';\"")}}
+            {% endcall %}
+
+            {{ form.Label(for_id="default_maximal_size", text="sowie mit je höchstens") }}
+            {{ form.InputWithSuffix(suffix="Kämpfer*innen", id="default_maximal_size", name="default_maximal_size", value=event_class.default_maximal_size or '') }}
+
+            {{ form.Label(for_id="default_maximal_group_count", text="sowie mit insgesamt höchstens") }}
+            {{ form.InputWithSuffix(suffix="Gruppen", id="default_maximal_group_count", name="default_maximal_group_count", value=event_class.default_maximal_group_count or '') }}
+
+            {{ form.FormCheckLabel(text="Führen diese Kriterien dazu, dass eine Einteilung nicht möglich ist, setzt sich durch:") }}
+
+            {{ form.FormRadio(id="prefer_grpc-no", name="prefer_group_count", value="no", checked=not event_class.proximity_prefer_group_count_over_proximity, label="Höchstanzahl von Kämpfer*innen")}}
+            {{ form.FormRadio(id="prefer_grpc-yes", name="prefer_group_count", value="yes", checked=event_class.proximity_prefer_group_count_over_proximity, label="Höchstanzahl von Gruppen")}}
         </div>
     </div>
     <div class="tj-tab hidden" id="tab-behavior">
-        <h3 class="fw-bold mt-4 mb-3">Zeitrahmen</h3>
-        <div class="mb-3">
-            <label for="fighting_time" class="form-label">Kampfdauer</label>
-            <div class="input-group">
-                <input name="fighting_time" id="fighting_time" value="{{ event_class.fighting_time }}" class="form-control" type="number">
-                <div class="input-group-text">Sekunden</div>
-            </div>
-            <div class="form-text">
-                <button class="btn btn-sm btn-link" type="button" onclick="fighting_time.value=120;">2 min</button>
-                <button class="btn btn-sm btn-link" type="button" onclick="fighting_time.value=180;">3 min</button>
-                <button class="btn btn-sm btn-link" type="button" onclick="fighting_time.value=240;">4 min</button>
-            </div>
-        </div>
-        <div class="mb-3">
-            <label for="golden_score_time" class="form-label">Golden Score-Dauer</label>
-            <div class="input-group">
-                <input name="golden_score_time" id="golden_score_time" value="{{ event_class.golden_score_time }}" class="form-control" type="number">
-                <div class="input-group-text">Sekunden</div>
-            </div>
-            <div class="form-text">
-                <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=0;">ohne</button>
-                <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=120;">2 min</button>
-                <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=180;">3 min</button>
-                <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=240;">4 min</button>
-                <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=-1;">unbegrenzt</button>
-            </div>
-        </div>
-        <div class="mb-3">
-            <label for="between_fights_time" class="form-label">Pausendauer</label>
-            <div class="input-group">
-                <input name="between_fights_time" id="between_fights_time" value="{{ event_class.between_fights_time }}" class="form-control" type="number">
-                <div class="input-group-text">Sekunden</div>
-            </div>
-            <div class="form-text">
-                <button class="btn btn-sm btn-link" type="button" onclick="between_fights_time.value=360;">6 min</button>
-                <button class="btn btn-sm btn-link" type="button" onclick="between_fights_time.value=600;">10 min</button>
-            </div>
-        </div>
+        <h3>Zeitrahmen</h3>
+
+        {{ form.Label(for_id="fighting_time", text="Kampfdauer") }}
+        {{ form.InputWithSuffix(name="fighting_time", id="fighting_time", suffix="Sekunden", value=event_class.fighting_time, type="number")}}
+        {% call form.FormPresets() %}
+            {{ buttons.SubtleButton(inline=True, text="2 min", attr="onclick=\"fighting_time.value=120;\"")}}
+            {{ buttons.SubtleButton(inline=True, text="3 min", attr="onclick=\"fighting_time.value=180;\"")}}
+            {{ buttons.SubtleButton(inline=True, text="4 min", attr="onclick=\"fighting_time.value=240;\"")}}
+        {% endcall %}
+
+        {{ form.Label(for_id="golden_score_time", text="Golden Score-Dauer") }}
+        {{ form.InputWithSuffix(name="golden_score_time", id="golden_score_time", suffix="Sekunden", value=event_class.golden_score_time, type="number")}}
+        {% call form.FormPresets() %}
+            {{ buttons.SubtleButton(inline=True, text="ohne", attr="onclick=\"golden_score_time.value=0;\"")}}
+            {{ buttons.SubtleButton(inline=True, text="2 min", attr="onclick=\"golden_score_time.value=120;\"")}}
+            {{ buttons.SubtleButton(inline=True, text="3 min", attr="onclick=\"golden_score_time.value=180;\"")}}
+            {{ buttons.SubtleButton(inline=True, text="4 min", attr="onclick=\"golden_score_time.value=240;\"")}}
+            {{ buttons.SubtleButton(inline=True, text="unbegrenzt", attr="onclick=\"golden_score_time.value=-1;\"")}}
+        {% endcall %}
+
+        {{ form.Label(for_id="between_fights_time", text="Pausendauer") }}
+        {{ form.InputWithSuffix(name="between_fights_time", id="between_fights_time", suffix="Sekunden", value=event_class.between_fights_time, type="number")}}
+        {% call form.FormPresets() %}
+            {{ buttons.SubtleButton(inline=True, text="6 min", attr="onclick=\"between_fights_time.value=360;\"")}}
+            {{ buttons.SubtleButton(inline=True, text="10 min", attr="onclick=\"between_fights_time.value=600;\"")}}
+        {% endcall %}    
     </div>
 
     {% if not new %}
     <div class="tj-tab hidden" id="tab-progress">
-        <h3 class="fw-bold mt-4 mb-3">Fortschritt</h3>
+        <h3>Fortschritt</h3>
 
         <div class="alert alert-warning">
             <p>Die folgenden Optionen führen dazu, dass die aktuelle Seite neu geladen wird. Nicht gespeicherte Änderungen können daher verloren gehen.</p>
