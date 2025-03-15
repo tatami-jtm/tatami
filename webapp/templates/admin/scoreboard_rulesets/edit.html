@@ -15,7 +15,7 @@
             {{ form.Input(id="title", name="title", value=scoreboard_ruleset.title or '') }}
 
             {{ form.Label(for_id="rules", text="Regelwerk (JSON)") }}
-            {{ form.Textarea(id="rules", name="rules", value=scoreboard_ruleset.rules or '', class="large") }}
+            {{ form.Textarea(id="rules", name="rules", value=scoreboard_ruleset.rules or '', size="large") }}
             {% call form.FormNotice() %}
                 Mehr Infos zur <a href="https://tatami-judo.de/docs/sb-rulesets/" target="_blank">Darstellung des Regelwerks</a>
             {% endcall %}
