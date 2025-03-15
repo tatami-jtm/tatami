@@ -49,7 +49,7 @@
             if g.device.event_role.may_use_assigned_lists and g.device.event_role.may_use_scoreboard }}
 
         {{ cover.CoverItem(href=url_for('mod_beamer.index', event=g.event.slug),
-            icons=["video-projector"], color="black", label="Listenanzeige")
+            icons=["video-projector"], color="red", label="Listenanzeige")
             if g.device.event_role.may_use_beamer }}
 
         {{ cover.CoverItem(href=url_for('mod_results.individual', event=g.event.slug),
