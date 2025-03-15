@@ -111,7 +111,11 @@
     {% call list.ListItem() %}
         {% call list.ListItemBody() %}
             {{ list.ListItemBodyHeader(text=dev.title ) }}
-            {{ list.ListItemBodyDetail(text=dev.event_role.name ) }}
+            {% if dev.confirmed %}
+            {{ list.ListItemBodyDetail(text=dev.event_role.name) }}
+            {% else %}
+            {{ list.ListItemBodyDetail(text="(Ausstehende Registrierung)") }}
+            {% endif %}
         {% endcall %}
         {% call list.ListItemMenu() %}
             {% call dropdown.Dropdown(right=True) %}
