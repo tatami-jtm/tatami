@@ -1,41 +1,38 @@
+{%- import "components/form.html" as form -%}
+{%- import "components/cards.html" as cards -%}
+{%- import "components/buttons.html" as buttons -%}
+
 {% set event_page="classes" %}
 {% extends "layouts/event-manager.html" %}
 {% block title %}{{ g.event.title }} | Kampfklassen{% endblock %}
 {% block body %}
-<h1 class="mb-3">Kampfklassen generieren</h1>
+<h1>Kampfklassen generieren</h1>
 
 <form action="" method="POST">
-    <div class="card card-semidialog">
-        <div class="card-body">
-            <div class="mb-3">
-                <label for="templates" class="form-label">Eine Vorlage auswählen</label>
-                <select id="templates" name="template" class="form-select" data-event_class-template>
-                    <option disabled selected></option>
-                    {% for tpl in templates %}
-                    <option value="{{ tpl.id }}">{{ tpl.template_name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        
-            <div>
-                <label for="generation" class="form-label">Kampfklassen angeben</label>
-                <textarea name="generation" id="generation" class="form-control"></textarea>
-                <div class="form-text">Verwenden Sie für jede zu erstellende Kampfklasse eine Zeile.<br>
-                    Standardmäßig wird der eingegebene Wert für den Namen und die Kurzbezeichnung verwendet.<br>
-                    Sie können aber auch eine Kurzbezeichnung explizit angeben (<code>Name:Kurzbezeichnung</code>).<br>
-                    Lassen Sie die Kurzbezeichnung leer, um den Wert aus der Vorlage zu übernehmen (<code>Name:</code>).
-                </div>
-            </div>
-        </div>
-        <div class="card-footer">
-            <button class="btn btn-primary" type="submit">Generation vornehmen</button>
-            <a href="{{ url_for('event_manager.classes', event=g.event.slug) }}" class="btn btn-secondary">Abbrechen</a>
-        </div>
-    </div>
+    {% call cards.Card() %}
+        {% call cards.CardBody() %}
+            {{ form.Label(for_id="template", text="Eine Vorlage auswählen") }}
+            {% call form.Select(name="template", id="template") %}
+                {{ form.SelectDefaultOption() }}
+                {% for tpl in templates %}
+                    {{ form.SelectOption(value=tpl.id, text=tpl.template_name) }}
+                {% endfor %}
+            {% endcall %}
+
+            {{ form.Label(for_id="generation", text="Kampfklassen angeben") }}
+            {{ form.Textarea(id="generation", name="generation") }}
+            {% call form.FormNotice() %}
+                Verwenden Sie für jede zu erstellende Kampfklasse eine Zeile.<br>
+                Standardmäßig wird der eingegebene Wert für den Namen und die Kurzbezeichnung verwendet.<br>
+                Sie können aber auch eine Kurzbezeichnung explizit angeben (<code>Name:Kurzbezeichnung</code>).<br>
+                Lassen Sie die Kurzbezeichnung leer, um den Wert aus der Vorlage zu übernehmen (<code>Name:</code>).
+            {% endcall %}        
+        {% endcall %}
+        {% call cards.CardFooter() %}
+            {{ buttons.PrimaryButton(type="submit", text="Generation vornehmen") }}
+            {{ buttons.SecondaryButton(href=url_for('event_manager.classes', event=g.event.slug), text="Abbrechen") }}
+        {% endcall %}
+    {% endcall %}
 </form>
 
 {% endblock body %}
-
-{% block custom_header %}
-<script src="{{ url_for('static', filename='application/event_class_import.js') }}" defer></script>
-{% endblock custom_header %}
