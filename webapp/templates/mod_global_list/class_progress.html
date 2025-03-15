@@ -3,12 +3,15 @@
 {%- import "components/buttons.html" as buttons -%}
 
 {% extends "layouts/application.html" %}
+{% set page='progress' %}
 {% block title %}Hauptliste | Kampfklassen-Fortschritt{% endblock %}
 {% block body %}
+
+{% include "mod_global_list/_header.html" %}
+
 {% call layout.Container() %}
 
-<h1>Hauptliste</h1>
-<h2>Kampfklassen-Fortschritt</h2>
+<h1>Kampfklassen-Fortschritt</h1>
 
 {% for cl in g.event.classes.order_by('title') %}
     <h3 class="fs-4 my-2">{{ cl.title }}</h3>
@@ -47,8 +50,6 @@
         {% endif %}
     {% endcall %}
 {% endfor %}
-
-{{ buttons.SecondaryButton(text="Zurück", href=url_for('mod_global_list.index', event=g.event.slug), class="mt-4") }}
 
 {% endcall %}
 {% endblock body %}

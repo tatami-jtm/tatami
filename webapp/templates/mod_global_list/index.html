@@ -1,8 +1,11 @@
 {% extends "layouts/application.html" %}
+{% set page='index' %}
 {% from "mod_global_list/_match_summary.html" import match_summary, small_match_summary %}
 {% block title %}Hauptliste{% endblock %}
 
 {% block body %}
+
+{% include "mod_global_list/_header.html" %}
 
 <div class="container-fluid">
     {% if current_group %}
