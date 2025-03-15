@@ -75,8 +75,8 @@
 {%- endif -%}
 {%- endmacro -%}
 
-{%- macro ButtonList() -%}
-<div class="button-list">
+{%- macro ButtonList(class="") -%}
+<div class="button-list {{ class }}">
     {{ caller() }}
 </div>
 {%- endmacro -%}

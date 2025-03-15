@@ -1,255 +1,209 @@
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/switches.html" as switches -%}
+{%- import "components/badges.html" as badges -%}
+{%- import "components/form.html" as form -%}
+{%- import "components/cards.html" as cards -%}
+
 <form action="" method="POST">
-    <div class="mt-3 mb-5 d-flex gap-1">
-        <button type="submit" class="btn btn-primary">Speichern</button>
-        <a href="{{ url_for('event_manager.classes', event=g.event.slug) }}" class="btn btn-secondary">Abbrechen</a>
-    </div>
+    {% call buttons.ButtonList(class="mb-3") %}
+        {{ buttons.PrimaryButton(type="submit", text="Speichern") }}
+        {{ buttons.SecondaryButton(href=url_for('event_manager.classes', event=g.event.slug), text="Abbrechen") }}
+    {% endcall %}
 
-    <div class="nav nav-tabs" id="classform-tab" role="tablist">
-        <div class="nav-item">
-            <button class="nav-link active" id="class-props-tab"
-                    data-bs-toggle="tab" type="button" role="tab"
-                    data-bs-target="#class-props" aria-controls="class-props"
-                    aria-selected="true">
-                Eigenschaften
-            </button>
-        </div>
-        <div class="nav-item">
-            <button class="nav-link" id="class-groups-tab"
-                    data-bs-toggle="tab" type="button" role="tab"
-                    data-bs-target="#class-groups" aria-controls="class-groups"
-                    aria-selected="false">
-                Gruppen
-            </button>
-        </div>
-        <div class="nav-item">
-            <button class="nav-link" id="class-behavior-tab"
-                    data-bs-toggle="tab" type="button" role="tab"
-                    data-bs-target="#class-behavior" aria-controls="class-behavior"
-                    aria-selected="false">
-                Verhalten
-            </button>
-        </div>
+    {% call switches.Tab() %}
+        {{ switches.TabItem(label="Eigenschaften", active=True, class="tj-tab-button", attr='data-tj-oneof=\'{"common": ".tj-tab", "unique": "#tab-props", "class": "hidden", "classWhen": "off", "ownClass": "active", "ownCommon": ".tj-tab-button"}\'') }}
+        {{ switches.TabItem(label="Gruppen", active=False, class="tj-tab-button", attr='data-tj-oneof=\'{"common": ".tj-tab", "unique": "#tab-groups", "class": "hidden", "classWhen": "off", "ownClass": "active", "ownCommon": ".tj-tab-button"}\'') }}
+        {{ switches.TabItem(label="Verhalten", active=False, class="tj-tab-button", attr='data-tj-oneof=\'{"common": ".tj-tab", "unique": "#tab-behavior", "class": "hidden", "classWhen": "off", "ownClass": "active", "ownCommon": ".tj-tab-button"}\'') }}
         {% if not new %}
-        <div class="nav-item">
-            <button class="nav-link" id="class-progress-tab"
-                    data-bs-toggle="tab" type="button" role="tab"
-                    data-bs-target="#class-progress" aria-controls="class-progress"
-                    aria-selected="false">
-                Fortschritt
-            </button>
-        </div>
-        <div class="nav-item">
-            <a class="nav-link" id="class-progress-tab"
-                    role="tab" aria-selected="false"
-                    href="{{ url_for('event_manager.merge_into_class', event=g.event.slug, id=event_class.id) }}">
-                Merge
-            </a>
-        </div>
+            {{ switches.TabItem(label="Fortschritt", active=False, class="tj-tab-button", attr='data-tj-oneof=\'{"common": ".tj-tab", "unique": "#tab-progress", "class": "hidden", "classWhen": "off", "ownClass": "active", "ownCommon": ".tj-tab-button"}\'') }}
+            {{ switches.TabItem(label="Merge", active=False, href=url_for('event_manager.merge_into_class', event=g.event.slug, id=event_class.id)) }}
+        {% endif %}
+    {% endcall %}
+
+    <div class="tj-tab" id="tab-props">
+        <h3>Eigenschaften</h3>
+
+        {{ form.Label(for_id="name", text="Bezeichnung") }}
+        {{ form.Input(id="name", name="name", value=event_class.title or '') }}
+
+        {{ form.Label(for_id="short_name", text="Kurzbezeichnung") }}
+        {{ form.Input(id="short_name", name="short_name", value=event_class.short_title or '') }}
+        {{ form.FormNotice(text="Diese Kurzbezeichnung wird u. a. für die Benennung der einzelnen Kampfgruppen verwendet und sollte nur wenige Zeichen lang sein, z. B. U13m für die Kampfklasse der männlichen U13.") }}
+
+        <h3>Voreinstellungen</h3>
+
+        {{ form.Label(for_id="name", text="Vorlage auswählen") }}
+        {% call form.Select(name="template", id="template", attr="data-event_class-template") %}
+            {{ form.SelectDefaultOption() }}
+            {% for tpl in templates %}
+                {{ form.SelectOption(value=tpl.id, text=tpl.template_name) }}
+            {% endfor %}
+        {% endcall %}
+
+        {{ buttons.Button(text="Anwenden", attr="data-event_class-call") }}
+
+        {% if current_user.has_privilege('alter_presets') %}
+            {% call cards.Card(class="mt-2") %}
+                {{ cards.CardHeader(text="Als Vorlage bereitstellen") }}
+                {% call cards.CardBody() %}
+                    {{ form.FormCheck(id="is_template", name="is_template", label="Diese Kampfklasse ist unter dem folgenden Namen als Vorlage verfügbar:", checked=event_class.is_template) }}
+                    {{ form.Input(id="template_name", name="template_name", value=event_class.template_name or '') }}
+                {% endcall %}
+            {% endcall %}
         {% endif %}
     </div>
-    <div class="tab-content" id="classform-tabContent">
-        <div class="tab-pane show active" role="tabpanel" tabindex="0"
-             id="class-props" aria-labelledby="class-props-tab">
-
-            <h3 class="fw-bold mt-4 mb-3">Eigenschaften</h3>
-            <div class="mb-3">
-                <label for="name" class="form-label">Bezeichnung</label>
-                <input name="name" id="name" value="{{ event_class.title or '' }}" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label for="short_name" class="form-label">Kurzbezeichnung</label>
-                <input name="short_name" id="short_name" value="{{ event_class.short_title or '' }}" class="form-control">
-                <div class="form-text">Diese Kurzbezeichnung wird u. a. für die Benennung der einzelnen Kampfgruppen verwendet und sollte nur wenige Zeichen lang sein, z. B. U13m für die Kampfklasse der männlichen U13.</div>
-            </div>
-
-            <h3 class="fw-bold mt-5 mb-3">Voreinstellungen</h3>
-
-            <div class="mb-3">
-                <label for="templates" class="form-label">Vorlage auswählen</label>
-                <div class="d-flex align-items-center">
-                    <select id="templates" class="form-select" data-event_class-template>
-                        <option disabled selected></option>
-                        {% for tpl in templates %}
-                        <option value="{{ tpl.id }}">{{ tpl.template_name }}</option>
-                        {% endfor %}
-                    </select>
-                    <button class="btn btn-dark btn-sm ms-2" type="button" data-event_class-call>Anwenden</button>
-                </div>
-            </div>
-
-            {% if current_user.has_privilege('alter_presets') %}
-            <div class="card">
-                <div class="card-header">Als Vorlage bereitstellen</div>
-                <div class="card-body">
-                    <div class="form-check">
-                        <input class="form-check-input mt-2" type="checkbox" id="is_template" name="is_template" {{ 'checked' if event_class.is_template }}>
-                        <label class="form-check-label p-0" for="is_template">Diese Kampfklasse ist unter dem Namen <input class="form-control d-inline w-25 mx-1 form-control-sm" id="template_name" name="template_name" value="{{ event_class.template_name or '' }}"> als Vorlage verfügbar.</label>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
+    <div class="tj-tab hidden" id="tab-groups">
+        <h3 class="fw-bold mt-4 mb-3">Gruppen</h3>
+        <p class="fw-bold">Die Gruppen werden eingeteilt &hellip;</p>
+        <div class="form-check mb-1">
+            <input class="form-check-input" type="radio" value="predefined" name="weight_mode" id="perm-weight_mode-predefined" {{ 'checked' if not event_class.use_proximity_weight_mode }}>
+            <label class="form-check-label mb-1 fw-bold" for="perm-weight_mode-predefined">
+                in die folgenden Gewichtsklassen:
+            </label>
         </div>
-        <div class="tab-pane" role="tabpanel" tabindex="0"
-             id="class-groups" aria-labelledby="class-groups-tab">
-
-            <h3 class="fw-bold mt-4 mb-3">Gruppen</h3>
-            <p class="fw-bold">Die Gruppen werden eingeteilt &hellip;</p>
+        <div class="mb-2 ms-5">
+            <textarea name="weight_generator" id="weight_generator" class="form-control font-monospace">{{ event_class.weight_generator or '' }}</textarea>
+            <div class="form-text">Jeweils eine Gewichtsklasse pro Zeile; Bezeichner können mit "-" beginnen, Plusklasse muss mit "+" beginnen</div>
+        </div>
+    
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="radio" value="proximity" name="weight_mode" id="perm-weight_mode-proximity" {{ 'checked' if event_class.use_proximity_weight_mode }}>
+            <label class="form-check-label mb-1 fw-bold" for="perm-weight_mode-proximity">
+                nach gewichtsnahen Gruppen
+            </label>
+        </div>
+        <div class="mb-2 ms-5">
+            <label for="default_maximal_proximity" class="form-label fw-normal">mit einem Höchstabstand von</label>
+            <div class="input-group">
+                <input name="default_maximal_proximity" id="default_maximal_proximity" value="{{ event_class.default_maximal_proximity or '' }}" class="form-control w-75" type="number">
+                <select name="proximity_unit" id="proximity_unit" class="form-select w-25">
+                    <option value="absolute" {{ 'selected' if not event_class.proximity_uses_percentage_instead_of_absolute }}>Gramm</option>
+                    <option value="relative" {{ 'selected' if event_class.proximity_uses_percentage_instead_of_absolute }}>Prozent</option>
+                </select>
+            </div>
+            <div class="form-text">
+                <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=2000; proximity_unit.value='absolute';">2 kg</button>
+                <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=3000; proximity_unit.value='absolute';">3 kg</button>
+                <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=4000; proximity_unit.value='absolute';">4 kg</button>
+                <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=5000; proximity_unit.value='absolute';">5 kg</button>
+                <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=5; proximity_unit.value='relative';">5 %</button>
+                <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=10; proximity_unit.value='relative';">10 %</button>
+            </div>
+        </div>
+        <div class="mb-2 ms-5">
+            <label for="default_maximal_size" class="form-label fw-normal">sowie mit je höchstens</label>
+            <div class="input-group">
+                <input name="default_maximal_size" id="default_maximal_size" value="{{ event_class.default_maximal_size or '' }}" class="form-control w-75" type="number">
+                <div class="input-group-text w-25">Kämpfer*innen</div>
+            </div>
+        </div>
+        <div class="mb-2 ms-5">
+            <label for="default_maximal_group_count" class="form-label fw-normal">sowie mit insgesamt höchstens</label>
+            <div class="input-group">
+                <input name="default_maximal_group_count" id="default_maximal_group_count" value="{{ event_class.default_maximal_group_count or '' }}" class="form-control w-75" type="number">
+                <div class="input-group-text w-25">Gruppen</div>
+            </div>
+        </div>
+        <div class="mb-2 ms-5">
+            <label for="default_maximal_size" class="form-label fw-normal">Führen diese Kriterien dazu, dass eine Einteilung nicht möglich ist, setzt sich durch:</label>
             <div class="form-check mb-1">
-                <input class="form-check-input" type="radio" value="predefined" name="weight_mode" id="perm-weight_mode-predefined" {{ 'checked' if not event_class.use_proximity_weight_mode }}>
-                <label class="form-check-label mb-1 fw-bold" for="perm-weight_mode-predefined">
-                    in die folgenden Gewichtsklassen:
+                <input class="form-check-input" type="radio" value="no" name="prefer_group_count" id="pref_grpc-no" {{ 'checked' if not event_class.proximity_prefer_group_count_over_proximity }}>
+                <label class="form-check-label mb-1" for="pref_grpc-no">
+                    Höchstanzahl von Kämpfer*innen
                 </label>
             </div>
-            <div class="mb-2 ms-5">
-                <textarea name="weight_generator" id="weight_generator" class="form-control font-monospace">{{ event_class.weight_generator or '' }}</textarea>
-                <div class="form-text">Jeweils eine Gewichtsklasse pro Zeile; Bezeichner können mit "-" beginnen, Plusklasse muss mit "+" beginnen</div>
-            </div>
-        
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="radio" value="proximity" name="weight_mode" id="perm-weight_mode-proximity" {{ 'checked' if event_class.use_proximity_weight_mode }}>
-                <label class="form-check-label mb-1 fw-bold" for="perm-weight_mode-proximity">
-                    nach gewichtsnahen Gruppen
+            <div class="form-check mb-1">
+                <input class="form-check-input" type="radio" value="yes" name="prefer_group_count" id="pref_grpc-yes" {{ 'checked' if event_class.proximity_prefer_group_count_over_proximity }}>
+                <label class="form-check-label mb-1" for="pref_grpc-yes">
+                    Höchstanzahl von Gruppen
                 </label>
             </div>
-            <div class="mb-2 ms-5">
-                <label for="default_maximal_proximity" class="form-label fw-normal">mit einem Höchstabstand von</label>
-                <div class="input-group">
-                    <input name="default_maximal_proximity" id="default_maximal_proximity" value="{{ event_class.default_maximal_proximity or '' }}" class="form-control w-75" type="number">
-                    <select name="proximity_unit" id="proximity_unit" class="form-select w-25">
-                        <option value="absolute" {{ 'selected' if not event_class.proximity_uses_percentage_instead_of_absolute }}>Gramm</option>
-                        <option value="relative" {{ 'selected' if event_class.proximity_uses_percentage_instead_of_absolute }}>Prozent</option>
-                    </select>
-                </div>
-                <div class="form-text">
-                    <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=2000; proximity_unit.value='absolute';">2 kg</button>
-                    <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=3000; proximity_unit.value='absolute';">3 kg</button>
-                    <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=4000; proximity_unit.value='absolute';">4 kg</button>
-                    <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=5000; proximity_unit.value='absolute';">5 kg</button>
-                    <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=5; proximity_unit.value='relative';">5 %</button>
-                    <button class="btn btn-sm btn-link" type="button" onclick="default_maximal_proximity.value=10; proximity_unit.value='relative';">10 %</button>
-                </div>
-            </div>
-            <div class="mb-2 ms-5">
-                <label for="default_maximal_size" class="form-label fw-normal">sowie mit je höchstens</label>
-                <div class="input-group">
-                    <input name="default_maximal_size" id="default_maximal_size" value="{{ event_class.default_maximal_size or '' }}" class="form-control w-75" type="number">
-                    <div class="input-group-text w-25">Kämpfer*innen</div>
-                </div>
-            </div>
-            <div class="mb-2 ms-5">
-                <label for="default_maximal_group_count" class="form-label fw-normal">sowie mit insgesamt höchstens</label>
-                <div class="input-group">
-                    <input name="default_maximal_group_count" id="default_maximal_group_count" value="{{ event_class.default_maximal_group_count or '' }}" class="form-control w-75" type="number">
-                    <div class="input-group-text w-25">Gruppen</div>
-                </div>
-            </div>
-            <div class="mb-2 ms-5">
-                <label for="default_maximal_size" class="form-label fw-normal">Führen diese Kriterien dazu, dass eine Einteilung nicht möglich ist, setzt sich durch:</label>
-                <div class="form-check mb-1">
-                    <input class="form-check-input" type="radio" value="no" name="prefer_group_count" id="pref_grpc-no" {{ 'checked' if not event_class.proximity_prefer_group_count_over_proximity }}>
-                    <label class="form-check-label mb-1" for="pref_grpc-no">
-                        Höchstanzahl von Kämpfer*innen
-                    </label>
-                </div>
-                <div class="form-check mb-1">
-                    <input class="form-check-input" type="radio" value="yes" name="prefer_group_count" id="pref_grpc-yes" {{ 'checked' if event_class.proximity_prefer_group_count_over_proximity }}>
-                    <label class="form-check-label mb-1" for="pref_grpc-yes">
-                        Höchstanzahl von Gruppen
-                    </label>
-                </div>
-            </div>
-
         </div>
-        <div class="tab-pane" role="tabpanel" tabindex="0"
-             id="class-behavior" aria-labelledby="class-behavior-tab">
-
-            <h3 class="fw-bold mt-4 mb-3">Zeitrahmen</h3>
-            <div class="mb-3">
-                <label for="fighting_time" class="form-label">Kampfdauer</label>
-                <div class="input-group">
-                    <input name="fighting_time" id="fighting_time" value="{{ event_class.fighting_time }}" class="form-control" type="number">
-                    <div class="input-group-text">Sekunden</div>
-                </div>
-                <div class="form-text">
-                    <button class="btn btn-sm btn-link" type="button" onclick="fighting_time.value=120;">2 min</button>
-                    <button class="btn btn-sm btn-link" type="button" onclick="fighting_time.value=180;">3 min</button>
-                    <button class="btn btn-sm btn-link" type="button" onclick="fighting_time.value=240;">4 min</button>
-                </div>
-            </div>
-            <div class="mb-3">
-                <label for="golden_score_time" class="form-label">Golden Score-Dauer</label>
-                <div class="input-group">
-                    <input name="golden_score_time" id="golden_score_time" value="{{ event_class.golden_score_time }}" class="form-control" type="number">
-                    <div class="input-group-text">Sekunden</div>
-                </div>
-                <div class="form-text">
-                    <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=0;">ohne</button>
-                    <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=120;">2 min</button>
-                    <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=180;">3 min</button>
-                    <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=240;">4 min</button>
-                    <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=-1;">unbegrenzt</button>
-                </div>
-            </div>
-            <div class="mb-3">
-                <label for="between_fights_time" class="form-label">Pausendauer</label>
-                <div class="input-group">
-                    <input name="between_fights_time" id="between_fights_time" value="{{ event_class.between_fights_time }}" class="form-control" type="number">
-                    <div class="input-group-text">Sekunden</div>
-                </div>
-                <div class="form-text">
-                    <button class="btn btn-sm btn-link" type="button" onclick="between_fights_time.value=360;">6 min</button>
-                    <button class="btn btn-sm btn-link" type="button" onclick="between_fights_time.value=600;">10 min</button>
-                </div>
-            </div>
-
-        </div>
-        {% if not new %}
-        <div class="tab-pane" role="tabpanel" tabindex="0"
-             id="class-progress" aria-labelledby="class-progress-tab">
-
-            <h3 class="fw-bold mt-4 mb-3">Fortschritt</h3>
-
-            <div class="alert alert-warning">
-                <p>Die folgenden Optionen führen dazu, dass die aktuelle Seite neu geladen wird. Nicht gespeicherte Änderungen können daher verloren gehen.</p>
-            </div>
-
-            <div class="card mb-3">
-                <div class="card-body">
-                    <p>Diese Kampfklasse ist zurzeit in folgendem Status:</p>
-        
-                    {% if not event_class.begin_weigh_in %}
-                    <p class="mb-0"><strong>Ausstehend</strong> &ndash; Die Waage wurde noch nicht eröffnet.</p>
-                    {% elif not event_class.begin_placement %}
-                    <p class="mb-0"><strong>In Waage</strong> &ndash; Die Waage wurde eröffnet. TN können jetzt eingewogen werden.</p>
-                    {% elif not event_class.begin_fighting %}
-                    <p class="mb-0"><strong>Wiegen beendet</strong> &ndash; Die Waage wurde wieder geschlossen. Die Listen können jetzt erstellt werden.</p>
-                    {% elif not event_class.ended_fighting %}
-                    <p class="mb-0"><strong>Kämpft</strong> &ndash; Die Listen wurden erstellt und die Kämpfe haben begonnen.</p>
-                    {% else %}
-                    <p class="mb-0"><strong>Beendet</strong> &ndash; Alle Kämpfe wurden durchgeführt.</p>
-                    {% endif %}
-                </div>
-                <div class="card-body border-top">
-                    {% if not event_class.begin_weigh_in %}
-                    <a href="{{ url_for('event_manager.class_step_forward', event=g.event.slug, id=event_class.id) }}" class="btn btn-dark">Waage eröffnen</a>
-                    {% elif not event_class.begin_placement %}
-                    <a href="{{ url_for('event_manager.class_step_back', event=g.event.slug, id=event_class.id) }}" class="btn btn-light">Waage abbrechen</a>
-                    <a href="{{ url_for('event_manager.class_step_forward', event=g.event.slug, id=event_class.id) }}" class="btn btn-dark">Waage schließen</a>
-                    {% elif not event_class.begin_fighting %}
-                    <a href="{{ url_for('event_manager.class_step_back', event=g.event.slug, id=event_class.id) }}" class="btn btn-light">Waage wieder eröffnen</a>
-                    <a href="{{ url_for('event_manager.class_step_forward', event=g.event.slug, id=event_class.id) }}" class="btn btn-dark">Kämpfe starten</a>
-                    {% elif not event_class.ended_fighting %}
-                    <a href="{{ url_for('event_manager.class_step_back', event=g.event.slug, id=event_class.id) }}" class="btn btn-light">Kämpfe abbrechen</a>
-                    <a href="{{ url_for('event_manager.class_step_forward', event=g.event.slug, id=event_class.id) }}" class="btn btn-dark">Kämpfe beenden</a>
-                    {% else %}
-                    <a href="{{ url_for('event_manager.class_step_back', event=g.event.slug, id=event_class.id) }}" class="btn btn-light">Kämpfe wieder eröffnen</a>
-                    {% endif %}
-                </div>
-            </div>
-
-            
-        </div>
-        {% endif %}
     </div>
+    <div class="tj-tab hidden" id="tab-behavior">
+        <h3 class="fw-bold mt-4 mb-3">Zeitrahmen</h3>
+        <div class="mb-3">
+            <label for="fighting_time" class="form-label">Kampfdauer</label>
+            <div class="input-group">
+                <input name="fighting_time" id="fighting_time" value="{{ event_class.fighting_time }}" class="form-control" type="number">
+                <div class="input-group-text">Sekunden</div>
+            </div>
+            <div class="form-text">
+                <button class="btn btn-sm btn-link" type="button" onclick="fighting_time.value=120;">2 min</button>
+                <button class="btn btn-sm btn-link" type="button" onclick="fighting_time.value=180;">3 min</button>
+                <button class="btn btn-sm btn-link" type="button" onclick="fighting_time.value=240;">4 min</button>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="golden_score_time" class="form-label">Golden Score-Dauer</label>
+            <div class="input-group">
+                <input name="golden_score_time" id="golden_score_time" value="{{ event_class.golden_score_time }}" class="form-control" type="number">
+                <div class="input-group-text">Sekunden</div>
+            </div>
+            <div class="form-text">
+                <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=0;">ohne</button>
+                <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=120;">2 min</button>
+                <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=180;">3 min</button>
+                <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=240;">4 min</button>
+                <button class="btn btn-sm btn-link" type="button" onclick="golden_score_time.value=-1;">unbegrenzt</button>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="between_fights_time" class="form-label">Pausendauer</label>
+            <div class="input-group">
+                <input name="between_fights_time" id="between_fights_time" value="{{ event_class.between_fights_time }}" class="form-control" type="number">
+                <div class="input-group-text">Sekunden</div>
+            </div>
+            <div class="form-text">
+                <button class="btn btn-sm btn-link" type="button" onclick="between_fights_time.value=360;">6 min</button>
+                <button class="btn btn-sm btn-link" type="button" onclick="between_fights_time.value=600;">10 min</button>
+            </div>
+        </div>
+    </div>
+
+    {% if not new %}
+    <div class="tj-tab hidden" id="tab-progress">
+        <h3 class="fw-bold mt-4 mb-3">Fortschritt</h3>
+
+        <div class="alert alert-warning">
+            <p>Die folgenden Optionen führen dazu, dass die aktuelle Seite neu geladen wird. Nicht gespeicherte Änderungen können daher verloren gehen.</p>
+        </div>
+
+        <p>Die Kampfklasse ist in folgendem Zustand:</p>
+        
+        {% call badges.BadgeControl() %}
+            {% if not event_class.begin_weigh_in %}
+                {{ badges.Badge(text='Ausstehend', style='secondary') }}
+                {{ badges.Badge(text='In Waage', style='inactive', href=url_for('event_manager.class_step_forward', event=g.event.slug, id=event_class.id)) }}
+                {{ badges.Badge(text='Einteilung', style='inactive') }}
+                {{ badges.Badge(text='Kämpft', style='inactive') }}
+                {{ badges.Badge(text='Beendet', style='inactive') }}
+            {% elif not event_class.begin_placement %}
+                {{ badges.Badge(text='Ausstehend', style='inactive', href=url_for('event_manager.class_step_back', event=g.event.slug, id=event_class.id)) }}
+                {{ badges.Badge(text='In Waage', style='info') }}
+                {{ badges.Badge(text='Einteilung', style='inactive', href=url_for('event_manager.class_step_forward', event=g.event.slug, id=event_class.id)) }}
+                {{ badges.Badge(text='Kämpft', style='inactive') }}
+                {{ badges.Badge(text='Beendet', style='inactive') }}
+            {% elif not event_class.begin_fighting %}
+                {{ badges.Badge(text='Ausstehend', style='inactive') }}
+                {{ badges.Badge(text='In Waage', style='inactive', href=url_for('event_manager.class_step_back', event=g.event.slug, id=event_class.id)) }}
+                {{ badges.Badge(text='Einteilung', style='warning') }}
+                {{ badges.Badge(text='Kämpft', style='inactive', href=url_for('event_manager.class_step_forward', event=g.event.slug, id=event_class.id)) }}
+                {{ badges.Badge(text='Beendet', style='inactive') }}
+            {% elif not event_class.ended_fighting %}
+                {{ badges.Badge(text='Ausstehend', style='inactive') }}
+                {{ badges.Badge(text='In Waage', style='inactive') }}
+                {{ badges.Badge(text='Einteilung', style='inactive', href=url_for('event_manager.class_step_back', event=g.event.slug, id=event_class.id)) }}
+                {{ badges.Badge(text='Kämpft', style='danger') }}
+                {{ badges.Badge(text='Beendet', style='inactive', href=url_for('event_manager.class_step_forward', event=g.event.slug, id=event_class.id)) }}
+            {% else %}
+                {{ badges.Badge(text='Ausstehend', style='inactive') }}
+                {{ badges.Badge(text='In Waage', style='inactive') }}
+                {{ badges.Badge(text='Einteilung', style='inactive') }}
+                {{ badges.Badge(text='Kämpft', style='inactive', href=url_for('event_manager.class_step_back', event=g.event.slug, id=event_class.id)) }}
+                {{ badges.Badge(text='Beendet', style='success') }}
+            {% endif %}
+        {% endcall %}
+    </div>
+    {% endif %}
 </form>
