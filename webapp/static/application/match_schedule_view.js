@@ -53,6 +53,7 @@ let update_schedule = async (e) => {
     scheduledArea.innerHTML = reply
     updateLocalConfig()
     updateFromSource()
+    enable_TJ(scheduledArea)
 }
 
 const updateField = (field, value) => {
