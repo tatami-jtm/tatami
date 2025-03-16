@@ -6,65 +6,6 @@
     filter: grayscale(0.85);
 }
 
-.table-scoreboard {
-    width: 100%;
-    border: 1px solid rgba(0, 0, 0, 0.5);
-    table-layout: fixed;
-}
-
-.table-scoreboard tr.row-fighters th {
-    text-align: center;
-}
-.table-scoreboard tr.row-fighters th.col-white {
-    background-color: #ddd;
-}
-.table-scoreboard tr.row-fighters th.col-blue {
-    background-color: #008;
-    color: white;
-}
-
-.table-scoreboard tr.row-labels th {
-    text-align: center;
-    font-size: 0.85rem;
-}
-.table-scoreboard tr.row-labels th.col-white {
-    background-color: #fff;
-}
-.table-scoreboard tr.row-labels th.col-blue {
-    background-color: #00f;
-    color: white;
-}
-
-.table-scoreboard tr.row-inputs td input,
-.table-scoreboard tr.row-inputs td output {
-    font-size: 2rem;
-    padding: 0;
-    width: 100%;
-    background-color: transparent;
-    color: inherit;
-    text-align: center;
-    font-weight: bold;
-}
-.table-scoreboard tr.row-inputs td input {
-    border: 1px dashed rgba(0, 0, 0, 0.25);
-}
-.table-scoreboard tr.row-inputs td output {
-    margin: 0;
-}
-.table-scoreboard tr.row-inputs td.col-white {
-    background-color: #fff;
-}
-.table-scoreboard tr.row-inputs td.col-blue {
-    background-color: #00f;
-    color: white;
-}
-.table-scoreboard tr.row-inputs td.col-penalty input,
-.table-scoreboard tr.row-inputs td.col-penalty output,
-.table-scoreboard tr.row-inputs td.col-penalty input,
-.table-scoreboard tr.row-inputs td.col-penalty output {
-    color: red;
-}
-
 .place1 {
     background-color: goldenrod;
     color: black;
