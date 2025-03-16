@@ -56,7 +56,7 @@
                         <div class="d-flex align-center justify-space-between">
                             <div>{{ mat.title }}</div>
                             {%- call buttons.SecondaryButton(href=url_for('mod_global_list.mark_all_at_mat_as_ready', event=g.event.slug, id=mat.id), inline=True) -%}
-                                {{ buttons.ButtonIcon(icon="running", label="Freigeben") }}
+                                {{ buttons.ButtonIcon(icon="running", label="Alle freigeben") }}
                             {%- endcall -%}
                         </div>
                     {% endcall %}
@@ -159,7 +159,11 @@
                              "Ausstehend" if not group.opened else
                              "Kämpft" if not group.completed else
                              "Beendet" -%}
-            {{ list.ListItemBodyDetail(text=status ~ " · " ~ group.participants.count() ~ " TN") }}
+            {%- set status_color = "secondary-dark" if not group.marked_ready else
+                                   "warning" if not group.opened else
+                                   "danger" if not group.completed else
+                                   "success" -%}
+            {% call list.ListItemBodyDetail() %}<span class="bg-white text-{{ status_color }} fw-bold">{{ status }}</span> · {{ group.participants.count() }} TN{% endcall %}
             {{ list.ListItemBodyDetail(text=group.estimated_fight_count() ~ (" Kämpfe" if group.estimated_fight_count() != 1 else " Kampf") ~ " (noch ca. " ~ group.estimated_remaining_fight_duration(in_minutes=True) ~ " min)") }}
         {% endcall %}
         {% call list.ListItemMenu() %}
