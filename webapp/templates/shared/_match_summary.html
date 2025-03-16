@@ -2,14 +2,14 @@
 
 {# TODO #}
 
-{% macro match_summary(mobj, large=False) %}
+{% macro match_summary(mobj, large=False, controls=False) %}
     {% call match.Match(large=large) %}
         {{ match.MatchSchedule(status=('done' if mobj.completed else
                                        'running' if mobj.running else
                                        'pending' if mobj.called_up else
                                        'scheduled' if mobj.scheduled else None),
                                label=('jetzt' if mobj.running else ''),
-                               no=mobj.match_schedule_key) }}
+                               no=mobj.match_schedule_key or '-') }}
         {% call match.MatchBody() %}
             {{ match.MatchLineup(white_name=mobj.white.full_name,
                                  white_association=mobj.white.association_name,

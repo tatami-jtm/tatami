@@ -10,8 +10,12 @@
 {%- endif -%}
 {%- endmacro -%}
 
-{%- macro ListItemBody() -%}
+{%- macro ListItemBody(href="") -%}
+{%- if href -%}
+<a href="{{ href }}" class="list-item-body">{{ caller() }}</a>
+{%- else -%}
 <div class="list-item-body">{{ caller() }}</div>
+{%- endif -%}
 {%- endmacro -%}
 
 {%- macro ListItemBodyHeader(text="") -%}
