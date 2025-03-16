@@ -4,8 +4,8 @@
 {% set SBRULES = g.event.sb_rules() %}
 
 {% call modals.Modal(id="offline-modal", centered=True) %}
-    {% call modals.ModalContainer(width="normal") %}
-        {{ modals.ModalHeader(text="Ein Fehler ist aufgetreten!") }}
+    {% call modals.ModalContainer() %}
+        {{ modals.ModalHeader(text="Ein Fehler ist aufgetreten!", class="text-bg-danger") }}
 
         {% call modals.ModalBody() %}
             <p>Es konnte keine Verbindung zu TATAMI aufgebaut werden oder ein schwerwiegender technischer Fehler ist aufgetreten. <strong>Das Kampfergebnis wurde noch nicht gespeichert!</strong></p>
