@@ -1,36 +1,37 @@
+{%- import "components/layout.html" as layout -%}
+{%- import "components/switches.html" as switches -%}
+{%- import "components/pagination.html" as pagination -%}
+
 {% set popup=True %}
 {% extends "layouts/application.html" %}
 {% block title %}Listen {{ g.device.position.title }}{% endblock %}
 {% block body %}
-<h1 class="h2 mb-2 fw-bold p-1">Kampflisten</h1>
-{% if assigned_lists %}
-{% if not request.values.get('show_only_one_list', 'no') == 'yes' %}
-<div class="nav nav-tabs tabs-sm w-100 mx-1">
-    <div class="nav-item">
-        <a class="nav-link" role="tab" href="?" title="Ansicht zurücksetzen (aktuelle Liste anzeigen)">&boxbox;</a>
-    </div>
-    {% for list in assigned_lists %}
-    <div class="nav-item">
-        <a class="nav-link {{ 'active' if list.id == shown_list.id }}" role="tab" href="?shown_list={{ list.id }}">{{ list.title }}</a>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-{% if shown_list.list_system().display_page_count > 1 %}
-<ul class="pagination m-0 mb-2 p-1">
-    {% for _ in range(shown_list.list_system().display_page_count) %}
-    {% if request.values.get('page', "1") == ""~loop.index %}
-    <li class="page-item active" aria-current="page"><span class="page-link">{{ loop.index }}</span></li>
+
+{% call layout.Container(width=("normal" if request.values.get('show_only_one_list', 'no') != 'yes' else "full")) %}
+    <h1 class="mt-1">Kampflisten</h1>
+
+    {% if assigned_lists %}
+        {% if not request.values.get('show_only_one_list', 'no') == 'yes' %}
+            {% call switches.Tab() %}
+                {% call switches.TabItem(href="?") %}<i class="iconoir-git-pull-request"></i>{% endcall %}
+                {% for list in assigned_lists %}
+                    {{ switches.TabItem(href="?shown_list=" ~ list.id, label=list.title, active=list.id == shown_list.id) }}
+                {% endfor %}
+            {% endcall %}
+        {% endif %}
+
+        {% if shown_list.list_system().display_page_count > 1 %}
+            {%- call pagination.Pagination() -%}
+                {% for _ in range(shown_list.list_system().display_page_count) %}
+                    {{ pagination.PaginationItem(href="?shown_list=" ~ shown_list.id ~ "&page=" ~ loop.index ~ "&show_only_one_list=" ~ request.values.get('show_only_one_list', 'no'), label=loop.index, active=(request.values.get('page', "1") == ""~loop.index)) }}
+                {% endfor %}
+            {%- endcall -%}
+        {% endif %}
+
+        <img src="{{ url_for('mod_list.display_image', event=g.event.slug, id=shown_list.id, page=request.values.get('page')) }}" class="img-spinner" alt="">
+
     {% else %}
-    <li class="page-item"><a class="page-link" href="?shown_list={{ shown_list.id }}&page={{ loop.index }}&show_only_one_list={{ request.values.get('show_only_one_list', 'no') }}">{{ loop.index }}</a></li>
+        <p>Dieser Matte wurden noch keine Listen zugewiesen, die Listen wurden noch nicht freigegeben oder alle Kämpfe sind beendet.</p>
     {% endif %}
-    {% endfor %}
-</ul>
-{% endif %}
-<div class="p-1 mb-2">
-    <img src="{{ url_for('mod_list.display_image', event=g.event.slug, id=shown_list.id, page=request.values.get('page')) }}" class="img-spinner" alt="">
-</div>
-{% else %}
-<p>Dieser Matte wurden noch keine Listen zugewiesen, die Listen wurden noch nicht freigegeben oder alle Kämpfe sind beendet.</p>
-{% endif %}
+{% endcall %}
 {% endblock body %}
