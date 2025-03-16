@@ -1,6 +1,7 @@
 {%- import "components/modals.html" as modals -%}
 {%- import "components/buttons.html" as buttons -%}
 {%- import "components/match.html" as match -%}
+{%- import "components/recall.html" as recall -%}
 
 {% call modals.Modal(id="callup-modal", centered=True) %}
     {% call modals.ModalContainer() %}
@@ -8,45 +9,50 @@
 
         {% call modals.ModalBody() %}
             <p class="fw-bold fs-4">Jetzt kämpfen: <span data-tatami-field="current.group">Gruppe</span> &middot; <span data-tatami-field="current.progress">Fortschritt</span></p>
-        
-            {% call match.Match(slim=False, large=True) %}
-                {{ match.MatchSchedule(no="-", status="running", label="jetzt") }}
 
-                {% call match.MatchBody() %}
-                    <div class="match-lineup">
-                        <div class="match-lineup-white">
-                            <div class="match-fighter" data-tatami-field="current.white.name">Name</div>
-                            <div class="match-association" data-tatami-field="current.white.club">Verein</div>
-                        </div>
-                        <div class="match-lineup-blue">
-                            <div class="match-fighter" data-tatami-field="current.blue.name">Name</div>
-                            <div class="match-association" data-tatami-field="current.blue.club">Verein</div>
-                        </div>
-                    </div>
+            {% call layout.Grid(class="align-center") %}
+                {% call layout.GridColumn(span=11) %}
+                    {% call match.Match(slim=False, large=True) %}
+                        {% call match.MatchBody() %}
+                            <div class="match-lineup">
+                                <div class="match-lineup-white">
+                                    <div class="match-fighter" data-tatami-field="current.white.name">Name</div>
+                                    <div class="match-association" data-tatami-field="current.white.club">Verein</div>
+                                </div>
+                                <div class="match-lineup-blue">
+                                    <div class="match-fighter" data-tatami-field="current.blue.name">Name</div>
+                                    <div class="match-association" data-tatami-field="current.blue.club">Verein</div>
+                                </div>
+                            </div>
+                        {% endcall %}
+                    {% endcall %}
+                {% endcall %}
+                {% call layout.GridColumn(span=1, class="text-right pr-1") %}
+                    {{ recall.Recall(attr="data-tatami-repeated-call") }}
                 {% endcall %}
             {% endcall %}
-            
-            <button class="repeated-call-btn" type="button" data-tatami-repeated-call>60</button>
         {% endcall %}
 
         {% call modals.ModalBody() %}
             <div class="callup-next-has">
                 <p class="fw-bold fs-5">Es bereiten sich vor: <span data-tatami-field="waiting.group">Gruppe</span> &middot; <span data-tatami-field="waiting.progress">Fortschritt</span></p>
-                
-                {% call match.Match() %}
-                    {{ match.MatchSchedule(no="-", status="pending") }}
 
-                    {% call match.MatchBody() %}
-                        <div class="match-lineup">
-                            <div class="match-lineup-white">
-                                <div class="match-fighter" data-tatami-field="waiting.white.name">Name</div>
-                                <div class="match-association" data-tatami-field="waiting.white.club">Verein</div>
-                            </div>
-                            <div class="match-lineup-blue">
-                                <div class="match-fighter" data-tatami-field="waiting.blue.name">Name</div>
-                                <div class="match-association" data-tatami-field="waiting.blue.club">Verein</div>
-                            </div>
-                        </div>
+                {% call layout.Grid() %}
+                    {% call layout.GridColumn(span=11) %}
+                        {% call match.Match() %}
+                            {% call match.MatchBody() %}
+                                <div class="match-lineup">
+                                    <div class="match-lineup-white">
+                                        <div class="match-fighter" data-tatami-field="waiting.white.name">Name</div>
+                                        <div class="match-association" data-tatami-field="waiting.white.club">Verein</div>
+                                    </div>
+                                    <div class="match-lineup-blue">
+                                        <div class="match-fighter" data-tatami-field="waiting.blue.name">Name</div>
+                                        <div class="match-association" data-tatami-field="waiting.blue.club">Verein</div>
+                                    </div>
+                                </div>
+                            {% endcall %}
+                        {% endcall %}
                     {% endcall %}
                 {% endcall %}
             </div>
