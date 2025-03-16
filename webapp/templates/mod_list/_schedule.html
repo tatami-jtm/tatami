@@ -1,74 +1,45 @@
-{% from "mod_global_list/_match_summary.html" import match_summary, small_match_summary %}
+{%- import "components/cards.html" as cards -%}
+{% from "shared/_match_summary.html" import match_summary %}
 
-<h2 class="h4 mb-3 fw-bold">Kämpfe auf {{ g.mat.title }}</h2>
+<h2>Kämpfe auf {{ g.mat.title }}</h2>
 
-<h3 class="h5 mb-2">Laufender Kampf</h3>
+<h3>Laufender Kampf</h3>
 
 {% set current_match = g.mat.current_match() %}
 {% if current_match %}
-<div class="card mb-4">
-    <div class="card-body p-2">
-        {{ small_match_summary(current_match) }}
-    </div>
-</div>
+    {{ match_summary(current_match, controls=True) }}
 {% else %}
-<p class="mb-3">Zurzeit findet kein Kampf statt.</p>
+    <p>Zurzeit findet kein Kampf statt.</p>
 {% endif %}
 
-<h3 class="h5 mb-2">Nächster Kampf</h3>
+<h3>Nächster Kampf</h3>
 
 {% set waiting_match = g.mat.waiting_match() %}
 {% if waiting_match %}
-<div class="card mb-4 border-0">
-    <div class="card-body p-2">
-        {{ small_match_summary(waiting_match) }}
-    </div>
-</div>
+    {{ match_summary(waiting_match, controls=True) }}
 {% else %}
-<p class="mb-3">Zurzeit wurde kein nächster Kampf aufgerufen.</p>
+    <p>Zurzeit wurde kein nächster Kampf aufgerufen.</p>
 {% endif %}
 
-<div class="accordion" id="listScheduleAccordion">
-    <div class="accordion-item">
-        <h3 class="accordion-header">
-            <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#listScheduleAccordion-scheduled" aria-control="listScheduleAccordion-scheduled">Angesetzte Kämpfe</button>
-        </h3>
-        <div id="listScheduleAccordion-scheduled" class="accordion-collapse collapse" data-bs-parent="#listScheduleAccordion">
-            <div class="accordion-body p-0">
+<h3>Angesetze Kämpfe</h3>
 
-                    {% for match in g.mat.scheduled_matches(include_called_up=False) %}
-                    <div class="p-2 {{ 'border-bottom' if not loop.last}}">
-                        {{ small_match_summary(match, compact=True) }}
-                    </div>
-                    {% else %}
-                    <p class="p-3 mb-0">Zurzeit wurde keine (weiteren) Kämpfe angesetzt.</p>
-                    {% endfor %}
-            </div>
-        </div>
-    </div>
+{% for match in g.mat.scheduled_matches(include_called_up=False) %}
+    {{ match_summary(match, controls=True) }}
+{% else %}
+    <p>Zurzeit wurde keine (weiteren) Kämpfe angesetzt.</p>
+{% endfor %}
+
+<h3>Weitere Kämpfe</h3>
+
+{% call cards.Card() %}
     {% for list in assigned_lists %}
-    <div class="accordion-item">
-        <h3 class="accordion-header">
-            <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#listScheduleAccordion-pending-gr{{ list.id }}" aria-control="listScheduleAccordion-pending-gr{{ list.id }}">{{ list.title }}</button>
-        </h3>
-        <div id="listScheduleAccordion-pending-gr{{ list.id }}" class="accordion-collapse collapse" data-bs-parent="#listScheduleAccordion">
-            <div class="accordion-body p-0">
-                {% for match in list.matches.filter_by(scheduled=False, completed=False) if not match.obsolete %}
-                    <div class="p-2 {{ 'border-bottom' if not loop.last}}">
-                        {{ small_match_summary(match, compact=True) }}
-                        {% if not match.schedulable() %}
-                        <p class="mb-0 fs-small text-danger">Auszeit notwendig &ndash; Kampf kann zurzeit nicht stattfinden.</p>
-                        {% elif not g.event.setting('scheduling.use', True) %}
-                        <div class="mt-1">
-                            <a href="{{ url_for('mod_list.schedule_match', event=g.event.slug, id=match.group.id, match_id=match.id, origin_url=request.url, do_not_add_flash_message=1) }}" class="btn btn-sm btn-dark" data-schedule-match="{{ match.id }}">Ansetzen</a>
-                        </div>
-                        {% endif %}
-                    </div>
-                    {% else %}
-                    <p class="p-3 mb-0">In dieser Gruppe stehen keine Kämpfe mehr aus.</p>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
+        {{ cards.CardHeader(text=list.title, class="tj-schedgrp-btn", actionable=True, attr='data-tj-oneof=\'{"common": ".tj-schedgrp-element", "unique": "#group-' ~ list.id ~ '", "class": "hidden", "classWhen": "off", "ownClass": "active", "ownCommon": ".tj-schedgrp-btn"}\'') }}
+        {% call cards.CardBody(class="tj-schedgrp-element hidden", id="group-" ~ list.id) %}
+            {% for match in list.matches.filter_by(scheduled=False, completed=False) if not match.obsolete %}
+                {{ match_summary(match, controls=True, schedule=False) }}
+            {% else %}
+                <p>In dieser Gruppe stehen keine Kämpfe mehr aus.</p>
+            {% endfor %}
+        {% endcall %}
     {% endfor %}
-</div>
+{% endcall %}

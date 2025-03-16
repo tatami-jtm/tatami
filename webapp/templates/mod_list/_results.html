@@ -1,62 +1,42 @@
-<h2 class="h4 mb-3 fw-bold">Ergebnisse eintragen</h2>
+{%- import "components/cards.html" as cards -%}
+{%- import "components/form.html" as form -%}
+{%- import "components/buttons.html" as buttons -%}
+
+<h2>Ergebnisse eintragen</h2>
 
 {% set SBRULES = g.event.sb_rules() %}
 {% set current_match = g.mat.current_match() %}
 {% if current_match %}
 
 <form action="{{ url_for('mod_list.write_match_result', event=g.event.slug, id=current_match.group.id, match_id=current_match.id) }}" method="POST">
-    <h3 class="h5 mb-2">Ergebnis</h3>
-    <div class="card mb-3">
-        <div class="card-body">
-            <div class="mb-3">
-                <label for="match-{{ current_match.id }}-winner">Gewinner/in ist:</label>
-                <select class="form-select" id="match-{{ current_match.id }}-winner" name="winner">
-                    <option disabled selected></option>
-                    <option value="white">
-                        Weiß ({{ current_match.white.full_name }})
-                    </option>
-                    <option value="blue">
-                        Blau ({{ current_match.blue.full_name }})
-                    </option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="match-{{ current_match.id }}-score">Unterpunkte:</label>
-                <select class="form-select" id="match-{{ current_match.id }}-score" name="score">
-                    <option disabled selected></option>
-                    <option value="1">
-                        1 WP (Shido oder Hantei)
-                    </option>
-                    <option value="3">
-                        3 WP
-                    </option>
-                    <option value="5">
-                        5 WP (Yuko)
-                    </option>
-                    <option value="7">
-                        7 WP (Waza-ari)
-                    </option>
-                    <option value="10">
-                        10 WP (Ippon, Hansokumake oder Waza-ari-awasete)
-                    </option>
-                </select>
-            </div>
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" value="yes" name="loser_disqualified" id="match-{{ current_match.id }}-loser-disqualified">
-                <label class="form-check-label mb-1" for="match-{{ current_match.id }}-loser-disqualified">
-                    Verlierer/in disqualifiziert (direkter Hansoku-make)
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="yes" name="loser_removed" id="match-{{ current_match.id }}-loser-removed">
-                <label class="form-check-label mb-1" for="match-{{ current_match.id }}-loser-removed">
-                    Verlierer/in scheidet aus (bspw. Verletzung oder eigener Wunsch)
-                </label>
-            </div>
-        </div>
-    </div>
+    <h3>Kampfergebnis</h3>
 
-    <h3 class="h5 mt-4 mb-2">Weitere Informationen (optional)</h3>
+    {% call cards.Card() %}
+        {% call cards.CardBody() %}
+            {{ form.FormCheckLabel(text="Gewinner/in ist:") }}
+            {{ form.FormRadio(id="current-match-" ~ current_match.id ~ "-winner-white", name="winner", value="white", label="Weiß (" ~ current_match.white.full_name ~ ")") }}
+            {{ form.FormRadio(id="current-match-" ~ current_match.id ~ "-winner-blue", name="winner", value="blue", label="Blau (" ~ current_match.blue.full_name ~ ")") }}
+
+            {{ form.Label(for_id="current-match-" ~ current_match.id ~ "-score", text="Unterpunkte") }}
+            {% call form.Select(id="current-match-" ~ current_match.id ~ "-score", name="score") %}
+                {{ form.SelectOption(value="1", text="1 WP (Shido oder Hantei)") }}
+                {{ form.SelectOption(value="3", text="3 WP") }}
+                {{ form.SelectOption(value="5", text="5 WP (Yuko)") }}
+                {{ form.SelectOption(value="7", text="7 WP (Wazaari)") }}
+                {{ form.SelectOption(value="10", text="10 WP (Ippon)") }}
+            {% endcall %}
+
+            {{ form.FormCheck(id="current-match-" ~ current_match.id ~ "-loser-disqualified", name="loser_disqualified", value="yes", label="Verlierer/in disqualifiziert (direkter Hansokumake)") }}
+
+            {{ form.FormCheck(id="current-match-" ~ current_match.id ~ "-loser-removed", name="loser_removed", value="yes", label="Verlierer/in scheidet aus (bspw. Verletzung oder eigener Wunsch)") }}
+        {% endcall %}
+        {% call cards.CardFooter() %}
+            {{ buttons.PrimaryCTA(type="submit", text="Ergebnis eintragen", class="w-100") }}
+        {% endcall %}
+    {% endcall %}
+
+
+    <h3>Weitere Informationen (optional)</h3>
 
     <table class="table-scoreboard mb-3">
         <tr class="row-fighters">
@@ -65,45 +45,45 @@
         </tr>
         <tr class="row-labels">
             {% for c in SBRULES.small_display %}
-            <th class="col-white {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
-                <label for="sb-white-{{ c }}">{{ SBRULES.scores[c].short_name }}</label>
-            </th>
+                <th class="col-white {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                    <label for="sb-white-{{ c }}">{{ SBRULES.scores[c].short_name }}</label>
+                </th>
             {% endfor %}
             {% for c in SBRULES.small_display %}
-            <th class="col-blue {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
-                <label for="sb-blue-{{ c }}">{{ SBRULES.scores[c].short_name }}</label>
-            </th>
+                <th class="col-blue {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                    <label for="sb-blue-{{ c }}">{{ SBRULES.scores[c].short_name }}</label>
+                </th>
             {% endfor %}
         </tr>
 
         <tr class="row-inputs">
             {% for c in SBRULES.small_display %}
-            {% set max_count = SBRULES.scores[c].max_count %}
-            <td class="col-white {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
-                <input type="numeric" id="sb-white-{{ c }}" name="sb-white-{{ c }}" value="0" min="0" {{ 'max=' ~ max_count if max_count }}>
-            </td>
+                {% set max_count = SBRULES.scores[c].max_count %}
+                <td class="col-white {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                    <input type="numeric" id="sb-white-{{ c }}" name="sb-white-{{ c }}" value="0" min="0" {{ 'max=' ~ max_count if max_count }}>
+                </td>
             {% endfor %}
             {% for c in SBRULES.small_display %}
-            {% set max_count = SBRULES.scores[c].max_count %}
-            <td class="col-blue {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
-                <input type="numeric" id="sb-blue-{{ c }}" name="sb-blue-{{ c }}" value="0" min="0" {{ 'max=' ~ max_count if max_count }}>
-            </td>
+                {% set max_count = SBRULES.scores[c].max_count %}
+                <td class="col-blue {{ 'col-penalty' if SBRULES.scores[c].penalty else 'col-score' }}">
+                    <input type="numeric" id="sb-blue-{{ c }}" name="sb-blue-{{ c }}" value="0" min="0" {{ 'max=' ~ max_count if max_count }}>
+                </td>
             {% endfor %}
         </tr>
     </table>
 
-    <div class="d-flex mb-3 align-items-center">
-        <label class="fw-bold me-3">Kampfzeit</label>
-        <input type="number" id="ft-minutes" name="ft-minutes" class="form-control w-min me-1" min="0" max="60" value="0">
-        min
-        <input type="number" id="ft-seconds" name="ft-seconds" class="form-control w-min ms-2 me-1" min="0" max="60" value="0">
-        s
-    </div>
+    {{ form.FormCheckLabel(text="Kampfzeit") }}
+    {% call layout.Grid() %}
+        {% call layout.GridColumn(span="auto") %}
+            {{ form.InputWithSuffix(id="ft-minutes", name="ft-minutes", type="number", attr='min="0" max="60"', value="0", suffix="min") }}
+        {% endcall %}
+        {% call layout.GridColumn(span="auto") %}
+            {{ form.InputWithSuffix(id="ft-seconds", name="ft-seconds", type="number", attr='min="0" max="60"', value="0", suffix="s") }}
+        {% endcall %}
+    {% endcall %}
 
     <input type="hidden" name="origin_url" value="{{ request.url }}">
     <input type="hidden" name="do_not_add_flash_message" value="yes">
-
-    <button type="submit" class="btn btn-primary w-100 btn-lg">Ergebnis eintragen</button>
 </form>
 
 {% else %}
