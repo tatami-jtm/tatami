@@ -1,8 +1,12 @@
 {%- import "components/match.html" as match -%}
-
-{# TODO #}
+{%- import "components/dropdown.html" as dropdown -%}
+{%- import "components/form.html" as form -%}
+{%- import "components/buttons.html" as buttons -%}
 
 {% macro match_summary(mobj, large=False, controls=False) %}
+    {%- set has_no_result, result = mobj.get_result() -%}
+    {% set result_data = result.data() %}
+    {% set SBRULES = g.event.sb_rules() %}
     {% call match.Match(large=large) %}
         {{ match.MatchSchedule(status=('done' if mobj.completed else
                                        'running' if mobj.running else
@@ -14,7 +18,66 @@
             {{ match.MatchLineup(white_name=mobj.white.full_name,
                                  white_association=mobj.white.association_name,
                                  blue_name=mobj.blue.full_name,
-                                 blue_association=mobj.blue.association_name) }}
+                                 blue_association=mobj.blue.association_name,
+                                 winner=result.winner()) }}
+            {% if not has_no_result and result_data %}
+                {{ match.MatchResult(
+                    white=result.get_white_scores(SBRULES),
+                    white_penalty=result.get_white_penalties(SBRULES),
+                    timer=result_data.full_time,
+                    blue=result.get_blue_scores(SBRULES),
+                    blue_penalty=result.get_blue_penalties(SBRULES)
+                ) }}
+            {% endif %}
+        {% endcall %}
+        {% if controls %}
+            {% call match.MatchMenu() %}
+                {% if mobj.completed %}
+                    {{ match.MatchMenuItem(icon="refresh-circle", href=url_for('mod_list.clear_match_result', event=g.event.slug, id=mobj.group.id, match_id=mobj.id, origin_url=request.url)) }}
+                    {{ _results_dropdown(mobj, result) }}
+                {% elif not mobj.scheduled %}
+                    {{ match.MatchMenuItem(icon="priority-up", href=url_for('mod_list.schedule_match', event=g.event.slug, id=mobj.group.id, match_id=mobj.id, origin_url=request.url)) }}
+                    {{ _results_dropdown(mobj, result) }}
+                {% elif not mobj.called_up %}
+                    {{ match.MatchMenuItem(icon="priority-down", href=url_for('mod_list.unschedule_match', event=g.event.slug, id=mobj.group.id, match_id=mobj.id, origin_url=request.url)) }}
+                    {{ _results_dropdown(mobj, result) }}
+                {% else %}
+                    {{ _results_dropdown(mobj, result) }}
+                {% endif %}
+            {% endcall %}
+        {% endif %}
+    {% endcall %}
+{% endmacro %}
+
+{% macro _results_dropdown(mobj, result) %}
+    {% call dropdown.Dropdown(right=True) %}
+        {% call dropdown.DropdownButton() %}
+            {{ match.MatchMenuItem(icon="edit-pencil",
+                attr=dropdown.ToggleDropdownAttr(dropdown='#match-dropdown-' ~ mobj.id)) }}
+        {% endcall %}
+        {% call dropdown.DropdownDialog(id="match-dropdown-" ~ mobj.id) %}
+            <form action="{{ url_for('mod_list.write_match_result', event=g.event.slug, id=mobj.group.id, match_id=mobj.id) }}" method="POST">
+                {{ form.FormCheckLabel(text="Gewinner/in ist:") }}
+                {{ form.FormRadio(id="match-" ~ mobj.id ~ "-winner-white", name="winner", value="white", label="Weiß (" ~ mobj.white.full_name ~ ")", checked=result.winner() == 'white') }}
+                {{ form.FormRadio(id="match-" ~ mobj.id ~ "-winner-blue", name="winner", value="blue", label="Blau (" ~ mobj.blue.full_name ~ ")", checked=result.winner() == 'blue') }}
+
+                {{ form.Label(for_id="match-" ~ mobj.id ~ "-score", text="Unterpunkte") }}
+                {% call form.Select(id="match-" ~ mobj.id ~ "-score", name="score") %}
+                    {{ form.SelectOption(value="1", text="1 WP (Shido oder Hantei)", selected=result.score() == 1) }}
+                    {{ form.SelectOption(value="3", text="3 WP", selected=result.score() == 3) }}
+                    {{ form.SelectOption(value="5", text="5 WP (Yuko)", selected=result.score() == 5) }}
+                    {{ form.SelectOption(value="7", text="7 WP (Wazaari)", selected=result.score() == 7) }}
+                    {{ form.SelectOption(value="10", text="10 WP (Ippon, Hansokumake oder Wazaari-awasete)", selected=result.score() == 10 or not result.score()) }}
+                {% endcall %}
+
+                {{ form.FormCheck(id="match-" ~ mobj.id ~ "-loser-disqualified", name="loser_disqualified", value="yes", label="Verlierer/in disqualifiziert (direkter Hansokumake)", checked=result.loser_disqualified()) }}
+
+                {{ form.FormCheck(id="match-" ~ mobj.id ~ "-loser-removed", name="loser_removed", value="yes", label="Verlierer/in scheidet aus (bspw. Verletzung oder eigener Wunsch)", checked=result.loser_removed()) }}
+
+                <input type="hidden" name="origin_url" value="{{ request.url }}">
+
+                {{ buttons.PrimaryButton(type="submit", text="Speichern") }}
+            </form>
         {% endcall %}
     {% endcall %}
 {% endmacro %}

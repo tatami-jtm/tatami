@@ -60,10 +60,10 @@
 </div>
 {%- endmacro -%}
 
-{%- macro MatchMenuItem(href=None, id="", icon="", class="", title="") -%}
+{%- macro MatchMenuItem(href=None, id="", icon="", class="", title="", attr="") -%}
 {%- if href != None -%}
-<a href="{{ href }}" class="match-menu-item {{ class }}" id="{{ id }}" title="{{ title }}"><i class="iconoir-{{ icon }}"></i></a>
+<a href="{{ href }}" class="match-menu-item {{ class }}" id="{{ id }}" title="{{ title }}" {{ attr|safe }}><i class="iconoir-{{ icon }}"></i></a>
 {%- else -%}
-<button class="match-menu-item {{ class }}" id="{{ id }}" title="{{ title }}"><i class="iconoir-{{ icon }}"></i></button>
+<button class="match-menu-item {{ class }}" id="{{ id }}" title="{{ title }}" {{ attr|safe }}><i class="iconoir-{{ icon }}"></i></button>
 {%- endif -%}
 {%- endmacro -%}
