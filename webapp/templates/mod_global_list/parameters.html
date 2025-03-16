@@ -1,67 +1,65 @@
+{%- import "components/layout.html" as layout -%}
+{%- import "components/datasets.html" as datasets -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/form.html" as form -%}
+
+
 {% extends "layouts/application.html" %}
 {% block title %}Hauptliste{% endblock %}
 {% from "mod_global_list/_match_summary.html" import small_match_summary %}
 {% block body %}
-<div class="container-fluid">
-    <h1 class="h2 fw-bold mb-4">Hauptliste</h1>
+{% call layout.Container() %}
 
-    
-    <h3 class="h4 fw-bold mb-2">TN-Parameter für {{ group.title }}</h3>
-    <div class="card mb-2 shadow">
-        <div class="card-body">
-            <table class="table mb-2">
-                <thead>
-                    <th>Name</th>
-                    <th>Verband</th>
-                    <th>DQ?</th>
-                    <th>Aus?</th>
-                    <th>Aus-Grund</th>
-                    <th>Pause Bis</th>
-                    <th></th>
-                </thead>
-                <tbody>
-                    {% for part in group.participants.all() %}
+    <h1>TN-Parameter für {{ group.title }}</h1>
+
+    {% call datasets.Dataset() %}
+        {% call datasets.Table() %}
+            {% call datasets.TableHead() %}
+                {{ datasets.TableHeadColumn(text="Name") }}
+                {{ datasets.TableHeadColumn(text="Verband") }}
+                {{ datasets.TableHeadColumn(text="DQ?") }}
+                {{ datasets.TableHeadColumn(text="Aus?") }}
+                {{ datasets.TableHeadColumn(text="Aus-Grund") }}
+                {{ datasets.TableHeadColumn(text="Pause bis") }}
+                {{ datasets.TableHeadEmptyColumn() }}
+            {% endcall %}
+            {% call datasets.TableBody() %}
+                {% for part in group.participants.all() %}
                     <form action="" method="POST">
                         <input type="hidden" name="participant_id" value="{{ part.id }}">
-                        <tr class="align-middle">
-                            <td class="fw-bold fs-5">{{ part.full_name }}</td>
-                            <td>{{ part.association_name }}</td>
-                            <td>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="disqualified-{{ part.id }}" name="disqualified" {{ 'checked' if part.disqualified}}>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="removed-{{ part.id }}" name="removed" {{ 'checked' if part.removed}}>
-                                </div>
-                            </td>
-                            <td>
-                                <input class="form-control" name="removal_cause" value="{{ part.removal_cause or '' }}">
-                            </td>
-
-                            <td>
-                                <input class="form-control" type="datetime-local" name="last_fight_at" value="{{ (part.last_fight_at + diff_delta).isoformat().rsplit(":", 1)[0] if part.last_fight_at }}">
-                            </td>
-                            <td>
+                        {% call datasets.TableRow() %}
+                            {{ datasets.TableColumn(text=part.full_name) }}
+                            {{ datasets.TableColumn(text=part.association_name) }}
+                            {% call datasets.TableColumn() %}
+                                {{ form.FormCheck(id="dq-" ~ part.id, name="disqualified", checked=part.disqualified, label="DQ") }}
+                            {% endcall %}
+                            {% call datasets.TableColumn() %}
+                                {{ form.FormCheck(id="rem-" ~ part.id, name="removed", checked=part.removed, label="Aus") }}
+                            {% endcall %}
+                            {% call datasets.TableColumn() %}
+                                {{ form.Input(name="removal_cause", value=part.removal_cause) }}
+                            {% endcall %}
+                            {% call datasets.TableColumn() %}
+                                {{ form.Input(name="last_fight_at", value=(part.last_fight_at + diff_delta).isoformat().rsplit(":", 1)[0] if part.last_fight_at, type="datetime-local") }}
+                            {% endcall %}
+                            {% call datasets.TableButtonsColumn() %}
                                 {% if saved_participant == part.id %}
-                                <button type="submit" class="btn btn-success btn-3d">OK</button>
+                                    {{ buttons.SubtleButton(type="submit", text="OK", inline=True) }}
                                 {% else %}
-                                <button type="submit" class="btn btn-secondary">Speichern</button>
+                                    {{ buttons.SecondaryButton(type="submit", text="Speichern", inline=True) }}
                                 {% endif %}
-                            </td>
-                        </tr>
+                            {% endcall %}
+                        {% endcall %}
                     </form>
-                    {% endfor %}
-                </tbody>
-            </table>
+                {% endfor %}
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+    <p class="fs-sm text-secondary-dark text-right">DQ = Disqualifikation, Aus = Ausgeschieden</p>
 
-            <p class="ms-2 mb-0 fs-small text-secondary text-end">DQ = Disqualifikation, Aus = Ausgeschieden</p>
-        </div>
-        <div class="card-footer">
-            <a href="{{ url_for('mod_global_list.index', event=g.event.slug, group=group.id) }}" class="btn btn-primary">Zurück zur Hauptliste</a>
-        </div>
+    {{ buttons.PrimaryButton(href=url_for('mod_global_list.index', event=g.event.slug, group=group.id), text="Zurück zur Hauptliste") }}
     </div>
 </div>
 
+{% endcall %}
 {% endblock body %}
