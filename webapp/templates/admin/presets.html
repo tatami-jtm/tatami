@@ -1,70 +1,56 @@
+{% import "components/switches.html" as switches %}
+{% import "components/list.html" as list %}
+{% import "components/buttons.html" as buttons %}
+
 {% extends "layouts/admin.html" %}
 {% block title %}Administrationsbereich{% endblock %}
 {% block body %}
 
 <h1>Voreinstellungen</h1>
 
-<div class="nav nav-tabs" id="presets-tab" role="tablist">
-    <div class="nav-item">
-        <button class="nav-link active" id="event_classes-tab"
-                data-bs-toggle="tab" type="button" role="tab"
-                data-bs-target="#event_classes" aria-controls="event_classes"
-                aria-selected="true">
-            Kampfklassen
-        </button>
-    </div>
-    <div class="nav-item">
-        <button class="nav-link" id="scoreboard_rulesets-tab"
-                data-bs-toggle="tab" type="button" role="tab"
-                data-bs-target="#scoreboard_rulesets" aria-controls="scoreboard_rulesets">
-            Scoreboard
-        </button>
-    </div>
-</div>
-<div class="tab-content" id="presets-tabContent">
-    <div class="tab-pane show active" role="tabpanel" tabindex="0"
-         id="event_classes" aria-labelledby="event_classes-tab">
-        <h3 class="fw-bold mt-4 mb-3">Kampfklassen</h3>
+{% call switches.Tab() %}
+    {{ switches.TabItem(label="Kampfklassen", active=True, class="tj-tab-button", attr='data-tj-oneof=\'{"common": ".tj-tab", "unique": "#tab-classes", "class": "hidden", "classWhen": "off", "ownClass": "active", "ownCommon": ".tj-tab-button"}\'') }}
+    {{ switches.TabItem(label="Scoreboard", active=False, class="tj-tab-button", attr='data-tj-oneof=\'{"common": ".tj-tab", "unique": "#tab-scoreboards", "class": "hidden", "classWhen": "off", "ownClass": "active", "ownCommon": ".tj-tab-button"}\'') }}
+{% endcall %}
 
-        <div class="list-group">
-            {% for ec in event_classes %}
+<div class="tj-tab" id="tab-classes">
+    <h2>Kampfklassen</h3>
+
+    {% call list.List() %}
+        {% for ec in event_classes %}
             {% if ec.event %}
-            <a href="{{ url_for('event_manager.edit_class', event=ec.event.slug, id=ec.id) }}" class="list-group-item list-group-item-action" target="_blank">
-                <div>
-                    <strong>{{ ec.template_name }}</strong>
-                </div>
-                <div>bei <span class="font-monospace small">{{ ec.event.slug }}</span></div>
-            </a>
+                {% call list.ListItem(href=url_for('event_manager.edit_class', event=ec.event.slug, id=ec.id)) %}
+                    {% call list.ListItemBody() %}
+                        {{ list.ListItemBodyHeader(text=ec.template_name) }}
+                        {{ list.ListItemBodyDetail(text=ec.event.slug) }}
+                    {% endcall %}
+                {% endcall %}
             {% else %}
-            <div class="list-group-item">
-                <div>
-                    <strong>{{ ec.template_name }}</strong>
-                </div>
-            </div>
+                {% call list.ListItem() %}
+                    {% call list.ListItemBody() %}
+                        {{ list.ListItemBodyHeader(text=ec.template_name) }}
+                    {% endcall %}
+                {% endcall %}
             {% endif %}
-            {% endfor %}
-        </div>
-    </div>
-    <div class="tab-pane" role="tabpanel" tabindex="0"
-    id="scoreboard_rulesets" aria-labelledby="scoreboard_rulesets-tab">
-        <h3 class="fw-bold mt-4 mb-3">Scoreboard</h3>
+        {% endfor %}
+    {% endcall %}
+</div>
+<div class="tj-tab hidden" id="tab-scoreboards">
+    <h2>Scoreboard</h2>
 
-        <div class="list-group mb-3">
-            {% for sr in scoreboard_rulesets %}
-            <a href="{{ url_for('admin.scoreboard_preset', id=sr.id) }}" class="list-group-item list-group-item-action" target="_blank">
-                <div>
-                    <strong>{{ sr.title }}</strong>
-                </div>
-                <div>
-                    {% if sr.enabled %}<div class="badge text-bg-secondary">Aktiviert</div>{% endif %}
-                    {% if sr.is_default %}<div class="badge text-bg-primary">Standard-Scoreboard</div>{% endif %}
-                </div>
-            </a>
-            {% endfor %}
-        </div>
+    {% call list.List() %}
+        {% for sr in scoreboard_rulesets %}
+            {% call list.ListItem(href=url_for('admin.scoreboard_preset', id=sr.id)) %}
+                {% call list.ListItemBody() %}
+                    {{ list.ListItemBodyHeader(text=sr.title) }}
+                    {{ list.ListItemBodyDetail(text="Aktiviert") if sr.enabled }}
+                    {{ list.ListItemBodyDetail(text="Standard-Scoreboard") if sr.is_default }}
+                {% endcall %}
+            {% endcall %}
+        {% endfor %}
+    {% endcall %}
 
-        <a href="{{ url_for('admin.new_scoreboard_preset') }}" class="btn btn-sm btn-secondary mb-3">Scoreboard hinzufügen</a>
-    </div>
+    {{ buttons.SecondaryButton(href=url_for('admin.new_scoreboard_preset'), text="Scoreboard hinzufügen") }}
 </div>
     
 {% endblock body %}

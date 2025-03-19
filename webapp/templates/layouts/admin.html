@@ -1,89 +1,65 @@
+{%- import "components/layout.html" as layout -%}
+{%- import "components/navbar.html" as navbar -%}
+{%- import "components/badges.html" as badges -%}
+
 <!DOCTYPE html>
-<html lang="de" {{ 'data-bs-theme="dark"'|safe if current_user.prefers_dark_mode }}>
-<head>
-    {% include "layouts/_header.html" %}
-    <title>TATAMI | {% block title %}{% endblock title %}</title>
-    {% block custom_header %}{% endblock custom_header %}
-</head>
-<body class="admin">
-    <nav class="navbar navbar-admin navbar-expand-lg navbar-light bg-white shadow-sm mb-2">
-        <div class="container-fluid py-2">
-            <a class="navbar-brand" href="{{ url_for('admin.index') }}">
-                <div class="splash-logo first-part">
-                    {{ config.BRAND_NAME }}
-                </div>
-                <div class="splash-logo second-part">
-                    Administration
-                </div>
-            </a>
-            <button class="navbar-toggler" type="button"
-                data-bs-toggle="collapse" data-bs-target="#adminMainNav"
-                aria-controls="adminMainNav" aria-expanded="false"
-                aria-label="Navigation ein-/ausblenden">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="adminMainNav">
-                <div class="d-flex justify-content-between w-100">
-                    <div class="navbar-nav">
-                        <div class="nav-item">
-                            <a class="nav-link" href="{{ url_for('admin.index') }}">Übersicht</a>
-                        </div>
-                        <div class="nav-item">
-                            <a class="nav-link" href="{{ url_for('admin.events') }}">Veranstaltungen</a>
-                        </div>
-                        {% if current_user.has_privilege('manage_users') %}
-                        <div class="nav-item">
-                            <a class="nav-link" href="{{ url_for('admin.user') }}">Konten und Rollen</a>
-                        </div>
-                        {% endif %}
-                        {% if current_user.has_privilege('alter_presets') %}
-                        <div class="nav-item">
-                            <a class="nav-link" href="{{ url_for('admin.presets') }}">Voreinstellungen</a>
-                        </div>
-                        {% endif %}
-                        {% if current_user.has_privilege('support') %}
-                        <div class="nav-item">
-                            {% if open_support_tickets > 0 %}
-                            <a class="nav-link" href="{{ url_for('admin.support_tickets') }}">
-                                Support
-                                <span class="badge text-bg-danger">{{ open_support_tickets }}</span>
-                            </a>
-                            {% else %}
-                            <a class="nav-link" href="{{ url_for('admin.support_tickets') }}">Support</a>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-                    </div>
-                    <div class="navbar-nav">
-                        <div class="nav-item">
-                            <a class="nav-link" href="{{ url_for('splash') }}">Zur Einwahl</a>
-                        </div>
-                        <div class="nav-item">
-                            <a class="nav-link" href="{{ url_for('security.logout') }}">Abmelden</a>
-                        </div>
-                    </div>
-                </div>
+<html lang="de">
+    <head>
+        {% include "layouts/_shared-header.html" %}
+        <title>TATAMI | {% block title %}{% endblock title %}</title>
+        {% block custom_header %}{% endblock custom_header %}
+    </head>
+    <body class="admin">
+        {%- call navbar.Navbar() -%}
+            {{ navbar.NavbarBrand(name=config.BRAND_NAME, label="Administration", href=url_for('admin.index')) }}
+
+            {% call navbar.NavbarNav() %}
+                {{ navbar.NavbarNavItem(href=url_for('admin.index'), label="Übersicht") }}
+                {{ navbar.NavbarNavItem(href=url_for('admin.events'), label="Veranstaltungen") }}
+                {{ navbar.NavbarNavItem(href=url_for('admin.user'), label="Konten und Rollen")
+                    if current_user.has_privilege('manage_users') }}
+                {{ navbar.NavbarNavItem(href=url_for('admin.presets'), label="Voreinstellungen")
+                    if current_user.has_privilege('alter_presets') }}
+                {% if current_user.has_privilege('support') %}
+                    {% if open_support_tickets > 0 %}
+                        {% call navbar.NavbarNavItem(href=url_for('admin.support_tickets')) %}
+                            Support {{ badges.Badge(text=open_support_tickets, style="danger") }}
+                        {% endcall %}
+                    {% else %}
+                        {{ navbar.NavbarNavItem(href=url_for('admin.support_tickets'), label="Support") }}
+                    {% endif %}
+                {% endif %}
+            {% endcall %}
+
+            {{ navbar.NavbarFiller() }}
+
+            {% call navbar.NavbarNav() %}
+                {{ navbar.NavbarNavItem(href=url_for('security.logout'), icon="log-out", label="Abmelden") }}
+            {% endcall %}
+        {%- endcall -%}
+
+        {% call layout.Container() %}
+            {% with messages = get_flashed_messages(with_categories=True) %}
+                {% if messages %}
+                    {% call layout.Container(width='full') %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category or 'secondary' }}" role="alert">
+                                {% if ":" in message %}
+                                    <p>
+                                        <strong>{{ message.split(":", 1)[0] }}:</strong>
+                                        {{ message.split(":", 1)[1] }}
+                                    </p>
+                                {% else %}
+                                    <p>{{ message }}</p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% endcall %}
+                {% endif %}
+            {% endwith %}
+            <div class="container main-container">
+                {% block body %}{% endblock body %}
             </div>
-        </div>
-    </nav>
-    {% with messages = get_flashed_messages(with_categories=True) %}
-    {% if messages %}
-    <div class="container pt-3 mb-3">
-    {% for category, message in messages %}
-        <div class="alert alert-{{ category or 'light' }} alert-dismissible fade show" role="alert">
-            {% if ":" in message %}
-            <p class="mb-0"><strong>{{ message.split(":", 1)[0] }}:</strong> {{ message.split(":", 1)[1] }}</p>
-            {% else %}
-            <p class="mb-0">{{ message }}</p>
-            {% endif %}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schließen"></button>
-        </div>
-    {% endfor %}
-    </div>
-    {% endif %}
-    {% endwith %}
-    <div class="container main-container">
-        {% block body %}{% endblock body %}
-    </div>
-</body>
+        {% endcall %}
+    </body>
 </html>

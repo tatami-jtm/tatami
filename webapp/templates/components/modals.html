@@ -1,0 +1,38 @@
+{% macro Modal(id="", centered=False, stretch=False, shown=False, class="") %}
+<div class="modal {{ 'centered' if centered }} {{ 'stretch' if stretch }} {{ 'shown' if shown }} {{ class }}" id="{{ id }}">
+    {{ caller() }}
+</div>
+{% endmacro %}
+
+{% macro ModalContainer(width="medium", class="") %}
+<div class="modal-container {{ 'width-' ~ width if width }} {{ class }}">
+    {{ caller() }}
+</div>
+{% endmacro %}
+
+{% macro ModalHeader(text="", close_btn=False, modal=None, class="") %}
+<div class="modal-header {{ class }}">
+    {%- if close_btn -%}{{ ModalCloseButton(modal) }}{%- endif -%}
+    {%- if text -%}<h3>{{ text }}</h3>{%- else -%}{{ caller() }}{%- endif -%}
+</div>
+{% endmacro %}
+
+{% macro ModalCloseButton(modal=None) %}
+<button class="btn btn-subtle modal-close-icon" {{ ToggleModalAttr(modal) }}>
+    <span class="button-icon"><i class="iconoir-xmark"></i></span>
+</button>
+{% endmacro %}
+
+{% macro ModalBody(class="") %}
+<div class="modal-body {{ class }}">
+    {{ caller() }}
+</div>
+{% endmacro %}
+
+{% macro ModalFooter() %}
+<div class="modal-footer">
+    {{ caller() }}
+</div>
+{% endmacro %}
+
+{% macro ToggleModalAttr(modal) %}data-tj-toggle='{"target": "{{ modal }}", "class": "shown"}'{% endmacro %}

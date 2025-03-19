@@ -1,50 +1,75 @@
+{%- import "components/layout.html" as layout -%}
+{%- import "components/cards.html" as cards -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/form.html" as form -%}
+{%- import "components/datasets.html" as datasets -%}
+
 {% extends "layouts/application.html" %}
 {% block title %}Waage{% endblock %}
 {% block body %}
 
-<div class="container container-small">
-    <div class="card mb-5 shadow-lg">
-        <div class="card-body">
-            <h1 class="h4 fw-bold mb-4">⚖️ Waage</h1>
-            <form class="row align-items-center" target="" method="GET">
-                <div class="col">
-                    <input class="form-control fs-2" autofocus="true" name="query" placeholder="Nachnamen eingeben..." value="{{ quarg or '' }}">
-                </div>
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-lg fs-3 btn-secondary">Suchen</button>
-                </div>
+{% call layout.Container() %}
+    <h1>Waage</h1>
+
+    {% call cards.Card(class="mb-5") %}
+        {% call cards.CardBody(class="pb-0") %}
+            <form class="" target="" method="GET">
+                {% call layout.Grid() %}
+                    {% call layout.GridColumn(span="") %}
+                        {{ form.Input(value=(quarg or ''), class='fs-2', attr='autofocus', name='query', placeholder='Nachname, Externe ID oder Verein eingeben...') }}
+                    {% endcall %}
+                    {% call layout.GridColumn(span="auto") %}
+                        {% call buttons.PrimaryButton(type="submit") %}
+                            {{ buttons.ButtonIcon(icon="search", label="Suchen") }}
+                        {% endcall %}
+                    {% endcall %}
+                    {% call layout.GridColumn(span="auto") %}
+                        {{ buttons.SecondaryButton(href="?", text="Zurücksetzen") }}
+                    {% endcall %}
+                {% endcall %}
             </form>
-        </div>
-    </div>
+        {% endcall %}
+    {% endcall %}
 
-    {% for reg in query %}
-    <div class="card mb-3">
-        <div class="card-header p-3">
-            <h4 class="m-0 fs-2">{{ reg.first_name }} {{ reg.last_name }}</h4>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-4">
-                    <div class="fw-bold">Verein</div>
-                    <div>{{ reg.club or '-' }}</div>
-                </div>
-                <div class="col-4">
-                    <div class="fw-bold">Verband</div>
-                    <div>{{ reg.association.name if reg.association else '-' }}</div>
-                </div>
-                <div class="col-4">
-                    <div class="fw-bold">Kampfklasse</div>
-                    <div>{{ reg.event_class.title }}</div>
-                </div>
-            </div>
-        </div>
-        <div class="card-footer p-2">
-            {% if not reg.weiged_in %}
-            <a href="{{ url_for('mod_weighin.for_participant', event=g.event.slug, id=reg.id) }}" class="btn w-100 p-2 fs-5 fw-bold btn-success">Einwiegen</a>
-            {% endif %}
-        </div>
-    </div>
-    {% endfor %}
-</div>
-
+    {% call datasets.Dataset(size="medium") %}
+        {% call datasets.Table() %}
+            {% call datasets.TableHead() %}
+                {{ datasets.TableHeadColumn(text="Nachname") }}
+                {{ datasets.TableHeadColumn(text="Vorname") }}
+                {{ datasets.TableHeadColumn(text="Ext. ID") }}
+                {{ datasets.TableHeadColumn(text="Verein") }}
+                {{ datasets.TableHeadColumn(text="Verband") }}
+                {{ datasets.TableHeadColumn(text="Kampfklasse") }}
+                {{ datasets.TableHeadColumn(text="Status") }}
+                {{ datasets.TableHeadEmptyColumn() }}
+            {% endcall %}
+            {% call datasets.TableBody() %}
+                {% for reg in query %}
+                    {% call datasets.TableRow() %}
+                        {{ datasets.TableColumn(text=reg.last_name) }}
+                        {{ datasets.TableColumn(text=reg.first_name) }}
+                        {{ datasets.TableColumn(text=reg.external_id or '-') }}
+                        {{ datasets.TableColumn(text=reg.club or '-') }}
+                        {{ datasets.TableColumn(text=reg.association.name if reg.association else '-') }}
+                        {{ datasets.TableColumn(text=reg.event_class.title) }}
+                        {% call datasets.TableColumn(check_id=check_id) %}
+                            {% if reg.weighed_in %}
+                            <span class="text-success">Eingewogen</span>
+                            {% else %}
+                            <span class="text-danger fw-bold">Ausstehend</span>
+                            {% endif %}
+                        {% endcall %}
+                        {% call datasets.TableButtonsColumn() %}
+                            {% if not reg.weighed_in %}
+                                {{ buttons.SecondaryButton(text="Einwiegen", href=url_for('mod_weighin.for_participant', event=g.event.slug, id=reg.id, query=quarg), inline=True) }}
+                            {% else %}
+                                {{ buttons.SubtleButton(text="Zurücknehmen", href=url_for('mod_weighin.correct_for_participant', event=g.event.slug, id=reg.id, query=quarg), inline=True) }}
+                            {% endif %}                      
+                        {% endcall %}
+                    {% endcall %}
+                {% endfor %}
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+{% endcall %}
 {% endblock body %}

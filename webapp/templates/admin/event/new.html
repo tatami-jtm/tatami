@@ -1,3 +1,7 @@
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/form.html" as form -%}
+{%- import "components/cards.html" as cards -%}
+
 {% extends "layouts/admin.html" %}
 {% block title %}Administrationsbereich | Neue Veranstaltung{% endblock %}
 {% block body %}
@@ -5,44 +9,39 @@
 <h1>Neue Veranstaltung</h1>
 
 <form action="" method="POST">
-    <div class="mb-3 d-flex gap-1">
-        <button type="submit" class="btn btn-primary">Speichern</button>
-        <a href="{{ url_for('admin.events') }}" class="btn btn-secondary">Abbrechen</a>
-    </div>
+    {% call cards.Card(class="width-medium mx-0") %}
+        {% call cards.CardBody() %}
+            {{ form.Label(for_id="title", text="Veranstaltungsname") }}
+            {{ form.Input(id="title", name="title") }}
 
-    <div class="mb-3">
-        <label for="title" class="form-label">Veranstaltungsname</label>
-        <input name="title" id="title" class="form-control">
-    </div>
+            {{ form.Label(for_id="slug_part", text="Event-ID (innerhalb der zuständigen Rolle)") }}
+            {{ form.Input(id="slug_part", name="slug_part") }}
+            {{ form.FormNotice(text='Es können Buchstaben, Ziffern, Bindestriche und den Punkt "." verwendet werden. Die Event-ID kann später nicht mehr geändert werden!') }}
 
-    <div class="mb-3">
-        <label for="slug_part" class="form-label">Event-ID (innerhalb der zuständigen Rolle)</label>
-        <input name="slug_part" id="slug_part" class="form-control" pattern="[a-zA-Z0-9.-]+">
-        <div class="form-text">Es können Buchstaben, Ziffern, Bindestriche und den Punkt "." verwendet werden. Die Event-ID kann später nicht mehr geändert werden!</div>
-    </div>
+            {{ form.Label(for_id="supervising_role", text="Zuständige Rolle") }}
+            {% call form.Select(id="supervising_role", name="supervising_role") %}
+                {{ form.SelectDefaultOption() }}
+                {% for role in roles %}
+                    {{ form.SelectOption(value=role.id, text=role.name) }}
+                {% endfor %}
+            {% endcall %}
 
-    <div class="mb-3">
-        <label for="supervising_role" class="form-label">Zuständige Rolle</label>
-        <select id="supervising_role" name="supervising_role" class="form-select">
-            {% for role in roles %}
-            <option value="{{ role.id }}" title="{{ role.description }}">{{ role.name }}</option>
-            {% endfor %}
-        </select>
-    </div>
+            {{ form.Label(for_id="supervising_user", text="Ansprechperson") }}
+            {% call form.Select(id="supervising_user", name="supervising_user") %}
+                {{ form.SelectDefaultOption() }}
+                {% for user in users %}
+                    {{ form.SelectOption(value=user.id, text=user.qualified_name()) }}
+                {% endfor %}
+            {% endcall %}
 
-    <div class="mb-3">
-        <label for="supervising_user" class="form-label">Ansprechperson</label>
-        <select id="supervising_user" name="supervising_user" class="form-select">
-            {% for user in users %}
-            <option value="{{ user.id }}">{{ user.qualified_name() }}</option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <div class="mb-3">
-        <label for="event_day" class="form-label">Veranstaltungstag</label>
-        <input name="event_day" id="event_day" class="form-control" type="date">
-        <div class="form-text">Wenn die Veranstaltung über mehrere Tage geht, trage hier zunächst den ersten Tag ein. Dies kann später geändert werden.</div>
-    </div>
+            {{ form.Label(for_id="event_day", text="Veranstaltungstag") }}
+            {{ form.Input(id="event_day", name="event_day", type="date") }}
+            {{ form.FormNotice(text='Wenn die Veranstaltung über mehrere Tage geht, trage hier zunächst den ersten Tag ein. Dies kann später geändert werden.') }}
+        {% endcall %}
+        {% call cards.CardFooter() %}
+            {{ buttons.PrimaryButton(type="submit", text="Speichern") }}
+            {{ buttons.SecondaryButton(href=url_for('admin.events'), text="Abbrechen") }}
+        {% endcall %}
+    {% endcall %}
 </form>
 {% endblock body %}

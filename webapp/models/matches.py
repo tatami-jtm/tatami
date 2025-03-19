@@ -138,3 +138,19 @@ class MatchResult(db.Model):
             return None
         
         return data
+    
+    def get_white_scores(self, SBRULES):
+        data = self.data()
+        return [data['white'][c] for c in SBRULES['small_display'] if not SBRULES['scores'][c]['penalty']]
+    
+    def get_white_penalties(self, SBRULES):
+        data = self.data()
+        return [data['white'][c] for c in SBRULES['small_display'] if SBRULES['scores'][c]['penalty']]
+    
+    def get_blue_scores(self, SBRULES):
+        data = self.data()
+        return [data['blue'][c] for c in SBRULES['small_display'] if not SBRULES['scores'][c]['penalty']]
+    
+    def get_blue_penalties(self, SBRULES):
+        data = self.data()
+        return [data['blue'][c] for c in SBRULES['small_display'] if SBRULES['scores'][c]['penalty']]

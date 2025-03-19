@@ -1,0 +1,3 @@
+{% macro Recall(timer=60, disabled=True, pending=False, attr="") %}
+<button type="submit" class="recall-btn {{ 'pending' if pending }}" {{ attr|safe }} {{ 'disabled' if disabled }}>{{ timer }}</button>
+{% endmacro %}

@@ -1,0 +1,87 @@
+{%- import "components/buttons.html" as buttons -%}
+
+{% macro Scoreboard() %}
+<div class="scoreboard">
+    {{ caller () }}
+</div>
+{% endmacro %}
+
+{% macro ScoreboardHeader(mat=None, sb_href='') %}
+<div class="scoreboard-header">
+    <div class="scoreboard-view-menu">
+        {{ buttons.InvertedSubtleButton(text='Kampf', active=True, attr='data-control="view.main"') }}
+        {{ buttons.InvertedSubtleButton(text='Aufruf', attr='data-control="view.callup"') }}
+        {{ buttons.InvertedSubtleButton(text='Pause', attr='data-control="view.break"') }}
+    </div>
+    <div class="scoreboard-mat-no" data-static="mat-number">{{ mat or '' }}</div>
+    <div class="scoreboard-start-action">
+        <a href="{{ sb_href }}" class="btn btn-secondary" target="_new">Scoreboard öffnen</a>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro ScoreboardTimer(time=None) %}
+<div class="scoreboard-timer">
+    <div class="scoreboard-timer-actions">
+        {{ buttons.SecondaryButton(text="Korrektur", attr='data-control="time.main.correct"', inline=True) }}
+        {{ buttons.DangerButton(text="Arzt rufen", attr='data-control="flash.medical"', inline=True) }}
+    </div>
+    <div class="scoreboard-timer-watch" id="global-time">4:00</div>
+    <div class="scoreboard-timer-controls">
+        <button type="button" class="scoreboard-btn" data-control="time.main.start">Starten</button>
+        <button type="button" class="scoreboard-btn" disabled data-control="time.main.stop">Stoppen</button>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro ScoreboardRowWhite() %}
+<div class="scoreboard-row row-white">
+    {{ caller () }}
+</div>
+{% endmacro %}
+
+{% macro ScoreboardRowBlue() %}
+<div class="scoreboard-row row-blue">
+    {{ caller () }}
+</div>
+{% endmacro %}
+
+{% macro ScoreboardRowLabels() %}
+<div class="scoreboard-row row-labels">
+    {{ caller () }}
+</div>
+{% endmacro %}
+
+{% macro ScoreboardEmptyItem() %}
+<div class="scoreboard-item"></div>
+{% endmacro %}
+
+{% macro ScoreboardLabelItem(text='') %}
+<div class="scoreboard-item">
+    <div class="scoreboard-item-label">{{ text or (caller() if caller is defined) }}</div>
+</div>
+{% endmacro %}
+
+{% macro ScoreboardButtonPairItem(large_label='0', small_label='–', large_control='', small_control='', score=None, order='white', large_enabled=True, small_enabled=True, penalty=False, medium_rather_than_large=False) %}
+<div class="scoreboard-item">
+    {%- if order == 'white' -%}
+        <button type="button" class="scoreboard-item-button small {{ 'penalty' if penalty }} {{ 'disabled' if not small_enabled }}" data-control="{{ small_control }}"{% if score %} data-score="{{ score }}"{% endif %}>{{ small_label }}</button>
+        <button type="button" class="scoreboard-item-button {{ 'large' if not medium_rather_than_large else 'medium' }} {{ 'penalty' if penalty }} {{ 'disabled' if not large_enabled }}" data-control="{{ large_control }}"{% if score %} data-score="{{ score }}"{% endif %}>{{ large_label }}</button>
+    {%- else -%}
+        <button type="button" class="scoreboard-item-button {{ 'large' if not medium_rather_than_large else 'medium' }} {{ 'penalty' if penalty }} {{ 'disabled' if not large_enabled }}" data-control="{{ large_control }}"{% if score %} data-score="{{ score }}"{% endif %}>{{ large_label }}</button>
+        <button type="button" class="scoreboard-item-button small {{ 'penalty' if penalty }} {{ 'disabled' if not small_enabled }}" data-control="{{ small_control }}"{% if score %} data-score="{{ score }}"{% endif %}>{{ small_label }}</button>
+    {%- endif -%}
+</div>
+{% endmacro %}
+
+{% macro ScoreboardSingleButtonItem(label='0', control='', score=None, enabled=True, penalty=False, size="small") %}
+<div class="scoreboard-item">
+    <button type="button" class="scoreboard-item-button {{ size }} {{ 'penalty' if penalty }} {{ 'disabled' if not enabled }}" data-control="{{ control }}"{% if score %} data-score="{{ score }}"{% endif %}>{{ label }}</button>
+</div>
+{% endmacro %}
+
+{% macro ScoreboardOsaekomiItem(color="white", value='') %}
+<div class="scoreboard-item">
+    <div class="scoreboard-item-osaekomi" id="osaekomi-{{ color }}">{{ value }}</div>
+</div>
+{% endmacro %}

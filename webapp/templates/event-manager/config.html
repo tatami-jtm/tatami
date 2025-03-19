@@ -1,179 +1,153 @@
+{%- import "components/cards.html" as cards -%}
+{%- import "components/form.html" as form -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/datasets.html" as datasets -%}
+
 {% set event_page="config" %}
 {% extends "layouts/event-manager.html" %}
 {% block title %}{{ g.event.title }} | Einstellungen{% endblock %}
 {% block body %}
+
 <h1>Einstellungen</h1>
 
 <form action="" method="POST">
-    <div class="card my-3">
-        <div class="card-header">Allgemeine Einstellungen</div>
-        <div class="card-body">
-            <input type="hidden" name="form" value="general">
+    <input type="hidden" name="form" value="general">
 
-            <div class="mb-3">
-                <label for="title" class="form-label">Veranstaltungsname</label>
-                <input name="title" id="title" class="form-control" value="{{ g.event.title }}">
-            </div>
+    {% call cards.Card(title="Veranstaltungseigenschaften") %}
+        {% call cards.CardBody() %}
+            {{ form.Label(for_id='title', text="Veranstaltungsname") }}
+            {{ form.Input(id='title', name='title', value=g.event.title) }}
 
-            <div class="mb-3">
-                <label for="supervising_role" class="form-label">Zuständige Rolle</label>
-                <select id="supervising_role" name="supervising_role" class="form-select">
-                    {% for role in roles %}
-                    <option value="{{ role.id }}" title="{{ role.description }}" {{ 'selected' if role.id == g.event.supervising_role.id }}>{{ role.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        
-            <div class="mb-3">
-                <label for="supervising_user" class="form-label">Ansprechperson</label>
-                <select id="supervising_user" name="supervising_user" class="form-select">
-                    {% for user in users %}
-                    <option value="{{ user.id }}" {{ 'selected' if user.id == g.event.supervising_user.id }}>{{ user.qualified_name() }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        
-            <div class="mb-3">
-                <label for="event_day" class="form-label">Erster Tag der Veranstaltung</label>
-                <input name="event_day_first" id="event_day_first" class="form-control" type="date" value="{{ g.event.first_day.date() }}">
-            </div>
-        
-            <div class="mb-3">
-                <label for="event_day" class="form-label">Letzter Tag der Veranstaltung</label>
-                <input name="event_day_last" id="event_day_last" class="form-control" type="date" value="{{ g.event.last_day.date() }}">
-            </div>
-        </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-secondary">Speichern</button>
-        </div>
-    </div>
+            {{ form.Label(for_id='supervising_role', text="Zuständige Rolle") }}
+            {% call form.Select(id='supervising_role', name='supervising_role') %}
+                {% for role in roles %}
+                    {{ form.SelectOption(value=role.id, selected=(role.id == g.event.supervising_role.id), text=role.name) }}
+                {% endfor %}
+            {% endcall %}
+
+            {{ form.Label(for_id='supervising_user', text="Ansprechperson") }}
+            {% call form.Select(id='supervising_user', name='supervising_user') %}
+                {% for user in users %}
+                    {{ form.SelectOption(value=user.id, selected=(user.id == g.event.supervising_user.id), text=user.qualified_name()) }}
+                {% endfor %}
+            {% endcall %}
+
+            {{ form.Label(for_id='event_day_first', text="Erster Tag der Veranstaltung") }}
+            {{ form.Input(type='date', id='event_day_first', name='event_day_first', value=g.event.first_day.date()) }}
+
+            {{ form.Label(for_id='event_day_last', text="Letzter Tag der Veranstaltung") }}
+            {{ form.Input(type='date', id='event_day_last', name='event_day_last', value=g.event.last_day.date()) }}
+        {% endcall %}
+        {% call cards.CardFooter() %}
+            {{ buttons.SecondaryButton(type="submit", text="Speichern") }}
+        {% endcall %}
+    {% endcall %}
 </form>
 
 <form action="" method="POST">
-    <div class="card my-3">
-        <div class="card-header">Allgemeine Einstellungen</div>
-        <div class="card-body">
-            <input type="hidden" name="form" value="misc">
+    <input type="hidden" name="form" value="misc">
 
-            <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" role="switch" id="count_weighin_as_registration" name="count_weighin_as_registration" {{ 'checked' if g.event.setting('count_weighin_as_registration', False) }}>
-                <label class="form-check-label fw-bold" for="count_weighin_as_registration">Nicht akkreditierte TN gelten als angemeldet, wenn sie eingewogen wurden.</label>
-                <div class="form-text">Dies ist insb. auszuwählen, wenn keine gesonderte Akkreditierung stattfindet, sondern die TN gleich zur Waage gehen können.</div>
-            </div>
-            <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" role="switch" id="write_activity_log" name="write_activity_log" {{ 'checked' if g.event.setting('write_activity_log', True) }}>
-                <label class="form-check-label fw-bold" for="write_activity_log">Veranstaltungsprotokoll schreiben</label>
-            </div>
-            <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" role="switch" id="use_association_instead_of_club" name="use_association_instead_of_club" {{ 'checked' if g.event.setting('use_association_instead_of_club', False) }}>
-                <label class="form-check-label fw-bold" for="use_association_instead_of_club">Anstelle des Vereins wird für die Listen, das Scoreboard u. a. der Verband verwendet</label>
-                <div class="form-text">Dies ist insb. bei Meisterschaften mit Vorqualifikation auszuwählen, bei denen der Verband maßgeblich ist.<br>Eine Änderung dieser Einstellung gilt nur für TN, die danach einer Gruppe zugewiesen werden.</div>
-            </div>
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="proxplace_hide_name" name="proxplace_hide_name" {{ 'checked' if g.event.setting('proximity_placement.hide_name', False) }}>
-                <label class="form-check-label fw-bold" for="proxplace_hide_name">TN-Name bei Einteilung nach gewichtsnahen Gruppen ausblenden</label>
-            </div>
-            <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" role="switch" id="proxplace_hide_club" name="proxplace_hide_club" {{ 'checked' if g.event.setting('proximity_placement.hide_club', False) }}>
-                <label class="form-check-label fw-bold" for="proxplace_hide_name">Verein bzw. Verband bei Einteilung nach gewichtsnahen Gruppen ausblenden</label>
-            </div>
-            <div class="mb-3">
-                <label for="sbid" class="form-label">Scoreboard</label>
-                <select id="sbid" name="sbid" class="form-select">
-                    {% for sb in scoreboard_rulesets %}
-                    <option value="{{ sb.id }}" {{ 'selected' if sb.id == g.event.sb_ruleset().id }}>{{ sb.title }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-secondary">Speichern</button>
-        </div>
-    </div>
+    {% call cards.Card(title="Allgemeine Einstellungen") %}
+        {% call cards.CardBody() %}
+            {{ form.FormCheck(id='count_weighin_as_registration', name='count_weighin_as_registration', label='Nicht akkreditierte TN gelten als angemeldet, wenn sie eingewogen wurden', checked=g.event.setting('count_weighin_as_registration', False)) }}
+            {{ form.FormNotice(text='Dies ist insb. auszuwählen, wenn keine gesonderte Akkreditierung stattfindet, sondern die TN gleich zur Waage gehen können.') }}
+
+            {{ form.FormCheck(id='write_activity_log', name='write_activity_log', label='Veranstaltungsprotokoll schreiben', checked=g.event.setting('write_activity_log', False)) }}
+
+            {{ form.FormCheck(id='use_association_instead_of_club', name='use_association_instead_of_club', label='Anstelle des Vereins wird für die Listen, das Scoreboard u. a. der Verband verwendet', checked=g.event.setting('use_association_instead_of_club', False)) }}
+            {{ form.FormNotice(text='Dies ist insb. bei Meisterschaften mit Vorqualifikation auszuwählen, bei denen der Verband maßgeblich ist. Eine Änderung dieser Einstellung gilt nur für TN, die danach einer Gruppe zugewiesen werden.') }}
+
+            {{ form.FormCheck(id='proxplace_hide_name', name='proxplace_hide_name', label='TN-Name bei Einteilung nach gewichtsnahen Gruppen ausblenden', checked=g.event.setting('proximity_placement.hide_name', False)) }}
+
+            {{ form.FormCheck(id='proxplace_hide_club', name='proxplace_hide_club', label='Verein bzw. Verband bei Einteilung nach gewichtsnahen Gruppen ausblenden', checked=g.event.setting('proximity_placement.hide_club', False)) }}
+        {% endcall %}
+        {% call cards.CardBody() %}
+            {{ form.Label(for_id='sbid', text="Scoreboard") }}
+            {% call form.Select(id='sbid', name='sbid') %}
+                {% for sb in scoreboard_rulesets %}
+                    {{ form.SelectOption(value=sb.id, selected=(sb.id == g.event.sb_ruleset().id), text=sb.title) }}
+                {% endfor %}
+            {% endcall %}
+        {% endcall %}
+        {% call cards.CardFooter() %}
+            {{ buttons.SecondaryButton(type="submit", text="Speichern") }}
+        {% endcall %}
+    {% endcall %}
 </form>
 
 <form action="" method="POST">
-    <div class="card my-3">
-        <div class="card-header">Vollautomatische Listenführung</div>
-        <div class="card-body">
-            <input type="hidden" name="form" value="scheduling">
-            <p>TATAMI kann die Listen vollautomatisch führen, sodass ohne weiteres Zutun ausgewählt wird, welche der einer Matte zugewiesenen Listen eröffnet werden und welcher Kampf der eröffneten Listen stattfinden soll.</p>
+    <input type="hidden" name="form" value="scheduling">
 
-            <div class="form-check form-switch fw-bold">
-                <input class="form-check-input" type="checkbox" role="switch" id="use-scheduling" name="use-scheduling" {{ 'checked' if g.event.setting('scheduling.use', True) }}>
-                <label class="form-check-label" for="use-scheduling">Die Listen werden automatisch geführt.</label>
-            </div>
-        </div>
-        <div class="card-body border-top">
+    {% call cards.Card(title="Vollautomatische Listenführung") %}
+        {% call cards.CardBody() %}
+        
+        <p>TATAMI kann die Listen vollautomatisch führen, sodass ohne weiteres Zutun ausgewählt wird, welche der einer Matte zugewiesenen Listen eröffnet werden und welcher Kampf der eröffneten Listen stattfinden soll.</p>
+
+            {{ form.FormCheck(id='use-scheduling', name='use-scheduling', label='Die Listen werden automatisch geführt', checked=g.event.setting('scheduling.use', True)) }}
+        {% endcall %}
+        {% call cards.CardBody() %}
             <p>Wenn die Listen automatisch geführt werden, muss angegeben werden, wie viele Listen (auf einer Matte) gleichzeitig eröffnet sein dürfen und wie viele Teilnehmende gleichzeitig (auf einer Matte) in eröffneten Listen sein dürfen. Diese Einstellung beeinflusst, ob und wie viele Pausen ggf. notwendig werden und wie lange das Auskämpfen einer Liste dauert.</p>
 
-            <div class="mb-3">
-                <label for="scheduling-max-group" class="mb-1">Höchstzahl der Listen</label>
-                <input name="scheduling-max-group" id="scheduling-max-group" class="form-control" type="number" min="1" max="16" value="{{ g.event.setting('scheduling.max_concurrent_groups', 3) }}">
-            </div>
+            {{ form.Label(for_id='scheduling-max-group', text="Höchstzahl der Listen") }}
+            {{ form.Input(type='number', id='scheduling-max-group', name='scheduling-max-group', value=g.event.setting('scheduling.max_concurrent_groups', 3), attr='min=1 max=16'|safe) }}
 
-            <div class="mb-3">
-                <label for="scheduling-max-participant" class="mb-1">Höchstzahl der Teilnehmenden</label>
-                <input name="scheduling-max-participant" id="scheduling-max-participant" class="form-control" type="number" min="1" max="128" value="{{ g.event.setting('scheduling.max_concurrent_participants', 30) }}">
-            </div>
-        </div>
-        <div class="card-body border-top">
+            {{ form.Label(for_id='scheduling-max-participant', text="Höchstzahl der Teilnehmenden") }}
+            {{ form.Input(type='number', id='scheduling-max-participant', name='scheduling-max-participant', value=g.event.setting('scheduling.max_concurrent_participants', 30), attr='min=1 max=128'|safe) }}
+        {% endcall %}
+        {% call cards.CardBody() %}
             <p>Zudem muss bestimmt werden, wie viele Kämpfe (höchstens) im Voraus geplant werden sollen. Mehr geplante Kämpfe ermöglicht eine genauere Voraussage (z. B. für Fragen von Trainer/innen), aber verringern die Flexibilität, sodass ggf. mehr Pausen notwendig werden.</p>
 
-            <div class="mb-3">
-                <label for="scheduling-plan-ahead" class="mb-1">Im Voraus geplante Kämpfe</label>
-                <input name="scheduling-plan-ahead" id="scheduling-plan-ahead" class="form-control" type="number" min="1" max="128" value="{{ g.event.setting('scheduling.plan_ahead', 5) }}">
-            </div>
-        </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-secondary">Speichern</button>
-        </div>
-    </div>
+            {{ form.Label(for_id='scheduling-plan-ahead', text="Im Voraus geplante Kämpfe") }}
+            {{ form.Input(type='number', id='scheduling-plan-ahead', name='scheduling-plan-ahead', value=g.event.setting('scheduling.plan_ahead', 5), attr='min=1 max=128'|safe) }}
+        {% endcall %}
+        {% call cards.CardFooter() %}
+            {{ buttons.SecondaryButton(type="submit", text="Speichern") }}
+        {% endcall %}
+    {% endcall %}
 </form>
 
-
 <form action="" method="POST">
-    <div class="card my-3">
-        <div class="card-header">Zuweisung der Listensysteme</div>
-        <div class="card-body">
-            <input type="hidden" name="form" value="list_system_rules">
+    <input type="hidden" name="form" value="list_system_rules">
+
+    {% call cards.Card(title="Zuweisung der Listensysteme") %}
+        {% call cards.CardBody() %}
             <p>Damit TATAMI den einzelnen Kampfgruppen das richtige Listensystem zuweist, müssen die Zuweisungsregeln hier angegeben werden:</p>
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>TN-Anzahl</th>
-                        <th>Listensystem</th>
-                    </tr>
-                </thead>
-                <tbody>
+            {% call datasets.Table() %}
+                {% call datasets.TableHead() %}
+                    {{ datasets.TableHeadColumn(text='TN-Anzahl') }}
+                    {{ datasets.TableHeadColumn(text='Listensysteme') }}
+                {% endcall %}
+                {% call datasets.TableBody() %}
                     {% for range in ranges %}
-                    <tr>
-                        <th>{% if range[0] == range[1] %}{{ range[0] }}{% else %}{{ range[0] }} - {{ range[1] }}{% endif %} TN</th>
-                        {% set possible_systems = ListSystem.for_range(*range) %}
-                        {% set current_rule = system_rules.filter_by(minimum=range[0], maximum=range[1]).one_or_none() %}
-                        
-                        {% if possible_systems.count() == 1 %}
-                        <td>{{ possible_systems.first().title }}</td>
-                        <input type="hidden" name="list_system-{{ range[0] }}-{{ range[1] }}" value="{{ possible_systems.first().id }}">
-                        {% else %}
-                        <td>
-                            <select name="list_system-{{ range[0] }}-{{ range[1] }}" class="form-select">
-                                {% for opt in possible_systems.all() %}
-                                <option value="{{ opt.id }}" {{ 'selected' if current_rule and current_rule.system.id == opt.id }}>{{ opt.title }}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        {% endif %}
-                    </tr>
+                    {% set possible_systems = ListSystem.for_range(*range) %}
+                    {% set current_rule = system_rules.filter_by(minimum=range[0], maximum=range[1]).one_or_none() %}
+
+                        {% call datasets.TableRow() %}
+                            {% call datasets.TableColumn() %}
+                                {% if range[0] == range[1] %}{{ range[0] }}{% else %}{{ range[0] }} - {{ range[1] }}{% endif %} TN
+                            {% endcall %}
+                            {% if possible_systems.count() == 1 %}
+                                {{ datasets.TableColumn(text=possible_systems.first().title) }}
+                                <input type="hidden" name="list_system-{{ range[0] }}-{{ range[1] }}" value="{{ possible_systems.first().id }}">
+                            {% else %}
+                                {% call datasets.TableColumn() %}
+                                    {% call form.Select(id='list_system-' ~ range[0] ~ '-' ~ range[1], name='list_system-' ~ range[0] ~ '-' ~ range[1], class='m-0 py-0') %}
+                                        {% for opt in possible_systems.all() %}
+                                            {{ form.SelectOption(value=opt.id, selected=(current_rule and current_rule.system.id == opt.id), text=opt.title) }}
+                                        {% endfor %}
+                                    {% endcall %}
+                                {% endcall %}
+                            {% endif %}
+                        {% endcall %}
                     {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-secondary">Speichern</button>
-        </div>
-    </div>
+                {% endcall %}
+            {% endcall %}
+        {% endcall %}
+        {% call cards.CardFooter() %}
+            {{ buttons.SecondaryButton(type="submit", text="Speichern") }}
+        {% endcall %}
+    {% endcall %}
 </form>
 
 {% endblock body %}

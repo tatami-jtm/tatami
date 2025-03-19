@@ -1,0 +1,43 @@
+{%- import "components/brand.html" as brand -%}
+
+{%- macro Navbar(width="full") -%}
+<nav class="navbar">
+    <div class="navbar-container width-{{ width }}">
+        {{ caller() }}
+    </div>
+</nav>
+{%- endmacro -%}
+
+
+{%- macro NavbarBrand(href="/", name="TATAMI", label=None) -%}
+{{ brand.LargeBrand(href=href, name=name, label=label, class="for-large") }}
+{{ brand.BrandIcon(href=href, class="for-small") }}
+{%- endmacro -%}
+
+
+{%- macro NavbarCenteredText(text=None, bold=True) -%}
+<div class="navbar-centered-text {{ 'fw-bold' if bold }}">{{ text or (caller() if caller is defined) }}</div>
+{%- endmacro -%}
+
+{%- macro NavbarFiller() -%}
+<div class="navbar-filler"></div>
+{%- endmacro -%}
+
+
+{%- macro NavbarNav() -%}
+<div class="navbar-nav">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
+
+
+{%- macro NavbarNavItem(href="#", label="", icon=None) -%}
+{%- if icon != None -%}
+<a href="{{ href }}" class="navbar-nav-item navbar-nav-item-with-icon">
+    <i class="iconoir-{{ icon }}"></i>
+    <span class="navbar-nav-item-icon-label">{{ label or (caller() if caller is defined) }}</span>
+</a>
+{%- else -%}
+<a href="{{ href }}" class="navbar-nav-item">{{ label or (caller() if caller is defined) }}</a>
+{%- endif -%}
+{%- endmacro -%}

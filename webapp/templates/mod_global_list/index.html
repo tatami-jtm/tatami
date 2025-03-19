@@ -1,269 +1,203 @@
+{%- import "components/layout.html" as layout -%}
+{%- import "components/colboard.html" as colboard -%}
+{%- import "components/list.html" as list -%}
+{%- import "components/cards.html" as cards -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/dropdown.html" as dropdown -%}
+{%- import "components/form.html" as form -%}
+{%- import "components/pagination.html" as pagination -%}
+
+{%- from "shared/_match_summary.html" import match_summary -%}
+
 {% extends "layouts/application.html" %}
-{% from "mod_global_list/_match_summary.html" import match_summary, small_match_summary %}
+{% set page='index' %}
 {% block title %}Hauptliste{% endblock %}
 
 {% block body %}
+{% include "mod_global_list/_header.html" %}
 
-<div class="container-fluid">
-    {% if current_group %}
-    <div class="row align-items-center mb-3">
-        <div class="col-12 col-md-3">
-            <h1 class="h2 pt-1 py-1 fw-bold">Hauptliste</h1>
-        </div>
-        <div class="col-12 col-md-9">
-            <div class="row mb-2 bg-light p-1 mx-0">
-                <h4 class="h6 pt-1 m-0 px-1 fw-bold col">{{ current_group.title }}</h4>
-                <div class="col-auto px-0">
-                    <a href="?" class="btn btn-light btn-sm">Schließen</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% else %}
-    <h1 class="h2 py-2 fw-bold mb-3">Hauptliste</h1>
-    {% endif %}
-
-    <div class="row">
-        <div class="col-12 col-md-4">
-            <h3 class="h4 fw-bold mb-4">Kampfgruppen</h3>
-
-            <div class="nav nav-tabs tabs-sm">
-                <div class="nav-item">
-                    <a href="?group_list=status" class="nav-link {{ 'active' if request.values.get('group_list', 'status') == 'status' }}">
-                        Fortschritt
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="?group_list=participant_count" class="nav-link {{ 'active' if request.values.get('group_list', 'status') == 'participant_count' }}">
-                        TN-Anzahl
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="?group_list=match_count" class="nav-link {{ 'active' if request.values.get('group_list', 'status') == 'match_count' }}">
-                        Kampfanzahl
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="?group_list=time_remaining" class="nav-link {{ 'active' if request.values.get('group_list', 'status') == 'time_remaining' }}">
-                        Erw. Restdauer
-                    </a>
-                </div>
-            </div>
-            <div class="card mb-3">
-                <div class="card-header">
-                    <a href="{{ url_for('mod_global_list.rotate_all_groups', event=g.event.slug) }}" class="btn btn-light btn-sm float-end">Alle verteilen</a>
-                    Nicht zugewiesene Kampfgruppen</div>
-                {% for group in free_groups if not group.participants.count() == 0 and group.list_system() != None %}
-                <div class="card-body {{ 'border-top' if not loop.first }} py-2">
-                    {{ group_entry(group, request.values.get('group_list', 'status') == 'participant_count',
-                                          request.values.get('group_list', 'status') == 'status',
-                                          request.values.get('group_list', 'status') == 'match_count',
-                                          request.values.get('group_list', 'status') == 'time_remaining') }}
-                </div>
-                {% else %}
-                <div class="card-body py-1">
-                    <p class="m-0">Keine Kampfgruppen verbleibend.</p>
-                </div>
-                {% endfor %}
-            </div>
+{% call colboard.Colboard() %}
+    {% call colboard.ColboardColumn() %}
+        {% call colboard.ColboardColumnHeader(title="Kampfgruppen") %}
+            {%- call buttons.SubtleButton(href=url_for('mod_list.display_all_pdf', event=g.event.slug), download="all_lists_" ~ now.strftime("%Y-%m-%d_%H-%M-%S") ~ ".pdf") -%}
+                {{ buttons.ButtonIcon(icon="multiple-pages-empty", label="PDF") }}
+            {%- endcall -%}
+            {%- call buttons.SubtleButton(href=url_for('mod_list.display_all_zip', event=g.event.slug)) -%}
+                {{ buttons.ButtonIcon(icon="compact-disc", label="ZIP") }}
+            {%- endcall -%}
+        {% endcall %}
+        {% call colboard.ColboardColumnBody() %}
+            {% call cards.Card() %}
+                {% call cards.CardHeader() %}
+                    <div class="d-flex align-center justify-space-between">
+                        <div>Ausstehende Kampfgruppen</div>
+                        {%- call buttons.SecondaryButton(href=url_for('mod_global_list.rotate_all_groups', event=g.event.slug), inline=True) -%}
+                            {{ buttons.ButtonIcon(icon="shuffle", label="Verteilen") }}
+                        {%- endcall -%}
+                    </div>
+                {% endcall %}
+                {% call list.List() %}
+                    {% for group in free_groups
+                        if not group.participants.count() == 0 and group.list_system() != None %}
+                        {{ group_entry(group) }}
+                    {% else %}
+                    </div>
+                    {% call cards.CardBody() %}
+                        <p>Keine Kampfgruppen verbleibend.</p>
+                    {% endcall %}
+                    <div>
+                    {% endfor %}
+                {% endcall %}
+            {% endcall %}
 
             {% for mat in mats %}
-            <div class="card mb-3">
-                <div class="card-header">
-                    <a href="{{ url_for('mod_global_list.mark_all_at_mat_as_ready', event=g.event.slug, id=mat.id) }}" class="btn btn-light btn-sm float-end">Alle freigeben</a>
-                    <a href="{{ url_for('mod_global_list.preview_mat', event=g.event.slug, id=mat.id) }}" class="btn btn-light btn-sm float-end">Vorschau</a>
-                    {{ mat.title }}</div>
-                {% for group in mat.assigned_groups if not (group.completed and group.event_class.ended_fighting) %}
-                <div class="card-body {{ 'border-top' if not loop.first }} py-2">
-                    {{ group_entry(group, request.values.get('group_list', 'status') == 'participant_count',
-                                          request.values.get('group_list', 'status') == 'status',
-                                          request.values.get('group_list', 'status') == 'match_count',
-                                          request.values.get('group_list', 'status') == 'time_remaining') }}
-                </div>
-                {% else %}
-                <div class="card-body py-1">
-                    <p class="m-0">Keine Kampfgruppen zugewiesen.</p>
-                </div>
-                {% endfor %}
-            </div>
+                {% call cards.Card() %}
+                    {% call cards.CardHeader() %}
+                        <div class="d-flex align-center justify-space-between">
+                            <div>{{ mat.title }}</div>
+                            {%- call buttons.SecondaryButton(href=url_for('mod_global_list.mark_all_at_mat_as_ready', event=g.event.slug, id=mat.id), inline=True) -%}
+                                {{ buttons.ButtonIcon(icon="running", label="Alle freigeben") }}
+                            {%- endcall -%}
+                        </div>
+                    {% endcall %}
+                    {% call list.List() %}
+                        {% for group in mat.assigned_groups
+                            if not (group.completed and group.event_class.ended_fighting) %}
+                            {{ group_entry(group) }}
+                        {% else %}
+                        </div>
+                        {% call cards.CardBody() %}
+                            <p>Keine Kampfgruppen zugewiesen.</p>
+                        {% endcall %}
+                        <div>
+                        {% endfor %}
+                    {% endcall %}
+                {% endcall %}
             {% endfor %}
-            <a href="{{ url_for('mod_list.display_all_zip', event=g.event.slug) }}" class="btn btn-secondary mb-3">Listen herunterladen</a>
-            <a href="{{ url_for('mod_list.display_all_pdf', event=g.event.slug) }}" download="all_lists_{{ now.strftime("%Y-%m-%d_%H-%M-%S") }}.pdf" class="btn btn-secondary mb-3">Sammel-PDF</a>
-            <a href="{{ url_for('mod_global_list.class_progress', event=g.event.slug) }}" class="btn btn-secondary mb-3">Kampfklassen-Fortschritt</a>
-        </div>
-        <div class="col-12 col-md-4">
-            <h3 class="h4 fw-bold mb-4">Ausstehende Kämpfe</h3>
-            
-            {% if current_group %}
-            {% if current_group.marked_ready %}
-            <div class="mb-3">
-                <a href="{{ url_for('mod_global_list.parameters', event=g.event.slug, id=current_group.id) }}" class="btn btn-secondary btn-sm">TN-Parameter anzeigen/bearbeiten</a>
-            </div>
-            {% if scheduled_matches.count() %}
-            <div class="card mb-3">
-                <div class="card-header">Angesetze Kämpfe</div>
-                {% for match in scheduled_matches %}
-                <div class="card-body {{ 'border-top' if loop.index != 1 }} p-2 pt-1">
-                    {{ match_summary(match) }}
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
+        {% endcall %}
+    {% endcall %}
+    
+    {% if current_group %}
+        {%- call colboard.ColboardColumn(span=3) -%}
+            {% call colboard.ColboardColumnHeader(title=current_group.title) %}
+                {%- call buttons.SubtleButton(href=url_for('mod_global_list.parameters', event=g.event.slug, id=current_group.id), disabled=not current_group.marked_ready) -%}
+                    {{ buttons.ButtonIcon(icon="database-settings", label="Parameter") }}
+                {%- endcall -%}
+                {%- call buttons.SubtleButton(href=url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id), target="_blank") -%}
+                    {{ buttons.ButtonIcon(icon="binocular", label="PDF anzeigen") }}
+                {%- endcall -%}
+                {%- call buttons.SubtleButton(href=url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id), target="_blank") -%}
+                    {{ buttons.ButtonIcon(icon="download", label="PDF herunterladen") }}
+                {%- endcall -%}
+            {% endcall %}
+            {%- call colboard.Colboard() -%}
+                {% call colboard.ColboardColumn(span=2) %}
+                    {{ colboard.ColboardColumnHeader(title="Kämpfe der Gruppe") }}
+                    {% call colboard.ColboardColumnBody() %}
+                        {% if current_group.marked_ready %}
+                            {% if scheduled_matches.count() %}
+                                <h3>Angesetzte Kämpfe</h3>
+                                {% for match in scheduled_matches %}
+                                    {{ match_summary(match, controls=True) }}
+                                {% endfor %}
+                            {% endif %}
 
-            {% if not_scheduled_matches.count() %}
-            <div class="card mb-3">
-                <div class="card-header">Zukünftige Kämpfe</div>
-                {% for match in not_scheduled_matches %}
-                <div class="card-body {{ 'border-top' if loop.index != 1 }} p-2 pt-1">
-                    {{ match_summary(match) }}
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
+                            {% if not_scheduled_matches.count() %}
+                                <h3>Zukünftige Kämpfe</h3>
+                                {% for match in not_scheduled_matches %}
+                                        {{ match_summary(match, controls=True) }}
+                                {% endfor %}
+                            {% endif %}
 
-            {% if completed_matches.count() %}
-            <div class="card mb-3">
-                <div class="card-header">Erledigte Kämpfe</div>
-                {% for match in completed_matches %}
-                <div class="card-body {{ 'border-top' if loop.index != 1 }} p-2 pt-1">
-                    {{ match_summary(match) }}
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
+                            {% if completed_matches.count() %}
+                                <h3>Erledigte Kämpfe</h3>
+                                {% for match in completed_matches %}
+                                    {{ match_summary(match, controls=True) }}
+                                {% endfor %}
+                            {% endif %}
 
-            {% if obsolete_matches.count() %}
-            {% if 'obsolete' in request.values.keys() %}
-            <div class="card mb-3">
-                <div class="card-header">Kämpfe aus überholten Daten (aufgrund Fehleingabe)</div>
-                {% for match in obsolete_matches %}
-                <div class="card-body {{ 'border-top' if loop.index != 1 }} p-0">
-                    {{ match_summary(match) }}
-                </div>
-                {% endfor %}
-            </div>
-            {% else %}
-            <p class="fs-small">Es gibt Kämpfe aus überholten Daten. <a href="?group={{ current_group.id }}&obsolete=yes">Anzeigen?</a></p>
-            {% endif %}
-            {% endif %}
-            {% else %}
-            <p>Diese Liste ist noch nicht freigegeben. Die Kämpfe können erst berechnet werden, wenn die Gruppeneinteilung abschließend geprüft und freigegeben wurde.</p>
-            {% endif %}
-            {% endif %}
-        </div>
-        <div class="col-12 col-md-4">
-            <h3 class="h4 fw-bold mb-4">Kampfliste</h3>
-
-            {% if current_group %}
-            <div class="d-flex align-items-center justify-content-between">
-                <div class="mb-3">
-                    <a href="{{ url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id) }}" class="btn btn-secondary btn-sm" target="_blank">Als PDF anzeigen</a>
-                    <a href="{{ url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id) }}" download="{{ current_group.download_name('list.pdf') }}" class="btn btn-secondary btn-sm">Als PDF herunterladen</a>
-                </div>
-
-                <ul class="pagination pagination-sm">
-                    {% for _ in range(current_group.list_system().display_page_count) %}
-                    {% if request.values.get('page', "1") == ""~loop.index %}
-                    <li class="page-item active" aria-current="page"><span class="page-link">{{ loop.index }}</span></li>
-                    {% else %}
-                    <li class="page-item"><a class="page-link" href="?group={{ current_group.id }}&page={{ loop.index }}">{{ loop.index }}</a></li>
-                    {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
-            
-            <div class="mb-3">
-                <img src="{{ url_for('mod_list.display_image', event=g.event.slug, id=current_group.id, page=request.values.get('page')) }}" class="img-spinner" alt="">
-            </div>
-            {% endif %}
-        </div>
-    </div>
-</div>
-
+                            {% if obsolete_matches.count() %}
+                                {% if 'obsolete' in request.values.keys() %}
+                                    <h3>Überholte Kampfdaten</h3>
+                                    {% for match in obsolete_matches %}
+                                        {{ match_summary(match) }}
+                                    {% endfor %}
+                                {% else %}
+                                    <p class="fs-small">Es gibt Kämpfe aus überholten Daten. <a href="?group={{ current_group.id }}&obsolete=yes">Anzeigen?</a></p>
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            <p>Diese Liste ist noch nicht freigegeben. Die Kämpfe können erst berechnet werden, wenn die Gruppeneinteilung abschließend geprüft und freigegeben wurde.</p>
+                        {% endif %}
+                    {% endcall %}
+                {% endcall %}
+                {% call colboard.ColboardColumn(span=3) %}
+                    {{ colboard.ColboardColumnHeader(title="Kampfliste") }}
+                    {% call colboard.ColboardColumnBody() %}
+                        {%- call pagination.Pagination() -%}
+                            {% for _ in range(current_group.list_system().display_page_count) %}
+                                {{ pagination.PaginationItem(href="?group=" ~ current_group.id ~ "&page=" ~ loop.index, label=loop.index, active=(request.values.get('page', "1") == ""~loop.index)) }}
+                            {% endfor %}
+                        {%- endcall -%}
+                        
+                        <img src="{{ url_for('mod_list.display_image', event=g.event.slug, id=current_group.id, page=request.values.get('page')) }}" class="img-spinner" alt="">
+                    {% endcall %}
+                {% endcall %}
+            {% endcall %}
+        {% endcall %}
+    {% else %}
+        {{ colboard.ColboardEmptyColumn(span=3, text="Wähle eine Gruppe aus.") }}
+    {% endif %}
+{% endcall %}
 {% endblock body %}
 
-{% macro group_entry(group, show_participant_count=False, show_status=True, show_fight_count=False, show_estimated_time_remaining=False) %}
-<div class="row align-items-center g-2">
-    <h4 class="h5 col mb-0 {{ 'fw-bold' if group.id == current_group.id else 'fw-normal' }}">
-        <a href="?group={{ group.id }}" class="link-dark text-decoration-none w-100 d-block">
-            {{ group.title }}
-        </a>
-    </h4>
-    {% if show_participant_count %}
-    <div class="col-auto">
-        <span class="badge text-bg-light border fs-small">{{ group.participants.count() }} TN</span>
-    </div>
-    {% endif %}
-    {% if show_fight_count %}
-    <div class="col-auto">
-        {% if group.list_system().estimated_fight_count == 1 %}
-        <span class="badge text-bg-light border fs-small">1 Kampf</span>
-        {% else %}
-        <span class="badge text-bg-light border fs-small">{{ group.estimated_fight_count() }} Kämpfe</span>
-        {% endif %}
-    </div>
-    {% endif %}
-    {% if show_status %}
-    <div class="col-auto">
-        {% if not group.marked_ready %}
-        <span class="badge text-bg-secondary">Nicht freigegeben</span>
-        {% elif not group.opened %}
-        <span class="badge text-bg-warning">Ausstehend</span>
-        {% elif not group.completed %}
-        <span class="badge text-bg-danger">Kämpft</span>
-        {% else %}
-        <span class="badge text-bg-success">Beendet</span>
-        {% endif %}
-    </div>
-    {% endif %}
-    {% if show_estimated_time_remaining %}
-    <div class="col-auto">
-        <span class="badge text-bg-light border fs-small">ca. {{ group.estimated_remaining_fight_duration(in_minutes=True) }} min</span>
-    </div>
-    {% endif %}
-    <div class="col-auto">
-        <div class="dropdown">
-            <button
-                class="btn btn-light btn-sm fw-bold"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                data-bs-auto-close="outside">
-                ⋮
-            </button>
-    
-            <div class="dropdown-menu dropdown-wide">
-                <form action="{{ url_for('mod_global_list.update_group', event=g.event.slug, id=group.id) }}" method="POST" class="px-3 py-2">    
-                    <div class="mb-3">
-                        <label for="group-{{ group.id }}-assignment" class="mb-1">Zuweisung</label>
-                        <select name="assignment" id="group-{{ group.id }}-assignment" class="form-select">
-                            <option value="none" {{ 'selected' if not group.assigned }}>nicht zuweisen</option>
+{% macro group_entry(group) %}
+    {% call list.ListItem(active=group.id == current_group.id) %}
+        {% call list.ListItemBody(href='?group=' ~ group.id) %}
+            {{ list.ListItemBodyHeader(text=group.title) }}
+            {%- set status = "Nicht freigegeben" if not group.marked_ready else
+                             "Ausstehend" if not group.opened else
+                             "Kämpft" if not group.completed else
+                             "Beendet" -%}
+            {%- set status_color = "secondary-dark" if not group.marked_ready else
+                                   "warning" if not group.opened else
+                                   "danger" if not group.completed else
+                                   "success" -%}
+            {% call list.ListItemBodyDetail() %}<span class="bg-white text-{{ status_color }} fw-bold">{{ status }}</span> · {{ group.participants.count() }} TN{% endcall %}
+            {{ list.ListItemBodyDetail(text=group.estimated_fight_count() ~ (" Kämpfe" if group.estimated_fight_count() != 1 else " Kampf") ~ " (noch ca. " ~ group.estimated_remaining_fight_duration(in_minutes=True) ~ " min)") }}
+        {% endcall %}
+        {% call list.ListItemMenu() %}
+            {% call dropdown.Dropdown(right=True) %}
+                {% call dropdown.DropdownButton() %}
+                    {{ list.ListItemMenuItem(icon="settings", attr=dropdown.ToggleDropdownAttr(dropdown='#group-dropdown-' ~ group.id)) }}
+                {% endcall %}
+                {% call dropdown.DropdownDialog(id="group-dropdown-" ~ group.id) %}
+                    <form action="{{ url_for('mod_global_list.update_group', event=g.event.slug, id=group.id) }}" method="POST">
+                        {{ form.Label(for_id="group-assignment-" ~ group.id, text="Zuweisung") }}
+                        {% call form.Select(id="group-assignment-" ~ group.id, name="assignment") %}
+                            {{ form.SelectOption(value="none", selected=not group.assigned, text="nicht zuweisen") }}
                             {% for mat in mats %}
-                            <option value="{{ mat.id }}" {{ 'selected' if group.assigned and group.assigned_to_position.id == mat.id }}>{{ mat.title }}</option>
+                                {{ form.SelectOption(value=mat.id, selected=group.assigned and group.assigned_to_position.id == mat.id, text=mat.title) }}
                             {% endfor %}
-                        </select>
-                    </div>
+                        {% endcall %}
 
-                    <input type="hidden" name="group_list" value="{{ request.values.get('group_list', 'status') }}">
-                    
-                    {% if not group.marked_ready %}
-                    <div class="mb-3">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="group-{{ group.id }}-marked_ready" name="marked_ready">
-                            <label class="form-check-label fw-bold" for="group-{{ group.id }}-marked_ready">Gruppe zur Eröffnung freigeben</label>
-                        </div>
-                    </div>
-                    {% else %}
-                    <p class="mb-1">Gruppe wurde zur Eröffnung freigegeben.</p>
-                    {% endif %}
-    
-                    <button type="submit" class="btn btn-primary btn-sm">Speichern</button>
-                    {% if group.marked_ready %}
-                    <a href="{{ url_for('mod_global_list.reset_group', event=g.event.slug, id=group.id) }}" class="btn btn-sm btn-outline-danger">Kämpfe zurücksetzen</a>
-                    {% endif %}
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+                        <input type="hidden" name="group_list" value="{{ request.values.get('group_list', 'status') }}">
+                        
+                        {% if not group.marked_ready %}
+                            {{ form.FormCheck(id="group-marked_ready-" ~ group.id, name="marked_ready", label="Gruppe zur Eröffnung freigeben", class="fw-bold text-danger") }}
+                        {% else %}
+                            {{ form.FormCheck(id="group-marked_ready-" ~ group.id, label="Gruppe zur Eröffnung freigegeben", disabled=True, checked=True) }}
+                        {% endif %}
+
+                        {% call buttons.ButtonList() %}
+                            {{ buttons.PrimaryButton(type="submit", text="Speichern") }}
+                            {% if group.marked_ready %}
+                                {{ buttons.SubtleDangerButton(href=url_for('mod_global_list.reset_group', event=g.event.slug, id=group.id), text="Kämpfe zurücksetzen") }}
+                            {% endif %}
+                        {% endcall %}        
+                    </form>
+                {% endcall %}
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
 {% endmacro %}

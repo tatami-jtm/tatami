@@ -1,3 +1,9 @@
+{%- import "components/cards.html" as cards -%}
+{%- import "components/form.html" as form -%}
+{%- import "components/layout.html" as layout -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/datasets.html" as datasets -%}
+
 {% set event_page="registrations" %}
 {% set curpage = "registrations" %}
 {% extends "layouts/event-manager.html" %}
@@ -6,134 +12,168 @@
 {% block body %}
 {% include "event-manager/registrations/_header.html" %}
 
-<div class="card mb-4 shadow-none">
-    <div class="card-body">
-        <form action="" method="GET" id="filterform" class="row gx-1 align-items-end">
-            <div class="col-auto">
-                <label for="class_filter" class="form-label mb-1">Kampfklasse</label>
-                <select name="class_filter" id="class_filter" class="form-select w-min">
-                    <option value="">(alle anzeigen)</option>
-                    <optgroup label="Einzelne Kampfklassen">
-                        {% for cl in g.event.classes.order_by('title') %}
-                        <option value="{{ cl.id }}"{{ ' selected' if class_filter=='single' and cl.id == filtered_class.id }}>{{ cl.title }}</option>
-                        {% endfor %}
-                    </optgroup>
-                    <optgroup label="Nach Fortschritt">
-                        <option value="pending"{{ ' selected' if class_filter == 'pending' }}>Ausstehend</option>
-                        <option value="weighing_in"{{ ' selected' if class_filter == 'weighing_in' }}>In Waage</option>
-                        <option value="weighed_in"{{ ' selected' if class_filter == 'weighed_in' }}>Wiegen beendet</option>
-                        <option value="fighting"{{ ' selected' if class_filter == 'fighting' }}>Kämpft</option>
-                        <option value="completed"{{ ' selected' if class_filter == 'completed' }}>Beendet</option>
-                    </optgroup>
-                </select>
-            </div>
-            <div class="col-auto">
-                <label for="status_filter" class="form-label mb-1">Status</label>
-                <select name="status_filter" id="status_filter" class="form-select w-min">
-                    <option value="">(alle anzeigen)</option>
-                    <option value="not_yet_confirmed"{{ ' selected' if status_filter == 'not_yet_confirmed' }}>Nicht bestätigt</option>
-                    <option value="confirmed"{{ ' selected' if status_filter == 'confirmed' }}>Bestätigt</option>
-                    <option value="not_yet_registered"{{ ' selected' if status_filter == 'not_yet_registered' }}>Nicht akkreditiert</option>
-                    <option value="registered"{{ ' selected' if status_filter == 'registered' }}>Akkreditiert</option>
-                    <option value="registered_not_weighed_in"{{ ' selected' if status_filter == 'registered_not_weighed_in' }}>Akkreditiert, nicht Eingewogen</option>
-                    <option value="weighed_in"{{ ' selected' if status_filter == 'weighed_in' }}>Eingewogen</option>
-                    <option value="weighed_in_without_registration"{{ ' selected' if status_filter == 'weighed_in_without_registration' }}>Eingewogen, nicht Akkreditiert</option>
-                </select>
-            </div>
-            <div class="col-auto">
-                <label for="name_filter" class="form-label mb-1">Name</label>
-                <input type="text" class="form-control" id="name_filter" name="name_filter" value="{{ name_filter or '' }}">
-            </div>
-            <div class="col-auto">
-                <label for="club_filter" class="form-label mb-1">Verein</label>
-                <input type="text" class="form-control" id="club_filter" name="club_filter" value="{{ club_filter or '' }}">
-            </div>
-            <div class="col-auto">
-                <label for="externalid_filter" class="form-label mb-1">Ext. ID</label>
-                <input type="text" class="form-control w-min" id="externalid_filter" name="externalid_filter" value="{{ externalid_filter or '' }}">
-            </div>
-            <div class="col-auto">
-                <label for="order_by" class="form-label mb-1">Sortieren nach</label>
-                <select name="order_by" id="order_by" class="form-select w-min">
-                    <option value="">(Nach-, Vorname, Verein)</option>
-                    <option value="first_name"{{ ' selected' if order_by == 'first_name' }}>Vorname</option>
-                    <option value="last_name"{{ ' selected' if order_by == 'last_name' }}>Nachname</option>
-                    <option value="club"{{ ' selected' if order_by == 'club' }}>Verein</option>
-                    <option value="association"{{ ' selected' if order_by == 'association' }}>Verband</option>
-                    <option value="event_class"{{ ' selected' if order_by == 'event_class' }}>Kampfklasse</option>
-                    <option value="verified_weight"{{ ' selected' if order_by == 'verified_weight' }}>Gewicht</option>
-                </select>
-            </div>
-        </form>
-    </div>
-    <div class="card-footer">
-        <div class="row">
-            <div class="col col-auto">
-                <button type="submit" form="filterform" class="btn btn-primary">Filtern</button>
-                <a href="?" class="btn btn-secondary">Zurücksetzen</a>
-                <a href="{{ url_for('event_manager.import_registrations_index', event=g.event.slug) }}" class="btn btn-secondary">TN importieren</a>
-                {% if filtered_class %}
-                <a href="{{ url_for('event_manager.print_registrations', event=g.event.slug, id=filtered_class.id) }}" class="btn btn-secondary" target="_blank">TN/Wiegeliste drucken ({{ filtered_class.short_title }})</a>
-                <a href="{{ url_for('event_manager.class_registrations_as_csv', event=g.event.slug, id=filtered_class.id) }}" download="{{ filtered_class.download_name('registrations.csv') }}" class="btn btn-secondary">CSV exportieren ({{ filtered_class.short_title }})</a>
-                {% else %}
-                <a href="{{ url_for('event_manager.print_registrations', event=g.event.slug) }}" class="btn btn-secondary" target="_blank">TN/Wiegeliste drucken</a>
-                <a href="{{ url_for('event_manager.class_registrations_as_csv', event=g.event.slug) }}" class="btn btn-secondary">CSV exportieren</a>
-                {% endif %}
-            </div>
-            <div class="col"></div>
-            <div class="col col-auto">
-                <a href="{{ url_for('event_manager.create_registration', event=g.event.slug) }}" class="btn btn-outline-dark">TN hinzufügen</a>
-            </div>
-        </div>
-    </div>
-</div>
+<form action="" method="GET" id="filterform">
+    {% call cards.Card() %}
+    {% call cards.CardBody(class="pb-0") %}
+            {% call layout.Grid() %}
+                {% call layout.GridColumn(large_span=2) %}
+                    {{ form.Label(for_id='class_filter', text='Kampfklasse') }}
+                    {% call form.Select(id='class_filter', name='class_filter') %}
+                        {{ form.SelectOption(text="(alle anzeigen)", value="") }}
+                        <optgroup label="Einzelne Kampfklassen">
+                            {% for cl in g.event.classes.order_by('title') %}
+                            {{ form.SelectOption(text=cl.title, value=cl.id,
+                                selected=(class_filter=='single' and cl.id == filtered_class.id)) }}
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="Nach Fortschritt">
+                            {{ form.SelectOption(text="Ausstehend", value="pending",
+                                selected=(class_filter == 'pending')) }}
+                            {{ form.SelectOption(text="Ausstehend", value="weighing_in",
+                                selected=(class_filter == 'weighing_in')) }}
+                            {{ form.SelectOption(text="Ausstehend", value="weighed_in",
+                                selected=(class_filter == 'weighed_in')) }}
+                            {{ form.SelectOption(text="Kämpft", value="fighting",
+                                selected=(class_filter == 'fighting')) }}
+                            {{ form.SelectOption(text="Beendet", value="completed",
+                                selected=(class_filter == 'completed')) }}
+                        </optgroup>
+                    {% endcall %}
+                {% endcall %}
+                {% call layout.GridColumn(large_span=3) %}
+                    {{ form.Label(for_id='name_filter', text='Name') }}
+                    {{ form.Input(id='name_filter', name='name_filter', value=(name_filter or '')) }}
+                {% endcall %}
+                {% call layout.GridColumn(large_span=2) %}
+                    {{ form.Label(for_id='club_filter', text='Verein') }}
+                    {{ form.Input(id='club_filter', name='club_filter', value=(club_filter or '')) }}
+                {% endcall %}
+                {% call layout.GridColumn(large_span=1) %}
+                    {{ form.Label(for_id='externalid_filter', text='Ext. ID') }}
+                    {{ form.Input(id='externalid_filter', name='externalid_filter', value=(externalid_filter or '')) }}
+                {% endcall %}
+                {% call layout.GridColumn(large_span=2) %}
+                    {{ form.Label(for_id='status_filter', text='Status') }}
+                    {% call form.Select(id='status_filter', name='status_filter') %}
+                        {{ form.SelectOption(text="(alle anzeigen)", value="") }}
+                        {{ form.SelectOption(text="Nicht bestätigt", value="not_yet_confirmed",
+                            selected=(status_filter == 'not_yet_confirmed')) }}
+                        {{ form.SelectOption(text="Bestätigt", value="confirmed",
+                            selected=(status_filter == 'confirmed')) }}
+                        {{ form.SelectOption(text="Nicht akkreditiert", value="not_yet_registered",
+                            selected=(status_filter == 'not_yet_registered')) }}
+                        {{ form.SelectOption(text="Akkreditiert", value="registered",
+                            selected=(status_filter == 'registered')) }}
+                        {{ form.SelectOption(text="Akkreditiert, nicht Eingewogen", value="registered_not_weighed_in",
+                            selected=(status_filter == 'registered_not_weighed_in')) }}
+                        {{ form.SelectOption(text="Eingewogen", value="weighed_in",
+                            selected=(status_filter == 'weighed_in')) }}
+                        {{ form.SelectOption(text="Eingewogen, nicht Akkreditiert",
+                            value="weighed_in_without_registration",
+                            selected=(status_filter == 'weighed_in_without_registration')) }}
+                    {% endcall %}
+                {% endcall %}
+                {% call layout.GridColumn(large_span=2) %}
+                    {{ form.Label(for_id='order_by', text='Sortieren nach') }}
+                    {% call form.Select(id='order_by', name='order_by') %}
+                        {{ form.SelectOption(text="(Nach-, Vorname, Verein)", value="") }}
+                        {{ form.SelectOption(text="Vorname", value="first_name",
+                            selected=(order_by == 'first_name')) }}
+                        {{ form.SelectOption(text="Nachname", value="last_name",
+                            selected=(order_by == 'last_name')) }}
+                        {{ form.SelectOption(text="Verein", value="club",
+                            selected=(order_by == 'club')) }}
+                        {{ form.SelectOption(text="Verband", value="association",
+                            selected=(order_by == 'association')) }}
+                        {{ form.SelectOption(text="Kampfklasse", value="event_class",
+                            selected=(order_by == 'event_class')) }}
+                        {{ form.SelectOption(text="Gewicht", value="verified_weight",
+                            selected=(order_by == 'verified_weight')) }}
+                    {% endcall %}
+                {% endcall %}
+            {% endcall %}
+        {% endcall %}
+        {% call cards.CardFooter() %}
+            {% call layout.Grid() %}
+                {% call layout.GridColumn(large_span=8) %}
+                    {{ buttons.SecondaryButton(type="submit", text="Filtern") }}
+                    {{ buttons.SubtleButton(href="?", text="Zurücksetzen") }}
+                    {% if filtered_class %}
+                        {{ buttons.SubtleButton(href=url_for('event_manager.print_registrations', event=g.event.slug, id=filtered_class.id), text=("TN/Wiegeliste drucken"), target='_blank') }}
+                        {{ buttons.SubtleButton(href=url_for('event_manager.class_registrations_as_csv', event=g.event.slug, id=filtered_class.id), text="CSV exportieren") }}
+                    {% else %}
+                        {{ buttons.SubtleButton(href=url_for('event_manager.print_registrations', event=g.event.slug), text=("TN/Wiegeliste drucken"), target='_blank') }}
+                        {{ buttons.SubtleButton(href=url_for('event_manager.class_registrations_as_csv', event=g.event.slug), text=("CSV exportieren")) }}
+                    {% endif %}
+                {% endcall %}
+                {% call layout.GridColumn(large_span=4, class="text-right") %}
+                    {{ buttons.SecondaryButton(href=url_for('event_manager.import_registrations_index',
+                        event=g.event.slug), text="TN importieren") }}
+                    {{ buttons.PrimaryButton(href=url_for('event_manager.create_registration', event=g.event.slug),
+                        text="TN hinzufügen") }}
+                {% endcall %}
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+</form>
 
 {% if filtered %}
-<h2 class="h4 mb-3 fw-bold">{{ g.event.registrations.count() }} Teilnehmende (ausgewählt: {{ query|length }} TN)</h2>
+<h2>{{ g.event.registrations.count() }} Teilnehmende (ausgewählt: {{ query|length }} TN)</h2>
 {% else %}
-<h2 class="h4 mb-3 fw-bold">{{ g.event.registrations.count() }} Teilnehmende</h2>
+<h2>{{ g.event.registrations.count() }} Teilnehmende</h2>
 {% endif %}
 
-<table class="table table-hover table-bordered admin-style">
-    <thead>
-        <tr>
-            <th><a href="?order_by=event_class" class="link-dark">Kampfklasse</a></th>
-            <th><a href="?order_by=last_name" class="link-dark">Nachname</a></th>
-            <th><a href="?order_by=first_name" class="link-dark">Vorname</a></th>
-            <th>Ext. ID</th>
-            <th><a href="?order_by=club" class="link-dark">Verein</a></th>
-            <th><a href="?order_by=association" class="link-dark">Verband</a></th>
-            <th><a href="?order_by=verified_weight" class="link-dark">Gewicht</a></th>
-            <th>Status</th>
-            <td></td>
-        </tr>
-    </thead>
-    <tbody>
-        {% for reg in query %}
-        <tr>
-            <td>{{ reg.event_class.title }}</td>
-            <td>{{ reg.last_name }}</td>
-            <td>{{ reg.first_name }}</td>
-            <td>{{ reg.external_id or '-' }}</td>
-            <td>{{ reg.club or '-' }}</td>
-            <td>{{ reg.association.short_name if reg.association else "-" }}</td>
-            <td>{% if reg.weighed_in and reg.verified_weight %}{{ reg.verified_weight / 1000 }} kg{% else %}-{% endif %}</td>
-            <td>
-                {% if reg.weighed_in %}
-                <span class="text-success fw-bold">Eingewogen</span>
-                {% elif reg.registered %}
-                <span class="text-warning fw-bold">Akkreditiert</span>
-                {% elif reg.confirmed %}
-                <span class="text-danger fw-bold">Anmeldung bestätigt</span>
-                {% else %}
-                Nicht bestätigt
-                {% endif %}
-            </td>
-            <td>
-                <a href="{{ url_for('event_manager.edit_registration', event=g.event.slug, id=reg.id) }}" class="btn btn-sm btn-outline-dark">Bearbeiten</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% call datasets.Dataset(size="medium") %}
+    {% call datasets.Table() %}
+        {% call datasets.TableHead() %}
+            {{ datasets.TableHeadEmptyColumn() }}
+            {{ datasets.TableHeadColumn(href="?order_by=event_class", text="Kampfklasse") }}
+            {{ datasets.TableHeadColumn(href="?order_by=last_name", text="Nachname") }}
+            {{ datasets.TableHeadColumn(href="?order_by=first_name", text="Vorname") }}
+            {{ datasets.TableHeadColumn(text="Ext. ID") }}
+            {{ datasets.TableHeadColumn(href="?order_by=club", text="Verein") }}
+            {{ datasets.TableHeadColumn(href="?order_by=association", text="Verband") }}
+            {{ datasets.TableHeadColumn(href="?order_by=verified_weight", text="Gewicht") }}
+            {{ datasets.TableHeadColumn(text="Status") }}
+            {{ datasets.TableHeadEmptyColumn() }}
+        {% endcall %}
+        {% call datasets.TableBody() %}
+            {% for reg in query %}
+            {%- set check_id = ("registration-"~reg.id) -%}
+                {% call datasets.TableRow() %}
+                    {{ datasets.TableCheckColumn(name="registrations", id=check_id) }}
+                    {{ datasets.TableColumn(text=reg.event_class.title, check_id=check_id) }}
+                    {{ datasets.TableColumn(text=reg.last_name, check_id=check_id) }}
+                    {{ datasets.TableColumn(text=reg.first_name, check_id=check_id) }}
+                    {{ datasets.TableColumn(text=reg.external_id or '-', check_id=check_id) }}
+                    {{ datasets.TableColumn(text=reg.club or '-', check_id=check_id) }}
+                    {{ datasets.TableColumn(text=(reg.association.short_name if reg.association else '-'), check_id=check_id) }}
+                    {% call datasets.TableColumn(check_id=check_id) %}
+                        {% if reg.weighed_in and reg.verified_weight %}
+                            {{ reg.verified_weight / 1000 }} kg
+                        {% else %}
+                            -
+                        {% endif %}
+                    {% endcall %}
+                    {% call datasets.TableColumn(check_id=check_id) %}
+                        {% if reg.weighed_in %}
+                        <span class="text-success fw-bold">Eingewogen</span>
+                        {% elif reg.registered %}
+                        <span class="text-warning fw-bold">Akkreditiert</span>
+                        {% elif reg.confirmed %}
+                        <span class="text-danger fw-bold">Anmeldung bestätigt</span>
+                        {% else %}
+                        Nicht bestätigt
+                        {% endif %}
+                    {% endcall %}
+                    {% call datasets.TableButtonsColumn() %}
+                        {% call buttons.SubtleButton(href=url_for('event_manager.edit_registration', event=g.event.slug, id=reg.id), inline=True) %}
+                            {{ buttons.ButtonIcon(icon="edit-pencil")}}
+                        {% endcall %}
+                    {% endcall %}
+                {% endcall %}
+            {% endfor %}
+        {% endcall %}
+    {% endcall %}
+{% endcall %}
 {% endblock body %}

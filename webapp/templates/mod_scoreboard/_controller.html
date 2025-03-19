@@ -1,87 +1,42 @@
+{%- import "components/scoreboard.html" as scoreboard -%}
 {% set SBRULES = g.event.sb_rules() %}
 
-<div class="sb">
-    <div class="sb-header sb-dark">
-        <div class="row align-items-center">
-            <div class="col-12 col-md-4">
-                <div class="btn-group w-100" role="group" aria-label="Ansicht">
-                    <button type="button" data-control="view.main" class="btn btn-light fs-5">Kampf</button>
-                    <button type="button" data-control="view.callup" class="btn btn-light fs-5">Aufruf</button>
-                    <button type="button" data-control="view.break" class="btn active btn-light fs-5">Pause</button>
-                </div>
-            </div>
-            <div class="col-12 col-md-4">
-                {% if not g.deviceless %}
-                <h1 class="h3 text-center m-0" data-static="mat-number">{{ g.device.position.title }}</h1>
-                {% else %}
-                <h1 class="h3 text-center m-0" data-static="mat-number"></h1>
-                {% endif %}
-            </div>
-            <div class="col-12 col-md-4 text-end">
-                <a href="{{ url_for('scoreboard', ruleset=g.event.sb_ruleset().id) }}" target="_new" type="button" class="btn btn-light fs-5">Scoreboard öffnen</a>
-            </div>
-        </div>    
-    </div>
-    <div class="sb-time-header sb-light">
-        <div id="current-screen">Kampf</div>
-        <button type="button" data-control="flash.medical" class="btn btn-danger fw-bold">Arzt rufen</button>
-    </div>
-    <div class="sb-time sb-dark">
-        <div class="sb-time-global" id="global-time">4:00</div>
-        <div class="sb-time-control">
-            <button class="sb-btn" data-control="time.main.start">STARTEN</button>
-            <button class="sb-btn" disabled data-control="time.main.stop">STOPPEN</button>
-        </div>
-        <div class="sb-time-correct">
-            <button class="sb-btn" data-control="time.main.correct" title="Zeit manuell korrigieren">K</button>
-        </div>
-    </div>
-    <div class="sb-side sb-white">
+{% call scoreboard.Scoreboard() %}
+    {{ scoreboard.ScoreboardHeader(
+        mat=g.device.position.title,
+        sb_href=url_for('scoreboard', ruleset=g.event.sb_ruleset().id)
+    ) }}
+
+    {{ scoreboard.ScoreboardTimer(time='4:00') }}
+
+    {% call scoreboard.ScoreboardRowWhite() %}
         {% for c in SBRULES.controls %}
-        {% if c == 'osaekomi' %}
-        <div class="sb-cell sb-twobtncell sb-osaekomi-btns">
-            <button type="button" data-control="osaekomi.white.stop" disabled class="sb-btn">Toketa</button>
-            <button type="button" data-control="osaekomi.white.start" class="sb-btn sb-btn-large">OSAE-KOMI</button>
-        </div>
-        <div class="sb-cell sb-osaekomi">
-            <div id="osaekomi-white" class="sb-osaekomi-item"></div>
-        </div>
-        {% else %}
-        <div class="sb-cell sb-twobtncell {{ 'sb-penalty' if SBRULES.scores[c].penalty }}">
-            <button type="button" data-control="white.reduce" data-score="{{ c }}" disabled class="sb-btn">&ndash;</button>
-            <button type="button" data-control="white.expand" data-score="{{ c }}" class="sb-btn sb-btn-large">0</button>
-        </div>
-        {% endif %}
+            {% if c == 'osaekomi' %}
+                {{ scoreboard.ScoreboardButtonPairItem(small_control='osaekomi.white.stop', large_control='osaekomi.white.start', small_label='Toketa', large_label='Osae-komi', medium_rather_than_large=True, order='white') }}
+                {{ scoreboard.ScoreboardOsaekomiItem(color="white") }}
+            {% else %}
+                {{ scoreboard.ScoreboardButtonPairItem(large_control='white.expand', small_control='white.reduce', score=c, order='white', penalty=SBRULES.scores[c].penalty) }}
+            {% endif %}
         {% endfor %}
-    </div>
-    <div class="sb-side-labels sb-dark">
+    {% endcall %}
+    {% call scoreboard.ScoreboardRowLabels() %}
         {% for c in SBRULES.controls %}
-        {% if c == 'osaekomi' %}
-        <div class="sb-cell sb-btncell">
-            <button type="button" data-control="osaekomi.toggle" disabled class="sb-btn">&laquo; Tauschen &raquo;</button>
-        </div>
-        <div class="sb-cell sb-cellskip"></div>
-        {% else %}
-        <div class="sb-cell sb-label">{{ SBRULES.scores[c].name.upper() }}</div>
-        {% endif %}
+            {% if c == 'osaekomi' %}
+                {{ scoreboard.ScoreboardSingleButtonItem(label="Tauschen", control="osaekomi.toggle") }}
+                {{ scoreboard.ScoreboardEmptyItem() }}
+            {% else %}
+                {{ scoreboard.ScoreboardLabelItem(text=SBRULES.scores[c].name) }}
+            {% endif %}
         {% endfor %}
-    </div>
-    <div class="sb-side sb-blue">
+    {% endcall %}
+    {% call scoreboard.ScoreboardRowBlue() %}
         {% for c in SBRULES.controls %}
-        {% if c == 'osaekomi' %}
-        <div class="sb-cell sb-twobtncell sb-osaekomi-btns">
-            <button type="button" data-control="osaekomi.blue.start" class="sb-btn sb-btn-large">OSAE-KOMI</button>
-            <button type="button" data-control="osaekomi.blue.stop" disabled class="sb-btn">Toketa</button>
-        </div>
-        <div class="sb-cell sb-osaekomi">
-            <div id="osaekomi-blue" class="sb-osaekomi-item"></div>
-        </div>
-        {% else %}
-        <div class="sb-cell sb-twobtncell {{ 'sb-penalty' if SBRULES.scores[c].penalty }}">
-            <button type="button" data-control="blue.expand" data-score="{{ c }}" class="sb-btn sb-btn-large">0</button>
-            <button type="button" data-control="blue.reduce" data-score="{{ c }}" disabled class="sb-btn">&ndash;</button>
-        </div>
-        {% endif %}
+            {% if c == 'osaekomi' %}
+                {{ scoreboard.ScoreboardButtonPairItem(small_control='osaekomi.blue.stop', large_control='osaekomi.blue.start', small_label='Toketa', large_label='Osae-komi', medium_rather_than_large=True, order='blue') }}
+                {{ scoreboard.ScoreboardOsaekomiItem(color="blue") }}
+            {% else %}
+                {{ scoreboard.ScoreboardButtonPairItem(large_control='blue.expand', small_control='blue.reduce', score=c, order='blue', penalty=SBRULES.scores[c].penalty) }}
+            {% endif %}
         {% endfor %}
-    </div>
-</div>
+    {% endcall %}
+{% endcall %}

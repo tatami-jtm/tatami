@@ -1,15 +1,20 @@
+{%- import "components/layout.html" as layout -%}
+
 {% extends "layouts/application.html" %}
 {% block title %}Scoreboard (nur Anzeige){% endblock %}
+
 {% block body %}
-<div class="row h-full">
-    <div class="col-12 col-xl-3 p-3 ignorable border-end shadow-sm bg-light overflow-y-auto h-100">
+{% call layout.Grid(class="h-full-with-navbar mh-full-with-navbar") %}
+    {% call layout.GridColumn(large_span=3, scrollable=True, class="p-2") %}
         {% include "mod_scoreboard/_standalone_properties.html" %}
-    </div>
-    <div class="col-12 col-xl-9 p-0">
+    {% endcall %}
+    {% call layout.GridColumn(large_span=9) %}
         {% include "mod_scoreboard/_controller.html" %}
-    </div>
-</div>
+    {% endcall %}
+
+{% endcall %}
 {% endblock body %}
+
 {% block custom_header %}
 <script src="{{ url_for('static', filename='application/scoreboard/controller_action.js') }}" defer></script>
 <script src="{{ url_for('static', filename='application/scoreboard/controller_state.js') }}" defer></script>

@@ -1,0 +1,19 @@
+{%- macro ErrorContainer() -%}
+<div class="container error-container">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
+
+{%- macro ErrorHeading(text="") -%}
+<h1 class="error-heading">{{ text or (caller() if caller is defined) }}</h1>
+{%- endmacro -%}
+
+{%- macro ErrorExplanation(text="") -%}
+<p class="error-explanation">{{ text or (caller() if caller is defined) }}</p>
+{%- endmacro -%}
+
+{%- macro ErrorOptions() -%}
+<div class="error-options">
+    {{ caller() }}
+</div>
+{%- endmacro -%}

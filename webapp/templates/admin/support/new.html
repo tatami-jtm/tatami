@@ -1,21 +1,25 @@
+{% import "components/cards.html" as cards %}
+{% import "components/form.html" as form %}
+{% import "components/buttons.html" as buttons %}
+
 {% extends "layouts/admin.html" %}
 {% block title %}Administrationsbereich{% endblock %}
 {% block body %}
 
-<h1 class="mb-4">Problem melden</h1>
+<h1>Problem melden</h1>
 
 <form action="" method="POST">
-    <div class="card card-semidialog mb-3">
-        <div class="card-body">
+    {% call cards.Card(class="width-medium mx-0") %}
+        {% call cards.CardBody() %}
             <p>Sie haben ein Problem bzw. benötigen Hilfe auf dieser Plattform? Bitte schildern Sie das Problem so genau wie möglich, damit wir Ihnen bestmöglich helfen können. Geben Sie ggf. das Turnier an, auf das sich das Problem bezieht.</p>
 
-            <label for="description" class="form-label">Problembeschreibung/Anfrage</label>
-            <textarea name="description" id="description" class="form-control"></textarea>
-        </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-primary">Problem melden</button>
-        </div>
-    </div>
+            {{ form.Label(for_id="description", text="Problembeschreibung bzw. Anfrage") }}
+            {{ form.Textarea(id="description", name="description") }}
+        {% endcall %}
+        {% call cards.CardFooter() %}
+            {{ buttons.PrimaryButton(type="submit", text="Problem melden") }}
+        {% endcall %}
+    {% endcall %}
 </form>
 
 {% endblock body %}

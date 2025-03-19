@@ -1,0 +1,41 @@
+{%- macro _Brand(name="TATAMI", label=None, size=None, href=None, class="") -%}
+{%- if href == None -%}
+<span class="brand {{ 'brand-' + size if size else '' }} {{ class }}">
+    <span class="brand-name">{{ name }}</span>
+    {%- if label -%}
+    <span class="brand-label">{{ label }}</span>
+    {%- endif -%}
+</span>
+{%- else -%}
+<a href="{{ href }}" class="brand {{ 'brand-' + size if size else '' }}  {{ class }}">
+    <span class="brand-name">{{ name }}</span>
+    {%- if label -%}
+    <span class="brand-label">{{ label }}</span>
+    {%- endif -%}
+</a>
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro Brand(name="TATAMI", label=None, href=None, class=None) -%}
+{{ _Brand(name=name, label=label, size=None, href=href, class=class) }}
+{%- endmacro -%}
+
+{%- macro LargeBrand(name="TATAMI", label=None, href=None, class=None) -%}
+{{ _Brand(name=name, label=label, size="large", href=href, class=class) }}
+{%- endmacro -%}
+
+{%- macro SmallBrand(name="TATAMI", label=None, href=None, class=None) -%}
+{{ _Brand(name=name, label=label, size="small", href=href, class=class) }}
+{%- endmacro -%}
+
+{%- macro BrandIcon(href=None, class="") -%}
+{%- if href == None -%}
+<span class="brand brand-icon {{ class }}">
+    <span class="brand-name">T</span>
+</span>
+{%- else -%}
+<a href="{{ href }}" class="brand brand-icon {{ class }}">
+    <span class="brand-name">T</span>
+</a>
+{%- endif -%}
+{%- endmacro -%}

@@ -1,247 +1,180 @@
+{%- import "components/colboard.html" as colboard -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/list.html" as list -%}
+{%- import "components/alerts.html" as alerts -%}
+{%- import "components/cards.html" as cards -%}
+
+{% set body_not_in_container=True %}
 {% extends "layouts/application.html" %}
 {% set page=event_class %}
 {% block title %}Einteilung - {{ event_class.title }}{% endblock %}
 {% block pre_messages %}{% include "mod_placement/_header.html" %}{% endblock %}
 {% block body %}
-<div class="container-fluid">
+
+{% call colboard.Colboard() %}
+
+    {% call colboard.ColboardColumn() %}
+        {%- call colboard.ColboardColumnHeader(title="Nicht zugewiesene TN") -%}
+            {% if proximity %}
+                {%- call buttons.SubtleButton(href=url_for('mod_placement.assign_all_proximity', event=g.event.slug, id=event_class.id)) -%}
+                    {{ buttons.ButtonIcon(icon="fast-arrow-right-square") }}
+                {%- endcall -%}
+            {% else %}
+                {%- call buttons.SubtleButton(href=url_for('mod_placement.assign_all_predefined', event=g.event.slug, id=event_class.id)) -%}
+                    {{ buttons.ButtonIcon(icon="fast-arrow-right-square") }}
+                {%- endcall -%}
+            {% endif %}
+        {%- endcall -%}
+
+        {%- call list.List() -%}
+            {% for reg in registrations.all() %}
+                {%- call list.ListItem() -%}
+                    {%- call list.ListItemBody() -%}
+                        {{ list.ListItemBodyHeader(reg.first_name + ' ' + reg.last_name) }}
+                        {{ list.ListItemBodyDetail(reg.association.name if g.event.setting('use_association_instead_of_club', False) and reg.association else reg.club) }}
+                        {{ list.ListItemBodyDetail(reg.verified_weight / 1000 ~ ' kg') }}
+                    {%- endcall -%}
+                    {%- call list.ListItemMenu() -%}
+                        {{ list.ListItemMenuItem(href=url_for('mod_placement.assign', event=g.event.slug, id=event_class.id, registration=reg.id, group=(current_group.id if current_group else None)), icon="plus-circle") }}
+                    {%- endcall -%}
+                {%- endcall -%}
+            {% endfor %}
+        {%- endcall -%}
+    {% endcall %}
+
+    {% call colboard.ColboardColumn() %}
+        {%- call colboard.ColboardColumnHeader(title=('Gewichtsklassen' if not proximity else 'Gewichtsnahe Gruppen')) -%}
+            {%- call buttons.SubtleButton(href=url_for('mod_placement.add_group', event=g.event.slug, id=event_class.id)) -%}
+                {{ buttons.ButtonIcon(icon="plus") }}
+            {%- endcall -%}
+            {%- call buttons.SubtleButton(href=url_for('mod_placement.place_for_all_groups', event=g.event.slug, id=event_class.id)) -%}
+                {{ buttons.ButtonIcon(icon="dice-five") }}
+            {%- endcall -%}
+            {%- call buttons.SubtleButton() -%}
+                {{ buttons.ButtonIcon(icon="refresh-double") }}
+            {%- endcall -%}
+            {%- call buttons.SubtleDangerButton(href=url_for('mod_placement.delete_all_for_class', event=g.event.slug, id=event_class.id)) -%}
+                {{ buttons.ButtonIcon(icon="trash") }}
+            {%- endcall -%}
+        {%- endcall -%}
+
+        {%- call list.List() -%}
+            {% for group in groups.order_by('title').all() %}
+                {%- call list.ListItem(href="?group=" ~ group.id, active=(group == current_group)) -%}
+                    {%- call list.ListItemBody() -%}
+                        {{ list.ListItemBodyHeader(group.title) }}
+                        {% if group.participants.count() == 0 %}
+                            {{ list.ListItemBodyDetail("0 TN") }}
+                        {% else %}
+                            {{ list.ListItemBodyDetail(group.participants.count() ~ " TN - " ~ (group.list_system().title if group.list_system() else "KEIN LISTENSYSTEM")) }}
+                        {% endif %}
+                    {%- endcall -%}
+                {%- endcall -%}
+            {% endfor %}
+        {%- endcall -%}
+    {% endcall %}
+
     {% if current_group %}
-    <div class="row align-items-center mb-3">
-        <div class="col-12 col-md-6">
-            <h1 class="h2 pt-1 py-1 fw-bold">{{ event_class.title }} &ndash; {{ 'Gewichtsklassen' if not proximity else 'Gewichtsnahe Gruppen' }}</h1>
-        </div>
-        <div class="col-12 col-md-6">
-            <div class="row mb-2 bg-light p-1 mx-0">
-                <h4 class="h6 pt-1 m-0 px-1 fw-bold col">{{ current_group.title }}</h4>
-                <div class="col-auto px-0">
-                    <a href="?" class="btn btn-light btn-sm">Schließen</a>
-                </div>
-            </div>
-        </div>
-    </div>
+        {%- call colboard.ColboardColumn(span=2) -%}
+            {%- call colboard.ColboardColumnHeader(title=current_group.title) -%}
+                {%- call buttons.SubtleButton(href=url_for('mod_placement.assign', event=g.event.slug, id=event_class.id, group=current_group.id), disabled=current_group.marked_ready) -%}
+                    {{ buttons.ButtonIcon(icon="plus") }}
+                {%- endcall -%}
+                {%- call buttons.SubtleButton(href=url_for('mod_placement.edit_group', event=g.event.slug, id=event_class.id, group_id=current_group.id), disabled=current_group.marked_ready) -%}
+                    {{ buttons.ButtonIcon(icon="edit-pencil") }}
+                {%- endcall -%}
+                {%- call buttons.SubtleButton(href=url_for('mod_placement.place_all', event=g.event.slug, id=event_class.id, group_id=current_group.id), disabled=current_group.marked_ready) -%}
+                    {{ buttons.ButtonIcon(icon="dice-three") }}
+                {%- endcall -%}
+                {%- call buttons.SubtleButton(href=url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id, draft=(1 if not current_group.marked_ready else None))) -%}
+                    {{ buttons.ButtonIcon(icon="empty-page") }}
+                {%- endcall -%}
+            {%- endcall -%}
+
+            {%- call colboard.Colboard() -%}
+                {%- call colboard.ColboardColumn() -%}
+                    {{ colboard.ColboardColumnHeader(title="TN der Gruppe") }}
+
+                    {% if current_group.marked_ready %}
+                        {%- call colboard.ColboardColumnBody() %}
+                            {%- call alerts.InfoAlert() %}
+                                <p>Diese Gruppe wurde zum Kämpfen freigegeben und kann daher nicht mehr geändert werden.</p>
+                                <p>Die Hauptliste kann die Kämpfe zurücksetzen und dadurch die Freigabe zurücknehmen</p>
+                            {%- endcall -%}
+                        {%- endcall -%}
+                    {% else %}
+                        {%- call list.List() -%}
+                            {% for part in current_group.participants.filter_by(placement_index=None).all() %}
+                                {%- call list.ListItem() -%}
+                                    {%- call list.ListItemBody() -%}
+                                        {{ list.ListItemBodyHeader(part.full_name) }}
+                                        {{ list.ListItemBodyDetail(part.association_name) }}
+                                    {%- endcall -%}
+                                    {%- call list.ListItemMenu() -%}
+                                        {{ list.ListItemMenuItem(href=url_for('mod_placement.unassign', event=g.event.slug, id=event_class.id, participant_id=part.id), icon="minus-circle") }}
+                                        {{ list.ListItemMenuItem(href=url_for('mod_placement.place', event=g.event.slug, id=event_class.id, participant_id=part.id), icon="plus-circle") }}
+                                    {%- endcall -%}
+                                {%- endcall -%}
+                            {% endfor %}
+                        {%- endcall -%}
+                    {% endif %}
+                {%- endcall -%}
+                {%- call colboard.ColboardColumn() -%}
+                    {{ colboard.ColboardColumnHeader(title="Setzen und Losen") }}
+                    {% call colboard.ColboardColumnBody() %}
+                        {% set list_system = current_group.list_system() %}
+                        {% if list_system %}
+                            {% call cards.Card(title=list_system.title) %}
+                                {% for prei in range(list_system.mandatory_maximum) %}
+                                    {% set i = list_system.list_class().meta._allocation_order[prei] - 1 %}
+                                    {% set participant = current_group.participants.filter_by(placement_index=i).first() %}
+                                    {% call cards.CardBody(class="p-1") %}
+                                        {% call layout.Grid(class="align-center") %}
+                                            {% call layout.GridColumn(span="1") %}
+                                                <div class="fs-3 text-center fw-bold {{ 'text-secondary' if not participant else 'text-dark' }}">{{ i + 1 }}</div>
+                                            {% endcall %}
+                                            {% if not participant %}
+                                                {% call layout.GridColumn(span="auto") %}n. n.{% endcall %}
+                                            {% else %}
+                                                {% call layout.GridColumn(span="") %}
+                                                    {% if participant.manually_placed %}
+                                                        <strong title="TN wurde manuell gesetzt."><i class="iconoir-pin"></i> {{ participant.full_name }}</strong><br>
+                                                    {% else %}
+                                                        <strong>{{ participant.full_name }}</strong><br>
+                                                    {% endif %}
+                                                    {{ participant.association_name }}
+                                                {% endcall %}
+                                                {% if not current_group.marked_ready %}
+                                                    {% call layout.GridColumn(span="auto") %}
+                                                        {% call buttons.SubtleButton(href=url_for('mod_placement.unplace', event=g.event.slug, id=event_class.id, participant_id=participant.id)) %}
+                                                            {{ buttons.ButtonIcon(icon='minus-circle') }}
+                                                        {% endcall %}
+                                                    {% endcall %}
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endcall %}
+                                    {%- endcall -%}
+                                {% endfor %}
+                            {%- endcall -%}
+                        {% elif current_group.participants.count() == 0 %}
+                            {%- call alerts.InfoAlert() %}
+                                <p>Noch kein Listensystem zugewiesen.</p>
+                                <p>Dieser Gruppe wurden noch keine Teilnehmenden hinzugefügt, sodass noch kein Listensystem bestimmt werden kann.</p>
+                            {%- endcall -%}
+                        {% else %}
+                            {%- call alerts.DangerAlert() %}
+                                <p>Noch kein Listensystem zugewiesen.</p>
+                                <p>Dies tritt in der Regel auf, wenn diese Gruppe zu groß ist, sodass kein ausreichend mächtiges Listensystem bereitsteht.</p>
+                            {%- endcall -%}
+                        {% endif %}
+                    {%- endcall -%}
+                {%- endcall -%}
+            {%- endcall -%}
+        {%- endcall -%}
     {% else %}
-    <h1 class="h2 py-2 fw-bold mb-3">{{ event_class.title }} &ndash; {{ 'Gewichtsklassen' if not proximity else 'Gewichtsnahe Gruppen' }}</h1>
+        {{ colboard.ColboardEmptyColumn(span=2, text="Wähle eine Gruppe aus.") }}
     {% endif %}
 
-    <div class="row">
-        <div class="col-12 col-md-3">
-            <h3 class="h4 fw-bold mb-2">Nicht zugewiesene TN</h3>
-
-            {% if registrations.count() %}
-            
-            <div class="mb-3">
-                {% if proximity %}
-                <a href="{{ url_for('mod_placement.assign_all_proximity', event=g.event.slug, id=event_class.id) }}" class="btn btn-primary btn-sm">Verbleibende TN zuweisen</a>
-                {% else %}
-                <a href="{{ url_for('mod_placement.assign_all_predefined', event=g.event.slug, id=event_class.id) }}" class="btn btn-primary btn-sm">Verbleibende TN zuweisen</a>
-                {% endif %}
-            </div>
-
-            <div class="card">
-                {% for reg in registrations.all() %}
-                <div class="card-body p-2 {{ 'border-top' if not loop.index == 1 }}">
-                    <div class="row">
-                        <div class="col-7">
-                            <strong>{{ reg.first_name }} {{ reg.last_name }}</strong><br>
-                            {{ reg.association.name if g.event.setting('use_association_instead_of_club', False) and reg.association else reg.club }}
-                        </div>
-                        <div class="col-2 fs-small ps-2">{{ reg.verified_weight / 1000 }} kg</div>
-                        <div class="col-3">
-                            <a href="{{ url_for('mod_placement.assign', event=g.event.slug, id=event_class.id, registration=reg.id) }}" class="btn btn-secondary w-100 btn-sm">Zuweisen</a>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-
-            {% else %}
-            
-            <p class="mb-1">Keine nicht zugewiesenen Teilnehmenden verbleibend.</p>
-            <p>Yay!</p>
-
-            {% endif %}
-        </div>
-        <div class="col-12 col-md-3">
-            <h3 class="h4 fw-bold mb-2">Gruppen</h3>
-            <div class="mb-2">
-                <a href="{{ url_for('mod_placement.add_group', event=g.event.slug, id=event_class.id) }}" class="btn btn-secondary btn-sm">Neue Gruppe</a>
-                <a href="{{ url_for('mod_placement.place_for_all_groups', event=g.event.slug, id=event_class.id) }}" class="btn btn-secondary btn-sm">Alle Gruppen losen</a>
-            </div>
-
-            {% if groups.count() %}
-
-            <div class="card mt-3">
-                {% for group in groups.order_by('title').all() %}
-                <div class="card-body p-2 {{ 'border-top' if not loop.index == 1 }}">
-                    <div class="row">
-                        {% if group.list_system() == None %}<div class="col-auto pe-0">⚠️</div>{% endif %}
-                        <div class="col">
-                            <a href="?group={{ group.id }}" class="link-dark {{ 'fw-bold' if group == current_group }}">{{ group.title }}</a>
-                        </div>
-                        <div class="col-auto">{{ group.participants.count() }} TN</div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-
-            <a href="{{ url_for('mod_placement.delete_all_for_class', event=g.event.slug, id=event_class.id) }}" class="btn btn-outline-danger btn-sm my-2 w-100">Gesamte Einteilung löschen</a>
-
-            {% else %}
-
-            <div class="alert alert-info mt-3">
-                <p>Keine Gruppen vorhanden.</p>
-    
-                <p>Es ist empfohlen, die Gruppen über die Zuweisung verbleibender TN (Knopf in 1. Spalte) automatisch zu erstellen.</p>
-            </div>
-            
-
-            {% endif %}
-        </div>
-        {% if current_group %}
-        <div class="col-12 col-md-3">
-            <h3 class="h4 fw-bold mb-2">TN der Gruppe</h3>
-
-            {% if current_group.marked_ready %}
-            <div class="alert alert-info">
-                <p>Diese Gruppe wurde zum Kämpfen freigegeben und kann daher nicht mehr geändert werden.</p>
-                <p>Die Hauptliste kann die Kämpfe zurücksetzen und dadurch die Freigabe zurücknehmen</p>
-            </div>
-            {% else %}
-
-            <div class="mb-3">
-                <a href="{{ url_for('mod_placement.assign', event=g.event.slug, id=event_class.id, group=current_group.id) }}" class="btn btn-secondary btn-sm">Weitere TN zuweisen</a>
-                <a href="{{ url_for('mod_placement.edit_group', event=g.event.slug, id=event_class.id, group_id=current_group.id) }}" class="btn btn-secondary btn-sm">Gruppe bearbeiten</a>
-            </div>
-
-            {% if current_group.participants.filter_by(placement_index=None).count() %}
-
-            <div class="card">
-                {% for part in current_group.participants.filter_by(placement_index=None).all() %}
-                <div class="card-body p-2 {{ 'border-top' if not loop.index == 1 }}">
-                    <div class="row">
-                        <div class="col-7">
-                            <strong>{{ part.full_name }}</strong><br>
-                            {{ part.association_name }}
-                        </div>
-                        <div class="col-2 px-0">
-                            <a href="{{ url_for('mod_placement.unassign', event=g.event.slug, id=event_class.id, participant_id=part.id) }}" class="btn btn-outline-danger w-100 d-block btn-sm">Löschen</a>
-                        </div>
-                        <div class="col-3">
-                            <a href="{{ url_for('mod_placement.place', event=g.event.slug, id=event_class.id, participant_id=part.id) }}" class="btn btn-secondary w-100 d-block btn-sm">Setzen</a>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-
-            {% elif current_group.participants.count() %}
-
-            <p>Alle dieser Gruppe zugewiesenen Teilnehmenden wurden gesetzt/gelost.</p>
-
-            {% else %}
-            
-            <p>Dieser Gruppe wurden noch keine Teilnehmenden zugewiesen.</p>
-
-            <a href="{{ url_for('mod_placement.delete_group', event=g.event.slug, id=event_class.id, group_id=current_group.id) }}" class="btn btn-danger btn-sm">Gruppe löschen</a>
-
-            {% endif %}
-            {% endif %}
-        </div>
-        <div class="col-12 col-md-3">
-            <h3 class="h4 fw-bold mb-2">Setzen und Losen</h3>
-            
-            {% set list_system = current_group.list_system() %}
-            {% if current_group.marked_ready %}
-            <div class="card">
-                <div class="card-header">
-                    {{ list_system.title }}
-                </div>
-                {% for i in range(list_system.mandatory_maximum) %}
-                {% set participant = current_group.participants.filter_by(placement_index=i).first() %}
-                <div class="card-body p-2 py-1 {{ 'border-top' if not loop.index == 1 }}">
-                    {% if not participant %}
-                    <div class="row">
-                        <div class="col-1 align-self-center text-center px-0">
-                            <div class="{{ 'fs-3' if i < 9 else 'fs-5 py-1' }} fw-bold text-secondary">{{ i + 1 }}</div>
-                        </div>
-                        <div class="col-10 align-self-center">n. n.</div>
-                    </div>
-                    {% else %}
-                    <div class="row">
-                        <div class="col-1 align-self-center text-center px-0">
-                            <div class="{{ 'fs-3' if i < 9 else 'fs-5 py-1' }} fw-bold text-dark">{{ i + 1 }}</div>
-                        </div>
-                        <div class="col-8 align-self-center">
-                            
-                            {% if participant.manually_placed %}
-                                <strong title="TN wurde manuell gesetzt.">📌 {{ participant.full_name }}</strong><br>
-                            {% else %}
-                                <strong>{{ participant.full_name }}</strong><br>
-                            {% endif %}
-                            {{ participant.association_name }}
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-                {% endfor %}
-            </div>
-            {% elif not list_system %}
-            <div class="mb-3">
-                <a href="" disabled class="btn disabled opacity-25 btn-primary btn-sm">Verbleibende Gruppen-TN losen</a>
-                <a href="" disabled class="btn disabled opacity-25 btn-secondary btn-sm">Vorschau als PDF</a>
-            </div>
-
-            <div class="alert alert-danger">
-                <p>Noch kein Listensystem zugewiesen.</p>
-                <p>Dies tritt in der Regel auf, wenn diese Gruppe zu groß ist, sodass kein ausreichend mächtiges Listensystem bereitsteht.</p>
-            </div>
-            {% else %}
-            <div class="mb-3">
-                <a href="{{ url_for('mod_placement.place_all', event=g.event.slug, id=event_class.id, group_id=current_group.id) }}" class="btn btn-primary btn-sm">Verbleibende Gruppen-TN losen</a>
-                <a href="{{ url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id, draft=1) }}" class="btn btn-secondary btn-sm" target="_blank">Vorschau als PDF</a>
-            </div>
-
-
-            <div class="card">
-                <div class="card-header">
-                    {{ list_system.title }}
-                </div>
-                {% for i in range(list_system.mandatory_maximum) %}
-                {% set participant = current_group.participants.filter_by(placement_index=i).first() %}
-                <div class="card-body p-2 py-1 {{ 'border-top' if not loop.index == 1 }}">
-                    {% if not participant %}
-                    <div class="row">
-                        <div class="col-1 align-self-center text-center px-0">
-                            <div class="{{ 'fs-3' if i < 9 else 'fs-5 py-1' }} fw-bold text-secondary">{{ i + 1 }}</div>
-                        </div>
-                        <div class="col-10 align-self-center">n. n.</div>
-                    </div>
-                    {% else %}
-                    <div class="row">
-                        <div class="col-1 align-self-center text-center px-0">
-                            <div class="{{ 'fs-3' if i < 9 else 'fs-5 py-1' }} fw-bold text-dark">{{ i + 1 }}</div>
-                        </div>
-                        <div class="col-8 align-self-center">
-                            
-                            {% if participant.manually_placed %}
-                                <strong title="TN wurde manuell gesetzt.">📌 {{ participant.full_name }}</strong><br>
-                            {% else %}
-                                <strong>{{ participant.full_name }}</strong><br>
-                            {% endif %}
-                            {{ participant.association_name }}
-                        </div>
-                        <div class="col-3 align-self-center">
-                            <a href="{{ url_for('mod_placement.unplace', event=g.event.slug, id=event_class.id, participant_id=participant.id) }}" class="btn btn-outline-danger w-100 d-block btn-sm">Löschen</a>
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-                {% endfor %}
-            </div>
-
-            {% endif %}
-        </div>
-        {% endif %}
-    </div>
-</div>
+{% endcall %}
 
 {% endblock body %}

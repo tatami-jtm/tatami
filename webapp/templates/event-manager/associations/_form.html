@@ -1,16 +1,15 @@
+{%- import "components/form.html" as form -%}
+{%- import "components/buttons.html" as buttons -%}
+
 <form action="" method="POST">
-    <div class="mt-3 mb-5 d-flex gap-1">
-        <button type="submit" class="btn btn-primary">Speichern</button>
-        <a href="{{ url_for('event_manager.associations', event=g.event.slug) }}" class="btn btn-secondary">Abbrechen</a>
+    <div class="d-flex mb-3">
+        {{ buttons.PrimaryButton(type='submit', text='Speichern') }}
+        {{ buttons.SecondaryButton(href=url_for('event_manager.associations', event=g.event.slug), text='Abbrechen') }}
     </div>
 
-    <div class="mb-3">
-        <label for="short_name" class="form-label">Kürzel</label>
-        <input name="short_name" id="short_name" value="{{ association.short_name or '' }}" class="form-control">
-    </div>
+    {{ form.Label(for_id='short_name', text='Kürzel') }}
+    {{ form.Input(id='short_name', name='short_name', value=(association.short_name or '')) }}
 
-    <div class="mb-3">
-        <label for="name" class="form-label">Bezeichnung</label>
-        <input name="name" id="name" value="{{ association.name or '' }}" class="form-control">
-    </div>
+    {{ form.Label(for_id='name', text='Bezeichnung') }}
+    {{ form.Input(id='name', name='name', value=(association.name or '')) }}
 </form>

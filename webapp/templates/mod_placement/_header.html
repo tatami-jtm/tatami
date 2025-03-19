@@ -1,22 +1,20 @@
-<div class="container-full m-0">
-    <ul class="nav nav-tabs nav-fullsize">
-        <li class="nav-item nav-item-title">
-            <a class="nav-link {{ 'active' if page=='index' }}" {{ 'aria-current' if page=='index' }} href="{{ url_for('mod_placement.index', event=g.event.slug) }}">🎲 Einteilung</a>
-        </li>
-        {% for ec in classes_query %}
-        {% if ec.begin_fighting %}
-        <li class="nav-item">
-            <a class="nav-link deactive {{ 'active' if page==ec }}" {{ 'aria-current' if page==ec }} href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=ec.id) }}" title="Kampfklasse hat bereits mit Kämpfen begonnen.">{{ ec.title }}</a>
-        </li>
-        {% elif ec.begin_placement %}
-        <li class="nav-item">
-            <a class="nav-link {{ 'active' if page==ec }}" {{ 'aria-current' if page==ec }} href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=ec.id) }}">🏁 {{ ec.title }}</a>
-        </li>
-        {% else %}
-        <li class="nav-item">
-            <a class="nav-link disabled deactive" disabled aria-disabled="true" href="" title="Kampfklasse ist noch nicht bereit.">🔒 {{ ec.title }}</a>
-        </li>
-        {% endif %}
-        {% endfor %}
-    </ul>
-</div>
+{%- import "components/toolbar.html" as toolbar -%}
+
+
+{%- call toolbar.Toolbar() -%}
+    {%- call toolbar.ToolbarBody(width="full") -%}
+        {%- call toolbar.ToolbarMenu() -%}
+            {{ toolbar.ToolbarMenuItem(href=url_for('mod_placement.index', event=g.event.slug), icon="info-circle", active=(page=='index')) }}
+
+            {% for ec in classes_query %}
+            {% if ec.begin_fighting %}
+                {{ toolbar.ToolbarMenuItem(href=url_for('mod_placement.for_class', event=g.event.slug, id=ec.id), label=ec.title, icon='eye-closed', active=(page==ec)) }}
+            {% elif ec.begin_placement %}
+                {{ toolbar.ToolbarMenuItem(href=url_for('mod_placement.for_class', event=g.event.slug, id=ec.id), icon="play", label=ec.title, active=(page==ec)) }}
+            {% else %}
+                {{ toolbar.ToolbarMenuItem(href='', icon="lock", label=ec.title, disabled=True) }}
+            {% endif %}
+            {% endfor %}
+        {%- endcall -%}
+    {%- endcall -%}
+{%- endcall -%}

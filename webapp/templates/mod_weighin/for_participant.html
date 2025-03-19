@@ -1,77 +1,62 @@
+{%- import "components/layout.html" as layout -%}
+{%- import "components/cards.html" as cards -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/form.html" as form -%}
+{%- import "components/datasets.html" as datasets -%}
+
 {% extends "layouts/application.html" %}
 {% block title %}Waage{% endblock %}
 {% block body %}
 
-<div class="container container-small">
-    <div class="card mb-3">
-        <div class="card-body">
-            <h1 class="h4 fw-bold mb-4">⚖️ Waage</h1>
+{% call layout.Container(width="small") %}
+    <h1>Waage</h1>
 
-            <a class="btn btn-secondary" href="{{ url_for('mod_weighin.index', event=g.event.slug) }}">&larr; Zurück zur Übersicht</a>
-        </div>
-    </div>
-    <div class="card mb-3">
-        <div class="card-header p-3">
-            <h4 class="m-0 fs-2">{{ registration.first_name }} {{ registration.last_name }}</h4>
-        </div>
-        <div class="card-body">
-            <div class="mb-2">
-                <div class="fw-bold">Verein</div>
-                <div>{{ registration.club or '-' }}</div>
-            </div>
-            <div class="mb-2">
-                <div class="fw-bold">Verband</div>
-                <div>{{ registration.association.name if registration.association else '-' }}</div>
-            </div>
-            <div class="mb-2">
-                <div class="fw-bold">Kampfklasse</div>
-                <div>{{ registration.event_class.title }}</div>
-            </div>
-            {% if registration.external_id %}
-            <div class="mb-2">
-                <div class="fw-bold">Externe ID</div>
-                <div>{{ registration.external_id }}</div>
-            </div>
-            {% endif %}
-        </div>
-        {% if not registration.registered %}
-        {% if g.event.setting('count_weighin_as_registration', False) %}
-        <div class="card-body border-top">
-            <div class="alert alert-warning m-0">
-                <p>{{ registration.first_name }} {{ registration.last_name }} wurde noch nicht offiziell vor Ort <strong>angemeldet</strong>. Mit der Eintragung der Waageergebnisse gilt die/der TN als angemeldet.</p>
-            </div>
-        </div>
-        {% else %}
-        <div class="card-body border-top">
-            <div class="alert alert-danger m-0">
-                <p>{{ registration.first_name }} {{ registration.last_name }} wurde noch nicht offiziell vor Ort <strong>angemeldet</strong>.</p>
-                <p>Die Eintragung der Waageergebnisse befreit <strong>nicht</strong> von der Notwendigkeit der Anmeldung.</p>
-            </div>
-        </div>
-        {% endif %}
-        {% endif %}
-        <div class="card-body border-top">
-            <form action="" method="POST">
-                <div class="row">
-                    <div class="col-12 col-md-6">
-                        <div class="fw-bold mb-2 fs-5">Vorgeschlagene Einteilung</div>
-                        <div class="fs-3">{{ registration.suggested_group }}</div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label for="verified_weight" class="fw-bold mb-2 fs-5">Gemessenes Gewicht</label>
+    <form action="" method="POST">
+        {% call cards.Card(class="mb-5") %}
+            {% call cards.CardHeader() %}
+                <div class="fs-3 fw-bold m-0">{{ registration.first_name }} {{ registration.last_name }}</div>
+            {% endcall %}
+            {% call cards.CardBody(class="pb-0") %}
+                {{ form.Label(for_id="association", text="Verband") }}
+                {{ form.Input(id="association", value=(registration.association.name if registration.association else '-'), readonly=True) }}
 
-                        <div class="input-group mb-3">
-                            <input class="form-control fs-3" type="number" step="0.1" autofocus name="verified_weight" id="verified_weight">
-                            <span class="input-group-text fs-3">kg</span>
-                        </div>
+                {{ form.Label(for_id="club", text="Verein") }}
+                {{ form.Input(id="club", value=registration.club, readonly=True) }}
 
-                        <button type="submit" class="btn btn-lg py-2 btn-primary w-100">Speichern</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+                {% if registration.external_id %}
 
-</div>
+                {{ form.Label(for_id="external_id", text="Ext. ID") }}
+                {{ form.Input(id="external_id", value=registration.external_id, readonly=True) }}
 
+                {% endif %}
+
+                {% call layout.Grid() %}
+                    {% call layout.GridColumn(span="3") %}
+                        {{ form.Label(for_id="event_class", text="Kampfklasse") }}
+                        {{ form.Input(id="event_class", value=registration.event_class.title, readonly=True) }}
+                    {% endcall %}
+                    {% call layout.GridColumn(span="3") %}
+                        {{ form.Label(for_id="suggested_group", text="Gemeldet für") }}
+                        {{ form.Input(id="suggested_group", value=registration.suggested_group, readonly=True) }}
+                    {% endcall %}
+                    {% call layout.GridColumn(span="6") %}
+                        {{ form.Label(for_id="verified_weight", text="Kontr. Gewicht") }}
+                        {{ form.InputWithSuffix(id='verified_weight', name='verified_weight', type="number", attr=('step="0.01" min="0" autofocus'|safe), suffix="kg", value=(registration.verified_weight / 1000 if registration.verified_weight else '')) }}
+                    {% endcall %}
+                {% endcall %}
+            {% endcall %}
+            {% call cards.CardFooter() %}
+                {% call layout.Grid() %}
+                    {% call layout.GridColumn(span="") %}
+                        {{ buttons.PrimaryButton(type='submit', class='w-100', text='Einwiegen') }}
+                    {% endcall %}
+                    {% call layout.GridColumn(span="auto") %}
+                        {{ buttons.SecondaryButton(href=url_for('mod_weighin.index', event=g.event.slug, query=request.values.get('query', None)), text='Abbrechen') }}
+                    {% endcall %}
+
+                {% endcall %}
+            {% endcall %}
+        {% endcall %}
+    </form>
+{% endcall %}
 {% endblock body %}

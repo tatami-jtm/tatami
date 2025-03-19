@@ -1,35 +1,50 @@
+{%- import "components/layout.html" as layout -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/datasets.html" as datasets -%}
+
 {% extends "layouts/application.html" %}
 {% block title %}Ergebnisse{% endblock %}
 {% set page = "individual" %}
-{% from "mod_global_list/_match_summary.html" import small_match_summary %}
 {% block body %}
+{% call layout.Container() %}
+
 {% include "mod_results/_header.html" %}
 
 {% for evcl in g.event.classes if evcl.groups.filter_by(completed=True).count() > 0 %}
-<h2 class="h4 mt-4">{{ evcl.title }}</h2>
-<a href="{{ url_for('mod_results.print_class', event=g.event.slug, id=evcl.id) }}" class="btn btn-secondary mb-3 btn-sm" target="_blank">Ergebnisse ausdrucken</a>
-<a href="{{ url_for('mod_results.class_as_csv', event=g.event.slug, id=evcl.id) }}" class="btn btn-secondary mb-3 btn-sm" download="{{ evcl.download_name('results.csv') }}" target="_blank">Als CSV herunterladen</a>
+    <h2>{{ evcl.title }}</h2>
 
+    {% call datasets.Dataset(size="large") %}
+        {% call datasets.DatasetMenu() %}
+            {% call buttons.SubtleButton(href=url_for('mod_results.print_class', event=g.event.slug, id=evcl.id), target='_blank', inline=True) %}
+                {{ buttons.ButtonIcon(icon='printer', label='Ausdrucken') }}
+            {% endcall %}
+            {% call buttons.SubtleButton(href=url_for('mod_results.class_as_csv', event=g.event.slug, id=evcl.id), download=evcl.download_name('results.csv'), inline=True) %}
+                {{ buttons.ButtonIcon(icon='download', label='CSV herunterladen') }}
+            {% endcall %}
+        {% endcall %}
+        {% for group in evcl.groups.filter_by(completed=True) %}
+            <h3 class="fs-4 {{ 'mt-0' if loop.first }}">{{ group.title }}</h3>
+            {% call datasets.Table() %}
+                {% call datasets.TableHead() %}
+                    {{ datasets.TableHeadColumn(text="Gruppe") }}
+                    {{ datasets.TableHeadColumn(text="Platz") }}
+                    {{ datasets.TableHeadColumn(text="Teilnehmer/in") }}
+                    {{ datasets.TableHeadColumn(text="Verein") }}
+                {% endcall %}
+                {% call datasets.TableBody() %}
+                    {% for participant in group.placements() %}
+                        {% call datasets.TableRow() %}
+                            {{ datasets.TableColumn(text=group.cut_title()) }}
+                            {{ datasets.TableColumn(text=participant.final_placement ~ '.') }}
+                            {{ datasets.TableColumn(text=participant.full_name) }}
+                            {{ datasets.TableColumn(text=participant.association_name) }}
+                        {% endcall %}
+                    {% endfor %}
+                {% endcall %}
+            {% endcall %}
+        {% endfor %}
+    {% endcall %}
+{% endfor %}
 
-{% for group in evcl.groups.filter_by(completed=True) %}
-<div class="card card-semidialog mb-3">
-    <div class="card-header">
-        {{ group.title }}
-    </div>
-    {% for participant in group.placements() %}
-    <div class="card-body p-2 py-1 {{ 'border-top' if not loop.index == 1 }}">
-        <div class="row">
-            <div class="col-1 align-self-center text-center">
-                <div class="{{ 'fs-3' if participant.final_placement < 9 else 'fs-5 py-1' }} place{{ participant.final_placement }} fw-bold">{{ participant.final_placement }}.</div>
-            </div>
-            <div class="col-11 align-self-center">
-                <strong>{{ participant.full_name }}</strong><br>
-                {{ participant.association_name }}
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-</div>
-{% endfor %}
-{% endfor %}
+{% endcall %}
 {% endblock body %}

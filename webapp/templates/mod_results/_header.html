@@ -1,19 +1,9 @@
-<h1 class="fw-bold h2 mb-3">Ergebnisse</h1>
+{%- import "components/switches.html" as switches -%}
 
-<div class="nav nav-tabs" id="results-tablist" role="tablist">
-    <div class="nav-item">
-        <a href="{{ url_for('mod_results.individual', event=g.event.slug) }}" class="nav-link {{ 'active' if page == 'individual' }}" role="tab">
-            Einzelergebnisse
-        </a>
-    </div>
-    <div class="nav-item">
-        <a href="{{ url_for('mod_results.team_results', event=g.event.slug) }}" class="nav-link {{ 'active' if page == 'teams' }}" role="tab">
-            Ergebnisse nach Verein
-        </a>
-    </div>
-    <div class="nav-item">
-        <a href="{{ url_for('mod_results.team_rankings', event=g.event.slug) }}" class="nav-link {{ 'active' if page == 'teams_ranking' }}" role="tab">
-            Medaillenspiegel
-        </a>
-    </div>
-</div>
+<h1>Ergebnisse</h1>
+
+{% call switches.Tab() %}
+    {{ switches.TabItem(href=url_for('mod_results.individual', event=g.event.slug), label='Einzelergebnisse', active=(page == 'individual')) }}
+    {{ switches.TabItem(href=url_for('mod_results.team_results', event=g.event.slug), label='Ergebnisse nach Verein', active=(page == 'teams')) }}
+    {{ switches.TabItem(href=url_for('mod_results.team_rankings', event=g.event.slug), label='Medaillenspiegel', active=(page == 'teams_ranking')) }}
+{% endcall %}

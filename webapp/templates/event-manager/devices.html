@@ -1,174 +1,156 @@
+{%- import "components/form.html" as form -%}
+{%- import "components/cards.html" as cards -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/dropdown.html" as dropdown -%}
+{%- import "components/layout.html" as layout -%}
+{%- import "components/list.html" as list -%}
+{%- import "components/alerts.html" as alerts -%}
+
 {% set event_page="devices" %}
 {% extends "layouts/event-manager.html" %}
 {% block title %}{{ g.event.title }} | Geräte- und Hallenplan{% endblock %}
 {% block body %}
 <h1>Geräte- und Hallenplan</h1>
 
-<h3 class="mt-3">Matten</h3>
+<h3>Matten</h3>
 
-<div class="row">
+{% call layout.Grid() %}
     {% for mat in mat_pos %}
-    <div class="col-12 col-xl-4 p-2">
-        {{ position(mat, device_roles, device_positions) }}
-    </div>
+        {% call layout.GridColumn(large_span=4) %}
+            {{ position(mat, device_roles, device_positions) }}
+        {% endcall %}
     {% endfor %}
-</div>
+{% endcall %}
 
-<a href="{{ url_for('event_manager.device_position_create', event=g.event.slug, mat=1) }}" class="btn btn-secondary btn-sm">Neue Position</a>
+{{ buttons.SecondaryButton(href=url_for('event_manager.device_position_create', event=g.event.slug, mat=1), text="Neue Position") }}
 
-<h3 class="mt-5">Verwaltung</h3>
+<h3>Verwaltung</h3>
 
-<div class="row">
+{% call layout.Grid() %}
     {% for admin in admin_pos %}
-    <div class="col-12 col-xl-4 p-2">
-        {{ position(admin, device_roles, device_positions) }}
-    </div>
+        {% call layout.GridColumn(large_span=4) %}
+            {{ position(admin, device_roles, device_positions) }}
+        {% endcall %}
     {% endfor %}
-</div>
+{% endcall %}
 
-<a href="{{ url_for('event_manager.device_position_create', event=g.event.slug) }}" class="btn btn-secondary btn-sm">Neue Position</a>
+{{ buttons.SecondaryButton(href=url_for('event_manager.device_position_create', event=g.event.slug), text="Neue Position") }}
 
-<h3 class="mt-5">Geräteanmeldungen</h3>
+<h3>Geräteanmeldungen</h3>
 
-<div class="row">
-    <div class="col-12 p-2">
-        <div class="card">
-            {% if requests %}
-            <div class="card-header">Offene Anfragen</div>
-            <div class="card-body border-bottom">
-                <div class="list-group">
-                    {% for dev in requests %}
-                        {{ device(dev, device_roles, device_positions)}}
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
-            <div class="card-body">
-                <form action="{{ url_for('event_manager.devices_allow_register', event=g.event.slug) }}" method="POST">
-                    <div class="mb-3">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="allow-registrations" name="allow" {{ 'checked' if g.event.allow_device_registration }}>
-                            <label class="form-check-label" for="allow-registrations">Neue Geräte dürfen sich registrieren</label>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-secondary">Speichern</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+{% call cards.Card() %}
+    {% if requests %}
+        {{ cards.CardHeader(text="Offene Anfragen") }}
+        {% call cards.CardBody() %}
+            {% call list.List() %}
+                {% for dev in requests %}
+                    {{ device(dev, device_roles, device_positions)}}
+                {% endfor %}
+            {% endcall %}
+        {% endcall %}
+    {% endif %}
+    {% call cards.CardBody() %}
+        <form action="{{ url_for('event_manager.devices_allow_register', event=g.event.slug) }}" method="POST">
+            {{ form.FormCheck(id="allow-registrations", name="allow", label="Neue Geräte dürfen sich registrieren", checked=g.event.allow_device_registration) }}
 
-<h3 class="mt-5">Offline-Scoreboard</h3>
+            {{ buttons.SecondaryButton(text="Speichern", type="submit") }}
+        </form>
+    {% endcall %}
+{% endcall %}
+
+<h3>Offline-Scoreboard</h3>
 
 <p>Sie können ein Offline-Scoreboard für diese Veranstaltung erzeugen und herunterladen. Das Offline-Scoreboard kann dann auch ohne Anmeldung oder Netzwerk-Verbindung verwendet werden.</p>
 
 <p>Ggf. müssen Sie Sicherheitsfunktionen deaktivieren, um das Offline-Scoreboard nutzen zu können. In Firefox müssen Sie bspw. in <a href="about:config">about:config</a> die Einstellung <code>security.fileuri.strict_origin_policy</code> deaktivieren, damit zwischen dem Controller und dem Scoreboard Daten übertragen werden können. Alternativ können Sie einen HTTP-Server verwenden, um das Offline-Scoreboard auf localhost bereitzustellen.</p>
 
-<div class="alert alert-warning">
-    <p class="mb-0">Diese Funktion ist bislang noch experimentell und sollte nur eingeschränkt verwendet werden.</p>
-</div>
+{% call alerts.WarningAlert() %}
+    <p>Diese Funktion ist bislang noch experimentell und sollte nur eingeschränkt verwendet werden.</p>
+{% endcall %}
 
-<a href="{{ url_for('event_manager.offline_board', event=g.event.slug) }}" class="btn btn-secondary">Scoreboard herunterladen</a>
+{{ buttons.SecondaryButton(href=url_for('event_manager.offline_board', event=g.event.slug), text="Scoreboard herunterladen") }}
 
 {% endblock body %}
 
-
 {% macro position(pos, roles, positions) %}
-<div class="card">
-    <div class="card-header p-1">
-        <div class="dropdown">
-            <button
-                class="btn btn-light dropdown-toggle border-none py-0 px-1 fw-bold"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                data-bs-auto-close="outside">
-                {{ pos.title }}
-            </button>
+    {% call cards.Card() %}
+        {% call cards.CardHeader() %}
+            {% call dropdown.Dropdown() %}
+                {% call dropdown.DropdownButton() %}
+                    {{ buttons.SecondaryButton(text=pos.title, attr=dropdown.ToggleDropdownAttr(dropdown='#position-' ~ pos.id), inline=True) }}
+                {% endcall %}
+                {% call dropdown.DropdownDialog(id="position-" ~ pos.id) %}
+                    <form action="{{ url_for('event_manager.device_position_update', event=g.event.slug, id=pos.id) }}" method="POST">
+                        {{ form.Label(for_id="pos-" ~ pos.id ~ "-name", text="Bezeichnung") }}
+                        {{ form.Input(name="name", id="pos-" ~ pos.id ~ "-name", value=pos.title) }}
 
-            <div class="dropdown-menu dropdown-wide">
-                <form action="{{ url_for('event_manager.device_position_update', event=g.event.slug, id=pos.id) }}" method="POST" class="px-3 py-2">
+                        {{ form.Label(for_id="pos-" ~ pos.id ~ "-role", text="Kategorie") }}
+                        {% call form.Select(name="is_mat", id="pos-" ~ pos.id ~ "-role") %}
+                            {{ form.SelectOption(value="1", text="Matten", selected=pos.is_mat) }}
+                            {{ form.SelectOption(value="0", text="Verwaltung", selected=not pos.is_mat) }}
+                        {% endcall %}
 
-                    <div class="mb-3">
-                        <label for="pos-{{ pos.id }}-name" class="mb-1">Bezeichnung</label>
-                        <input name="name" id="pos-{{ pos.id }}-name" class="form-control" value="{{ pos.title }}">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="pos-{{ pos.id }}-role" class="mb-1">Kategorie</label>
-                        <select name="is_mat" id="pos-{{ pos.id }}-role" class="form-select">
-                            <option value="1" {{ 'selected' if pos.is_mat }}>Matten</option>
-                            <option value="0" {{ 'selected' if not pos.is_mat }}>Verwaltung</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-sm">Speichern</button>
-                </form>
-                <div><hr class="dropdown-divider"></div>
-                <div><a class="dropdown-item" href="{{ url_for('event_manager.device_position_delete', event=g.event.slug, id=pos.id) }}">Position entfernen</a></div>
-            </div>
-        </div>
-    </div>
-    <div class="card-body">
-        <div class="list-group">
-            {% for dev in pos.devices %}
-                {{ device(dev, device_roles, device_positions)}}
-            {% endfor %}
-        </div>
-    </div>
-</div>
+                        {{ buttons.PrimaryButton(type="submit", text="Speichern") }}
+                        {{ buttons.SubtleDangerButton(href=url_for('event_manager.device_position_delete', event=g.event.slug, id=pos.id), text="Position entfernen") }}
+                    </form>
+                {% endcall %}
+            {% endcall %}
+        {% endcall %}
+        {% call cards.CardBody() %}
+            {% call list.List() %}
+                {% for dev in pos.devices %}
+                    {{ device(dev, device_roles, device_positions)}}
+                {% endfor %}
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
 {% endmacro %}
 
 
 {% macro device(dev, roles, positions) %}
-<div class="list-group-item">
-    <div class="dropdown float-end">
-        <button
-            class="btn btn-light btn-sm fw-bold"
-            type="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-            data-bs-auto-close="outside">
-            ⋮
-        </button>
+    {% call list.ListItem() %}
+        {% call list.ListItemBody() %}
+            {{ list.ListItemBodyHeader(text=dev.title ) }}
+            {% if dev.confirmed %}
+            {{ list.ListItemBodyDetail(text=dev.event_role.name) }}
+            {% else %}
+            {{ list.ListItemBodyDetail(text="(Ausstehende Registrierung)") }}
+            {% endif %}
+        {% endcall %}
+        {% call list.ListItemMenu() %}
+            {% call dropdown.Dropdown(right=True) %}
+                {% call dropdown.DropdownButton() %}
+                    {{ list.ListItemMenuItem(icon="more-vert", attr=dropdown.ToggleDropdownAttr(dropdown='#dev-dropown-' ~ dev.id)) }}
+                {% endcall %}
+                {% call dropdown.DropdownDialog(id="dev-dropown-" ~ dev.id) %}
+                    <form action="{{ url_for('event_manager.device_update', event=g.event.slug, id=dev.id) }}" method="POST">
+                        {{ form.Label(for_id="dev-" ~ dev.id ~ "-role", text="Aufgabe") }}
+                        {% call form.Select(name="role", id="dev-" ~ dev.id ~ "-role") %}
+                            {{ form.SelectDefaultOption() }}
+                            {% for role in roles %}
+                                {{ form.SelectOption(value=role.id, text=role.name, selected=(role.id == dev.event_role_id)) }}
+                            {% endfor %}
+                        {% endcall %}
 
-        <div class="dropdown-menu dropdown-wide">
-            <form action="{{ url_for('event_manager.device_update', event=g.event.slug, id=dev.id) }}" method="POST" class="px-3 py-2">
-                <div class="mb-3">
-                    <label for="dev-{{ dev.id }}-role" class="mb-1">Aufgabe</label>
-                    <select name="role" id="dev-{{ dev.id }}-role" class="form-select">
-                        <option disabled {{ 'selected' if dev.event_role == None }}></option>
-                        {% for role in roles %}
-                        <option value="{{ role.id }}" {{ 'selected' if role.id == dev.event_role.id }}>{{ role.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                        {{ form.Label(for_id="dev-" ~ dev.id ~ "-position", text="Position") }}
+                        {% call form.Select(name="position", id="dev-" ~ dev.id ~ "-position") %}
+                            {{ form.SelectDefaultOption() }}
+                            {% for pos in positions %}
+                                {{ form.SelectOption(value=pos.id, text=pos.title, selected=(pos.id == dev.position_id)) }}
+                            {% endfor %}
+                        {% endcall %}
 
-                <div class="mb-3">
-                    <label for="dev-{{ dev.id }}-pos" class="mb-1">Position</label>
-                    <select name="position" id="dev-{{ dev.id }}-pos" class="form-select">
-                        <option disabled {{ 'selected' if dev.position == None }}></option>
-                        {% for pos in positions %}
-                        <option value="{{ pos.id }}" {{ 'selected' if pos.id == dev.position.id }}>{{ pos.title }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                        {{ form.Label(for_id="dev-" ~ dev.id ~ "-name", text="Bezeichnung") }}
+                        {{ form.Input(name="name", id="dev-" ~ dev.id ~ "-name", value=dev.title) }}
 
-                <div class="mb-3">
-                    <label for="dev-{{ dev.id }}-name" class="mb-1">Bezeichnung</label>
-                    <input name="name" id="dev-{{ dev.id }}-name" class="form-control" value="{{ dev.title }}">
-                </div>
-
-                <button type="submit" class="btn btn-primary btn-sm">Speichern</button>
-            </form>
-            <div><hr class="dropdown-divider"></div>
-            <div><a class="dropdown-item" href="{{ url_for('event_manager.device_inspect', event=g.event.slug, id=dev.id) }}" target="_blank">Sitzung beitreten</a></div>
-            <div><a class="dropdown-item" href="{{ url_for('event_manager.device_delete', event=g.event.slug, id=dev.id) }}">Gerät entfernen</a></div>
-        </div>
-    </div>
-
-    <div>{{ dev.title }}</div>
-    <div class="fs-small fst-italic">{{ dev.event_role.name }}</div>
-
-</div>
+                        {% call buttons.ButtonList() %}
+                            {{ buttons.PrimaryButton(type="submit", text="Speichern") }}
+                            {{ buttons.SecondaryButton(href=url_for('event_manager.device_inspect', event=g.event.slug, id=dev.id), text="Sitzung beitreten") }}
+                            {{ buttons.SubtleDangerButton(href=url_for('event_manager.device_delete', event=g.event.slug, id=dev.id), text="Gerät entfernen") }}
+                        {% endcall %}
+                    </form>
+                {% endcall %}
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
 {% endmacro %}

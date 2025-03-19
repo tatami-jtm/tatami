@@ -1,0 +1,54 @@
+{%- macro Base(title=None) -%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{%- if title -%} TATAMI | {{ title }} {%- else -%} TATAMI {%- endif -%}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='tatami/css/tatami.css') }}">
+    <script src="{{ url_for('static', filename='tatami/js/tatami.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='tatami/js/_toggle.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='tatami/js/_oneof.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='tatami/js/_dropdown.js') }}" defer></script>
+</head>
+<body>
+    {{ caller() }}
+</body>
+</html>
+{%- endmacro -%}
+
+{%- macro ErrorBase() -%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TATAMI</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='tatami/css/tatami.css') }}">
+    <script src="{{ url_for('static', filename='tatami/js/tatami.js') }}" defer></script>
+</head>
+<body class="error">
+    {{ caller() }}
+</body>
+</html>
+{%- endmacro -%}
+
+{%- macro Container(width="normal") -%}
+<div class="container width-{{ width }}">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
+
+{%- macro Grid(class="") -%}
+<div class="grid {{ class }} {{ 'scrollable' if scrollable }}">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
+
+{%- macro GridColumn(span=12, large_span=None, class="", scrollable=False) -%}
+<div class="col col-{{ span }} {{ 'col-lg-' ~ large_span if large_span }} {{ 'scrollable' if scrollable }} {{ class }}">
+    {{ caller() }}
+</div>
+{%- endmacro -%}

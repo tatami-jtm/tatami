@@ -1,3 +1,7 @@
+{% import "components/cards.html" as cards %}
+{% import "components/buttons.html" as buttons %}
+{% import "components/form.html" as form %}
+
 {% extends "layouts/admin.html" %}
 {% block title %}Administrationsbereich{% endblock %}
 {% block body %}
@@ -5,24 +9,23 @@
 <h1>Systemnachricht {{ 'erstellen' if action == 'new' else 'bearbeiten' }}</h1>
 
 <form action="" method="POST">
-    <div class="mb-3 d-flex gap-1">
-        <button type="submit" class="btn btn-primary">Speichern</button>
-        <a href="{{ url_for('admin.messages') }}" class="btn btn-secondary">Abbrechen</a>
-    </div>
+    {% call cards.Card(class="width-medium mx-0") %}
+        {% call cards.CardBody() %}
+            {{ form.Label(for_id="description", text="Inhalt") }}
+            {{ form.Textarea(id="description", name="description", value=message.description or '', size="large") }}
 
-    <div class="mb-3">
-        <label for="description" class="form-label">Inhalt</label>
-        <textarea name="description" id="description" class="form-control">{{ message.description or '' }}</textarea>
-    </div>
-
-    <div class="mb-3">
-        <label for="user_id" class="form-label">Autor*in</label>
-        <select name="user_id" id="user_id" class="form-select">
-            <option value="">(System)</option>
-            {% for user in users %}
-            <option value="{{ user.id }}" {{ 'selected' if user == message.user }}>#{{ user.id }} - {{ user.display_name }}</option>
-            {% endfor %}
-        </select>
-    </div>
+            {{ form.Label(for_id="user_id", text="Autor*in") }}
+            {% call form.Select(id="user_id", name="user_id") %}
+                {{ form.SelectOption(value='', text='(System)') }}
+                {% for user in users %}
+                    {{ form.SelectOption(value=user.id, text=user.qualified_name(), selected=user == message.user) }}
+                {% endfor %}
+            {% endcall %}
+        {% endcall %}
+        {% call cards.CardFooter() %}
+            {{ buttons.PrimaryButton(type="submit", text="Speichern") }}
+            {{ buttons.SecondaryButton(href=url_for('admin.messages'), text="Abbrechen") }}
+        {% endcall %}
+    {% endcall %}
 </form>
 {% endblock body %}

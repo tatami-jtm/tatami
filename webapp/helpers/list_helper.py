@@ -6,7 +6,7 @@ import random
 
 def load_list(group):
     list_type = group.list_system()
-    list_cls = compile_list(list_type.list_file)
+    list_cls = list_type.list_class()
 
     list = list_cls()
     struct = {

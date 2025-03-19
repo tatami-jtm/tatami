@@ -1,37 +1,42 @@
+{%- import "components/layout.html" as layout -%}
+{%- import "components/datasets.html" as datasets -%}
+
 {% extends "layouts/application.html" %}
 {% block title %}Ergebnisse{% endblock %}
 {% set page = "teams" %}
-{% from "mod_global_list/_match_summary.html" import small_match_summary %}
 {% block body %}
+{% call layout.Container() %}
+
 {% include "mod_results/_header.html" %}
 
 {% for evcl in event_classes %}
-<h2 class="h4 mt-4 mb-3">{{ evcl[0].title }}</h2>
+<h2>{{ evcl[0].title }}</h2>
 
-
-{% for team, participants in evcl[1].items() %}
-<div class="card card-semidialog mb-3">
-    <div class="card-header">
-        {{ team }}
-    </div>
-    {% for participant in participants %}
-    <div class="card-body p-2 py-1 {{ 'border-top' if not loop.index == 1 }}">
-        <div class="row">
-            <div class="col-1 align-self-center text-center">
-                <div class="{{ 'fs-3' if participant.final_placement < 9 else 'fs-5 py-1' }} place{{ participant.final_placement }} fw-bold">{{ participant.final_placement }}.</div>
-            </div>
-            <div class="col-9 align-self-center">
-                <strong>{{ participant.full_name }}</strong><br>
-                {{ participant.association_name }}
-            </div>
-            <div class="col-2 align-self-center text-center px-0">
-                <div class="fs-5 py-1 fw-bold">{{ participant.group.cut_title() }}</div>
-            </div>
-        </div>
-    </div>
+{% call datasets.Dataset(size="large") %}
+    {% for team, participants in evcl[1].items() %}
+        <h3 class="fs-4 {{ 'mt-0' if loop.first }}">{{ team }}</h3>
+        {% call datasets.Table(class="mt-2" if not loop.first) %}
+            {% call datasets.TableHead() %}
+                {{ datasets.TableHeadColumn(text="Verein") }}
+                {{ datasets.TableHeadColumn(text="Gruppe") }}
+                {{ datasets.TableHeadColumn(text="Platz") }}
+                {{ datasets.TableHeadColumn(text="Teilnehmer/in") }}
+            {% endcall %}
+            {% call datasets.TableBody() %}
+                {% for participant in participants %}
+                    {% call datasets.TableRow() %}
+                        {{ datasets.TableColumn(text=team) }}
+                        {{ datasets.TableColumn(text=participant.group.cut_title()) }}
+                        {{ datasets.TableColumn(text=participant.final_placement ~ '.') }}
+                        {{ datasets.TableColumn(text=participant.full_name) }}
+                    {% endcall %}
+                {% endfor %}
+            {% endcall %}
+        {% endcall %}
     {% endfor %}
-</div>
-{% endfor %}
+{% endcall %}
+
 {% endfor %}
 
+{% endcall %}
 {% endblock body %}

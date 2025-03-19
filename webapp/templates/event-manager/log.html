@@ -1,46 +1,52 @@
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/alerts.html" as alerts -%}
+
 {% set event_page="dashboard" %}
 {% extends "layouts/event-manager.html" %}
 {% block title %}{{ g.event.title }} | Protokoll{% endblock %}
 {% block body %}
-<h1 class="mb-5">Übersicht</h1>
-<h2>Veranstaltungsprotokoll</h2>
+<h1>Veranstaltungsprotokoll</h1>
 
 {% if g.event.setting('write_activity_log', True) %}
 
-<h3 class="h5 fw-bold mt-4 mb-3">Aktuelle Einträge</h3>
-<ul class="list-group mb-2">
+<h2 class="fs-3">Aktuelle Einträge</h2>
+
+<div class="list mb-2">
     {% for item in g.event.log_items.order_by('created_at')[::-1] %}
     {% if not loop.first and (loop.previtem.created_at - item.created_at).seconds > 180 %}
-</ul>
-<h3 class="h5 fw-bold mt-4 mb-3">{{ item.created_at.strftime("%d.%m.%Y %H:%M") }}</h3>
-<ul class="list-group mb-2">
+</div>
+<h2 class="fs-3">{{ item.created_at.strftime("%d.%m.%Y %H:%M") }}</h2>
+<div class="list mb-2">
     {% endif %}
-    <li class="list-group-item">
-        <p class="fs-small text-body-tertiary mb-0">{{ item.log_creator }} {{ item.created_at.strftime("am %d.%m.%Y um %H:%M") }}:</p>
-        {% if item.log_type == 'ERROR' %}
-            {% if current_user.has_privilege('admin') %}
-                <p class="mb-0 text-danger fw-bold">Der folgende Fehler ist aufgetreten:</p>
-                <pre class="mb-0 {{ 'text-danger' if item.log_type == 'ERROR' }} {{ 'text-warning' if item.log_type == 'WARNING' }}">{{ item.log_value }}</pre>
+    <div class="list-item">
+        <div class="list-item-body">
+            <p class="fs-xs text-secondary my-0">{{ item.log_creator }} {{ item.created_at.strftime("am %d.%m.%Y um %H:%M") }}:</p>
+            {% if item.log_type == 'ERROR' %}
+                {% if current_user.has_privilege('admin') %}
+                    <p class="my-0 text-danger fw-bold">Der folgende Fehler ist aufgetreten:</p>
+                    <pre>{{ item.log_value }}</pre>
+                {% else %}
+                    <p class="my-0 text-danger">Ein Fehler ist aufgetreten. Bitte wenden Sie sich an d. Systemadministrator/in.</p>
+                {% endif %}
             {% else %}
-                <p class="mb-0 text-danger">Ein Fehler ist aufgetreten. Bitte wenden Sie sich an d. Systemadministrator/in.</p>
+                <p class="my-0 {{ 'text-danger' if item.log_type == 'ERROR' }} {{ 'text-warning' if item.log_type == 'WARNING' }}">{{ item.log_value }}</p>
             {% endif %}
-        {% else %}
-            <p class="mb-0 {{ 'text-danger' if item.log_type == 'ERROR' }} {{ 'text-warning' if item.log_type == 'WARNING' }}">{{ item.log_value }}</p>
-        {% endif %}
-    </li>
+        </div>
+    </div>
     {% endfor %}
-</ul>
+</div>
 
-<a class="btn btn-secondary mt-3" href="{{ url_for('event_manager.index', event=g.event.slug) }}">Zurück zur Übersicht</a>
-<a class="btn btn-dark mt-3" href="{{ url_for('event_manager.raw_log', event=g.event.slug) }}" download="event.log">Protokoll speichern</a>
+{{ buttons.SecondaryButton(href=url_for('event_manager.index', event=g.event.slug), text='Zurück zur Übersicht') }}
+{{ buttons.SubtleButton(href=url_for('event_manager.raw_log', event=g.event.slug), text='Protokoll speichern', download='event.log') }}
 
 {% else %}
 
-<div class="alert alert-info mt-4 mb-3">
+{% call alerts.InfoAlert() %}
     <p>Das Veranstaltungsprotokoll wurde für diese Veranstaltung deaktiviert.</p>
-</div>
+{% endcall %}
 
-<a class="btn btn-secondary mt-3" href="{{ url_for('event_manager.index', event=g.event.slug) }}">Zurück zur Übersicht</a>
+{{ buttons.SecondaryButton(href=url_for('event_manager.index', event=g.event.slug), text='Zurück zur Übersicht') }}
+
 
 {% endif %}
 

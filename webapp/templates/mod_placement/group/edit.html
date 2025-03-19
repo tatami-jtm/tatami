@@ -1,14 +1,15 @@
+{%- import "components/layout.html" as layout -%}
+{%- import "components/cards.html" as cards -%}
+
 {% extends "layouts/application.html" %}
 {% set page=event_class %}
 {% block title %}Einteilung - {{ event_class.title }}{% endblock %}
 {% block pre_messages %}{% include "mod_placement/_header.html" %}{% endblock %}
 {% block body %}
-<div class="container-fluid">
-    <h1 class="h2 fw-bold mb-4">{{ event_class.title }} &ndash; {{ 'Gewichtsklassen' if not proximity else 'Gewichtsnahe Gruppen' }}</h1>
 
-    
-    <h3 class="h4 fw-bold mb-2">Gruppe bearbeiten: {{ group.title }}</h3>
+{% call layout.Container(width='small') %}
+    <h1>Kampfklasse {{ event_class.title }}</h1>    
+    <h2 class="fs-3">Gruppe bearbeiten: {{ group.title }}</h2>
     {% include "mod_placement/group/_form.html" %}
-</div>
-
+{% endcall %}
 {% endblock body %}

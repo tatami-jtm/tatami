@@ -1,0 +1,19 @@
+{% macro Dropdown(class="", id="", right=False) %}
+<div class="dropdown {{ class }} {{ 'right' if right }}" id="{{ id }}">
+    {{ caller() }}
+</div>
+{% endmacro %}
+
+{% macro DropdownButton() %}
+<div class="dropdown-button">
+    {{ caller() }}
+</div>
+{% endmacro %}
+
+{% macro DropdownDialog(class="", id="", shown=False) %}
+<div class="dropdown-dialog {{ class }} {{ 'shown' if shown }}" id="{{ id }}">
+    {{ caller() }}
+</div>
+{% endmacro %}
+
+{% macro ToggleDropdownAttr(dropdown, ownClass="active") %}data-tj-dropdown='{"target": "{{ dropdown }}", "ownClass": "{{ ownClass }}"}'{% endmacro %}

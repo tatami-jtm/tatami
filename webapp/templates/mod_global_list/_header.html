@@ -1,0 +1,16 @@
+{%- import "components/toolbar.html" as toolbar -%}
+
+{%- call toolbar.Toolbar() -%}
+    {%- call toolbar.ToolbarBody() -%}
+        {%- call toolbar.ToolbarMenu() -%}
+            {{ toolbar.ToolbarMenuItem(href=url_for('mod_global_list.index', event=g.event.slug),
+                label="Übersicht", icon="dashboard-dots", active=page=='index') }}
+            {{ toolbar.ToolbarMenuItem(href=url_for('mod_global_list.class_progress', event=g.event.slug),
+                label="Kampffortschritt", icon="control-slider", active=page=='progress') }}
+            {% for mat in g.event.device_positions.filter_by(is_mat=True).all() %}
+                {{ toolbar.ToolbarMenuItem(href=url_for('mod_global_list.preview_mat', event=g.event.slug, id=mat.id),
+                    label=mat.title, active=page=='mat-' ~ mat.id) }}
+            {% endfor %}
+        {%- endcall -%}
+    {%- endcall -%}
+{%- endcall -%}

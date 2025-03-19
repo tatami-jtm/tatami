@@ -1,53 +1,55 @@
+{% import "components/datasets.html" as datasets %}
+{% import "components/buttons.html" as buttons %}
+
 {% extends "layouts/admin.html" %}
 {% set curpage = "accts" %}
 {% block title %}Administrationsbereich | Kontenübersicht{% endblock %}
 {% block body %}
 {% include "admin/user/_header.html" %}
 
-<h3>Benutzerkonten</h3>
-<div class="table-responsive">
-    <table class="table table-hover table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>E-Mail</th>
-                <th>Rollen</th>
-                <th>Status</th>
-                <td></td>
-            </tr>
-        </thead>
-        <tbody class="table-group-divider">
-        {% for user in all_user %}
-            <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.display_name or '' }}</td>
-                <td>{{ user.email }}</td>
-                <td>
-                    <ul class="list-unstyled">
-                    {% for role in user.roles %}
-                        <li>
-                            <span class="badge text-bg-{{ 'secondary' if not role.is_admin else 'primary' }}" title="{{ role.description }}">{{ role.name }}</span>
-                        </li>
-                    {% endfor %}
-                    </ul>
-                </td>
-                <td>
-                {% if user.active %}
-                    <span class="badge text-bg-success">Aktiv</span>
-                {% else %}
-                    <span class="badge bg-light text-danger">Inaktiv</span>
-                {% endif %}
-                </td>
-                <td>
-                    <form action="{{ url_for('admin.user_toggle_active', id=user.id) }}" method="POST" class="d-flex">
-                        <a href="{{ url_for('admin.edit_user', id=user.id) }}" class="m-1 btn btn-secondary btn-sm">Bearbeiten</a>
-                        <button type="submit" class="m-1 btn btn-outline-danger btn-sm">{{ 'Deaktivieren' if user.active else 'Aktivieren' }}</button>
-                    </form>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+<h2>Benutzerkonten</h2>
+
+{% call datasets.Dataset() %}
+    {% call datasets.Table() %}
+        {% call datasets.TableHead() %}
+            {{ datasets.TableHeadColumn(text="ID") }}
+            {{ datasets.TableHeadColumn(text="Name") }}
+            {{ datasets.TableHeadColumn(text="E-Mail") }}
+            {{ datasets.TableHeadColumn(text="Rollen") }}
+            {{ datasets.TableHeadColumn(text="Status") }}
+            {{ datasets.TableHeadEmptyColumn() }}
+        {% endcall %}
+        {% call datasets.TableBody() %}
+            {% for user in all_user %}
+                {% call datasets.TableRow() %}
+                    {{ datasets.TableColumn(text=user.id) }}
+                    {{ datasets.TableColumn(text=user.display_name or '-') }}
+                    {{ datasets.TableColumn(text=user.email) }}
+                    {% call datasets.TableColumn() %}
+                        {% for role in user.roles %}
+                            <span class="badge my-0 text-bg-{{ 'secondary' if not role.is_admin else 'primary' }}" title="{{ role.description }}">{{ role.name }}</span>
+                        {% endfor %}
+                    {% endcall %}
+                    {% call datasets.TableColumn() %}
+                        {% if user.active %}
+                            <span class="fw-bold text-success">Aktiv</span>
+                        {% else %}
+                            <span class="text-danger">Inaktiv</span>
+                        {% endif %}
+                    {% endcall %}
+                    {% call datasets.TableButtonsColumn() %}
+                        {% call buttons.SubtleButton(href=url_for('admin.edit_user', id=user.id), inline=True) %}
+                            {{ buttons.ButtonIcon(icon="edit-pencil") }}
+                        {% endcall %}
+                        {% call buttons.SubtleDangerButton(type="submit", inline=True,
+                            attr='form="toggle-active-' ~ user.id ~ '"') %}
+                            {{ buttons.ButtonIcon(icon="lock" if user.active else "lock-slash") }}
+                        {% endcall %}
+                    {% endcall %}
+                {% endcall %}
+                <form action="{{ url_for('admin.user_toggle_active', id=user.id) }}" method="POST" class="d-flex" id="toggle-active-{{ user.id }}"></form>
+            {% endfor %}
+        {% endcall %}
+    {% endcall %}
+{% endcall %}
 {% endblock body %}

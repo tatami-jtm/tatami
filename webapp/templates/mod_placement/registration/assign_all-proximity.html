@@ -1,33 +1,39 @@
+{%- import "components/layout.html" as layout -%}
+{%- import "components/cards.html" as cards -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/segmentation.html" as segmentation -%}
+
 {% extends "layouts/application.html" %}
 {% set page=event_class %}
 {% block title %}Einteilung - {{ event_class.title }}{% endblock %}
 {% block pre_messages %}{% include "mod_placement/_header.html" %}{% endblock %}
 {% block body %}
-<div class="container-fluid">
-    <h1 class="h2 fw-bold mb-4">{{ event_class.title }} &ndash; Gewichtsnahe Gruppen</h1>
 
-    
-    <h3 class="h4 fw-bold mb-2">Verbleibende TN zuweisen</h3>
+{% call layout.Container(width='small') %}
+
+    <h1>Kampfklasse {{ event_class.title }}</h1>    
+    <h2 class="fs-3">Verbleibende TN zuweisen</h2>
+
     <form action="" method="POST">
-        <div class="card card-semidialog mb-3">
-            <div class="card-body">
+        {% call cards.Card() %}
+            {% call cards.CardBody() %}
                 <p class="fw-bold">Die Einteilung erfolgt nach gewichtsnahen Gruppen.</p>
                 <p>Es wird die folgende Einteilung</p>
                 <ul>
                     {% if event_class.default_maximal_proximity %}
                     {% if event_class.proximity_uses_percentage_instead_of_absolute %}
-                    <li>mit einem Höchstabstand von {{ event_class.default_maximal_proximity }}% und</li>
+                    <li class="my-0">mit einem Höchstabstand von {{ event_class.default_maximal_proximity }}% und</li>
                     {% else %}
-                    <li>mit einem Höchstabstand von {{ event_class.default_maximal_proximity / 1000 }}kg und</li>
+                    <li class="my-0">mit einem Höchstabstand von {{ event_class.default_maximal_proximity / 1000 }}kg und</li>
                     {% endif %}
                     {% endif %}
-                    <li>mit einer Gruppengröße von je höchstens {{ event_class.default_maximal_size }} TN{% if event_class.default_maximal_group_count %} und{% endif %}</li>
+                    <li class="my-0">mit einer Gruppengröße von je höchstens {{ event_class.default_maximal_size }} TN{% if event_class.default_maximal_group_count %} und{% endif %}</li>
                     {% if event_class.default_maximal_group_count %}
-                    <li>mit höchstens {{ event_class.default_maximal_group_count }} unterschiedlichen Gruppen</li>
+                    <li class="my-0">mit höchstens {{ event_class.default_maximal_group_count }} unterschiedlichen Gruppen</li>
                     {% if event_class.proximity_prefer_group_count_over_proximity %}
-                    <li>wobei bei Widersprüchen die Anzahl der Gruppen Vorrang genießt</li>
+                    <li class="my-0">wobei bei Widersprüchen die Anzahl der Gruppen Vorrang genießt</li>
                     {% else %}
-                    <li>wobei bei Widersprüchen die Anzahl der TN je Gruppe Vorrang genießt</li>
+                    <li class="my-0">wobei bei Widersprüchen die Anzahl der TN je Gruppe Vorrang genießt</li>
                     {% endif %}
                     {% endif %}
                 </ul>
@@ -37,26 +43,23 @@
                 <p class="fw-bold text-danger">Wegen des Höchstabstands zwischen zwei TN einer Gruppe kann die Höchstanzahl der Gruppen durch die automatische Einteilung nicht eingehalten werden. Ggf. anpassen oder unten korrigieren.</p>
                 {% endif %}
                 <p>Durch Klick auf den schwarzen bzw. grauen Balken kann geändert werden, ob an dieser Stelle eine Gruppengrenze gezogen werden soll.</p>
-                <ol class="segmentation">
-                    {% for reg in registrations.all() %}
-                    {% if not loop.first %}
-                    <li class="segmentation-control">
-                        <input type="checkbox" id="before_{{ reg.id }}" name="before" value="{{ reg.id }}" class="segmentation-checkbox" {{ 'checked' if default_segmentation[reg.id] }}>
-                        <label for="before_{{ reg.id }}" class="segmentation-label">Hier abgrenzen</label>
-                    </li>
-                    {% endif %}
-                    <li class="segmentation-item">
-                        <strong>{{ reg.verified_weight / 1000 }} kg</strong> &ndash; {% if g.event.setting('proximity_placement.hide_name', False) %}<span class="font-monospace">{{ reg.anon_name() }}</span>{% else %}{{ reg.first_name }} {{ reg.last_name }}{% endif %} ({% if g.event.setting('proximity_placement.hide_club', False) %}<span class="font-monospace">{{ reg.anon_club() }}</span>{% else %}{{ reg.association.name if g.event.setting('use_association_instead_of_club', False) and reg.association else reg.club }}{% endif %})
-                    </li>
-                    {% endfor %}
-                </ol>
-            </div>
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Zuweisung vornehmen</button>
-                <a href="{{ url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id) }}" class="btn btn-secondary">Abbrechen</a>
-            </div>
-        </div>
-    </form>
-</div>
 
+                {% call segmentation.Segmentation() %}
+                    {% for reg in registrations.all() %}
+                        {% if not loop.first %}
+                            {{ segmentation.SegmentationControl(id='before_'~reg.id, name='before', value=reg.id, checked=default_segmentation[reg.id]) }}
+                        {% endif %}
+                        {% call segmentation.SegmentationItem() %}
+                            <strong>{{ reg.verified_weight / 1000 }} kg</strong> &ndash; {% if g.event.setting('proximity_placement.hide_name', False) %}<span class="font-monospace">{{ reg.anon_name() }}</span>{% else %}{{ reg.first_name }} {{ reg.last_name }}{% endif %} ({% if g.event.setting('proximity_placement.hide_club', False) %}<span class="font-monospace">{{ reg.anon_club() }}</span>{% else %}{{ reg.association.name if g.event.setting('use_association_instead_of_club', False) and reg.association else reg.club }}{% endif %})
+                        {% endcall %}
+                    {% endfor %}
+                {% endcall %}
+            {% endcall %}
+            {% call cards.CardFooter() %}
+                {{ buttons.PrimaryButton(type='submit', text='Zuweisen') }}
+                {{ buttons.SecondaryButton(href=url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id), text='Abbrechen') }}
+            {% endcall %}
+        {% endcall %}
+    </form>
+{% endcall %}
 {% endblock body %}

@@ -1,18 +1,11 @@
-<h1 class="mb-3 h2 fw-bold">Anmeldungen</h1>
+{%- import "components/switches.html" as switches -%}
 
-<div class="nav nav-tabs mb-4">
-    <div class="nav-item">
-        <a class="nav-link {{ 'active' if curpage == 'registrations' }}"
-           {{ 'aria-current="page"' if curpage == 'registrations' }}
-           href="{{ url_for('event_manager.registrations', event=g.event.slug) }}">
-            Teilnehmende
-        </a>
-    </div>
-    <div class="nav-item">
-        <a class="nav-link {{ 'active' if curpage == 'associations' }}"
-           {{ 'aria-current="page"' if curpage == 'associations' }}
-           href="{{ url_for('event_manager.associations', event=g.event.slug) }}">
-            Verbände
-        </a>
-    </div>
-</div>
+<h1>Anmeldungen</h1>
+
+{% call switches.Tab() %}
+    {{ switches.TabItem(href=url_for('event_manager.registrations', event=g.event.slug),
+        label="Teilnehmende", active=curpage == 'registrations') }}
+    
+    {{ switches.TabItem(href=url_for('event_manager.associations', event=g.event.slug),
+        label="Verbände", active=curpage == 'associations') }}
+{% endcall %}

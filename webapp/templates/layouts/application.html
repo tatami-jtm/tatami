@@ -1,34 +1,36 @@
+{%- import "components/layout.html" as layout -%}
+
 <!DOCTYPE html>
 <html lang="de">
     <head>
-        {% include "layouts/_header.html" %}
+        {% include "layouts/_shared-header.html" %}
         <title>TATAMI | {% block title %}{% endblock title %}</title>
         {% block custom_header %}{% endblock custom_header %}
     </head>
     <body class="application" data-tatami-event="{{ g.event.slug }}">
-    {% if not popup %}
-    {% set mode="app" %}
-    {% include "layouts/_appheader.html" %}
-    {% block pre_messages %}{% endblock pre_messages %}
-    {% with messages = get_flashed_messages(with_categories=True) %}
-    {% if messages %}
-    <div class="container-fluid mt-3">
-    {% for category, message in messages %}
-        <div class="alert alert-{{ category or 'light' }} alert-dismissible fade show" role="alert">
-            {% if ":" in message %}
-            <p class="mb-0"><strong>{{ message.split(":", 1)[0] }}:</strong> {{ message.split(":", 1)[1] }}</p>
-            {% else %}
-            <p class="mb-0">{{ message }}</p>
-            {% endif %}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schließen"></button>
-        </div>
-    {% endfor %}
-    </div>
-    {% endif %}
-    {% endwith %}
-    {% endif %}
-    <div class="container-fluid mt-3">
+        {% if not popup %}
+            {% set mode="app" %}
+            {% include "layouts/_appheader.html" %}
+
+            {% block pre_messages %}{% endblock pre_messages %}
+
+            {% with messages = get_flashed_messages(with_categories=True) %}
+                {% if messages %}
+                    {% call layout.Container(width='full') %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category or 'secondary' }}" role="alert">
+                                {% if ":" in message %}
+                                <p><strong>{{ message.split(":", 1)[0] }}:</strong> {{ message.split(":", 1)[1] }}</p>
+                                {% else %}
+                                <p>{{ message }}</p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% endcall %}
+                {% endif %}
+            {% endwith %}
+        {% endif %}
+
         {% block body %}{% endblock body %}
-    </div>
-</body>
+    </body>
 </html>

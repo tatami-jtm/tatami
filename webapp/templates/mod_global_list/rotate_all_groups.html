@@ -1,18 +1,23 @@
+{%- import "components/layout.html" as layout -%}
+{%- import "components/form.html" as form -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/cards.html" as cards -%}
+
 {% extends "layouts/application.html" %}
 {% block title %}Hauptliste{% endblock %}
 {% block body %}
-<div class="container-fluid">
-    <h1 class="h2 fw-bold mb-4">Hauptliste</h1>
 
+{% call layout.Container(width="medium") %}
+
+    <h1>Verbleibende Gruppen verteilen</h1>
     
-    <h3 class="h4 fw-bold mb-2">Verbleibende Gruppen verteilen</h3>
     <form action="" method="POST">
-        <div class="card card-semidialog">
-            <div class="card-body">
+        {% call cards.Card() %}
+            {% call cards.CardBody() %}
                 {% if fight_count != 1 %}
-                <p class="mb-1">Die noch nicht zugewiesenen Kampfgruppen mit insgesamt <strong>{{ fight_count }} Kämpfen</strong></p>
+                <p>Die noch nicht zugewiesenen Kampfgruppen mit insgesamt <strong>{{ fight_count }} Kämpfen</strong></p>
                 {% else %}
-                <p class="mb-1">Die noch nicht zugewiesenen Kampfgruppen mit insgesamt <strong>einem Kampf</strong></p>
+                <p>Die noch nicht zugewiesenen Kampfgruppen mit insgesamt <strong>einem Kampf</strong></p>
                 {% endif %}
                 <ul>
                     {% for group in free_groups if not group.participants.count() == 0 %}
@@ -21,18 +26,14 @@
                 </ul>
                 <p>werden auf die folgenden Matten verteilt:</p>
                 {% for mat in mats %}
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="to-{{ mat }}" name="to" value="{{ mat.id }}" checked>
-                    <label class="form-check-label" for="to-{{ mat }}">{{ mat.title }}</label>
-                </div>
+                    {{ form.FormCheck(id="to-"~mat.id, name="to", value=mat.id, label=mat.title, checked=True) }}
                 {% endfor %}
-            </div>
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Verteilen</button>
-                <a href="{{ url_for('mod_global_list.index', event=g.event.slug) }}" class="btn btn-secondary">Abbrechen</a>
-            </div>
-        </div>
+            {% endcall %}
+            {% call cards.CardFooter() %}
+                {{ buttons.PrimaryButton(type='submit', text='Verteilen') }}
+                {{ buttons.SecondaryButton(href=url_for('mod_global_list.index', event=g.event.slug), text='Abbrechen') }}
+            {% endcall %}
+        {% endcall %}
     </form>
-</div>
-
+{% endcall %}
 {% endblock body %}

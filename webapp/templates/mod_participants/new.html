@@ -2,11 +2,11 @@
 {% block title %}Teilnehmende{% endblock %}
 {% block body %}
 
-<div class="container pt-3">
-    <h1 class="mb-3 h2 fw-bold">TN hinzufügen</h1>
+{% call layout.Container() %}
+
+    <h1>TN hinzufügen</h1>
     {% include "mod_participants/_form.html" %}
-</div>
 
-
+{% endcall %}
 
 {% endblock body %}

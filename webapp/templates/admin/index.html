@@ -1,104 +1,95 @@
+{%- import "components/layout.html" as layout -%}
+{%- import "components/cards.html" as cards -%}
+{%- import "components/list.html" as list -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/badges.html" as badges -%}
+
 {% extends "layouts/admin.html" %}
 {% block title %}Administrationsbereich{% endblock %}
 {% block body %}
-<h1>Hallo {{ current_user.qualified_name() }}</h1>
+<h1>Hallo, {{ current_user.qualified_name() }}!</h1>
 
-<div class="row mt-4">
-    <div class="col-12 col-lg-3 mb-4">
-        <div class="card">
-            <div class="card-header">Profilübersicht</div>
-            <div class="card-body">
+{% call layout.Grid() %}
+    {% call layout.GridColumn(large_span=3) %}
+        {% call cards.Card(title="Profilübersicht") %}
+            {% call cards.CardBody() %}
                 <h6>Deine E-Mail-Adresse</h6>
-                {{ current_user.email }}
-            </div>
-            <div class="card-body border-top">
-                <h6>Dein Theme</h6>
-                <div>
-                    {{ 'hell' if not current_user.prefers_dark_mode else 'dunkel' }}
-                    <a href="{{ url_for('admin.toggle_display_mode_preference') }}">(wechseln)</a>
-                </div>
-            </div>
-            <div class="card-body border-top">
-                <h6>Deine Rollen</h6>
-                {% for role in current_user.roles %}
-                    <span class="badge text-bg-{{ 'secondary' if not role.is_admin else 'primary' }}" title="{{ role.description }}">{{ role.name }}</span>
-                {% endfor %}
-            </div>
-            <div class="card-footer">
-                <a href="{{ url_for('admin.edit_user_me') }}" class="btn btn-secondary btn-sm">Profil bearbeiten</a>
-                <a href="{{ url_for('admin.new_support') }}" class="btn btn-outline-danger btn-sm">Problem melden</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-lg-6 mb-4">
-        <div class="card">
-            <div class="card-header">Deine Veranstaltungen</div>
+                <span>{{ current_user.email }}</span>
+            {% endcall %}
+            {% call cards.CardBody() %}
+                <h6 class="mb-0">Deine Rollen</h6>
+                {% call badges.BadgeList() %}
+                    {% for role in current_user.roles %}
+                        {{ badges.Badge(text=role.name, style='secondary' if not role.is_admin else 'primary') }}
+                    {% endfor %}
+                {% endcall %}
+            {% endcall %}
+            {% call cards.CardFooter() %}
+                {{ buttons.SecondaryButton(href=url_for('admin.edit_user_me'), text="Profil bearbeiten", inline=True) }}
+                {{ buttons.SubtleDangerButton(href=url_for('admin.new_support'), text="Problem melden", inline=True) }}
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+    {% call layout.GridColumn(large_span=6) %}
+        {% call cards.Card(title="Deine Veranstaltungen") %}
             {% if events|length == 0 %}
-            <div class="card-body">
-                <p>Du hast keine aktuellen Veranstaltungen.</p>
-            </div>
+                {% call cards.CardBody() %}
+                    <p>Du hast keine aktuellen Veranstaltungen.</p>
+                {% endcall %}
             {% else %}
-            <div class="card-body p-1">
-                <div class="list-group list-group-flush">
-                {% for evt in events %}
-                    <a href="{{ url_for('event_manager.index', event=evt.slug) }}" class="list-group-item list-group-item-action">
-                        <div>
-                            <strong>{{ evt.title }}</strong>
-                            ({{ evt.first_day.strftime("%d.%m.%Y") }} &ndash; {{ evt.last_day.strftime("%d.%m.%Y") }})
-                        </div>
-                        <div class="font-monospace small">{{ evt.slug }}</div>
-                    </a>
-                {% endfor %}
-                </div>
-            </div>
+                {% call list.List() %}
+                    {% for event in events %}
+                        {% call list.ListItem(href=url_for('event_manager.index', event=event.slug)) %}
+                            {% call list.ListItemBody() %}
+                                {{ list.ListItemBodyHeader(event.title) }}
+                                {{ list.ListItemBodyDetail(event.first_day.strftime("%d.%m.%Y") ~ " – " ~ event.last_day.strftime("%d.%m.%Y")) }}
+                                {{ list.ListItemBodyDetail(event.slug) }}
+                            {% endcall %}
+                        {% endcall %}
+                    {% endfor %}
+                {% endcall %}
             {% endif %}
-            <div class="card-footer">
-                <a href="{{ url_for('admin.events') }}" class="btn btn-primary btn-sm">Alle Veranstaltungen</a>
+            {% call cards.CardFooter() %}
+                {{ buttons.PrimaryButton(href=url_for('admin.events'), text='Alle Veranstaltungen', inline=True) }}
                 {% if current_user.has_privilege('create_tournaments') %}
-                <a href="{{ url_for('admin.new_event') }}" class="btn btn-secondary btn-sm">Veranstaltung hinzufügen</a>
+                    {{ buttons.SecondaryButton(href=url_for('admin.new_event'), text='Veranstaltung hinzufügen', inline=True) }}
                 {% endif %}
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-lg-3 mb-4">
-        <div class="card">
-            <div class="card-header">Systemnachrichten</div>
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
+    {% call layout.GridColumn(large_span=3) %}
+        {% call cards.Card(title="Systemnachrichten") %}
             {% for msg in system_messages %}
-            <div class="card-body py-2">
-                <p class="fs-smaller mb-1 text-secondary">{{ msg.user.display_name if msg.user else 'System' }} am {{ msg.created_at.strftime("%d.%m.%Y") }}:</p>
-                <p class="mb-0">{{ msg.description }}</p>
-            </div>
+                {% call cards.CardBody() %}
+                    <p class="fs-sm mb-1 text-secondary-dark">{{ msg.user.display_name if msg.user else 'System' }} am {{ msg.created_at.strftime("%d.%m.%Y") }}:</p>
+                    <p class="my-0">{{ msg.description }}</p>
+                {% endcall %}
             {% else %}
-            <div class="card-body">
-                <p class="mb-1">Hier gibt es zurzeit nichts zu sehen.</p>
-            </div>
+                {% call cards.CardBody() %}
+                    <p>Hier gibt es zurzeit nichts zu sehen.</p>
+                {% endcall %}
             {% endfor %}
             {% if current_user.has_privilege('admin') %}
-            <div class="card-footer">
-                <a href="{{ url_for('admin.messages') }}" class="btn btn-secondary btn-sm">Meldungen bearbeiten</a>
-            </div>
+                {% call cards.CardFooter() %}
+                    {{ buttons.SecondaryButton(href=url_for('admin.messages'), text='Meldungen bearbeiten', inline=True) }}
+                {% endcall %}
             {% endif %}
-        </div>
-    </div>
-</div>
+        {% endcall %}
+    {% endcall %}
+{% endcall %}
 
 {% if current_user.help_requests_that_are_open_or_recently_resolved().count() > 0 %}
-<div class="card">
-    <div class="card-header">Ihre Support-Anfragen</div>
-    {% for request in current_user.help_requests_that_are_open_or_recently_resolved() %}
-    <div class="card-body {{ 'border-top' if not loop.first }} py-2">
-        <p class="mb-1"><strong>Problem:</strong> {{ request.description }}</p>
-        {% if request.resolved %}
-        <p class="mb-0"><strong class="text-success">Behoben</strong> am {{ request.resolved_at.strftime("%d.%m.%Y") }}: {{ request.resolution }}</p>
-        {% else %}
-        <p class="mb-0"><strong class="text-danger">Noch offen</strong></p>
-        {% endif %}
-    </div>
-    {% else %}
-    <div class="card-body">
-        <p>Sie haben gerade keine aktuellen Support-Anfragen.</p>
-    </div>
-    {% endfor %}
-</div>
+    {% call cards.Card(title="Ihre Support-Anfragen") %}
+        {% for request in current_user.help_requests_that_are_open_or_recently_resolved() %}
+            {% call cards.CardBody(class="py-1") %}
+                <p class="my-0"><strong>Problem:</strong> {{ request.description }}</p>
+                {% if request.resolved %}
+                <p class="my-0"><strong class="text-success">Behoben</strong> am {{ request.resolved_at.strftime("%d.%m.%Y") }}: {{ request.resolution }}</p>
+                {% else %}
+                <p class="my-0"><strong class="text-danger">Noch offen</strong></p>
+                {% endif %}
+            {% endcall %}
+        {% endfor %}
+    {% endcall %}
 {% endif %}
 {% endblock body %}

@@ -1,64 +1,66 @@
+{%- import "components/layout.html" as layout -%}
+{%- import "components/toolbar.html" as toolbar -%}
+
 <!DOCTYPE html>
-<html lang="de" {{ 'data-bs-theme="dark"'|safe if current_user.prefers_dark_mode }}>
-<head>
-    {% include "layouts/_header.html" %}
-    <title>TATAMI | {% block title %}{% endblock title %}</title>
-    {% block custom_header %}{% endblock custom_header %}
-</head>
-<body class="admin" data-tatami-event="{{ g.event.slug }}">
-    {% set mode="evmgr" %}
-    {% include "layouts/_appheader.html" %}
-    <div class="container-fluid event-container">
-        <div class="row">
-            <div class="col event-sidebar bg-light shadow-sm">
-                <div class="nav flex-column mb-4">
-                    <div class="nav-item">
-                        <a class="nav-link {{ 'active' if event_page=='dashboard' }}" href="{{ url_for('event_manager.index', event=g.event.slug) }}">📊 Übersicht</a>
-                    </div>
-                    <div class="nav-item">
-                        <a class="nav-link {{ 'active' if event_page=='config' }}" href="{{ url_for('event_manager.config', event=g.event.slug) }}">⚙️ Einstellungen</a>
-                    </div>
-                    <div class="nav-item">
-                        <a class="nav-link {{ 'active' if event_page=='classes' }}" href="{{ url_for('event_manager.classes', event=g.event.slug) }}">👪 Kampfklassen</a>
-                    </div>
-                    <div class="nav-item">
-                        <a class="nav-link {{ 'active' if event_page=='registrations' }}" href="{{ url_for('event_manager.registrations', event=g.event.slug) }}">📝 Anmeldungen</a>
-                    </div>
-                    <div class="nav-item">
-                        <a class="nav-link {{ 'active' if event_page=='devices' }}" href="{{ url_for('event_manager.devices', event=g.event.slug) }}">💻 Geräte- und Hallenplan</a>
-                    </div>
-                    {#
-                    <div class="nav-item">
-                        <a class="nav-link {{ 'active' if event_page=='stream' }}" href="">📽️ Streaming</a>
-                    </div>
-                    #}
-                    <div class="nav-item">
-                        <a class="nav-link" href="https://tatami-judo.de/docs/" target="_blank">ℹ️ Anleitungen</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col p-4 pt-4">
-                {% with messages = get_flashed_messages(with_categories=True) %}
+<html lang="de">
+    <head>
+        {% include "layouts/_shared-header.html" %}
+        <title>TATAMI | {% block title %}{% endblock title %}</title>
+        {% block custom_header %}{% endblock custom_header %}
+    </head>
+    
+    <body data-tatami-event="{{ g.event.slug }}">
+        {% set mode="evmgr" %}
+        {% include "layouts/_appheader.html" %}
+
+        {%- call toolbar.Toolbar() -%}
+            {{ toolbar.ToolbarHeader(g.event.title) }}
+
+            {%- call toolbar.ToolbarBody() -%}
+                {%- call toolbar.ToolbarMenu() -%}
+                    {{ toolbar.ToolbarMenuItem(href=url_for('event_manager.index', event=g.event.slug),
+                        label="Übersicht", icon="dashboard-dots", active=event_page=='dashboard') }}
+
+                    {{ toolbar.ToolbarMenuItem(href=url_for('event_manager.config', event=g.event.slug),
+                        label="Einstellungen", icon="settings", active=event_page=='config') }}
+
+                    {{ toolbar.ToolbarMenuItem(href=url_for('event_manager.classes', event=g.event.slug),
+                        label="Kampfklassen", icon="community", active=event_page=='classes') }}
+
+                    {{ toolbar.ToolbarMenuItem(href=url_for('event_manager.registrations', event=g.event.slug),
+                        label="Anmeldungen", icon="user-square", active=event_page=='registrations') }}
+
+                    {{ toolbar.ToolbarMenuItem(href=url_for('event_manager.devices', event=g.event.slug),
+                        label="Geräte- und Hallenplan", icon="network", active=event_page=='devices') }}
+
+                    {# toolbar.ToolbarMenuItem(href="",
+                        label="Streaming", icon="antenna", active=event_page=='streaming') #}
+
+                    {{ toolbar.ToolbarMenuItem(href="https://tatami-judo.de/docs/",
+                        label="Anleitungen", icon="info-circle") }}
+                {%- endcall -%}
+            {%- endcall -%}
+        {%- endcall -%}
+
+        {% call layout.Container() %}
+
+            {% with messages = get_flashed_messages(with_categories=True) %}
                 {% if messages %}
                 <div class="container mt-2 mb-3">
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category or 'light' }} alert-dismissible fade show" role="alert">
+                    <div class="alert alert-{{ category or 'secondary' }}" role="alert">
                         {% if ":" in message %}
-                        <p class="mb-0"><strong>{{ message.split(":", 1)[0] }}:</strong> {{ message.split(":", 1)[1] }}</p>
+                        <p><strong>{{ message.split(":", 1)[0] }}:</strong> {{ message.split(":", 1)[1] }}</p>
                         {% else %}
-                        <p class="mb-0">{{ message }}</p>
+                        <p>{{ message }}</p>
                         {% endif %}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schließen"></button>
                     </div>
                 {% endfor %}
                 </div>
                 {% endif %}
                 {% endwith %}
-                <div class="container mt-4 main-container">
-                    {% block body %}{% endblock body %}
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
+                
+            {% block body %}{% endblock body %}
+        {% endcall %}
+    </body>
 </html>

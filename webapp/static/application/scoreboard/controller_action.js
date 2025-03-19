@@ -5,7 +5,6 @@
 var sbState
 
 const mat_number = document.querySelector("[data-static=\"mat-number\"]").innerText
-const current_screen = document.getElementById("current-screen")
 const global_time = document.getElementById("global-time")
 const white_osaekomi = document.getElementById("osaekomi-white")
 const blue_osaekomi = document.getElementById("osaekomi-blue")

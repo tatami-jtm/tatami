@@ -1,0 +1,35 @@
+{%- macro Toolbar() -%}
+<div class="toolbar">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
+
+{%- macro ToolbarHeader(title="", width="normal") -%}
+<div class="toolbar-header {{ 'width-' + width if width }}">
+    <div class="toolbar-header-title">{{ title }}</div>
+    {{ caller() if caller is defined }}
+</div>
+{%- endmacro -%}
+
+{%- macro ToolbarBody(width="normal") -%}
+<div class="toolbar-body {{ 'width-' + width if width }}">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
+
+{%- macro ToolbarMenu() -%}
+<div class="toolbar-menu">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
+
+{%- macro ToolbarMenuItem(href="", label="", icon=None, active=False, disabled=False) -%}
+{%- if icon != None -%}
+<a href="{{ href }}" class="toolbar-menu-item toolbar-menu-item-with-icon {{ 'active' if active }} {{ 'disabled' if disabled }}" {{ 'disabled' if disabled }}>
+    <i class="iconoir-{{ icon }}"></i>
+    {% if label %}<span class="toolbar-menu-item-icon-label">{{ label }}</span>{% endif %}
+</a>
+{%- else -%}
+<a href="{{ href }}" class="toolbar-menu-item {{ 'active' if active }} {{ 'disabled' if disabled }}" {{ 'disabled' if disabled }}>{{ label }}</a>
+{%- endif -%}
+{%- endmacro -%}

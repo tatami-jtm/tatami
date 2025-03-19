@@ -25,6 +25,12 @@
             font-weight: normal;
         }
 
+        h1 em {
+            font-style: normal;
+            font-size: 0.7em;
+            opacity: 0.2;
+        }
+
         h2 {
             font-size: 20pt;
             margin: 0;
@@ -81,13 +87,18 @@
         }
 
         table .association {
-            width: 30%;
+            width: 150pt;
+            max-width: 150pt;
+            min-width: 150pt;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             font-size: 12pt;
         }
     </style>
 </head>
 <body>
-    <h1>{{ g.event.title }}</h1>
+    <h1>{{ g.event.title }} <em>via {{ config.BRAND_NAME }}</em></h1>
     <h2>Ergebnisse {{ evcl.title }}</h2>
     
     {% for group in evcl.groups.filter_by(completed=True) %}
@@ -114,6 +125,6 @@
     </section>
     {% endfor %}
 
-    <!-- <script>print();</script> -->
+    <script>print();</script>
 </body>
 </html>

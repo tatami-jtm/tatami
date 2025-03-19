@@ -1,6 +1,8 @@
-<div class="clearfix mb-3">
-    <button type="button" class="btn btn-light float-end" data-bs-toggle="modal" data-bs-target="#results-modal" data-control="enter-results" disabled>Ergebnis eintragen</button>
-    <button type="button" class="btn me-1 btn-dark float-end" data-control="callup-again" title="ACHTUNG! Dies löscht den gesamten Kampffortschritt.">Kampf aufrufen</button>
+{% import "components/buttons.html" as buttons %}
+
+<div class="d-flex justify-end">
+    {{ buttons.SecondaryButton(text='Kampf aufrufen', attr='data-control="callup-again"') }}
+    {{ buttons.SecondaryButton(text='Ergebnis eintragen', attr='data-control="enter-results"', class="disabled") }}
 </div>
 
 <div data-scheduled-area>

@@ -1,0 +1,15 @@
+{%- macro Cover() -%}
+<div class="cover">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
+
+{%- macro CoverItem(href="", icons=[], label="", detail="", color="") -%}
+<a href="{{ href }}" class="cover-item">
+    <div class="cover-item-icon {{ color }}">{%- for icon in icons -%}<i class="iconoir-{{ icon }}"></i>{%- endfor -%}</div>
+    <div class="cover-item-label">{{ label or (caller() if caller is defined) }}</div>
+    {%- if detail -%}
+    <div class="cover-item-detail">{{ detail }}</div>
+    {%- endif -%}
+</a>
+{%- endmacro -%}

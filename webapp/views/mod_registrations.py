@@ -23,7 +23,8 @@ def index():
 
     if "query" in request.values:
         query = query.filter(Registration.last_name.ilike(f"{request.values['query']}%") |
-                             Registration.external_id.ilike(f"{request.values['query']}%"))
+                             Registration.external_id.ilike(f"{request.values['query']}%") |
+                             Registration.club.ilike(f"{request.values['query']}%"))
         quarg = request.values['query']
 
     query = query.order_by('registered', 'last_name', 'first_name').all()
@@ -45,7 +46,12 @@ def confirm(id):
     db.session.commit()
     g.event.log(g.device.title, 'DEBUG', f'{reg.short_name()} wurde akkreditiert.')
 
-    return redirect(url_for('mod_registrations.index', event=g.event.slug))
+    query = None
+
+    if 'query' in request.args:
+        query = request.args['query']
+
+    return redirect(url_for('mod_registrations.index', event=g.event.slug, query=query))
 
 
 @mod_registrations_view.route('/unconfirm/<id>')
@@ -62,7 +68,12 @@ def unconfirm(id):
     db.session.commit()
     g.event.log(g.device.title, 'DEBUG', f'Akkreditierung von {reg.short_name()} wurde aufgehoben.')
 
-    return redirect(url_for('mod_registrations.index', event=g.event.slug))
+    query = None
+
+    if 'query' in request.args:
+        query = request.args['query']
+
+    return redirect(url_for('mod_registrations.index', event=g.event.slug, query=query))
 
 
 @mod_registrations_view.route('/api', methods=['POST'])

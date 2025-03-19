@@ -1,128 +1,101 @@
-{% from "mod_global_list/_match_summary.html" import match_summary, small_match_summary %}
+{% from "shared/_match_summary.html" import match_summary %}
+{% import "components/buttons.html" as buttons %}
+{% import "components/cards.html" as cards %}
 
-<h3 class="h5 mb-2">Laufender Kampf</h3>
+<h3 class="fs-4">Laufender Kampf</h3>
 
 {% set current_match = g.mat.current_match() %}
 {% if current_match %}
-<div class="card mb-4">
-    <div class="card-body p-2">
-        {{ small_match_summary(current_match) }}
-    </div>
-</div>
+    {{ match_summary(current_match, controls=True) }}
 
-<input type="hidden" data-tatami-source="current_match.any" value="1">
-<input type="hidden" data-tatami-source="current_match.results_link" value="{{ url_for('mod_list.write_match_result', event=g.event.slug, id=current_match.group.id, match_id=current_match.id) }}">
-<input type="hidden" data-tatami-source="current_match.group" value="{{ current_match.group.title }}">
-<input type="hidden" data-tatami-source="current_match.white.name" value="{{ current_match.white.full_name }}">
-<input type="hidden" data-tatami-source="current_match.white.association" value="{{ current_match.white.association_name }}">
-<input type="hidden" data-tatami-source="current_match.blue.name" value="{{ current_match.blue.full_name }}">
-<input type="hidden" data-tatami-source="current_match.blue.association" value="{{ current_match.blue.association_name }}">
+    <input type="hidden" data-tatami-source="current_match.any" value="1">
+    <input type="hidden" data-tatami-source="current_match.results_link" value="{{ url_for('mod_list.write_match_result', event=g.event.slug, id=current_match.group.id, match_id=current_match.id) }}">
+    <input type="hidden" data-tatami-source="current_match.group" value="{{ current_match.group.title }}">
+    <input type="hidden" data-tatami-source="current_match.white.name" value="{{ current_match.white.full_name }}">
+    <input type="hidden" data-tatami-source="current_match.white.association" value="{{ current_match.white.association_name }}">
+    <input type="hidden" data-tatami-source="current_match.blue.name" value="{{ current_match.blue.full_name }}">
+    <input type="hidden" data-tatami-source="current_match.blue.association" value="{{ current_match.blue.association_name }}">
 
-<input type="hidden" data-tatami-source="current_match.fighting_time" value="{{ current_match.group.event_class.fighting_time }}">
-<input type="hidden" data-tatami-source="current_match.golden_score_time" value="{{ current_match.group.event_class.golden_score_time }}">
+    <input type="hidden" data-tatami-source="current_match.fighting_time" value="{{ current_match.group.event_class.fighting_time }}">
+    <input type="hidden" data-tatami-source="current_match.golden_score_time" value="{{ current_match.group.event_class.golden_score_time }}">
 
-{% set list_tags = current_match.list_tags.split(",") %}
-{% if 'final' in list_tags %}
-<input type="hidden" data-tatami-source="current_match.progress" value="Finale">
-{% elif 'semifinal' in list_tags %}
-<input type="hidden" data-tatami-source="current_match.progress" value="Halbfinale">
-{% elif 'thirdplace' in list_tags %}
-<input type="hidden" data-tatami-source="current_match.progress" value="Kampf um Platz 3">
-{% elif 'repechage' in list_tags %}
-<input type="hidden" data-tatami-source="current_match.progress" value="Trostrunde">
+    {% set list_tags = current_match.list_tags.split(",") %}
+    {% if 'final' in list_tags %}
+        <input type="hidden" data-tatami-source="current_match.progress" value="Finale">
+    {% elif 'semifinal' in list_tags %}
+        <input type="hidden" data-tatami-source="current_match.progress" value="Halbfinale">
+    {% elif 'thirdplace' in list_tags %}
+        <input type="hidden" data-tatami-source="current_match.progress" value="Kampf um Platz 3">
+    {% elif 'repechage' in list_tags %}
+        <input type="hidden" data-tatami-source="current_match.progress" value="Trostrunde">
+    {% else %}
+        <input type="hidden" data-tatami-source="current_match.progress" value="Hauptrunde">
+    {% endif %}
+
 {% else %}
-<input type="hidden" data-tatami-source="current_match.progress" value="Hauptrunde">
-{% endif %}
-{% else %}
-<p class="mb-3">Zurzeit findet kein Kampf statt.</p>
+    <p class="mb-3">Zurzeit findet kein Kampf statt.</p>
 
-{% if g.event.setting('scheduling.use', True) %}
-<p>Die Listen werden auf dieser Matte automatisch geführt. Folglich sind entweder noch keine Listen freigegeben, alle Kämpf erledigt oder es muss zurzeit eine Pause stattfinden.</p>
+    {% if g.event.setting('scheduling.use', True) %}
+        <p>Die Listen werden auf dieser Matte automatisch geführt. Folglich sind entweder noch keine Listen freigegeben, alle Kämpf erledigt oder es muss zurzeit eine Pause stattfinden.</p>
 
-<a href="?" class="btn btn-secondary w-100 mb-5">Seite aktualisieren</a>
-{% else %}
-<p class="mb-5">Unten können ggf. Kämpfe ausgewählt werden, die jetzt stattfinden können.</p>
-{% endif %}
+        {{ buttons.SecondaryButton(href='?', text='Seite aktualisieren') }}
+    {% else %}
+        <p>Unten können ggf. Kämpfe ausgewählt werden, die jetzt stattfinden können.</p>
+    {% endif %}
 
-<input type="hidden" data-tatami-source="current_match.any" value="0">
+    <input type="hidden" data-tatami-source="current_match.any" value="0">
 {% endif %}
 
-<h3 class="h5 mb-2">Nächster Kampf</h3>
+<h3 class="fs-4">Nächster Kampf</h3>
 
 {% set waiting_match = g.mat.waiting_match() %}
 {% if waiting_match %}
-<div class="card mb-4 border-0">
-    <div class="card-body p-2">
-        {{ small_match_summary(waiting_match) }}
-    </div>
-</div>
-<input type="hidden" data-tatami-source="waiting_match.any" value="1">
-<input type="hidden" data-tatami-source="waiting_match.group" value="{{ waiting_match.group.title }}">
-<input type="hidden" data-tatami-source="waiting_match.white.name" value="{{ waiting_match.white.full_name }}">
-<input type="hidden" data-tatami-source="waiting_match.white.association" value="{{ waiting_match.white.association_name }}">
-<input type="hidden" data-tatami-source="waiting_match.blue.name" value="{{ waiting_match.blue.full_name }}">
-<input type="hidden" data-tatami-source="waiting_match.blue.association" value="{{ waiting_match.blue.association_name }}">
-{% set list_tags = waiting_match.list_tags.split(",") %}
-{% if 'final' in list_tags %}
-<input type="hidden" data-tatami-source="waiting_match.progress" value="Finale">
-{% elif 'semifinal' in list_tags %}
-<input type="hidden" data-tatami-source="waiting_match.progress" value="Halbfinale">
-{% elif 'thirdplace' in list_tags %}
-<input type="hidden" data-tatami-source="waiting_match.progress" value="Kampf um Platz 3">
-{% elif 'repechage' in list_tags %}
-<input type="hidden" data-tatami-source="waiting_match.progress" value="Trostrunde">
+    {{ match_summary(waiting_match, controls=True) }}
+
+    <input type="hidden" data-tatami-source="waiting_match.any" value="1">
+    <input type="hidden" data-tatami-source="waiting_match.group" value="{{ waiting_match.group.title }}">
+    <input type="hidden" data-tatami-source="waiting_match.white.name" value="{{ waiting_match.white.full_name }}">
+    <input type="hidden" data-tatami-source="waiting_match.white.association" value="{{ waiting_match.white.association_name }}">
+    <input type="hidden" data-tatami-source="waiting_match.blue.name" value="{{ waiting_match.blue.full_name }}">
+    <input type="hidden" data-tatami-source="waiting_match.blue.association" value="{{ waiting_match.blue.association_name }}">
+
+    {% set list_tags = waiting_match.list_tags.split(",") %}
+    {% if 'final' in list_tags %}
+        <input type="hidden" data-tatami-source="waiting_match.progress" value="Finale">
+    {% elif 'semifinal' in list_tags %}
+        <input type="hidden" data-tatami-source="waiting_match.progress" value="Halbfinale">
+    {% elif 'thirdplace' in list_tags %}
+        <input type="hidden" data-tatami-source="waiting_match.progress" value="Kampf um Platz 3">
+    {% elif 'repechage' in list_tags %}
+        <input type="hidden" data-tatami-source="waiting_match.progress" value="Trostrunde">
+    {% else %}
+        <input type="hidden" data-tatami-source="waiting_match.progress" value="Hauptrunde">
+    {% endif %}
 {% else %}
-<input type="hidden" data-tatami-source="waiting_match.progress" value="Hauptrunde">
-{% endif %}
-{% else %}
-<p class="mb-3">Zurzeit wurde kein nächster Kampf aufgerufen.</p>
-<input type="hidden" data-tatami-source="waiting_match.any" value="0">
+    <p class="mb-3">Zurzeit wurde kein nächster Kampf aufgerufen.</p>
+    <input type="hidden" data-tatami-source="waiting_match.any" value="0">
 {% endif %}
 
-<div class="accordion" id="listScheduleAccordion">
-    <div class="accordion-item">
-        <h3 class="accordion-header">
-            <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#listScheduleAccordion-scheduled" aria-control="listScheduleAccordion-scheduled">Angesetzte Kämpfe</button>
-        </h3>
-        <div id="listScheduleAccordion-scheduled" class="accordion-collapse collapse" data-bs-parent="#listScheduleAccordion">
-            <div class="accordion-body p-0">
+<h3 class="fs-4">Angesetzte Kämpfe</h3>
 
-                    {% for match in g.mat.scheduled_matches(include_called_up=False) %}
-                    <div class="p-2 {{ 'border-bottom' if not loop.last}}">
-                        {{ small_match_summary(match, compact=True) }}
-                    </div>
-                    {% else %}
-                    <p class="p-3 mb-0">Zurzeit wurde keine (weiteren) Kämpfe angesetzt.</p>
-                    {% endfor %}
-            </div>
-        </div>
-    </div>
-    {% for list in assigned_lists if not list.completed %}
-    <div class="accordion-item">
-        <h3 class="accordion-header">
-            <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#listScheduleAccordion-pending-gr{{ list.id }}" aria-control="listScheduleAccordion-pending-gr{{ list.id }}">
-                {{ list.title }}
-            </button>
-        </h3>
-        <div id="listScheduleAccordion-pending-gr{{ list.id }}" class="accordion-collapse collapse" data-bs-parent="#listScheduleAccordion">
-            <div class="accordion-body p-0">
-                {% for match in list.matches.filter_by(scheduled=False, completed=False) if not match.obsolete %}
-                    <div class="p-2 border-bottom">
-                        {{ small_match_summary(match, compact=True) }}
-                        {% if not match.schedulable() %}
-                        <p class="mb-0 fs-small text-danger">Auszeit notwendig &ndash; Kampf kann zurzeit nicht stattfinden.</p>
-                        {% elif not g.event.setting('scheduling.use', True) %}
-                        <div class="mt-1">
-                            <button type="button" class="btn btn-sm btn-dark" data-schedule-match="{{ match.id }}">Ansetzen</button>
-                        </div>
-                        {% endif %}
-                    </div>
-                    {% else %}
-                    <p class="p-3 mb-0 border-bottom">In dieser Gruppe stehen keine Kämpfe mehr aus.</p>
-                {% endfor %}
-                    <p class="p-3 py-2 m-0"><a href="{{ url_for('mod_list.display', event=g.event.slug, shown_list=list.id, show_only_one_list='yes') }}" data-show-list>Liste anzeigen</a></p>
-            </div>
-        </div>
-    </div>
+{% for match in g.mat.scheduled_matches(include_called_up=False) %}
+    {{ match_summary(match, controls=True) }}
+{% else %}
+    <p>Zurzeit wurde keine (weiteren) Kämpfe angesetzt.</p>
+{% endfor %}
+
+<h3>Weitere Kämpfe</h3>
+
+{% call cards.Card() %}
+    {% for list in assigned_lists %}
+        {{ cards.CardHeader(text=list.title, class="tj-schedgrp-btn", actionable=True, attr='data-tj-oneof=\'{"common": ".tj-schedgrp-element", "unique": "#group-' ~ list.id ~ '", "class": "hidden", "classWhen": "off", "ownClass": "active", "ownCommon": ".tj-schedgrp-btn"}\'') }}
+        {% call cards.CardBody(class="tj-schedgrp-element hidden", id="group-" ~ list.id) %}
+            {% for match in list.matches.filter_by(scheduled=False, completed=False) if not match.obsolete %}
+                {{ match_summary(match, controls=True, schedule=False) }}
+            {% else %}
+                <p>In dieser Gruppe stehen keine Kämpfe mehr aus.</p>
+            {% endfor %}
+            <p><a href="{{ url_for('mod_list.display', event=g.event.slug, shown_list=list.id, show_only_one_list='yes') }}" data-show-list>Liste anzeigen</a></p>
+        {% endcall %}
     {% endfor %}
-</div>
+{% endcall %}

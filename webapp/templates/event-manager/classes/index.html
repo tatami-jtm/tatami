@@ -1,60 +1,71 @@
+{%- import "components/badges.html" as badges -%}
+{%- import "components/datasets.html" as datasets -%}
+{%- import "components/buttons.html" as buttons -%}
+
 {% set event_page="classes" %}
 {% extends "layouts/event-manager.html" %}
 {% block title %}{{ g.event.title }} | Kampfklassen{% endblock %}
 {% block body %}
 <h1>Kampfklassen</h1>
 
-<table class="table table-hover table-bordered">
-    <thead>
-        <tr>
-            <th>Bezeichnung</th>
-            <th>Stand</th>
-            <th>Zeiten (Kampf/GS/Pause)</th>
-            <th>Verteilung</th>
-            <td></td>
-        </tr>
-    </thead>
-    <tbody>
-        {% for cl in g.event.classes.order_by('title') %}
-        <tr>
-            <td>{{ cl.title }}</td>
-            <td>
-                {% if not cl.begin_weigh_in %}
-                <a href="{{ url_for('event_manager.class_step_forward', event=g.event.slug, id=cl.id, to='index') }}" class="badge text-bg-secondary text-decoration-none" title="Hier klicken, um zum nächsten Zustand zu gehen.">Ausstehend</a>
-                {% elif not cl.begin_placement %}
-                <a href="{{ url_for('event_manager.class_step_forward', event=g.event.slug, id=cl.id, to='index') }}" class="badge text-bg-warning text-decoration-none" title="Hier klicken, um zum nächsten Zustand zu gehen.">In Waage</a>
-                {% elif not cl.begin_fighting %}
-                <a href="{{ url_for('event_manager.class_step_forward', event=g.event.slug, id=cl.id, to='index') }}" class="badge text-bg-dark text-decoration-none" title="Hier klicken, um zum nächsten Zustand zu gehen.">Wiegen beendet</a>
-                {% elif not cl.ended_fighting %}
-                <a href="{{ url_for('event_manager.class_step_forward', event=g.event.slug, id=cl.id, to='index') }}" class="badge text-bg-danger text-decoration-none" title="Hier klicken, um zum nächsten Zustand zu gehen.">Kämpft</a>
-                {% else %}
-                <span class="badge text-bg-success">Beendet</span>
-                {% endif %}
-            </td>
-            <td>
-                {{ (cl.fighting_time / 60) ~ "min" }} / {{ (cl.golden_score_time  / 60) ~ "min" if cl.golden_score_time >= 0 else "unbegrenzt" }} / {{ (cl.between_fights_time / 60) ~ "min" }}
-            </td>
-            <td>
-                {% if cl.use_proximity_weight_mode %}
-                {% if cl.proximity_uses_percentage_instead_of_absolute %}
-                <em>Gewichtsnahe Gruppen</em><br>mit Differenz kleiner {{ cl.default_maximal_proximity }}%
-                {% else %}
-                <em>Gewichtsnahe Gruppen</em><br>mit Differenz kleiner {{ cl.default_maximal_proximity / 1000 }}kg
-                {% endif %}
-                {% else %}
-                <em>Gewichtsklassen</em><br>{{ ", ".join(cl.weight_generator.split("\n")) }}
-                {% endif %}
-            </td>
-            <td>
-                <a href="{{ url_for('event_manager.edit_class', event=g.event.slug, id=cl.id) }}" class="btn btn-sm btn-primary">Bearbeiten</a>
-                <a href="{{ url_for('event_manager.registrations', event=g.event.slug, class_filter=cl.id) }}" class="btn btn-sm btn-secondary">{{ cl.registrations.count() }} TN</a>
-                <a href="{{ url_for('event_manager.class_registrations_as_csv', event=g.event.slug, id=cl.id) }}" download="{{ cl.download_name('registrations.csv') }}" class="btn btn-sm btn-secondary">CSV</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% call datasets.Dataset() %}
+    {% call datasets.Table() %}
+        {% call datasets.TableHead() %}
+            {{ datasets.TableHeadColumn(text="Bezeichnung") }}
+            {{ datasets.TableHeadColumn(text="Stand") }}
+            {{ datasets.TableHeadColumn(text="Zeiten (Kampf/GS/Pause)") }}
+            {{ datasets.TableHeadColumn(text="Einteilung") }}
+            {{ datasets.TableHeadColumn(text="TN") }}
+            {{ datasets.TableHeadEmptyColumn() }}
+        {% endcall %}
+        {% call datasets.TableBody() %}
+            {% for cl in g.event.classes.order_by('title') %}
+                {% call datasets.TableRow() %}
+                    {{ datasets.TableColumn(text=cl.title) }}
+                    {% call datasets.TableColumn() %}
+                        {% if not cl.begin_weigh_in %}
+                            {{ badges.Badge(href=url_for('event_manager.class_step_forward', event=g.event.slug, id=cl.id, to='index'), style="secondary", text="Ausstehend") }}
+                        {% elif not cl.begin_placement %}
+                            {{ badges.Badge(href=url_for('event_manager.class_step_forward', event=g.event.slug, id=cl.id, to='index'), style="info", text="In Waage") }}
+                        {% elif not cl.begin_fighting %}
+                            {{ badges.Badge(href=url_for('event_manager.class_step_forward', event=g.event.slug, id=cl.id, to='index'), style="warning", text="Einteilung") }}
+                        {% elif not cl.ended_fighting %}
+                            {{ badges.Badge(href=url_for('event_manager.class_step_forward', event=g.event.slug, id=cl.id, to='index'), style="danger", text="Kämpft") }}
+                        {% else %}
+                            {{ badges.Badge(style="success", text="Beendet") }}
+                        {% endif %}
+                    {% endcall %}
+                    {% call datasets.TableColumn() %}
+                        {{ "%.2f min" % (cl.fighting_time / 60) }} / {{ "%.2f min" % (cl.golden_score_time  / 60) if cl.golden_score_time >= 0 else "unbegrenzt" }} / {{ "%.2f min" % (cl.between_fights_time / 60) }}
+                    {% endcall %}
+                    {% call datasets.TableColumn() %}
+                        {% if cl.use_proximity_weight_mode %}
+                        {% if cl.proximity_uses_percentage_instead_of_absolute %}
+                        <strong>Gewichtsnahe Gruppen</strong> mit Diff. &lt; {{ cl.default_maximal_proximity }}%
+                        {% else %}
+                        <strong>Gewichtsnahe Gruppen</strong> mit Diff. &lt;  {{ cl.default_maximal_proximity / 1000 }}kg
+                        {% endif %}
+                        {% else %}
+                        <strong>Gewichtsklassen</strong>: {{ " ".join(cl.weight_generator.split("\n")) }}
+                        {% endif %}
+                    {% endcall %}
+                    {% call datasets.TableColumn() %}
+                        {{ badges.Badge(href=url_for('event_manager.registrations', event=g.event.slug, class_filter=cl.id), style="inactive", text="%d TN" % cl.registrations.count()) }}
+                    {% endcall %}
+                    {% call datasets.TableButtonsColumn() %}
+                        {% call buttons.SubtleButton(href=url_for('event_manager.edit_class', event=g.event.slug, id=cl.id), inline=True) %}
+                            {{ buttons.ButtonIcon(icon='edit-pencil') }}
+                        {% endcall %}
+                        {% call buttons.SubtleButton(href=url_for('event_manager.class_registrations_as_csv', event=g.event.slug, id=cl.id), inline=True) %}
+                            {{ buttons.ButtonIcon(icon='database-export') }}
+                        {% endcall %}
+                    {% endcall %}
+                {% endcall %}
+            {% endfor %}
+        {% endcall %}
+    {% endcall %}
+{% endcall %}
 
-<a href="{{ url_for('event_manager.create_class', event=g.event.slug) }}" class="btn btn-primary">Kampfklasse hinzufügen</a>
-<a href="{{ url_for('event_manager.generate_classes', event=g.event.slug) }}" class="btn btn-secondary">Autom. Generation</a>
+{{ buttons.PrimaryButton(href=url_for('event_manager.create_class', event=g.event.slug), text="Kampfklasse hinzufügen") }}
+{{ buttons.SecondaryButton(href=url_for('event_manager.generate_classes', event=g.event.slug), text="Autom. Generation") }}
 {% endblock body %}

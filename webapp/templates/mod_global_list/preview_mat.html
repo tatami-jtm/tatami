@@ -1,22 +1,22 @@
-{% extends "layouts/application.html" %}
-{% block title %}Hauptliste{% endblock %}
-{% from "mod_global_list/_match_summary.html" import small_match_summary %}
-{% block body %}
-<div class="container-fluid">
-    <h1 class="h2 fw-bold mb-4">Hauptliste</h1>
+{%- import "components/layout.html" as layout -%}
 
-    
-    <h3 class="h4 fw-bold mb-2">Kampfvorschau für {{ mat.title }}</h3>
+{% extends "layouts/application.html" %}
+{% set page='mat-' ~ mat.id %}
+{% block title %}Hauptliste{% endblock %}
+{% from "shared/_match_summary.html" import match_summary %}
+{% block body %}
+
+{% include "mod_global_list/_header.html" %}
+
+{% call layout.Container() %}
+    <h1>Kampfvorschau für {{ mat.title }}</h1>
+
     {% for match in mat.scheduled_matches() %}
-    <div class="card card-semidialog mb-2 shadow">
-        <div class="card-body p-2">
-            {{ small_match_summary(match) }}
-        </div>
-    </div>
+        {{ match_summary(match) }}
     {% else %}
     <p>Auf {{ mat.title }} wurden noch keine Kämpfe angesetzt oder alle Kämpfe wurden erledigt.</p>
     {% endfor %}
-    <a href="{{ url_for('mod_global_list.index', event=g.event.slug) }}" class="btn btn-secondary">Zurück</a>
-</div>
+
+{% endcall %}
 
 {% endblock body %}

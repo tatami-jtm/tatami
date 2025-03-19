@@ -1,19 +1,18 @@
-<div class="modal" id="winner-shown-modal" tabindex="-1" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title h4 fw-bold">Ergebnis letzter Kampf</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Dialog schließen"></button>
-            </div>
-            <div class="modal-body">
-                <p>Den letzten Kampf auf {{ g.mat.title }} hat gewonnen:</p>
-                <p><strong data-tatami-field="winner.name">Name</strong>
-                (<span data-tatami-field="winner.club">Verein</span>)</p>
-            </div>
+{%- import "components/modals.html" as modals -%}
+{%- import "components/buttons.html" as buttons -%}
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary w-100 btn-lg" data-control="callup">Nächsten Kampf aufrufen</button>
-            </div>
-        </div>
-    </div>
-</div>
+{% call modals.Modal(id="winner-shown-modal", centered=True) %}
+    {% call modals.ModalContainer(width="small") %}
+        {{ modals.ModalHeader(text="Ergebnis letzter Kampf", close_btn=True, modal="#winner-shown-modal") }}
+
+        {% call modals.ModalBody() %}
+            <p>Den letzten Kampf auf {{ g.mat.title }} hat gewonnen:</p>
+            <p><strong data-tatami-field="winner.name">Name</strong>
+            (<span data-tatami-field="winner.club">Verein</span>)</p>
+        {% endcall %}
+
+        {% call modals.ModalFooter() %}
+            {{ buttons.PrimaryButton(text="Nächsten Kampf aufrufen", class="w-100", attr='data-control="callup"')}}
+        {% endcall %}
+    {% endcall %}
+{% endcall %}

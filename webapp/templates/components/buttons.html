@@ -1,0 +1,82 @@
+{%- macro _LinkButton(style="info", size=None, href="#", text=None, active=False, disabled=False, class="", download="", attr="", target="") -%}
+<a href="{{ href }}" class="btn btn-{{ style }}{{ '-cta' if size == 'cta' else '' if size == None else ' btn-' + size }}{{ ' active' if active }}{{ ' disabled' if disabled }} {{ class }}"{{ ' disabled' if disabled }} {% if download %}download="{{ download }}"{% endif %} {% if target %}target="{{ target }}"{% endif %} {{ attr|safe if attr }}>{{ text or (caller() if caller is defined) }}</a>
+{%- endmacro -%}
+
+{%- macro _SemanticButton(style="info", size=None, id=None, type="button", text=None, active=False, disabled=False, class="", attr="") -%}
+<button {% if id != None %}id="{{ id }}"{% endif %} type="{{ type }}" class="btn btn-{{ style }}{{ '-cta' if size == 'cta' else '' if size == None else ' btn-' + size }}{{ ' active' if active }}{{ ' disabled' if disabled }} {{ class }}"{{ ' disabled' if disabled }} {{ attr|safe if attr }}>{{ text or (caller() if caller is defined) }}</button>
+{%- endmacro -%}
+
+{%- macro PrimaryButton(mode="semantic", text=None, inline=False) -%}
+{%- if mode == "link" or "href" in kwargs %}
+{{ _LinkButton(style="primary", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
+{%- else -%}
+{{ _SemanticButton(style="primary", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro SecondaryButton(mode="semantic", text=None, inline=False) -%}
+{%- if mode == "link" or "href" in kwargs %}
+{{ _LinkButton(style="secondary", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
+{%- else -%}
+{{ _SemanticButton(style="secondary", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
+{%- endif -%}
+{%- endmacro -%}
+
+{% set Button = SecondaryButton %}
+
+{%- macro SubtleButton(mode="semantic", text=None, inline=False) -%}
+{%- if mode == "link" or "href" in kwargs %}
+{{ _LinkButton(style="subtle", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
+{%- else -%}
+{{ _SemanticButton(style="subtle", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro InvertedSubtleButton(mode="semantic", text=None, inline=False) -%}
+{%- if mode == "link" or "href" in kwargs %}
+{{ _LinkButton(style="inverted-subtle", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
+{%- else -%}
+{{ _SemanticButton(style="inverted-subtle", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro DangerButton(mode="semantic", text=None, inline=False) -%}
+{%- if mode == "link" or "href" in kwargs %}
+{{ _LinkButton(style="danger", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
+{%- else -%}
+{{ _SemanticButton(style="danger", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro SubtleDangerButton(mode="semantic", text=None, inline=False) -%}
+{%- if mode == "link" or "href" in kwargs %}
+{{ _LinkButton(style="danger-subtle", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
+{%- else -%}
+{{ _SemanticButton(style="danger-subtle", text=(text or caller()), size=("inline" if inline else None), **kwargs) }}
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro PrimaryCTA(mode="semantic", text=None) -%}
+{%- if mode == "link" or "href" in kwargs %}
+{{ _LinkButton(style="primary", text=(text or caller()), size="cta", **kwargs) }}
+{%- else -%}
+{{ _SemanticButton(style="primary", text=(text or caller()), size="cta", **kwargs) }}
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro ButtonIcon(icon="", label="") -%}
+{%- if label or caller is defined -%}
+<div class="button-icon">
+    <i class="iconoir-{{ icon }}"></i>
+    <span class="button-icon-label">{{ label or (caller() if caller is defined) }}</span>
+</div>
+{% else %}
+<div class="button-icon"><i class="iconoir-{{ icon }}"></i></div>
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro ButtonList(class="") -%}
+<div class="button-list {{ class }}">
+    {{ caller() }}
+</div>
+{%- endmacro -%}
