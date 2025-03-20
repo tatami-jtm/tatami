@@ -4,6 +4,9 @@ import json
 import os
 from . import pdftool
 
+TEMPLATES_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "templates"))
+STATIC_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../static"))
+
 NBSP = "&nbsp;"
 
 class ListRenderer:
@@ -20,7 +23,7 @@ class ListRenderer:
         result = []
 
         for template in self.list.get_included_templates():
-            with open(f'listslib/templates/{template}.html', 'r') as f:
+            with open(f'{TEMPLATES_PATH}/{template}.html', 'r') as f:
                 template_html = f.read()
 
             result.append(self.render_partial(template_html))
@@ -122,7 +125,7 @@ class ListRenderer:
         return f"[invalid value]"
     
     def render_html_template(self):
-        with open('listslib/templates/base.html', 'r') as f:
+        with open(f'{TEMPLATES_PATH}/base.html', 'r') as f:
             t = f.read()
         
         t = t.replace("%%listname%%", self.list.get_name())
@@ -138,10 +141,10 @@ class ListRenderer:
         if self.served:
             t = t.replace("%%css%%", '<link rel="stylesheet" href="/static/application/lists.css">')
         else:
-            with open("./static/application/lists.css") as f:
+            with open(f"{STATIC_PATH}/application/lists.css") as f:
                 css_file = f.read()
             
-            css_file = css_file.replace("url('../", "url('file://" + os.path.abspath("./static/") + '/')
+            css_file = css_file.replace("url('../", f"url('file://{STATIC_PATH}/")
             t = t.replace("%%css%%", '<style>' + css_file + '</style>')
 
         return t
