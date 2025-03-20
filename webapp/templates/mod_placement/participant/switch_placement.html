@@ -11,25 +11,23 @@
 
 {% call layout.Container(width='small') %}
 
-    <h1>Kampfklasse {{ event_class.title }} &ndash; TN setzen</h1>
+    <h1>Kampfklasse {{ event_class.title }} &ndash; TN vertauschen</h1>    
 
     <form action="" method="POST">
         {% call cards.Card() %}
             {% call cards.CardBody() %}
                 <p class="mb-1">In der Gruppe</p>
                 <p class="my-1 fw-bold">{{ group.title }}</p>
-                <p class="my-1">wird</p>
-                <p class="my-1 fw-bold">{{ participant.full_name }} ({{ participant.association_name }})</p>
-                <p class="mt-1">auf die folgende Position gesetzt:</p>
+                <p class="my-1">werden die folgenden beiden TN vertauscht:</p>
 
                 {% for prei in range(list_system.mandatory_maximum) %}
                     {% set i = list_system.list_class().meta._allocation_order[prei] - 1 %}
                     {% set participant = group.participants.filter_by(placement_index=i).first() %}
-                    {% call form.FormRadio(id='position'~i, name='position', value=i, disabled=participant) %}
+                    {% call form.FormCheck(id='position'~i, name='position', value=i) %}
                     {% if participant %}
-                        {{ i + 1 }} &ndash; {{ participant.full_name }} ({{ participant.association_name }})
+                        {{ i + 1 }} &ndash; {{ participant.full_name }} ({{ participant.association_name }})</label>
                     {% else %}
-                        {{ i + 1 }} &ndash; frei
+                        {{ i + 1 }} &ndash; <span class="text-secondary">frei</span>
                     {% endif %}
                     {% endcall %}
                 {% endfor %}

@@ -492,6 +492,46 @@ def unplace(id, participant_id):
     return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
 
 
+@mod_placement_view.route('/class/<id>/group/<group_id>/switch_placements', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def switch_placements(id, group_id):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+    group = event_class.groups.filter_by(id=group_id).one_or_404()
+    list_system = group.list_system()
+
+    if not list_system:
+        flash("Setzen in dieser Gruppe nicht möglich, da noch kein Listensystem zugewiesen ist.", 'danger')
+
+        return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
+
+    if request.method == 'POST':
+        positions = request.form.getlist('position')
+        if len(positions) == 2:
+            first_participant = group.participants.filter_by(placement_index=positions[0]).first()
+            second_participant = group.participants.filter_by(placement_index=positions[1]).first()
+
+            if first_participant:
+                first_participant.placement_index = positions[1]
+                first_participant.manually_placed = True
+            
+            if second_participant:
+                second_participant.placement_index = positions[0]
+                second_participant.manually_placed = True
+            
+            db.session.commit()
+            return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
+
+        else:
+            flash("Wählen Sie genau zwei Positionen aus, die vertauscht werden sollen", 'danger')
+
+    return render_template("mod_placement/participant/switch_placement.html", event_class=event_class, group=group, list_system=list_system)
+
+
 @mod_placement_view.route('/class/<id>/group/<group_id>/place_all', methods=['GET', 'POST'])
 @check_and_apply_event
 @check_is_registered
