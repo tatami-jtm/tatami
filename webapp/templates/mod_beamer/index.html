@@ -15,7 +15,7 @@
 <div class="d-flex justify-end p-1">
     {% call dropdown.Dropdown(right=True) %}
         {% call dropdown.DropdownButton() %}
-            {% call buttons.SubtleButton(attr=dropdown.ToggleDropdownAttr(dropdown='#config-dropdown')) %}
+            {% call buttons.SubtleButton(attr=dropdown.ToggleDropdownAttr(dropdown='#config-dropdown'), title="Einstellungen") %}
                 {{ buttons.ButtonIcon(icon="more-horiz") }}
             {% endcall %}
         {% endcall %}
@@ -32,7 +32,7 @@
         {% endcall %}
     {% endcall %}
 
-    {% call buttons.SubtleButton(href=url_for('devices.index', event=g.event.slug)) %}
+    {% call buttons.SubtleButton(href=url_for('devices.index', event=g.event.slug), title="Zurück") %}
         {{ buttons.ButtonIcon(icon="xmark") }}
     {% endcall %}
 </div>

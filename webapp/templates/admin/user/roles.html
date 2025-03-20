@@ -34,7 +34,7 @@
                         </ul>
                     {% endcall %}
                     {% call datasets.TableButtonsColumn() %}
-                        {% call buttons.SubtleButton(href=url_for('admin.edit_role', id=role.id), inline=True) %}
+                        {% call buttons.SubtleButton(href=url_for('admin.edit_role', id=role.id), inline=True, title="Bearbeiten") %}
                             {{ buttons.ButtonIcon(icon="edit-pencil") }}
                         {% endcall %}
                     {% endcall %}

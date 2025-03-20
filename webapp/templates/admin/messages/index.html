@@ -24,10 +24,10 @@
                     {{ datasets.TableColumn(text=(msg.user.display_name if msg.user else 'System')) }}
                     {{ datasets.TableColumn(text=msg.created_at.strftime("%d.%m.%Y")) }}
                     {% call datasets.TableButtonsColumn() %}
-                        {% call buttons.SubtleButton(href=url_for('admin.message', id=msg.id), inline=True) %}
+                        {% call buttons.SubtleButton(href=url_for('admin.message', id=msg.id), inline=True, title="Bearbeiten") %}
                             {{ buttons.ButtonIcon(icon="edit-pencil") }}
                         {% endcall %}
-                        {% call buttons.SubtleDangerButton(type="submit", attr='form="msg-' ~ msg.id ~ '-delform"', inline=True) %}
+                        {% call buttons.SubtleDangerButton(type="submit", attr='form="msg-' ~ msg.id ~ '-delform"', inline=True, title="Löschen") %}
                             {{ buttons.ButtonIcon(icon="trash") }}
                         {% endcall %}
                     {% endcall %}

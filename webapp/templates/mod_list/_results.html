@@ -92,7 +92,8 @@
 {% if g.event.setting('scheduling.use', True) %}
 <p>Die Listen werden auf dieser Matte automatisch geführt. Folglich sind entweder noch keine Listen freigegeben, alle Kämpf erledigt oder es muss zurzeit eine Pause stattfinden.</p>
 
-<a href="?" class="btn btn-dark">Seite aktualisieren</a>
+{{ buttons.SecondaryButton(text="Seite aktualisieren", href="?") }}
+
 {% else %}
 <p>Links können ggf. Kämpfe ausgewählt werden, die jetzt stattfinden können.</p>
 {% endif %}

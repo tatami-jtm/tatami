@@ -1,7 +1,27 @@
 from ..listslib import compile_list
 from . import db
 import base64
+import hashlib
 import re
+
+PRONOUNCABLE_HASH = {
+    '0': 'ja',
+    '1': 'ne',
+    '2': 'fa',
+    '3': 'mo',
+    '4': 'go',
+    '5': 'ra',
+    '6': 'se',
+    '7': 'schi',
+    '8': 'po',
+    '9': 'wu',
+    'A': 'na',
+    'B': 'le',
+    'C': 'mi',
+    'D': 'so',
+    'E': 'fu',
+    'F': 'do'
+}
 
 class Registration(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
@@ -46,13 +66,19 @@ class Registration(db.Model):
         return self.first_name[0].upper() + ". " + self.last_name.upper() + assoc_pt
     
     def anon_name(self):
-        return base64.b16encode(f"{self.id}".encode() + self.last_name.encode() + b" " + self.first_name.encode()).decode()[:24]
+        base_hash = self.last_name.encode() + b" " + self.first_name.encode() + f"{self.id}".encode()
+        base_hash = base64.b16encode(hashlib.md5(base_hash).digest()).decode()
+
+        return "".join([*map(lambda x: PRONOUNCABLE_HASH[x], base_hash[:4])]).capitalize() + " " + "".join([*map(lambda x: PRONOUNCABLE_HASH[x], base_hash[7:13])]).capitalize()
     
     def anon_club(self):
         if self.association:
-            return base64.b16encode(self.club.encode() + b"+" + self.association.short_name.encode()).decode()[:18]
+            base_hash = self.club.encode() + b"+" + self.association.short_name.encode()
         else:
-            return base64.b16encode(self.club.encode()).decode()[:18]
+            base_hash = self.club.encode()
+
+        base_hash = base64.b16encode(hashlib.md5(base_hash).digest()).decode()
+        return "".join([*map(lambda x: PRONOUNCABLE_HASH[x], base_hash[:4])]).capitalize()
     
     def matches_status(self, filter):
         # All registrations match no filter

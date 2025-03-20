@@ -1,9 +1,9 @@
-{%- macro _LinkButton(style="info", size=None, href="#", text=None, active=False, disabled=False, class="", download="", attr="", target="") -%}
-<a href="{{ href }}" class="btn btn-{{ style }}{{ '-cta' if size == 'cta' else '' if size == None else ' btn-' + size }}{{ ' active' if active }}{{ ' disabled' if disabled }} {{ class }}"{{ ' disabled' if disabled }} {% if download %}download="{{ download }}"{% endif %} {% if target %}target="{{ target }}"{% endif %} {{ attr|safe if attr }}>{{ text or (caller() if caller is defined) }}</a>
+{%- macro _LinkButton(style="info", size=None, href="#", text=None, active=False, disabled=False, class="", download="", attr="", target="", title=None) -%}
+<a href="{{ href }}" class="btn btn-{{ style }}{{ '-cta' if size == 'cta' else '' if size == None else ' btn-' + size }}{{ ' active' if active }}{{ ' disabled' if disabled }} {{ class }}"{{ ' disabled' if disabled }} {% if download %}download="{{ download }}"{% endif %} {% if target %}target="{{ target }}"{% endif %} {% if title %}title="{{ title }}"{% endif %} {{ attr|safe if attr }}>{{ text or (caller() if caller is defined) }}</a>
 {%- endmacro -%}
 
-{%- macro _SemanticButton(style="info", size=None, id=None, type="button", text=None, active=False, disabled=False, class="", attr="") -%}
-<button {% if id != None %}id="{{ id }}"{% endif %} type="{{ type }}" class="btn btn-{{ style }}{{ '-cta' if size == 'cta' else '' if size == None else ' btn-' + size }}{{ ' active' if active }}{{ ' disabled' if disabled }} {{ class }}"{{ ' disabled' if disabled }} {{ attr|safe if attr }}>{{ text or (caller() if caller is defined) }}</button>
+{%- macro _SemanticButton(style="info", size=None, id=None, type="button", text=None, active=False, disabled=False, class="", attr="", title=None) -%}
+<button {% if id != None %}id="{{ id }}"{% endif %} type="{{ type }}" class="btn btn-{{ style }}{{ '-cta' if size == 'cta' else '' if size == None else ' btn-' + size }}{{ ' active' if active }}{{ ' disabled' if disabled }} {{ class }}"{{ ' disabled' if disabled }} {% if title %}title="{{ title }}"{% endif %} {{ attr|safe if attr }}>{{ text or (caller() if caller is defined) }}</button>
 {%- endmacro -%}
 
 {%- macro PrimaryButton(mode="semantic", text=None, inline=False) -%}
