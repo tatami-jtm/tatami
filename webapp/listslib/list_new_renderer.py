@@ -106,8 +106,10 @@ class ListRenderer:
 
         elif op == "mscore":
             match = self.list.get_match_by_id(query['match'])
-            match_result = match.get_result()
+            if not match:
+                return ""
 
+            match_result = match.get_result()
             if not match_result:
                 return ""
             elif query['for'] == 'white':

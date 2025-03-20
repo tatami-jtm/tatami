@@ -62,37 +62,7 @@
         </playoff>
     </rules>
 
-    <display>
-        <template page="2">
-            <write-header x="137.5" y="16.75" />
-            <write-fighter x="22" y="48" type="full">
-                <fighter id="1" />
-            </write-fighter>
-            <write-fighter x="22" y="54" type="full">
-                <fighter id="2" />
-            </write-fighter>
-            <write-score x="60.125" y="48" match-id="match1" for="white" />
-            <write-score x="60.125" y="54" match-id="match1" for="blue" />
-
-            <write-score x="67.5" y="48" match-id="match2" for="white" />
-            <write-score x="67.5" y="54" match-id="match2" for="blue" />
-
-            <write-score x="75" y="48" match-id="match3" for="white" />
-            <write-score x="75" y="54" match-id="match3" for="blue" />
-
-            <write-total x="82.5" y="48" fighter-id="1" option="points" />
-            <write-total x="91.5" y="48" fighter-id="1" option="score" />
-            <write-total x="100.5" y="48" fighter-id="1" option="placement" />
-            <write-total x="82.5" y="54" fighter-id="2" option="points" />
-            <write-total x="91.5" y="54" fighter-id="2" option="score" />
-            <write-total x="100.5" y="54" fighter-id="2" option="placement" />
-
-            <write-fighter x="152" y="230" type="default">
-                <placed on="1" />
-            </write-fighter>
-            <write-fighter x="152" y="236" type="default">
-                <placed on="2" />
-            </write-fighter>
-        </template>
-    </display>
+    <html-renderer>
+        <include file="bestof3" />
+    </html-renderer>
 </ruleset>
