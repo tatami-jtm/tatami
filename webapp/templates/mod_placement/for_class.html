@@ -50,7 +50,7 @@
             {%- call buttons.SubtleButton(href=url_for('mod_placement.place_for_all_groups', event=g.event.slug, id=event_class.id)) -%}
                 {{ buttons.ButtonIcon(icon="dice-five") }}
             {%- endcall -%}
-            {%- call buttons.SubtleButton() -%}
+            {%- call buttons.SubtleButton(href=url_for('mod_placement.refresh_for_class', event=g.event.slug, id=event_class.id)) -%}
                 {{ buttons.ButtonIcon(icon="refresh-double") }}
             {%- endcall -%}
             {%- call buttons.SubtleDangerButton(href=url_for('mod_placement.delete_all_for_class', event=g.event.slug, id=event_class.id)) -%}

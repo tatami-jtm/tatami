@@ -325,7 +325,7 @@ def assign_all_predefined(id):
                 registration.placed_at = registration.placed_at or dt.now()
 
                 db.session.add(participant)
-                g.event.log(g.device.title, 'DEBUG', f'Angemeldeter TN {participant.full_name} wurde Gruppe {group.title} zugewiesen.')
+                g.event.log(g.device.title, 'DEBUG', f'Angemeldeter TN {participant.full_name} wurde Gruppe {ag.title} zugewiesen.')
                 participants_created += 1
 
         db.session.commit()
@@ -611,6 +611,54 @@ def delete_all_for_class(id):
     return render_template("mod_placement/delete_all_for_class.html", event_class=event_class)
 
 
+
+@mod_placement_view.route('/class/<id>/refresh', methods=['GET', 'POST'])
+@check_and_apply_event
+@check_is_registered
+def refresh_for_class(id):
+    if not g.device.event_role.may_use_placement_tool:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    event_class = g.event.classes.filter_by(id=id).one_or_404()
+
+    if request.method == 'POST':
+        groups_needing_refreshing = set()
+        for group in event_class.groups:
+            needs_to_clear_group = False
+
+            for participant in group.participants:
+                if participant.registration is None:
+                    # This participant was manually added and cannot be refreshed
+                    continue
+
+                registration = participant.registration
+
+                # Refresh participant names
+                if 'update_names' in request.form:
+                    _refresh_participant_name(participant, registration)
+
+                # Check for unfitting group
+                if 'update_weight' in request.form:
+                    groups_needing_refreshing.update(
+                        _refresh_participant_weight(event_class, participant, registration, group)
+                    )
+        
+        # Refresh groups
+        for group in event_class.groups:
+            if group in groups_needing_refreshing:
+                _refresh_group(group)
+
+        db.session.commit()
+            
+        # g.event.log(g.device.title, 'DANGER', f'Für die Kampklasse {event_class.title} wurde die Einteilung zurückgesetzt: {group_counter} Gruppen, {participant_counter} TN wurden gelöscht und {registration_counter} TN-Registrierungen wurden zurückgesetzt')
+        # flash(f"Für die Kampklasse {event_class.title} wurde die Einteilung zurückgesetzt. {group_counter} Gruppen, {participant_counter} TN wurden gelöscht und {registration_counter} TN-Registrierungen wurden zurückgesetzt.", 'success')
+
+        return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id))
+
+    return render_template("mod_placement/refresh_for_class.html", event_class=event_class)
+
+
 def _get_weight_classes(event_class):
     classes = []
     raw_classes = event_class.weight_generator.strip().split("\n")
@@ -669,3 +717,96 @@ def _randomly_place_group(group, method='random'):
         db.session.commit()
 
         current_count += 1
+
+
+def _refresh_participant_name(participant, registration):
+    participant.full_name = f"{registration.first_name} {registration.last_name}"
+
+    if g.event.setting('use_association_instead_of_club', False) and registration.association:
+        participant.association_name = registration.association.name
+    else:
+        participant.association_name = registration.club
+
+
+def _refresh_participant_weight(event_class, participant, registration, group):
+    groups_that_need_refreshing = []
+    tolerance = int(float(request.form['tolerance']) * 1000)
+    actual_weight = registration.verified_weight - tolerance
+
+    # Delete from unfitting groups
+    if ((group.min_weight is not None and group.min_weight >= actual_weight) or \
+        (group.max_weight is not None and group.max_weight < actual_weight)) and \
+            not group.marked_ready:
+
+        if registration.participants.count() == 1:
+            registration.placed = False
+
+        db.session.delete(participant)
+        db.session.commit()
+
+        groups_that_need_refreshing.append(group)
+
+    # Assign to new fitting groups
+
+    applicable_groups = event_class.groups.filter(
+        Group.min_weight.is_(None) | (Group.min_weight < actual_weight),
+        Group.max_weight.is_(None) | (Group.max_weight >= actual_weight)
+    ).all()
+
+    for newgroup in applicable_groups:
+        # Ignore groups that are already marked as ready
+        if newgroup.marked_ready:
+            continue
+
+        # Skip if we already have the participant here
+        if newgroup.participants.filter_by(registration=registration).count() > 0:
+            continue
+
+        participant = Participant(event=g.event, group=newgroup)
+        participant.placement_index = None
+        participant.manually_placed = None
+        participant.final_placement = None
+        participant.final_points = None
+        participant.final_score = None
+        participant.removed = False
+        participant.disqualified = False
+        participant.removal_cause = None
+
+        participant.full_name = f"{registration.first_name} {registration.last_name}"
+        participant.registration = registration
+
+        if g.event.setting('use_association_instead_of_club', False) and registration.association:
+            participant.association_name = registration.association.name
+        else:
+            participant.association_name = registration.club
+
+        registration.placed = True
+        registration.placed_at = registration.placed_at or dt.now()
+
+        db.session.add(participant)
+        groups_that_need_refreshing.append(newgroup)
+
+    db.session.commit()
+
+    return groups_that_need_refreshing
+
+def _refresh_group(group):
+    group.system_id = None
+
+    has_autoplaced_participant = False
+
+    for participant in group.participants:
+        if participant.placement_index is None:
+            continue
+
+        if not participant.manually_placed:
+            has_autoplaced_participant = True
+
+        if participant.placement_index >= group.list_system().mandatory_maximum:
+            participant.placement_index = None
+            participant.manually_placed = False
+
+    if has_autoplaced_participant:
+        _randomly_place_group(group, method=request.form.get('method', 'random'))
+    
+    db.session.commit()

@@ -1,0 +1,48 @@
+{%- import "components/layout.html" as layout -%}
+{%- import "components/cards.html" as cards -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/form.html" as form -%}
+
+{% extends "layouts/application.html" %}
+{% set page=event_class %}
+{% block title %}Hauptliste{% endblock %}
+{% block pre_messages %}{% include "mod_placement/_header.html" %}{% endblock %}
+{% block body %}
+
+{% call layout.Container(width='small') %}
+
+    <h1>Kampfklasse {{ event_class.title }} &ndash; TN-Daten aktualisieren</h2>
+
+    <form action="" method="POST">
+        {% call cards.Card() %}
+            {% call cards.CardBody() %}
+                <p>TATAMI wird versuchen, die TN-Daten aus den Anmeldungen aktualisieren.</p>
+                <p>Manuell einer Gruppe hinzugefügte TN werden nicht verändert. Zum Kämpfen freigegebene Gruppen werden ebenfalls nicht verändert.</p>
+                <p>Bitte wählen Sie aus, welche Aktualisierungsverfahren Sie anwenden wollen:</p>
+            {% endcall %}
+            {% call cards.CardBody() %}
+                {{ form.FormCheck(id="update-names", name="update_names", label="Name und Verein/Verband aktualisieren", checked=True) }}
+            {% endcall %}
+            {% call cards.CardBody() %}
+                {{ form.FormCheck(id="update-weight", name="update_weight", label="TN-Zuweisung anhand der Gewichtsgrenzen der Gruppen überprüfen und ggf. aktualisieren", checked=not event_class.use_proximity_weight_mode) }}
+
+                <div class="ml-4">
+                    {{ form.Label(for_id='tolerance', text='Toleranz:') }}
+                    {{ form.InputWithSuffix(id='tolerance', name='tolerance', value=0.1, type="number", attr=('step="0.1" min="0" max="3"'|safe), suffix="kg") }}
+
+                    {{ form.Label(for_id='method', text='Losverfahren') }}
+                    {% call form.Select(id='method', name='method') %}
+                        {{ form.SelectOption(value='random', text='Zufällig', selected=True) }}
+                        {{ form.SelectOption(value='smallest_weight', text='Nach Gewicht (niedrigstes zuerst)') }}
+                        {{ form.SelectOption(value='largest_weight', text='Nach Gewicht (höchstes zuerst)') }}
+                    {% endcall %}
+                </div>
+            {% endcall %}
+            {% call cards.CardFooter() %}
+                {{ buttons.PrimaryButton(type='submit', text='TN-Daten aktualisieren') }}
+                {{ buttons.SecondaryButton(href=url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id), text='Abbrechen') }}
+            {% endcall %}
+        {% endcall %}
+    </form>
+{% endcall %}
+{% endblock body %}
