@@ -16,11 +16,11 @@
     {% call colboard.ColboardColumn() %}
         {%- call colboard.ColboardColumnHeader(title="Nicht zugewiesene TN") -%}
             {% if proximity %}
-                {%- call buttons.SubtleButton(href=url_for('mod_placement.assign_all_proximity', event=g.event.slug, id=event_class.id)) -%}
+                {%- call buttons.SubtleButton(href=url_for('mod_placement.assign_all_proximity', event=g.event.slug, id=event_class.id), title="Verbleibende TN zuweisen") -%}
                     {{ buttons.ButtonIcon(icon="fast-arrow-right-square") }}
                 {%- endcall -%}
             {% else %}
-                {%- call buttons.SubtleButton(href=url_for('mod_placement.assign_all_predefined', event=g.event.slug, id=event_class.id)) -%}
+                {%- call buttons.SubtleButton(href=url_for('mod_placement.assign_all_predefined', event=g.event.slug, id=event_class.id), title="Verbleibende TN zuweisen") -%}
                     {{ buttons.ButtonIcon(icon="fast-arrow-right-square") }}
                 {%- endcall -%}
             {% endif %}
@@ -44,16 +44,16 @@
 
     {% call colboard.ColboardColumn() %}
         {%- call colboard.ColboardColumnHeader(title=('Gewichtsklassen' if not proximity else 'Gewichtsnahe Gruppen')) -%}
-            {%- call buttons.SubtleButton(href=url_for('mod_placement.add_group', event=g.event.slug, id=event_class.id)) -%}
+            {%- call buttons.SubtleButton(href=url_for('mod_placement.add_group', event=g.event.slug, id=event_class.id), title="Gruppe hinzufügen") -%}
                 {{ buttons.ButtonIcon(icon="plus") }}
             {%- endcall -%}
-            {%- call buttons.SubtleButton(href=url_for('mod_placement.place_for_all_groups', event=g.event.slug, id=event_class.id)) -%}
+            {%- call buttons.SubtleButton(href=url_for('mod_placement.place_for_all_groups', event=g.event.slug, id=event_class.id), title="Alle Gruppen losen") -%}
                 {{ buttons.ButtonIcon(icon="dice-five") }}
             {%- endcall -%}
-            {%- call buttons.SubtleButton(href=url_for('mod_placement.refresh_for_class', event=g.event.slug, id=event_class.id)) -%}
+            {%- call buttons.SubtleButton(href=url_for('mod_placement.refresh_for_class', event=g.event.slug, id=event_class.id), title="TN-Daten aktualisieren") -%}
                 {{ buttons.ButtonIcon(icon="refresh-double") }}
             {%- endcall -%}
-            {%- call buttons.SubtleDangerButton(href=url_for('mod_placement.delete_all_for_class', event=g.event.slug, id=event_class.id)) -%}
+            {%- call buttons.SubtleDangerButton(href=url_for('mod_placement.delete_all_for_class', event=g.event.slug, id=event_class.id), title="Gesamte Einteilung löschen") -%}
                 {{ buttons.ButtonIcon(icon="trash") }}
             {%- endcall -%}
         {%- endcall -%}
@@ -77,19 +77,19 @@
     {% if current_group %}
         {%- call colboard.ColboardColumn(span=2) -%}
             {%- call colboard.ColboardColumnHeader(title=current_group.title) -%}
-                {%- call buttons.SubtleButton(href=url_for('mod_placement.assign', event=g.event.slug, id=event_class.id, group=current_group.id), disabled=current_group.marked_ready) -%}
+                {%- call buttons.SubtleButton(href=url_for('mod_placement.assign', event=g.event.slug, id=event_class.id, group=current_group.id), disabled=current_group.marked_ready, title="TN zuweisen") -%}
                     {{ buttons.ButtonIcon(icon="plus") }}
                 {%- endcall -%}
-                {%- call buttons.SubtleButton(href=url_for('mod_placement.edit_group', event=g.event.slug, id=event_class.id, group_id=current_group.id), disabled=current_group.marked_ready) -%}
+                {%- call buttons.SubtleButton(href=url_for('mod_placement.edit_group', event=g.event.slug, id=event_class.id, group_id=current_group.id), disabled=current_group.marked_ready, title="Gruppe bearbeiten") -%}
                     {{ buttons.ButtonIcon(icon="edit-pencil") }}
                 {%- endcall -%}
-                {%- call buttons.SubtleButton(href=url_for('mod_placement.place_all', event=g.event.slug, id=event_class.id, group_id=current_group.id), disabled=current_group.marked_ready) -%}
+                {%- call buttons.SubtleButton(href=url_for('mod_placement.place_all', event=g.event.slug, id=event_class.id, group_id=current_group.id), disabled=current_group.marked_ready, title="Verbleibende TN der Gruppe losen") -%}
                     {{ buttons.ButtonIcon(icon="dice-three") }}
                 {%- endcall -%}
-                {%- call buttons.SubtleButton(href=url_for('mod_placement.switch_placements', event=g.event.slug, id=event_class.id, group_id=current_group.id), disabled=current_group.marked_ready) -%}
+                {%- call buttons.SubtleButton(href=url_for('mod_placement.switch_placements', event=g.event.slug, id=event_class.id, group_id=current_group.id), disabled=current_group.marked_ready, title="TN tauschen") -%}
                     {{ buttons.ButtonIcon(icon="coins-swap") }}
                 {%- endcall -%}
-                {%- call buttons.SubtleButton(href=url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id), target="_blank") -%}
+                {%- call buttons.SubtleButton(href=url_for('mod_list.display_pdf', event=g.event.slug, id=current_group.id), target="_blank", title="PDF") -%}
                     {{ buttons.ButtonIcon(icon="empty-page") }}
                 {%- endcall -%}
             {%- endcall -%}
