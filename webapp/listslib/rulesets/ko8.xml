@@ -113,71 +113,7 @@
         </score>
     </rules>
 
-    <display>
-        <template page="8">
-            <write-header x="137.5" y="16.75" />
-
-            <!-- Main // Round of 8 -->
-            <write-fighter x="22" y="43.5" type="full"><fighter id="1" /></write-fighter>
-            <write-fighter x="22" y="49.5" type="full"><fighter id="2" /></write-fighter>
-            <write-fighter x="22" y="55.5" type="full"><fighter id="3" /></write-fighter>
-            <write-fighter x="22" y="61.5" type="full"><fighter id="4" /></write-fighter>
-            <write-fighter x="22" y="67.5" type="full"><fighter id="5" /></write-fighter>
-            <write-fighter x="22" y="73.5" type="full"><fighter id="6" /></write-fighter>
-            <write-fighter x="22" y="79.5" type="full"><fighter id="7" /></write-fighter>
-            <write-fighter x="22" y="85.5" type="full"><fighter id="8" /></write-fighter>
-
-            <!-- Main // Semifinals -->
-            <write-fighter x="66" y="43.5" type="short"><winner match-id="AvB" /></write-fighter>
-            <write-fighter x="66" y="55.5" type="short"><winner match-id="CvD" /></write-fighter>
-            <write-fighter x="66" y="67.5" type="short"><winner match-id="EvF" /></write-fighter>
-            <write-fighter x="66" y="79.5" type="short"><winner match-id="GvH" /></write-fighter>
-
-            <!-- Main // Final -->
-            <write-fighter x="101" y="49.5" type="short"><winner match-id="ABvCD" /></write-fighter>
-            <write-fighter x="101" y="73.5" type="short"><winner match-id="EFvGH" /></write-fighter>
-            <write-fighter x="137" y="61.5" type="short"><winner match-id="ABCDvEFGH" /></write-fighter>
-
-            <!-- Repechage // Semifinals -->
-            <write-fighter x="22" y="111" type="short"><loser match-id="AvB" /></write-fighter>
-            <write-fighter x="22" y="123" type="short"><loser match-id="CvD" /></write-fighter>
-            <write-fighter x="22" y="134.75" type="short"><loser match-id="EvF" /></write-fighter>
-            <write-fighter x="22" y="146.75" type="short"><loser match-id="GvH" /></write-fighter>
-
-            <!-- Repechage // Third Place Finals -->
-            <write-fighter x="58" y="117" type="short"><winner match-id="rabvcd" /></write-fighter>
-            <write-fighter x="58" y="132" type="short"><loser match-id="EFvGH" /></write-fighter>
-            <write-fighter x="58" y="140.5" type="short"><winner match-id="refvgh" /></write-fighter>
-            <write-fighter x="58" y="155.5" type="short"><loser match-id="ABvCD" /></write-fighter>
-
-            <write-fighter x="94" y="124.5" type="short"><winner match-id="rRABCDvefgh" /></write-fighter>
-            <write-fighter x="94" y="148" type="short"><winner match-id="rREFGHvabcd" /></write-fighter>
-
-            <!-- Total Results -->
-            <write-fighter x="152" y="230" type="default">
-                <winner match-id="ABCDvEFGH" />
-            </write-fighter>
-            <write-fighter x="152" y="236" type="default">
-                <loser match-id="ABCDvEFGH" />
-            </write-fighter>
-            <write-fighter x="152" y="242" type="default">
-                <winner match-id="rRABCDvefgh" />
-            </write-fighter>
-            <write-fighter x="152" y="248" type="default">
-                <winner match-id="rREFGHvabcd" />
-            </write-fighter>
-            <write-fighter x="152" y="254" type="default">
-                <loser match-id="rRABCDvefgh" />
-            </write-fighter>
-            <write-fighter x="152" y="260" type="default">
-                <loser match-id="rREFGHvabcd" />
-            </write-fighter>
-            <write-fighter x="152" y="266" type="default">
-                <loser match-id="rabvcd" />
-            </write-fighter>
-            <write-fighter x="152" y="272" type="default">
-                <loser match-id="refvgh" />
-            </write-fighter>
-        </template>
-    </display>
+    <html-renderer>
+        <include file="ko8" />
+    </html-renderer>
 </ruleset>

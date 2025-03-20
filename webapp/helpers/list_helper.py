@@ -18,8 +18,7 @@ def load_list(group):
     if group.random_seed:
         struct['random_seed'] = group.random_seed
 
-    for prei in range(list_type.mandatory_maximum):
-        i = list_cls.meta._allocation_order[prei] - 1
+    for i in range(list_type.mandatory_maximum):
         participant = group.participants.filter_by(placement_index=i).first()
 
         if participant is None:

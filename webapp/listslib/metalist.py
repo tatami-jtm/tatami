@@ -471,6 +471,8 @@ class MetaList:
         obj._fighters[alloc_id] = player
         obj._fighter_count += 1
 
+        print(obj._fighter_count, alloc_id, obj._fighters)
+
         if alloc_id in self._fighter_group_allocs:
             group_name = self._fighter_group_allocs[alloc_id]
 
