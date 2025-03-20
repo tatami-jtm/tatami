@@ -3,6 +3,12 @@ import re
 import json
 import os
 from . import pdftool
+from ..config_base import SETTINGS
+
+if SETTINGS['WKHTMLTOPDF_PATH'] is not None:
+    PDFKIT_CONFIG = pdfkit.configuration(wkhtmltopdf=SETTINGS['WKHTMLTOPDF_PATH'])
+else:
+    PDFKIT_CONFIG = pdfkit.configuration()
 
 TEMPLATES_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "templates"))
 STATIC_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../static"))
@@ -159,7 +165,7 @@ class ListRenderer:
             'encoding': "UTF-8",
             'quiet': '',
             "enable-local-file-access": "",
-        })
+        }, configuration=PDFKIT_CONFIG)
     
     def render_image(self, page=1):
         return pdftool.make_image(self.render_pdf(), page - 1)
