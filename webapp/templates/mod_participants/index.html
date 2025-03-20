@@ -162,8 +162,8 @@
                             {% endif %}
                         {% endcall %}
                         {% call datasets.TableButtonsColumn() %}
-                            {% call buttons.SubtleButton(href=url_for('mod_participants.edit', event=g.event.slug, id=reg.id), inline=True) %}
-                                {{ buttons.ButtonIcon(icon="edit-pencil")}}
+                            {% call buttons.SubtleButton(href=url_for('mod_participants.edit', event=g.event.slug, id=reg.id), inline=True, title="Bearbeiten") %}
+                                {{ buttons.ButtonIcon(icon="edit-pencil") }}
                             {% endcall %}
                         {% endcall %}
                     {% endcall %}

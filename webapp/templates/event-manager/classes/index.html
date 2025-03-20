@@ -53,10 +53,10 @@
                         {{ badges.Badge(href=url_for('event_manager.registrations', event=g.event.slug, class_filter=cl.id), style="inactive", text="%d TN" % cl.registrations.count()) }}
                     {% endcall %}
                     {% call datasets.TableButtonsColumn() %}
-                        {% call buttons.SubtleButton(href=url_for('event_manager.edit_class', event=g.event.slug, id=cl.id), inline=True) %}
+                        {% call buttons.SubtleButton(href=url_for('event_manager.edit_class', event=g.event.slug, id=cl.id), inline=True, title="Bearbeiten") %}
                             {{ buttons.ButtonIcon(icon='edit-pencil') }}
                         {% endcall %}
-                        {% call buttons.SubtleButton(href=url_for('event_manager.class_registrations_as_csv', event=g.event.slug, id=cl.id), inline=True) %}
+                        {% call buttons.SubtleButton(href=url_for('event_manager.class_registrations_as_csv', event=g.event.slug, id=cl.id), inline=True, title="CSV herunterladen") %}
                             {{ buttons.ButtonIcon(icon='database-export') }}
                         {% endcall %}
                     {% endcall %}

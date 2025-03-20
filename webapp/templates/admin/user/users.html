@@ -38,11 +38,11 @@
                         {% endif %}
                     {% endcall %}
                     {% call datasets.TableButtonsColumn() %}
-                        {% call buttons.SubtleButton(href=url_for('admin.edit_user', id=user.id), inline=True) %}
+                        {% call buttons.SubtleButton(href=url_for('admin.edit_user', id=user.id), inline=True, title="Bearbeiten") %}
                             {{ buttons.ButtonIcon(icon="edit-pencil") }}
                         {% endcall %}
                         {% call buttons.SubtleDangerButton(type="submit", inline=True,
-                            attr='form="toggle-active-' ~ user.id ~ '"') %}
+                            attr='form="toggle-active-' ~ user.id ~ '"', title="Deaktivieren" if user.active else "Aktivieren") %}
                             {{ buttons.ButtonIcon(icon="lock" if user.active else "lock-slash") }}
                         {% endcall %}
                     {% endcall %}

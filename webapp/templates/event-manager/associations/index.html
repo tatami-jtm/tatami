@@ -24,7 +24,7 @@
                 {{ datasets.TableColumn(text=assoc.name) }}
                 {{ datasets.TableColumn(text=assoc.registrations.count() ~ " TN") }}
                 {% call datasets.TableButtonsColumn() %}
-                    {% call buttons.SubtleButton(href=url_for('event_manager.edit_association', event=g.event.slug, id=assoc.id), inline=True) %}
+                    {% call buttons.SubtleButton(href=url_for('event_manager.edit_association', event=g.event.slug, id=assoc.id), inline=True, title="Bearbeiten") %}
                         {{ buttons.ButtonIcon(icon='edit-pencil') }}
                     {% endcall %}
                 {% endcall %}
