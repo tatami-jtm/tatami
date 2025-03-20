@@ -17,17 +17,23 @@ def load_list(group):
 
     if group.random_seed:
         struct['random_seed'] = group.random_seed
-    
-    for participant in group.participants.order_by('placement_index'):
-        if participant.placement_index is None:
-            continue
 
-        f = Fighter(participant.id, participant.full_name, participant.association_name)
-        if participant.disqualified:
-            f.disqualify()
-        elif participant.removed:
-            f.remove()
-        struct['fighters'].append(f)
+    for prei in range(list_type.mandatory_maximum):
+        i = list_cls.meta._allocation_order[prei] - 1
+        participant = group.participants.filter_by(placement_index=i).first()
+
+        if participant is None:
+            struct['fighters'].append(BlankFighter)
+        
+        else:
+            f = Fighter(participant.id, participant.full_name, participant.association_name)
+            if participant.disqualified:
+                f.disqualify()
+            elif participant.removed:
+                f.remove()
+            struct['fighters'].append(f)        
+
+    print(struct['fighters'])
 
     for match in group.matches.all():
         if not match.obsolete and match.has_result():
