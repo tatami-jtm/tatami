@@ -142,4 +142,9 @@
             </write-fighter>
         </template>
     </display>
+
+    <html-renderer>
+        <include file="pool3" />
+        <include file="playoff_up" />
+    </html-renderer>
 </ruleset>

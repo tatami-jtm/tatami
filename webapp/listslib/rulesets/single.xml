@@ -19,15 +19,6 @@
         </score>
     </rules>
 
-    <display>
-        <template page="1">
-            <write-header x="137.5" y="16.75" />
-            <write-fighter x="26.5" y="55.5" type="full">
-                <fighter id="1" />
-            </write-fighter>
-        </template>
-    </display>
-
     <html-renderer>
         <include file="single" />
     </html-renderer>

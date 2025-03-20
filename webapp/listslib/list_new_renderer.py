@@ -4,6 +4,8 @@ import json
 import os
 from . import pdftool
 
+NBSP = "&nbsp;"
+
 class ListRenderer:
 
     TOKEN_REGEX = re.compile(r'%%([a-z]+)\:(.+?)%%')
@@ -33,12 +35,29 @@ class ListRenderer:
         query = json.loads(query)
 
         if op == "fname":
-            return self.list.meta._evaluate_fighter_ref(self.list, query).get_name()
+            fighter = self.list.meta._evaluate_fighter_ref(self.list, query)
+
+            if fighter is None:
+                return NBSP
+
+            return fighter.get_name()
 
         elif op == "fassoc":
-            return self.list.meta._evaluate_fighter_ref(self.list, query).get_affil()
+            fighter = self.list.meta._evaluate_fighter_ref(self.list, query)
+
+            if fighter is None:
+                return NBSP
+
+            return fighter.get_affil()
 
         elif op == "fscore" or op == "fpoints":
+            if 'scope' not in query:
+                if not self.list.completed(): return ''
+                if not self.list.score(): return ''
+            else:
+                self.list.score()
+                if not self.list._score_deductions['calced']: return ''
+
             fighter = self.list.meta._evaluate_fighter_ref(self.list, query)
             scope = query['scope'] if 'scope' in query else 'all'
 
@@ -57,8 +76,16 @@ class ListRenderer:
                 return str(fighter_total[0])
 
         elif op == "fplacement":
+            if 'scope' not in query:
+                if not self.list.completed(): return ''
+                if not self.list.score(): return ''
+            else:
+                self.list.score()
+                if not self.list._score_deductions['calced']: return ''
+
             fighter = self.list.meta._evaluate_fighter_ref(self.list, query)
             if 'scope' not in query:
+                print(self.list._score_deductions)
                 if fighter in self.list._score_deductions['results']['first']:
                     return '1.'
                 elif fighter in self.list._score_deductions['results']['second']:
@@ -82,7 +109,7 @@ class ListRenderer:
             match_result = match.get_result()
 
             if not match_result:
-                return "-"
+                return ""
             elif query['for'] == 'white':
                 return str(match_result.get_score_white())
             elif query['for'] == 'blue':
