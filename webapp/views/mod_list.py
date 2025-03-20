@@ -13,6 +13,8 @@ from ..models import db, Match
 
 from .. import helpers
 
+from ..listslib import ListRenderer
+
 mod_list_view = Blueprint('mod_list', __name__)
 
 
@@ -132,23 +134,10 @@ def display_pdf(id):
     group = g.event.groups.filter_by(id=id).one_or_404()
     group_list = helpers.load_list(group)
 
-    if 'draft' in request.values:
-        pdf = group_list.make_pdf(title=g.event.title,
-                                  event_class=group.event_class.short_title,
-                                  group=group.cut_title(),
-                                  draft=True)
-    elif group.assigned_to_position:
-        pdf = group_list.make_pdf(title=g.event.title,
-                                  event_class=group.event_class.short_title,
-                                  group=group.cut_title(),
-                                  mat=group.assigned_to_position.title)
-    else:
-        pdf = group_list.make_pdf(title=g.event.title,
-                                  event_class=group.event_class.short_title,
-                                  group=group.cut_title())
+    lr = ListRenderer(group_list, g.event, group, served=False)
 
     pdf_io = io.BytesIO()
-    pdf.write(pdf_io)
+    pdf_io.write(lr.render_pdf())
     pdf_io.seek(0)
 
     return send_file(pdf_io, mimetype='application/pdf')
@@ -242,6 +231,23 @@ def display_all_zip():
     return Response(zip_io.getvalue(), mimetype='application/zip', headers={
         'Content-Disposition': f'attachment;filename=all_lists_{now}.zip'
     })
+
+
+@mod_list_view.route('/display/<id>/list.html')
+@check_and_apply_event
+@check_is_registered
+def display_html(id):
+    if not (g.device.event_role.may_use_global_list or
+            g.device.event_role.may_use_assigned_lists or
+            g.device.event_role.may_use_placement_tool):
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+    
+    group = g.event.groups.filter_by(id=id).one_or_404()
+    group_list = helpers.load_list(group)
+
+    lr = ListRenderer(group_list, g.event, group, served=True)
+    return lr.render_html_template()
 
 
 @mod_list_view.route('/group/<id>/match/<match_id>/schedule')

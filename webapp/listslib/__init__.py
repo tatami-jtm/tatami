@@ -2,6 +2,7 @@ from .list_compiler import *
 from .metalist import *
 from .fighter import Fighter
 from .match_result import MatchResult
+from .list_new_renderer import ListRenderer
 
 if __name__ == "__main__":
     # example_list = compile_list('pool2')()

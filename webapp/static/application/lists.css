@@ -1,0 +1,395 @@
+@font-face {
+    font-display: swap;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 200;
+    src: url('../fonts/inter-v13-latin_latin-ext-200.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/inter-v13-latin_latin-ext-regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    src: url('../fonts/inter-v13-latin_latin-ext-500.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../fonts/inter-v13-latin_latin-ext-700.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 900;
+    src: url('../fonts/inter-v13-latin_latin-ext-900.woff2') format('woff2');
+}
+
+* { box-sizing: border-box; }
+
+.tlist {
+    font-family: Inter, Arial, Helvetica, sans-serif;
+}
+
+.tlist>:first-child {
+    margin-top: 0;
+}
+.tlist>:last-child {
+    margin-bottom: 0;
+}
+
+.tlist .tlist-page {
+    margin: 0.25cm auto;
+    width: 100%;
+    max-width: 26.25cm;
+    min-height: 29.7cm;
+    padding: 1.5cm;
+    background-color: white;
+    border: 1px solid #ddd;
+}
+
+.tlist .tlist-page-inner {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.tlist .tlist-header {
+    padding-bottom: 2.75cm;
+}
+
+.tlist .tlist-brand {
+    position: absolute;
+    top: 1.125cm; left: 0;
+    color: #8a9b68;
+    border-radius: 1mm;
+    font-weight: 900;
+    font-size: 4.25mm;
+}
+
+.tlist h1 {
+    position: absolute;
+    top: 1.25cm; left: 0;
+    font-weight: 500;
+    font-size: 6mm;
+}
+
+.tlist h2 {
+    font-size: 5mm;
+    font-weight: 600;
+    margin-top: 0.75cm;
+    margin-bottom: -0.5cm;
+}
+
+.tlist .tlist-mat {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    text-align: center;
+    font-size: 4mm;
+}
+
+.tlist .tlist-draft {
+    position: fixed;
+    top: 50%; left: 0; right: 0;
+    text-align: center;
+    font-size: 40mm;
+    font-weight: 700;
+    pointer-events: none;
+    user-select: none;
+    color: #f006;
+    transform: translateY(-50%) rotate(45deg);
+}
+
+.tlist .tlist-table {
+    position: absolute;
+    top: 1cm; right: 0;
+    width: 6cm;
+    height: 2.44cm;
+}
+.tlist .tlist-table table {
+    border-collapse: collapse;
+}
+
+.tlist .tlist-table table .tlist-table-event {
+    width: 6cm;
+    height: 0.69cm;
+    padding: 0.125cm 0.1cm;
+    border: 0.5mm solid;
+    font-size: 3.25mm;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.tlist .tlist-table .tlist-table-class {
+    width: 2.5cm;
+    height: 1.25cm;
+    padding: 0.25cm;
+    border: 0.5mm solid;
+    border-top: none;
+    font-size: 7mm;
+    font-weight: 900;
+    text-align: center;
+}
+
+.tlist .tlist-table .tlist-table-group {
+    width: 3.5cm;
+    height: 1.25cm;
+    padding: 0.25cm;
+    border: 0.5mm solid;
+    border-top: none;
+    border-left: none;
+    font-size: 7mm;
+    font-weight: 900;
+    text-align: left;
+}
+
+.tlist .tlist-table .tlist-table-fights {
+    width: 6cm;
+    height: 0.5cm;
+    padding: 0.1cm 0;
+    font-size: 3mm;
+    text-align: right;
+}
+
+.tlist-pool-table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-bottom: 0.5cm;
+    margin-top: 0.75cm;
+    break-inside: avoid;
+}
+
+.tlist-pool-table td,
+.tlist-pool-table th {
+    border: 0.5mm solid black;
+    padding: 0.5mm 0.75mm;
+}
+
+.tlist-pool-table th {
+    font-weight: 600;
+    font-size: 4mm;
+    background-color: #e0e0e0;
+}
+
+.tlist-pool-table td {
+    height: 0.5cm;
+    font-size: 4mm;
+    text-align: center;
+}
+
+.tlist-pool-table td a,
+.tlist-pool-table th a {
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+}
+.tlist-pool-table td a:hover,
+.tlist-pool-table th a:hover {
+    box-shadow: 0 0 0 0.25cm #ff0a;
+    background-color: #ff0a;
+}
+
+.tlist-pool-table .tlist-pool-table-placement {
+    width: 0.6cm;
+    max-width: 0.6cm;
+    padding: 0;
+    text-align: center;
+    border: 0.25mm solid;
+    font-size: 3mm;
+}
+.tlist-pool-table th.tlist-pool-table-placement {
+    visibility: none;
+    background-color: transparent;
+    border: none;
+}
+
+.tlist-pool-table td.tlist-pool-table-participant {
+    height: 0.75cm;
+    width: 6cm;
+    text-align: left;
+}
+
+.tlist-pool-table td.tlist-pool-table-participant {
+    line-height: 1.0;
+}
+
+.tlist .tlist-participant-name {
+    font-size: 4mm;
+    width: inherit;
+    font-weight: 500;
+    margin-bottom: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.tlist .tlist-participant-assoc {
+    font-size: 3mm;
+    width: inherit;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.tlist-pool-table .tlist-pool-table-fight {
+    width: 1cm;
+}
+
+.tlist-pool-table .tlist-pool-table-fight.tlist-pool-table-fight-blank {
+    background-color: #888;
+}
+
+.tlist-pool-table .tlist-pool-table-score {
+    border-left-width: 0.75mm;
+}
+
+.tlist-pool-table .tlist-pool-table-score,
+.tlist-pool-table .tlist-pool-table-points,
+.tlist-pool-table .tlist-pool-table-place {
+    width: 1.25cm;
+}
+
+.tlist-pool-table .tlist-ko-matchno {
+    width: 0.6cm;
+    max-width: 0.6cm;
+    padding: 0;
+    font-weight: 700;
+    font-size: 3.25mm;
+    background-color: #e0e0e0;
+}
+
+.tlist-match-hint {
+    font-size: 3.5mm;
+    margin-left: 5.75cm;
+    margin-top: -0.25cm;
+    margin-bottom: 0.5cm;
+    color: #666666;
+}
+
+.tlist-application-hint {
+    font-size: 3.5mm;
+    margin-top: 0.5cm;
+    margin-bottom: 0.5cm;
+}
+
+.tlist-statement {
+    margin-top: 0.75cm;
+    margin-bottom: 0.5cm;
+    font-size: 3.75mm;
+}
+
+.tlist-single-winner .tlist-participant-name {
+    font-size: 4.5mm;
+}
+.tlist-single-winner .tlist-participant-assoc {
+    font-size: 3.85mm;
+}
+
+.tlist-ko {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 0.5cm;
+    margin-top: 0.75cm;
+}
+
+.tlist-ko .tlist-pool-table {
+    margin: 0;
+}
+
+.tlist-ko .tlist-pool-table td.tlist-ko-loser {
+    width: 0.6cm;
+    max-width: 0.6cm;
+    padding: 0;
+    text-align: center;
+    border: 0.25mm dotted;
+    font-size: 3mm;
+}
+
+.tlist-ko .tlist-pool-table .tlist-ko-line {
+    padding: 0.1cm;
+    line-height: 1;
+    text-align: left;
+    font-size: 3.25mm;
+    vertical-align: bottom;
+    position: relative;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.tlist-ko .tlist-pool-table .tlist-ko-line.tlist-ko-line-winner {
+    overflow: unset;
+}
+.tlist-ko .tlist-pool-table .tlist-ko-line.tlist-ko-line-winner::after {
+    content: '1.';
+    display: block;
+    position: absolute;
+    font-size: 0.8cm;
+    font-weight: 800;
+    color: #aaa;
+    left: 3.1cm;
+    bottom: -0.1cm;
+}
+.tlist-ko .tlist-pool-table .tlist-ko-line.tlist-ko-line-winner[data-placement]::after {
+    content: attr(data-placement) '.';
+}
+
+.tlist-ko .tlist-pool-table .tlist-ko-line-skip,
+.tlist-ko .tlist-pool-table .tlist-ko-line {
+    width: 3cm;
+    max-width: 3.5cm;
+    border: none;
+}
+.tlist-ko .tlist-pool-table .tlist-ko-line-skip,
+.tlist-ko .tlist-pool-table .tlist-ko-matchno-skip {
+    visibility: hidden;
+    border: none;
+}
+.tlist-ko .tlist-pool-table .tlist-ko-line {
+    border-bottom: 0.5mm solid;
+}
+
+.tlist section.tlist-section {
+    break-inside: avoid;
+}
+
+@media print {
+    body.tlist {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .tlist .tlist-page {
+        padding: 0;
+        margin: 0;
+        max-width: none;
+        border: none;
+        height: 0;
+    }
+    .tlist .tlist-page .tlist-page-inner {
+        height: auto;
+    }
+
+}
+
+@page {
+    size: A4;
+    margin: 15mm;
+    margin-top: 10mm;
+}

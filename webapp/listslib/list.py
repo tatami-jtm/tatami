@@ -67,3 +67,6 @@ class List:
     
     def make_image(self, **params):
         return self.list_renderer.make_image(params)
+    
+    def get_included_templates(self):
+        return ['single']
