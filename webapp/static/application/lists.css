@@ -325,7 +325,7 @@
     padding: 0.1cm;
     line-height: 1;
     text-align: left;
-    font-size: 3.25mm;
+    font-size: 3.5mm;
     vertical-align: bottom;
     position: relative;
     white-space: nowrap;
@@ -342,8 +342,8 @@
     font-size: 0.8cm;
     font-weight: 800;
     color: #aaa;
-    left: 3.1cm;
-    bottom: -0.1cm;
+    left: 3.6cm;
+    bottom: -0.3cm;
 }
 .tlist-ko .tlist-pool-table .tlist-ko-line.tlist-ko-line-winner[data-placement]::after {
     content: attr(data-placement) '.';
@@ -351,7 +351,7 @@
 
 .tlist-ko .tlist-pool-table .tlist-ko-line-skip,
 .tlist-ko .tlist-pool-table .tlist-ko-line {
-    width: 3cm;
+    width: 3.5cm;
     max-width: 3.5cm;
     border: none;
 }
