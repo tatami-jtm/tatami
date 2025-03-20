@@ -190,18 +190,10 @@ def display_all_zip():
     zip_file = zipfile.ZipFile(zip_io, mode='w')
 
     for group, group_list in collected_groups:
-        if group.assigned_to_position:
-            pdf = group_list.make_pdf(title=g.event.title,
-                                    event_class=group.event_class.short_title,
-                                    group=group.cut_title(),
-                                    mat=group.assigned_to_position.title)
-        else:
-            pdf = group_list.make_pdf(title=g.event.title,
-                                    event_class=group.event_class.short_title,
-                                    group=group.cut_title())
+        lr = ListRenderer(group_list, g.event, group, served=False)
 
         pdf_io = io.BytesIO()
-        pdf.write(pdf_io)
+        pdf_io.write(lr.render_pdf())
         pdf_io.seek(0)
 
         title = group.title
