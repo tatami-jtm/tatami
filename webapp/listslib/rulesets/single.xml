@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <ruleset>
     <meta>
-        <name is="Einzelbesetzung" />
+        <name is="Einzelliste" />
         <require>
             <exact of="1" />
         </require>
@@ -27,4 +27,8 @@
             </write-fighter>
         </template>
     </display>
+
+    <html-renderer>
+        <include file="single" />
+    </html-renderer>
 </ruleset>

@@ -31,6 +31,7 @@ class MetaList:
         self.__load_match_order()
         self.__load_score_rules()
         self.__load_playoff_rules()
+        self.__load_included_templates()
 
     """
         __load_name()
@@ -394,6 +395,13 @@ class MetaList:
                         po_val["placement_rules"][pos] = { "loser": ref.attrib['match-id'] }
 
             self._playoff_rules[po_id] = po_val
+
+    def __load_included_templates(self):
+        self._included_templates = []
+
+        for tpl in self._com.findall('html-renderer/include'):
+            self._included_templates.append(tpl.attrib['file'])
+
 
     # Managing functions:
 
@@ -1024,6 +1032,10 @@ class MetaList:
             return (BlankFighter, BlankFighter)
 
         return obj._score_deductions['results']['fifth']
+    
+
+    def get_included_templates(self, obj):
+        return self._included_templates
     
 
     """

@@ -58,4 +58,8 @@
             </write-fighter>
         </template>
     </display>
+
+    <html-renderer>
+        <include file="pool2" />
+    </html-renderer>
 </ruleset>

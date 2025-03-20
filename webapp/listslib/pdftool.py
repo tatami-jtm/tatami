@@ -32,7 +32,7 @@ def write_file(obj, filename):
 
 def make_image(obj, page=0):
     output = io.BytesIO()
-    make_writer(obj).write(output)
+    output.write(obj)
     pdf = pdfium.PdfDocument(output)
     bitmap = pdf[page].render(
         scale = 5,

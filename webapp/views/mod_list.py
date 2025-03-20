@@ -100,24 +100,10 @@ def display_image(id, page=1):
     if not group.list_system().display_page_count > page - 1 >= 0:
         abort(404)
 
-    if 'draft' in request.values:
-        image = group_list.make_image(title=g.event.title,
-                                      event_class=group.event_class.short_title,
-                                      group=group.cut_title(),
-                                      draft=True, page=page)
-    elif group.assigned_to_position:
-        image = group_list.make_image(title=g.event.title,
-                                      event_class=group.event_class.short_title,
-                                      group=group.cut_title(),
-                                      mat=group.assigned_to_position.title, page=page)
-    else:
-        image = group_list.make_image(title=g.event.title,
-                                      event_class=group.event_class.short_title,
-                                      group=group.cut_title(), page=page)
+    lr = ListRenderer(group_list, g.event, group, served=False)
     image_io = io.BytesIO()
-    image.save(image_io, 'PNG', quality=70)
+    lr.render_image(page=page).save(image_io, 'PNG', quality=70)
     image_io.seek(0)
-
     return send_file(image_io, mimetype='image/png')
 
 
