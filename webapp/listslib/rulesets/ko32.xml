@@ -606,4 +606,8 @@
             <write-fighter x="94" y="231.5" type="short"><winner match-id="m58" /></write-fighter>
         </template>
     </display>
+
+    <html-renderer>
+        <include file="ko32" />
+    </html-renderer>
 </ruleset>

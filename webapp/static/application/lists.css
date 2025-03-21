@@ -345,6 +345,10 @@
     left: 3.6cm;
     bottom: -0.3cm;
 }
+.tlist-ko .tlist-pool-table .tlist-ko-line.tlist-ko-line-winner.tlist-ko-line-winner-left::after {
+    bottom: -0.2cm;
+    left: -0.8cm;
+}
 .tlist-ko .tlist-pool-table .tlist-ko-line.tlist-ko-line-winner[data-placement]::after {
     content: attr(data-placement) '.';
 }
