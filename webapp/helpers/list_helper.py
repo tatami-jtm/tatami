@@ -32,8 +32,6 @@ def load_list(group):
                 f.remove()
             struct['fighters'].append(f)        
 
-    print(struct['fighters'])
-
     for match in group.matches.all():
         if not match.obsolete and match.has_result():
             if not match.is_playoff:

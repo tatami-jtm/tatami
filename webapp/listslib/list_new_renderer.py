@@ -94,7 +94,6 @@ class ListRenderer:
 
             fighter = self.list.meta._evaluate_fighter_ref(self.list, query)
             if 'scope' not in query:
-                print(self.list._score_deductions)
                 if fighter in self.list._score_deductions['results']['first']:
                     return '1.'
                 elif fighter in self.list._score_deductions['results']['second']:
@@ -156,16 +155,19 @@ class ListRenderer:
         return t
     
     def render_pdf(self):
-        return pdfkit.from_string(self.render_html_template(), options={
-            "title": "Teilnahmebestätigung",
-            'margin-top': '10mm',
-            'margin-right': '15mm',
-            'margin-bottom': '15mm',
-            'margin-left': '15mm',
-            'encoding': "UTF-8",
-            'quiet': '',
-            "enable-local-file-access": "",
-        }, configuration=PDFKIT_CONFIG)
+        return pdftool.make_header_and_footer(
+            pdfkit.from_string(self.render_html_template(), options={
+                "title": "Teilnahmebestätigung",
+                'margin-top': '10mm',
+                'margin-right': '15mm',
+                'margin-bottom': '15mm',
+                'margin-left': '15mm',
+                'encoding': "UTF-8",
+                'quiet': '',
+                "enable-local-file-access": ""
+            }, configuration=PDFKIT_CONFIG),
+            self.group,
+        )
     
     def render_image(self, page=1):
         return pdftool.make_image(self.render_pdf(), page - 1)
