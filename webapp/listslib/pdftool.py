@@ -54,7 +54,7 @@ def make_header_and_footer(pdfstr, group):
         shadow_pdf.add_page()
         shadow_pdf.text(192, 290, f"S. {pageno + 1}/{len(reader.pages)}")
         shadow_pdf.text(8, 286, group.title)
-        shadow_pdf.text(8, 290, f"Stand: {datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S')}")
+        shadow_pdf.text(8, 290, f"Stand: {datetime.datetime.now().strftime('%d.%m.%Y %H:%M')}")
     
     shadow_pdf_reader = PdfReader(io.BytesIO(shadow_pdf.output()))
 
