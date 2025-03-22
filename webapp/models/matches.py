@@ -26,6 +26,7 @@ class Match(db.Model):
     blue = db.relationship('Participant', foreign_keys=[blue_id], backref=db.backref(
         'blue_matches', lazy='dynamic'))
     
+    match_list_no = db.Column(db.Integer())
     match_schedule_key = db.Column(db.Integer())
     listslib_match_id = db.Column(db.String(35))
     list_tags = db.Column(db.String(85))
@@ -69,7 +70,23 @@ class Match(db.Model):
                 return False
         
         return True
+    
+    def get_readable_tags(self):
+        rtags = []
 
+        for tag in self.list_tags.split(","):
+            if tag == "final":
+                rtags.append("Finale")
+            elif tag == "semifinal":
+                rtags.append("Halbfinale")
+            elif tag == "repechage":
+                rtags.append("Trostrunde")
+            elif tag == "thirdplace":
+                rtags.append("Kampf um Platz 3")
+            else:
+                rtags.append(tag)
+
+        return rtags
 
 class MatchResult(db.Model):
     id = db.Column(db.Integer(), primary_key=True)

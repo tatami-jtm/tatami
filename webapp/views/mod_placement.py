@@ -174,6 +174,10 @@ def assign(id):
             if request.form['participant'] == 'registration':
                 registration = event_class.registrations.filter_by(id=request.form['registration']).one()
                 participant.full_name = f"{registration.first_name} {registration.last_name}"
+
+                if len(participant.full_name) > 21:
+                    participant.full_name = f"{registration.first_name[0]}. {registration.last_name}"
+
                 participant.registration = registration
 
                 if g.event.setting('use_association_instead_of_club', False) and registration.association:
@@ -314,6 +318,10 @@ def assign_all_predefined(id):
                 participant.removal_cause = None
     
                 participant.full_name = f"{registration.first_name} {registration.last_name}"
+
+                if len(participant.full_name) > 21:
+                    participant.full_name = f"{registration.first_name[0]}. {registration.last_name}"
+
                 participant.registration = registration
 
                 if g.event.setting('use_association_instead_of_club', False) and registration.association:
@@ -386,6 +394,10 @@ def assign_all_proximity(id):
             participant.removal_cause = None
 
             participant.full_name = f"{registration.first_name} {registration.last_name}"
+
+            if len(participant.full_name) > 21:
+                participant.full_name = f"{registration.first_name[0]}. {registration.last_name}"
+
             participant.registration = registration
 
             if g.event.setting('use_association_instead_of_club', False) and registration.association:
@@ -762,6 +774,9 @@ def _randomly_place_group(group, method='random'):
 def _refresh_participant_name(participant, registration):
     participant.full_name = f"{registration.first_name} {registration.last_name}"
 
+    if len(participant.full_name) > 21:
+         participant.full_name = f"{registration.first_name[0]}. {registration.last_name}"
+
     if g.event.setting('use_association_instead_of_club', False) and registration.association:
         participant.association_name = registration.association.name
     else:
@@ -813,6 +828,10 @@ def _refresh_participant_weight(event_class, participant, registration, group):
         participant.removal_cause = None
 
         participant.full_name = f"{registration.first_name} {registration.last_name}"
+
+        if len(participant.full_name) > 21:
+            participant.full_name = f"{registration.first_name[0]}. {registration.last_name}"
+
         participant.registration = registration
 
         if g.event.setting('use_association_instead_of_club', False) and registration.association:

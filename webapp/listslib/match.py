@@ -2,12 +2,13 @@ from .match_result import MatchResult
 
 class Match:
 
-    def __init__(self, id, white, blue, tags=None):
+    def __init__(self, id, white, blue, tags=None, no=None):
         self._id = id
         self._white = white
         self._blue = blue
         self._tags = tags or []
         self._result = None
+        self._no = no
 
     def __repr__(self):
         return f"Match<{self.get_id()}>({repr(self.get_white())}, {repr(self.get_blue())}, {repr(self.get_tags())})"
@@ -23,6 +24,9 @@ class Match:
 
     def get_tags(self):
         return self._tags
+    
+    def get_no(self):
+        return self._no
     
     def set_result(self, match_result):
         match_result.set_match(self)

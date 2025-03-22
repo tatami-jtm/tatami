@@ -13,7 +13,7 @@
             <fighter id="2" />
         </alloc>
 
-        <match id="AvB">
+        <match id="AvB" no="1">
             <white><fighter id="1" /></white>
             <blue><fighter id="2" /></blue>
             <is a="final" />
@@ -31,31 +31,7 @@
         </score>
     </rules>
 
-    <display>
-        <template page="3">
-            <write-header x="137.5" y="16.75" />
-            <write-fighter x="22" y="48" type="full">
-                <fighter id="1" />
-            </write-fighter>
-            <write-fighter x="22" y="54" type="full">
-                <fighter id="2" />
-            </write-fighter>
-            <write-score x="60.125" y="48" match-id="AvB" for="white" />
-            <write-score x="60.125" y="54" match-id="AvB" for="blue" />
-
-            <write-total x="67.5" y="48" fighter-id="1" option="points" />
-            <write-total x="76.5" y="48" fighter-id="1" option="score" />
-            <write-total x="85.5" y="48" fighter-id="1" option="placement" />
-            <write-total x="67.5" y="54" fighter-id="2" option="points" />
-            <write-total x="76.5" y="54" fighter-id="2" option="score" />
-            <write-total x="85.5" y="54" fighter-id="2" option="placement" />
-
-            <write-fighter x="152" y="230" type="default">
-                <placed on="1" />
-            </write-fighter>
-            <write-fighter x="152" y="236" type="default">
-                <placed on="2" />
-            </write-fighter>
-        </template>
-    </display>
+    <html-renderer>
+        <include file="pool2" />
+    </html-renderer>
 </ruleset>

@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, flash, g, session, \
 import io, zipfile, random, time, json
 from datetime import datetime
 
-from pypdf import PdfWriter
+from pypdf import PdfWriter, PdfReader
 
 from .event_manager import check_and_apply_event
 from .devices import check_is_registered
@@ -12,6 +12,8 @@ from .devices import check_is_registered
 from ..models import db, Match
 
 from .. import helpers
+
+from ..listslib import ListRenderer
 
 mod_list_view = Blueprint('mod_list', __name__)
 
@@ -98,24 +100,10 @@ def display_image(id, page=1):
     if not group.list_system().display_page_count > page - 1 >= 0:
         abort(404)
 
-    if 'draft' in request.values:
-        image = group_list.make_image(title=g.event.title,
-                                      event_class=group.event_class.short_title,
-                                      group=group.cut_title(),
-                                      draft=True, page=page)
-    elif group.assigned_to_position:
-        image = group_list.make_image(title=g.event.title,
-                                      event_class=group.event_class.short_title,
-                                      group=group.cut_title(),
-                                      mat=group.assigned_to_position.title, page=page)
-    else:
-        image = group_list.make_image(title=g.event.title,
-                                      event_class=group.event_class.short_title,
-                                      group=group.cut_title(), page=page)
+    lr = ListRenderer(group_list, g.event, group, served=False)
     image_io = io.BytesIO()
-    image.save(image_io, 'PNG', quality=70)
+    lr.render_image(page=page).save(image_io, 'PNG', quality=70)
     image_io.seek(0)
-
     return send_file(image_io, mimetype='image/png')
 
 
@@ -132,23 +120,10 @@ def display_pdf(id):
     group = g.event.groups.filter_by(id=id).one_or_404()
     group_list = helpers.load_list(group)
 
-    if 'draft' in request.values:
-        pdf = group_list.make_pdf(title=g.event.title,
-                                  event_class=group.event_class.short_title,
-                                  group=group.cut_title(),
-                                  draft=True)
-    elif group.assigned_to_position:
-        pdf = group_list.make_pdf(title=g.event.title,
-                                  event_class=group.event_class.short_title,
-                                  group=group.cut_title(),
-                                  mat=group.assigned_to_position.title)
-    else:
-        pdf = group_list.make_pdf(title=g.event.title,
-                                  event_class=group.event_class.short_title,
-                                  group=group.cut_title())
+    lr = ListRenderer(group_list, g.event, group, served=False)
 
     pdf_io = io.BytesIO()
-    pdf.write(pdf_io)
+    pdf_io.write(lr.render_pdf())
     pdf_io.seek(0)
 
     return send_file(pdf_io, mimetype='application/pdf')
@@ -174,15 +149,8 @@ def display_all_pdf():
     pdfw = PdfWriter()
 
     for group, group_list in collected_groups:
-        if group.assigned_to_position:
-            pdf = group_list.make_pdf(title=g.event.title,
-                                    event_class=group.event_class.short_title,
-                                    group=group.cut_title(),
-                                    mat=group.assigned_to_position.title)
-        else:
-            pdf = group_list.make_pdf(title=g.event.title,
-                                    event_class=group.event_class.short_title,
-                                    group=group.cut_title())
+        lr = ListRenderer(group_list, g.event, group, served=False)
+        pdf = PdfReader(io.BytesIO(lr.render_pdf()))
 
         for page in pdf.pages:
             pdfw.add_page(page)
@@ -215,18 +183,10 @@ def display_all_zip():
     zip_file = zipfile.ZipFile(zip_io, mode='w')
 
     for group, group_list in collected_groups:
-        if group.assigned_to_position:
-            pdf = group_list.make_pdf(title=g.event.title,
-                                    event_class=group.event_class.short_title,
-                                    group=group.cut_title(),
-                                    mat=group.assigned_to_position.title)
-        else:
-            pdf = group_list.make_pdf(title=g.event.title,
-                                    event_class=group.event_class.short_title,
-                                    group=group.cut_title())
+        lr = ListRenderer(group_list, g.event, group, served=False)
 
         pdf_io = io.BytesIO()
-        pdf.write(pdf_io)
+        pdf_io.write(lr.render_pdf())
         pdf_io.seek(0)
 
         title = group.title
@@ -242,6 +202,23 @@ def display_all_zip():
     return Response(zip_io.getvalue(), mimetype='application/zip', headers={
         'Content-Disposition': f'attachment;filename=all_lists_{now}.zip'
     })
+
+
+@mod_list_view.route('/display/<id>/list.html')
+@check_and_apply_event
+@check_is_registered
+def display_html(id):
+    if not (g.device.event_role.may_use_global_list or
+            g.device.event_role.may_use_assigned_lists or
+            g.device.event_role.may_use_placement_tool):
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+    
+    group = g.event.groups.filter_by(id=id).one_or_404()
+    group_list = helpers.load_list(group)
+
+    lr = ListRenderer(group_list, g.event, group, served=True)
+    return lr.render_html_template()
 
 
 @mod_list_view.route('/group/<id>/match/<match_id>/schedule')

@@ -14,17 +14,17 @@
             <fighter id="3" />
         </alloc>
 
-        <match id="AvB">
+        <match id="AvB" no="1">
             <white><fighter id="1" /></white>
             <blue><fighter id="2" /></blue>
         </match>
 
-        <match id="AvC">
+        <match id="AvC" no="2">
             <white><fighter id="1" /></white>
             <blue><fighter id="3" /></blue>
         </match>
 
-        <match id="BvC">
+        <match id="BvC" no="3">
             <white><fighter id="2" /></white>
             <blue><fighter id="3" /></blue>
         </match>
@@ -142,4 +142,9 @@
             </write-fighter>
         </template>
     </display>
+
+    <html-renderer>
+        <include file="pool3" />
+        <include file="playoff_up" />
+    </html-renderer>
 </ruleset>

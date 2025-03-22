@@ -31,6 +31,7 @@ class MetaList:
         self.__load_match_order()
         self.__load_score_rules()
         self.__load_playoff_rules()
+        self.__load_included_templates()
 
     """
         __load_name()
@@ -220,10 +221,15 @@ class MetaList:
         for tag in match_xml.findall('is'):
             tags.append(tag.attrib['a'])
 
+        no = None
+        if 'no' in match_xml.attrib:
+            no = match_xml.attrib['no']
+
         return {
             'white': white,
             'blue': blue,
-            'tags': tags
+            'tags': tags,
+            'no': no,
         }
 
     """
@@ -395,6 +401,13 @@ class MetaList:
 
             self._playoff_rules[po_id] = po_val
 
+    def __load_included_templates(self):
+        self._included_templates = []
+
+        for tpl in self._com.findall('html-renderer/include'):
+            self._included_templates.append(tpl.attrib['file'])
+
+
     # Managing functions:
 
     """
@@ -442,7 +455,12 @@ class MetaList:
         obj._match_objs = {}
         obj._score_complete = False
         obj._score_deductions = {
-            'results': {},
+            'results': {
+                'first': [BlankFighter],
+                'second': [BlankFighter],
+                'third': [BlankFighter, BlankFighter],
+                'fifth': [BlankFighter, BlankFighter],
+            },
             'calced': {}
         }
         obj._playoff_data = {}
@@ -599,7 +617,7 @@ class MetaList:
             if None in (white, blue):
                 return None
 
-            new_match = Match(match_id, white, blue, match['tags'])
+            new_match = Match(match_id, white, blue, match['tags'], match['no'])
 
             if not informational_only:
                 obj._match_objs[match_id] = new_match
@@ -953,6 +971,9 @@ class MetaList:
                 player_list = []
 
                 for dp in cond['equal']:
+                    if len(obj._score_deductions['calced'][dp['among']]['order']) < dp['place']:
+                        return False, None
+
                     score = obj._score_deductions['calced'][dp['among']]['order'][dp['place'] - 1]
                     base_set.add(score[1])
                     player_list.append(score[0])
@@ -1024,6 +1045,10 @@ class MetaList:
             return (BlankFighter, BlankFighter)
 
         return obj._score_deductions['results']['fifth']
+    
+
+    def get_included_templates(self, obj):
+        return self._included_templates
     
 
     """

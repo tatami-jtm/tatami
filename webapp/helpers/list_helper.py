@@ -17,17 +17,20 @@ def load_list(group):
 
     if group.random_seed:
         struct['random_seed'] = group.random_seed
-    
-    for participant in group.participants.order_by('placement_index'):
-        if participant.placement_index is None:
-            continue
 
-        f = Fighter(participant.id, participant.full_name, participant.association_name)
-        if participant.disqualified:
-            f.disqualify()
-        elif participant.removed:
-            f.remove()
-        struct['fighters'].append(f)
+    for i in range(list_type.mandatory_maximum):
+        participant = group.participants.filter_by(placement_index=i).first()
+
+        if participant is None:
+            struct['fighters'].append(BlankFighter)
+        
+        else:
+            f = Fighter(participant.id, participant.full_name, participant.association_name)
+            if participant.disqualified:
+                f.disqualify()
+            elif participant.removed:
+                f.remove()
+            struct['fighters'].append(f)        
 
     for match in group.matches.all():
         if not match.obsolete and match.has_result():
@@ -58,7 +61,7 @@ def dump_list(list, group):
                 data = [data]
 
             for fighter in data:
-                if fighter == BlankFighter: continue
+                if fighter == BlankFighter or fighter is None: continue
 
                 participant = Participant.query.filter_by(id=fighter.get_id()).one()
                 participant.final_placement = plm
@@ -77,6 +80,7 @@ def dump_list(list, group):
         if item['type'] == 'match':
             match_id = item['match'].get_id()
             match_tags = item['match'].get_tags()
+            match_no = item['match'].get_no()
 
             existing_match = group.matches.filter(Match.listslib_match_id==match_id, (Match.obsolete==False) | (Match.obsolete==None)).one_or_none()
 
@@ -92,13 +96,13 @@ def dump_list(list, group):
                 match.is_playoff = list.is_playoff(match_id)
                 match.listslib_match_id = match_id
                 match.list_tags = ",".join(match_tags)
+                match.match_list_no = match_no
 
                 match.scheduled = False
                 match.called_up = False
                 match.running = False
                 match.completed = False
                 match.obsolete = False
-
 
     db.session.commit()
 

@@ -312,6 +312,8 @@ class Group(db.Model):
             return 0
 
         estimated_match_count = self.estimated_remaining_fight_count()
+        delta = self.estimated_fight_count() - estimated_match_count
+        estimated_match_count = max(1, self.estimated_fight_count() * self.participants.count() / self.list_system().mandatory_maximum - delta)
 
         # Presumption:
         # 1/3rd of all matches will take only 1/2 of the fighting time

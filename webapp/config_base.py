@@ -11,6 +11,7 @@ SETTINGS = {
     "INSTANCE_PATH": "/tmp",  # OVERWRITE IN CONFIG.PY
     "NEVER_VALIDATE_EMAIL_DNS": False,
     "ALLOW_SETUP": False,
+    "WKHTMLTOPDF_PATH": None,
 }
 
 SETTINGS.update(custom_settings)

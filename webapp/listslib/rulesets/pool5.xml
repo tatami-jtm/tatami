@@ -16,52 +16,52 @@
             <fighter id="5" />
         </alloc>
 
-        <match id="AvB">
+        <match id="AvB" no="1">
             <white><fighter id="1" /></white>
             <blue><fighter id="2" /></blue>
         </match>
 
-        <match id="AvC">
+        <match id="AvC" no="6">
             <white><fighter id="1" /></white>
             <blue><fighter id="3" /></blue>
         </match>
 
-        <match id="AvD">
+        <match id="AvD" no="8">
             <white><fighter id="1" /></white>
             <blue><fighter id="4" /></blue>
         </match>
 
-        <match id="AvE">
+        <match id="AvE" no="3">
             <white><fighter id="1" /></white>
             <blue><fighter id="5" /></blue>
         </match>
 
-        <match id="BvC">
+        <match id="BvC" no="4">
             <white><fighter id="2" /></white>
             <blue><fighter id="3" /></blue>
         </match>
 
-        <match id="BvD">
+        <match id="BvD" no="10">
             <white><fighter id="2" /></white>
             <blue><fighter id="4" /></blue>
         </match>
 
-        <match id="BvE">
+        <match id="BvE" no="7">
             <white><fighter id="2" /></white>
             <blue><fighter id="5" /></blue>
         </match>
 
-        <match id="CvD">
+        <match id="CvD" no="2">
             <white><fighter id="3" /></white>
             <blue><fighter id="4" /></blue>
         </match>
 
-        <match id="CvE">
+        <match id="CvE" no="9">
             <white><fighter id="3" /></white>
             <blue><fighter id="5" /></blue>
         </match>
 
-        <match id="DvE">
+        <match id="DvE" no="5">
             <white><fighter id="4" /></white>
             <blue><fighter id="5" /></blue>
         </match>
@@ -199,151 +199,8 @@
         </playoff>
     </rules>
 
-    <display>
-        <template page="6">
-            <!-- Fighters -->
-            <write-header x="137.5" y="16.75" />
-            <write-fighter x="22" y="48" type="full">
-                <fighter id="1" />
-            </write-fighter>
-            <write-fighter x="22" y="54" type="full">
-                <fighter id="2" />
-            </write-fighter>
-            <write-fighter x="22" y="60" type="full">
-                <fighter id="3" />
-            </write-fighter>
-            <write-fighter x="22" y="66" type="full">
-                <fighter id="4" />
-            </write-fighter>
-            <write-fighter x="22" y="72" type="full">
-                <fighter id="5" />
-            </write-fighter>
-
-            <!-- Pool Matches -->
-            <write-score x="60.125" y="48" match-id="AvB" for="white" />
-            <write-score x="60.125" y="54" match-id="AvB" for="blue" />
-
-            <write-score x="67.5" y="60" match-id="CvD" for="white" />
-            <write-score x="67.5" y="66" match-id="CvD" for="blue" />
-
-            <write-score x="75" y="48" match-id="AvE" for="white" />
-            <write-score x="75" y="72" match-id="AvE" for="blue" />
-
-            <write-score x="82.5" y="54" match-id="BvC" for="white" />
-            <write-score x="82.5" y="60" match-id="BvC" for="blue" />
-
-            <write-score x="90" y="66" match-id="DvE" for="white" />
-            <write-score x="90" y="72" match-id="DvE" for="blue" />
-
-            <write-score x="97.5" y="48" match-id="AvC" for="white" />
-            <write-score x="97.5" y="60" match-id="AvC" for="blue" />
-
-            <write-score x="105" y="54" match-id="BvE" for="white" />
-            <write-score x="105" y="72" match-id="BvE" for="blue" />
-
-            <write-score x="112.5" y="48" match-id="AvD" for="white" />
-            <write-score x="112.5" y="66" match-id="AvD" for="blue" />
-
-            <write-score x="120" y="60" match-id="CvE" for="white" />
-            <write-score x="120" y="72" match-id="CvE" for="blue" />
-
-            <write-score x="127.5" y="54" match-id="BvD" for="white" />
-            <write-score x="127.5" y="66" match-id="BvD" for="blue" />
-
-            <!-- Points/Scores (Pool) -->
-
-            <write-total x="135" y="48" fighter-id="1" option="points" />
-            <write-total x="144" y="48" fighter-id="1" option="score" />
-            <write-total x="153" y="48" fighter-id="1" option="placement" />
-
-            <write-total x="135" y="54" fighter-id="2" option="points" />
-            <write-total x="144" y="54" fighter-id="2" option="score" />
-            <write-total x="153" y="54" fighter-id="2" option="placement" />
-
-            <write-total x="135" y="60" fighter-id="3" option="points" />
-            <write-total x="144" y="60" fighter-id="3" option="score" />
-            <write-total x="153" y="60" fighter-id="3" option="placement" />
-
-            <write-total x="135" y="66" fighter-id="4" option="points" />
-            <write-total x="144" y="66" fighter-id="4" option="score" />
-            <write-total x="153" y="66" fighter-id="4" option="placement" />
-
-            <write-total x="135" y="72" fighter-id="5" option="points" />
-            <write-total x="144" y="72" fighter-id="5" option="score" />
-            <write-total x="153" y="72" fighter-id="5" option="placement" />
-
-            <!-- Playoffs -->
-
-            <write-fighter x="22" y="116.75" type="default">
-                <fighter id="1" playoff="e123up" />
-            </write-fighter>
-            <write-fighter x="22" y="122.75" type="default">
-                <fighter id="2" playoff="e123up" />
-            </write-fighter>
-            <write-fighter x="65.5" y="117" type="default">
-                <winner match-id="upXvY" />
-            </write-fighter>
-            <write-fighter x="65.5" y="131.75" type="default">
-                <fighter id="3" playoff="e123up" />
-            </write-fighter>
-            <write-fighter x="103" y="122.25" type="short">
-                <winner match-id="upXYvZ" />
-            </write-fighter>
-
-            <write-fighter x="22" y="161.5" type="default">
-                <fighter id="1" playoff="e432down" />
-            </write-fighter>
-            <write-fighter x="22" y="167.5" type="default">
-                <fighter id="2" playoff="e432down" />
-            </write-fighter>
-            <write-fighter x="65.5" y="162" type="default">
-                <winner match-id="downXvY" />
-            </write-fighter>
-            <write-fighter x="22" y="178" type="default">
-                <loser match-id="downXvY" />
-            </write-fighter>
-            <write-fighter x="22" y="190" type="default">
-                <fighter id="3" playoff="e432down" />
-            </write-fighter>
-            <write-fighter x="65.5" y="184.5" type="default">
-                <winner match-id="downXYvZ" />
-            </write-fighter>
-
-            <write-fighter x="22" y="161.5" type="default">
-                <fighter id="1" playoff="e543down" />
-            </write-fighter>
-            <write-fighter x="22" y="167.5" type="default">
-                <fighter id="2" playoff="e543down" />
-            </write-fighter>
-            <write-fighter x="65.5" y="162" type="default">
-                <winner match-id="downUvV" />
-            </write-fighter>
-            <write-fighter x="22" y="178" type="default">
-                <loser match-id="downUvV" />
-            </write-fighter>
-            <write-fighter x="22" y="190" type="default">
-                <fighter id="3" playoff="e543down" />
-            </write-fighter>
-            <write-fighter x="65.5" y="184.5" type="default">
-                <winner match-id="downUVvW" />
-            </write-fighter>
-
-            <!-- Results -->
-            <write-fighter x="152" y="230" type="default">
-                <placed on="1" />
-            </write-fighter>
-            <write-fighter x="152" y="236" type="default">
-                <placed on="2" />
-            </write-fighter>
-            <write-fighter x="152" y="242" type="default">
-                <placed on="3" />
-            </write-fighter>
-            <write-fighter x="152" y="248" type="default">
-                <placed on="4" />
-            </write-fighter>
-            <write-fighter x="152" y="254" type="default">
-                <placed on="5" />
-            </write-fighter>
-        </template>
-    </display>
+    <html-renderer>
+        <include file="pool5" />
+        <include file="playoff_up" />
+    </html-renderer>
 </ruleset>
