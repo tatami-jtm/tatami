@@ -16,52 +16,52 @@
             <fighter id="5" />
         </alloc>
 
-        <match id="AvB">
+        <match id="AvB" no="1">
             <white><fighter id="1" /></white>
             <blue><fighter id="2" /></blue>
         </match>
 
-        <match id="AvC">
+        <match id="AvC" no="6">
             <white><fighter id="1" /></white>
             <blue><fighter id="3" /></blue>
         </match>
 
-        <match id="AvD">
+        <match id="AvD" no="8">
             <white><fighter id="1" /></white>
             <blue><fighter id="4" /></blue>
         </match>
 
-        <match id="AvE">
+        <match id="AvE" no="3">
             <white><fighter id="1" /></white>
             <blue><fighter id="5" /></blue>
         </match>
 
-        <match id="BvC">
+        <match id="BvC" no="4">
             <white><fighter id="2" /></white>
             <blue><fighter id="3" /></blue>
         </match>
 
-        <match id="BvD">
+        <match id="BvD" no="10">
             <white><fighter id="2" /></white>
             <blue><fighter id="4" /></blue>
         </match>
 
-        <match id="BvE">
+        <match id="BvE" no="7">
             <white><fighter id="2" /></white>
             <blue><fighter id="5" /></blue>
         </match>
 
-        <match id="CvD">
+        <match id="CvD" no="2">
             <white><fighter id="3" /></white>
             <blue><fighter id="4" /></blue>
         </match>
 
-        <match id="CvE">
+        <match id="CvE" no="9">
             <white><fighter id="3" /></white>
             <blue><fighter id="5" /></blue>
         </match>
 
-        <match id="DvE">
+        <match id="DvE" no="5">
             <white><fighter id="4" /></white>
             <blue><fighter id="5" /></blue>
         </match>

@@ -20,62 +20,62 @@
             <fighter id="8" group="poolB" />
         </alloc>
 
-        <match id="A13">
+        <match id="A13" no="1">
             <white><fighter id="1" /></white>
             <blue><fighter id="3" /></blue>
         </match>
 
-        <match id="A15">
+        <match id="A15" no="5">
             <white><fighter id="1" /></white>
             <blue><fighter id="5" /></blue>
         </match>
 
-        <match id="A17">
+        <match id="A17" no="9">
             <white><fighter id="1" /></white>
             <blue><fighter id="7" /></blue>
         </match>
 
-        <match id="A35">
+        <match id="A35" no="10">
             <white><fighter id="3" /></white>
             <blue><fighter id="5" /></blue>
         </match>
 
-        <match id="A37">
+        <match id="A37" no="6">
             <white><fighter id="3" /></white>
             <blue><fighter id="7" /></blue>
         </match>
 
-        <match id="A57">
+        <match id="A57" no="2">
             <white><fighter id="5" /></white>
             <blue><fighter id="7" /></blue>
         </match>
 
-        <match id="B24">
+        <match id="B24" no="3">
             <white><fighter id="2" /></white>
             <blue><fighter id="4" /></blue>
         </match>
 
-        <match id="B26">
+        <match id="B26" no="7">
             <white><fighter id="2" /></white>
             <blue><fighter id="6" /></blue>
         </match>
 
-        <match id="B28">
+        <match id="B28" no="11">
             <white><fighter id="2" /></white>
             <blue><fighter id="8" /></blue>
         </match>
 
-        <match id="B46">
+        <match id="B46" no="12">
             <white><fighter id="4" /></white>
             <blue><fighter id="6" /></blue>
         </match>
 
-        <match id="B48">
+        <match id="B48" no="8">
             <white><fighter id="4" /></white>
             <blue><fighter id="8" /></blue>
         </match>
 
-        <match id="B68">
+        <match id="B68" no="4">
             <white><fighter id="6" /></white>
             <blue><fighter id="8" /></blue>
         </match>
@@ -97,19 +97,19 @@
             <match id="B46" />
         </order>
 
-        <match id="F1">
+        <match id="F1" no="13">
             <white><placed on="1" among="poolA" /></white>
             <blue><placed on="2" among="poolB" /></blue>
             <is a="semifinal" />
         </match>
 
-        <match id="F2">
+        <match id="F2" no="14">
             <white><placed on="2" among="poolA" /></white>
             <blue><placed on="1" among="poolB" /></blue>
             <is a="semifinal" />
         </match>
 
-        <match id="FF">
+        <match id="FF" no="15">
             <white><winner match-id="F1" /></white>
             <blue><winner match-id="F2" /></blue>
             <is a="final" />

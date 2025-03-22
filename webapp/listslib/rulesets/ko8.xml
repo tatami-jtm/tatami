@@ -21,68 +21,68 @@
         </alloc>
 
         <!-- Main // Round of 8 -->
-        <match id="AvB">
+        <match id="AvB" no="1">
             <white><fighter id="1" /></white>
             <blue><fighter id="2" /></blue>
         </match>
 
-        <match id="CvD">
+        <match id="CvD" no="2">
             <white><fighter id="3" /></white>
             <blue><fighter id="4" /></blue>
         </match>
 
-        <match id="EvF">
+        <match id="EvF" no="3">
             <white><fighter id="5" /></white>
             <blue><fighter id="6" /></blue>
         </match>
 
-        <match id="GvH">
+        <match id="GvH" no="4">
             <white><fighter id="7" /></white>
             <blue><fighter id="8" /></blue>
         </match>
 
         <!-- Main // Semifinal -->
-        <match id="ABvCD">
+        <match id="ABvCD" no="5">
             <white><winner match-id="AvB" /></white>
             <blue><winner match-id="CvD" /></blue>
             <is a="semifinal" />
         </match>
 
-        <match id="EFvGH">
+        <match id="EFvGH" no="6">
             <white><winner match-id="EvF" /></white>
             <blue><winner match-id="GvH" /></blue>
             <is a="semifinal" />
         </match>
 
         <!-- Main // Final -->
-        <match id="ABCDvEFGH">
+        <match id="ABCDvEFGH" no="11">
             <white><winner match-id="ABvCD" /></white>
             <blue><winner match-id="EFvGH" /></blue>
             <is a="final" />
         </match>
 
         <!-- Repechage // Semifinals -->
-        <match id="rabvcd">
+        <match id="rabvcd" no="7">
             <white><loser match-id="AvB" /></white>
             <blue><loser match-id="CvD" /></blue>
             <is a="repechage" />
         </match>
 
-        <match id="refvgh">
+        <match id="refvgh" no="8">
             <white><loser match-id="EvF" /></white>
             <blue><loser match-id="GvH" /></blue>
             <is a="repechage" />
         </match>
 
         <!-- Repechage // Finale -->
-        <match id="rRABCDvefgh">
+        <match id="rRABCDvefgh" no="9">
             <white><winner match-id="rabvcd" /></white>
             <blue><loser match-id="EFvGH" /></blue>
             <is a="repechage" />
             <is a="thirdplace" />
         </match>
 
-        <match id="rREFGHvabcd">
+        <match id="rREFGHvabcd" no="10">
             <white><winner match-id="refvgh" /></white>
             <blue><loser match-id="ABvCD" /></blue>
             <is a="repechage" />
