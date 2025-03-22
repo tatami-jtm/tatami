@@ -13,7 +13,7 @@
             <fighter id="2" />
         </alloc>
 
-        <match id="AvB">
+        <match id="AvB" no="1">
             <white><fighter id="1" /></white>
             <blue><fighter id="2" /></blue>
             <is a="final" />

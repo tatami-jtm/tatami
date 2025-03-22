@@ -80,6 +80,7 @@ def dump_list(list, group):
         if item['type'] == 'match':
             match_id = item['match'].get_id()
             match_tags = item['match'].get_tags()
+            match_no = item['match'].get_no()
 
             existing_match = group.matches.filter(Match.listslib_match_id==match_id, (Match.obsolete==False) | (Match.obsolete==None)).one_or_none()
 
@@ -95,13 +96,13 @@ def dump_list(list, group):
                 match.is_playoff = list.is_playoff(match_id)
                 match.listslib_match_id = match_id
                 match.list_tags = ",".join(match_tags)
+                match.match_list_no = match_no
 
                 match.scheduled = False
                 match.called_up = False
                 match.running = False
                 match.completed = False
                 match.obsolete = False
-
 
     db.session.commit()
 

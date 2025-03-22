@@ -26,6 +26,7 @@ class Match(db.Model):
     blue = db.relationship('Participant', foreign_keys=[blue_id], backref=db.backref(
         'blue_matches', lazy='dynamic'))
     
+    match_list_no = db.Column(db.Integer())
     match_schedule_key = db.Column(db.Integer())
     listslib_match_id = db.Column(db.String(35))
     list_tags = db.Column(db.String(85))

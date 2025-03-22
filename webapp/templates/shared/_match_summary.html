@@ -13,7 +13,7 @@
                                        'pending' if mobj.called_up else
                                        'scheduled' if mobj.scheduled else None),
                                label=('jetzt' if mobj.running else ''),
-                               no=mobj.match_schedule_key or '-') if schedule }}
+                               no=mobj.match_list_no or '-') if schedule }}
         {% call match.MatchBody() %}
             {{ match.MatchLineup(white_name=mobj.white.full_name,
                                  white_association=mobj.white.association_name,

@@ -221,10 +221,15 @@ class MetaList:
         for tag in match_xml.findall('is'):
             tags.append(tag.attrib['a'])
 
+        no = None
+        if 'no' in match_xml.attrib:
+            no = match_xml.attrib['no']
+
         return {
             'white': white,
             'blue': blue,
-            'tags': tags
+            'tags': tags,
+            'no': no,
         }
 
     """
@@ -612,7 +617,7 @@ class MetaList:
             if None in (white, blue):
                 return None
 
-            new_match = Match(match_id, white, blue, match['tags'])
+            new_match = Match(match_id, white, blue, match['tags'], match['no'])
 
             if not informational_only:
                 obj._match_objs[match_id] = new_match

@@ -13,12 +13,12 @@
             <fighter id="2" />
         </alloc>
 
-        <match id="match1">
+        <match id="match1" no="1">
             <white><fighter id="1" /></white>
             <blue><fighter id="2" /></blue>
         </match>
 
-        <match id="match2">
+        <match id="match2" no="2">
             <white><fighter id="1" /></white>
             <blue><fighter id="2" /></blue>
         </match>
@@ -48,7 +48,7 @@
                 <fighter id="2" />
             </realloc>
 
-            <match id="match3">
+            <match id="match3" no="3">
                 <white><fighter id="1" /></white>
                 <blue><fighter id="2" /></blue>
             </match>
