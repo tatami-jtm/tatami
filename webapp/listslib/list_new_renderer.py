@@ -120,10 +120,11 @@ class ListRenderer:
             match_result = match.get_result()
             if not match_result:
                 return ""
+
             elif query['for'] == 'white':
-                return str(match_result.get_score_white())
+                return str(match_result.get_score_white() if match_result.get_score_white() is not None else '')
             elif query['for'] == 'blue':
-                return str(match_result.get_score_blue())
+                return str(match_result.get_score_blue() if match_result.get_score_blue() is not None else '')
         else:
             return f"[invalid operation: {op}]"
         
