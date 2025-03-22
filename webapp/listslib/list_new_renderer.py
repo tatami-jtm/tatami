@@ -4,6 +4,7 @@ import json
 import os
 from . import pdftool
 from ..config_base import SETTINGS
+from .fighter import BlankFighter
 
 if SETTINGS['WKHTMLTOPDF_PATH'] is not None:
     PDFKIT_CONFIG = pdfkit.configuration(wkhtmltopdf=SETTINGS['WKHTMLTOPDF_PATH'])
@@ -93,6 +94,10 @@ class ListRenderer:
                 if not self.list._score_deductions['calced']: return ''
 
             fighter = self.list.meta._evaluate_fighter_ref(self.list, query)
+
+            if fighter == BlankFighter:
+                return ''
+
             if 'scope' not in query:
                 if fighter in self.list._score_deductions['results']['first']:
                     return '1.'

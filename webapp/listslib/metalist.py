@@ -450,7 +450,12 @@ class MetaList:
         obj._match_objs = {}
         obj._score_complete = False
         obj._score_deductions = {
-            'results': {},
+            'results': {
+                'first': [BlankFighter],
+                'second': [BlankFighter],
+                'third': [BlankFighter, BlankFighter],
+                'fifth': [BlankFighter, BlankFighter],
+            },
             'calced': {}
         }
         obj._playoff_data = {}
@@ -961,6 +966,9 @@ class MetaList:
                 player_list = []
 
                 for dp in cond['equal']:
+                    if len(obj._score_deductions['calced'][dp['among']]['order']) <= dp['place']:
+                        return False, None
+
                     score = obj._score_deductions['calced'][dp['among']]['order'][dp['place'] - 1]
                     base_set.add(score[1])
                     player_list.append(score[0])
