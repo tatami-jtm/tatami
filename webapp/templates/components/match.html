@@ -4,6 +4,19 @@
 </div>
 {%- endmacro -%}
 
+{%- macro MatchHeader(group="", tags=None) -%}
+<div class="match-header">
+    {%- if group -%}
+        <div class="match-header-group">{{ group }}</div>
+    {%- endif -%}
+    {%- if tags -%}
+        {%- for tag in tags -%}
+            <div class="match-header-tag">{{ tag }}</div>
+        {%- endfor -%}
+    {%- endif -%}
+</div>
+{%- endmacro -%}
+
 {%- macro MatchSchedule(no=-1, status="", label="") -%}
 <div class="match-sidebar">
     <div class="match-schedule {{ status }}">{{ no }}</div>

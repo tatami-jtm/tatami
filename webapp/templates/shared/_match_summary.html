@@ -8,6 +8,7 @@
     {% set result_data = result.data() %}
     {% set SBRULES = g.event.sb_rules() %}
     {% call match.Match(large=large) %}
+        {{ match.MatchHeader(group=mobj.group.title, tags=mobj.get_readable_tags()) }}
         {{ match.MatchSchedule(status=('done' if mobj.completed else
                                        'running' if mobj.running else
                                        'pending' if mobj.called_up else

@@ -70,7 +70,23 @@ class Match(db.Model):
                 return False
         
         return True
+    
+    def get_readable_tags(self):
+        rtags = []
 
+        for tag in self.list_tags.split(","):
+            if tag == "final":
+                rtags.append("Finale")
+            elif tag == "semifinal":
+                rtags.append("Halbfinale")
+            elif tag == "repechage":
+                rtags.append("Trostrunde")
+            elif tag == "thirdplace":
+                rtags.append("Kampf um Platz 3")
+            else:
+                rtags.append(tag)
+
+        return rtags
 
 class MatchResult(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
