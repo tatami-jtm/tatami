@@ -44,7 +44,7 @@ def index():
                 Match.scheduled==False,
                 Match.completed==False,
                 (Match.obsolete==False) | (Match.obsolete==None)
-            )
+            ).order_by(Match.match_list_no)
             completed_matches = current_group.matches.filter(
                 Match.completed==True,
                 (Match.obsolete==False) | (Match.obsolete==None)
