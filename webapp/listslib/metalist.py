@@ -971,7 +971,7 @@ class MetaList:
                 player_list = []
 
                 for dp in cond['equal']:
-                    if len(obj._score_deductions['calced'][dp['among']]['order']) <= dp['place']:
+                    if len(obj._score_deductions['calced'][dp['among']]['order']) < dp['place']:
                         return False, None
 
                     score = obj._score_deductions['calced'][dp['among']]['order'][dp['place'] - 1]
