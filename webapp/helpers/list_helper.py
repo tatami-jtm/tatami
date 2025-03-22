@@ -61,7 +61,7 @@ def dump_list(list, group):
                 data = [data]
 
             for fighter in data:
-                if fighter == BlankFighter: continue
+                if fighter == BlankFighter or fighter is None: continue
 
                 participant = Participant.query.filter_by(id=fighter.get_id()).one()
                 participant.final_placement = plm
