@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, flash, g, session, \
 import io, zipfile, random, time, json
 from datetime import datetime
 
-from pypdf import PdfWriter
+from pypdf import PdfWriter, PdfReader
 
 from .event_manager import check_and_apply_event
 from .devices import check_is_registered
@@ -149,15 +149,8 @@ def display_all_pdf():
     pdfw = PdfWriter()
 
     for group, group_list in collected_groups:
-        if group.assigned_to_position:
-            pdf = group_list.make_pdf(title=g.event.title,
-                                    event_class=group.event_class.short_title,
-                                    group=group.cut_title(),
-                                    mat=group.assigned_to_position.title)
-        else:
-            pdf = group_list.make_pdf(title=g.event.title,
-                                    event_class=group.event_class.short_title,
-                                    group=group.cut_title())
+        lr = ListRenderer(group_list, g.event, group, served=False)
+        pdf = PdfReader(io.BytesIO(lr.render_pdf()))
 
         for page in pdf.pages:
             pdfw.add_page(page)
