@@ -1052,7 +1052,10 @@ class MetaList:
             return BlankFighter
         
         if self._results_are_ordered:
-            return self.get_third(obj)[1]
+            third = self.get_third(obj)
+            if len(third) == 2:
+                return third[1]
+            return BlankFighter
 
         # TODO:
 
@@ -1086,7 +1089,10 @@ class MetaList:
             return BlankFighter
         
         if self._results_are_ordered:
-            return self.get_fifth(obj)[1]
+            fifth = self.get_fifth(obj)
+            if len(fifth) == 2:
+                return fifth[1]
+            return BlankFighter
 
         # TODO:
 

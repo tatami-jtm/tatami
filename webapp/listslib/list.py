@@ -44,8 +44,14 @@ class List:
     def get_third(self):
         return self.meta.get_third(self)
     
+    def get_fourth(self):
+        return self.meta.get_fourth(self)
+    
     def get_fifth(self):
         return self.meta.get_fifth(self)
+    
+    def get_sixth(self):
+        return self.meta.get_sixth(self)
     
     def import_struct(self, struct):
         return self.meta.import_struct(self, struct)

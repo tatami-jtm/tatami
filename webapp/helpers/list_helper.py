@@ -63,8 +63,17 @@ def dump_list(list, group):
             for fighter in data:
                 if fighter == BlankFighter or fighter is None: continue
 
+                local_plm = plm
+
+                if plm == 3 and group.event.setting('place.differentiate-better.third', False):
+                    if list.get_fourth() == fighter:
+                        local_plm = 4
+                elif plm == 5 and group.event.setting('place.differentiate-better.fifth', False):
+                    if list.get_sixth() == fighter:
+                        local_plm = 6
+
                 participant = Participant.query.filter_by(id=fighter.get_id()).one()
-                participant.final_placement = plm
+                participant.final_placement = local_plm
 
     if group.random_seed is None:
         group.random_seed = list._random_seed
