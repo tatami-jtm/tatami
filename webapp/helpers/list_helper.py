@@ -41,6 +41,12 @@ def load_list(group):
 
     list.import_struct(struct)
 
+    if group.event.setting('place.differentiate-better.third', False):
+        list.set_option("differentiate-better.third")
+
+    if group.event.setting('place.differentiate-better.fifth', False):
+        list.set_option("differentiate-better.fifth")
+
     return list
 
 def dump_list(list, group):
@@ -65,10 +71,10 @@ def dump_list(list, group):
 
                 local_plm = plm
 
-                if plm == 3 and group.event.setting('place.differentiate-better.third', False):
+                if plm == 3 and list.has_option("differentiate-better.third"):
                     if list.get_fourth() == fighter:
                         local_plm = 4
-                elif plm == 5 and group.event.setting('place.differentiate-better.fifth', False):
+                elif plm == 5 and list.has_option("differentiate-better.fifth"):
                     if list.get_sixth() == fighter:
                         local_plm = 6
 

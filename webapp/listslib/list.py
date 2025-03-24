@@ -16,6 +16,12 @@ class List:
 
     def __init__(self):
         self.meta.init(self)
+
+    def set_option(self, opt):
+        self.meta.set_option(self, opt)
+
+    def has_option(self, opt):
+        return self.meta.has_option(self, opt)
     
     def alloc(self, player):
         self.meta.alloc(self, player)

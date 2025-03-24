@@ -473,6 +473,7 @@ class MetaList:
         }
         obj._playoff_data = {}
         obj._random_seed = random.randint(1, 100000)
+        obj._options = []
 
     """
         alloc(obj, Player)
@@ -1171,3 +1172,10 @@ class MetaList:
 
     def is_playoff(self, obj, match_id):
         return match_id in self._playoff_match_ids
+    
+    def set_option(self, obj, option):
+        if option not in obj._options:
+            obj._options.append(option)
+
+    def has_option(self, obj, option):
+        return option in obj._options
