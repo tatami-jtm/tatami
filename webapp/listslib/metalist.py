@@ -919,6 +919,7 @@ class MetaList:
             if self.has_option(obj, 'differentiate-better.fifth') and not self._results_are_ordered['fifth']:
                 if 'resolve_5' not in self._playoff_match_ids:
                     self._playoff_match_ids.append('resolve_5')
+
                 self._matches['resolve_5'] = {
                     'white': fighter_refs[0],
                     'blue': fighter_refs[1],
@@ -1181,6 +1182,11 @@ class MetaList:
             po_match = self.get_match_by_id(obj, po_match_id)
             po_match.set_result(po_match_result)
             self.enter_results(obj, po_match_result)
+
+            # Better be safe than sorry, get info schedule and run score after every
+            # match has been entered, so that resolv-matches can be added possibly
+            self.get_schedule(obj, True)
+            self.score(obj)
         
         self.get_schedule(obj, False)
         self.score(obj)
