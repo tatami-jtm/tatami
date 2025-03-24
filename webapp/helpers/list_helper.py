@@ -9,10 +9,12 @@ def load_list(group):
     list_cls = list_type.list_class()
 
     list = list_cls()
+
     struct = {
         'fighters': [],
         'matches': {},
-        'playoff_matches': {}
+        'playoff_matches': {},
+        'options': []
     }
 
     if group.random_seed:
@@ -39,6 +41,12 @@ def load_list(group):
             else:
                 struct['playoff_matches'][match.listslib_match_id] = match.get_result()[1]._make_list_result()
 
+    if group.event.setting('place.differentiate-better.third', False):
+        struct['options'].append("differentiate-better.third")
+
+    if group.event.setting('place.differentiate-better.fifth', False):
+        struct['options'].append("differentiate-better.fifth")
+
     list.import_struct(struct)
 
     return list
@@ -63,8 +71,18 @@ def dump_list(list, group):
             for fighter in data:
                 if fighter == BlankFighter or fighter is None: continue
 
+                local_plm = plm
+
+                if plm == 3 and list.has_option("differentiate-better.third"):
+                    if list.get_fourth() == fighter:
+                        local_plm = 4
+
+                if plm == 5 and list.has_option("differentiate-better.fifth"):
+                    if list.get_sixth() == fighter:
+                        local_plm = 6
+
                 participant = Participant.query.filter_by(id=fighter.get_id()).one()
-                participant.final_placement = plm
+                participant.final_placement = local_plm
 
     if group.random_seed is None:
         group.random_seed = list._random_seed

@@ -7,3 +7,5 @@ write_activity_log: True
 use_association_instead_of_club: False
 proximity_placement.hide_name: False
 proximity_placement.hide_club: False
+place.differentiate-better.third: False
+place.differentiate-better.fifth: False

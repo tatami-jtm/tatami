@@ -286,6 +286,14 @@ class MetaList:
     """
     def __load_score_rules(self):
         self._score_rules = []
+        self._results_are_ordered = {
+            'third': False,
+            'fifth': False
+        }
+
+        if (rao := self._com.find('meta/results-are-ordered')) is not None:
+            self._results_are_ordered['third'] = rao.attrib['third-place'] == 'true'
+            self._results_are_ordered['fifth'] = rao.attrib['fifth-place'] == 'true'
 
         for rule in self._com.findall('rules/score/*'):
             cmd = rule.tag
@@ -465,6 +473,7 @@ class MetaList:
         }
         obj._playoff_data = {}
         obj._random_seed = random.randint(1, 100000)
+        obj._options = []
 
     """
         alloc(obj, Player)
@@ -592,8 +601,19 @@ class MetaList:
             
             expected_placement = ref['placed'] - 1
 
+            index = 0 if not 'index' in ref else ref['index']
+
             if len(obj._score_deductions['calced'][scope]['order']) > expected_placement:
-                return obj._score_deductions['calced'][scope]['order'][expected_placement][0]
+                return obj._score_deductions['calced'][scope]['order'][expected_placement][index]
+            else:
+                # no fighter with that placement, possibly because this list is not full
+                return None
+
+        if 'final_placed' in ref:
+            index = 0 if not 'index' in ref else ref['index']
+
+            if len(obj._score_deductions['results'][ref['final_placed']]) > index:
+                return obj._score_deductions['results'][ref['final_placed']][index]
             else:
                 # no fighter with that placement, possibly because this list is not full
                 return None
@@ -882,6 +902,32 @@ class MetaList:
         # Store results
         obj._score_deductions['results'][on] = fighters
 
+        if on == 'third':
+            if self.has_option(obj, 'differentiate-better.third') and not self._results_are_ordered['third']:
+                if 'resolve_3' not in self._playoff_match_ids:
+                    self._playoff_match_ids.append('resolve_3')
+
+                self._matches['resolve_3'] = {
+                    'white': fighter_refs[0],
+                    'blue': fighter_refs[1],
+                    'tags': [],
+                    'no': None,
+                }
+                return self.__score_resolve_match(obj, None, {'id': 'resolve_3'})
+
+        if on == 'fifth':
+            if self.has_option(obj, 'differentiate-better.fifth') and not self._results_are_ordered['fifth']:
+                if 'resolve_5' not in self._playoff_match_ids:
+                    self._playoff_match_ids.append('resolve_5')
+
+                self._matches['resolve_5'] = {
+                    'white': fighter_refs[0],
+                    'blue': fighter_refs[1],
+                    'tags': [],
+                    'no': None,
+                }
+                return self.__score_resolve_match(obj, None, {'id': 'resolve_5'})
+
         return True
 
     """
@@ -1032,6 +1078,26 @@ class MetaList:
         return obj._score_deductions['results']['third']
 
     """
+        get_fourth(obj)
+
+        tries to get fourth if possible
+    """
+    def get_fourth(self, obj):
+        assert obj._score_complete, \
+            "placements not available until full score evaluation"
+
+        if not 'third' in obj._score_deductions['results']:
+            return BlankFighter
+        
+        if self._results_are_ordered['third']:
+            third = self.get_third(obj)
+            if len(third) == 2:
+                return third[1]
+            return BlankFighter
+
+        return self._evaluate_fighter_ref(obj, {'loser': 'resolve_3'})
+
+    """
         get_fifth(obj)
 
         materially equivalent to get_third, except the fighter(s) placed in the 'fifth' slot is
@@ -1045,11 +1111,38 @@ class MetaList:
             return (BlankFighter, BlankFighter)
 
         return obj._score_deductions['results']['fifth']
+
+    """
+        get_sixth(obj)
+
+        tries to get fourth if possible
+    """
+    def get_sixth(self, obj):
+        assert obj._score_complete, \
+            "placements not available until full score evaluation"
+
+        if not 'third' in obj._score_deductions['results']:
+            return BlankFighter
+        
+        if self._results_are_ordered['fifth']:
+            fifth = self.get_fifth(obj)
+            if len(fifth) == 2:
+                return fifth[1]
+            return BlankFighter
+
+        return self._evaluate_fighter_ref(obj, {'loser': 'resolve_5'})
     
 
     def get_included_templates(self, obj):
-        return self._included_templates
-    
+        templates = self._included_templates
+
+        if self.has_option(obj, 'differentiate-better.third') and not self._results_are_ordered['third']:
+            templates.append('resolve_3')
+
+        if self.has_option(obj, 'differentiate-better.fifth') and not self._results_are_ordered['fifth']:
+            templates.append('resolve_5')
+
+        return templates
 
     """
         import_struct(self, obj, struct)
@@ -1058,6 +1151,10 @@ class MetaList:
     """
     def import_struct(self, obj, struct):
         self.init(obj)
+
+        for option in struct['options']:
+            self.set_option(obj, option)
+
         for fighter in struct['fighters']:
             self.alloc(obj, fighter)
         
@@ -1081,6 +1178,11 @@ class MetaList:
             po_match = self.get_match_by_id(obj, po_match_id)
             po_match.set_result(po_match_result)
             self.enter_results(obj, po_match_result)
+
+            # Better be safe than sorry, get info schedule and run score after every
+            # match has been entered, so that resolv-matches can be added possibly
+            self.get_schedule(obj, True)
+            self.score(obj)
         
         self.get_schedule(obj, False)
         self.score(obj)
@@ -1095,7 +1197,8 @@ class MetaList:
             'fighters': [],
             'matches': {},
             'random_seed': obj._random_seed,
-            'playoff_matches': {}
+            'playoff_matches': {},
+            'options': obj._options
         }
 
         fighters_prep_list = {}
@@ -1119,3 +1222,10 @@ class MetaList:
 
     def is_playoff(self, obj, match_id):
         return match_id in self._playoff_match_ids
+    
+    def set_option(self, obj, option):
+        if option not in obj._options:
+            obj._options.append(option)
+
+    def has_option(self, obj, option):
+        return option in obj._options

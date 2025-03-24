@@ -5,6 +5,7 @@
         <require>
             <exact of="4" />
         </require>
+        <results-are-ordered third-place="true" fifth-place="true" />
     </meta>
 
     <rules>

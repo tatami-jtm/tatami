@@ -16,6 +16,12 @@ class List:
 
     def __init__(self):
         self.meta.init(self)
+
+    def set_option(self, opt):
+        self.meta.set_option(self, opt)
+
+    def has_option(self, opt):
+        return self.meta.has_option(self, opt)
     
     def alloc(self, player):
         self.meta.alloc(self, player)
@@ -44,8 +50,14 @@ class List:
     def get_third(self):
         return self.meta.get_third(self)
     
+    def get_fourth(self):
+        return self.meta.get_fourth(self)
+    
     def get_fifth(self):
         return self.meta.get_fifth(self)
+    
+    def get_sixth(self):
+        return self.meta.get_sixth(self)
     
     def import_struct(self, struct):
         return self.meta.import_struct(self, struct)
