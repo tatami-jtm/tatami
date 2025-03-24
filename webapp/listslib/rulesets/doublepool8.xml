@@ -6,7 +6,6 @@
             <min of="5" />
             <max of="8" />
         </require>
-        <results-are-ordered third-place="true" fifth-place="false" />
     </meta>
 
     <rules>
