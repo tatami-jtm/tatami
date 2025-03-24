@@ -51,9 +51,14 @@
     {% endif %}
     {% call cards.CardBody() %}
         <form action="{{ url_for('event_manager.devices_allow_register', event=g.event.slug) }}" method="POST">
-            {{ form.FormCheck(id="allow-registrations", name="allow", label="Neue Geräte dürfen sich registrieren", checked=g.event.allow_device_registration) }}
+            {{ form.FormCheck(id="allow-registrations", name="allow", label="Neue Geräte dürfen sich registrieren", checked=g.event.allow_device_registration, class="mb-1") }}
 
-            {{ buttons.SecondaryButton(text="Speichern", type="submit") }}
+            {% call buttons.ButtonList(class="mb-0") %}
+                {{ buttons.SecondaryButton(text="Speichern", type="submit", class="mb-0") }}
+                {% call buttons.SecondaryButton(href=url_for('event_manager.quick_sign_in', event=g.event.slug), class="mb-0", title="Neues Gerät anlegen") %}
+                    {{ buttons.ButtonIcon(icon='plus') }}
+                {% endcall %}
+            {% endcall %}
         </form>
     {% endcall %}
 {% endcall %}

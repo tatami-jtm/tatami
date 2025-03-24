@@ -1030,7 +1030,7 @@ def device_position_create():
     return redirect(url_for('event_manager.devices', event=g.event.slug))
 
 
-@eventmgr_view.route('/quick-sign-in', methods=["POST"])
+@eventmgr_view.route('/quick-sign-in', methods=["GET", "POST"])
 @login_required
 @check_and_apply_event
 @check_is_event_supervisor
@@ -1047,28 +1047,20 @@ def quick_sign_in():
     device.token = str(uuid.uuid4())
     device.title = f"Admin-Zugang - {current_user.display_name}"
 
-    device.confirmed = True
-    device.confirmed_at = datetime.now()
-
+    device.confirmed = False
     device.registered_at = datetime.now()
     device.registered_by_id = current_user.id
 
-    pos = DevicePosition.query.filter_by(
-        event=g.event, id=request.form['position']).one_or_404()
-    role = EventRole.query.filter_by(id=request.form['role']).one_or_404()
-
-    device.position_id = pos.id
-    device.event_role_id = role.id
+    device.position_id = None
+    device.event_role_id = None
 
     db.session.commit()
 
     session['device_token'] = device.token
 
-    flash('Willkommen! Die Schnelleinwahl war erfolgreich.', 'success')
+    g.event.log(current_user.qualified_name(), 'DEBUG', f'Schnelleinwahl vorgenommen')
 
-    g.event.log(current_user.qualified_name(), 'DEBUG', f'Schnelleinwahl vorgenommen mit Rolle {device.event_role.name} an {device.position.title}')
-
-    return redirect(url_for('devices.index', event=g.event.slug))
+    return redirect(url_for('event_manager.devices', event=g.event.slug))
 
 
 
