@@ -30,7 +30,7 @@ def index():
     query = query.order_by('weighed_in', 'registered', 'last_name', 'first_name').all()
 
     # only currently weighing classes:
-    query = [q for q in query if q.event_class.begin_weigh_in and not q.event_class.begin_placement]
+    query = [q for q in query if q.event_class and q.event_class.begin_weigh_in and not q.event_class.begin_placement]
     
     return render_template("mod_weighin/index.html", query=query, quarg=quarg)
 
