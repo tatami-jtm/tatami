@@ -601,8 +601,10 @@ class MetaList:
             
             expected_placement = ref['placed'] - 1
 
+            index = 0 if not 'index' in ref else ref['index']
+
             if len(obj._score_deductions['calced'][scope]['order']) > expected_placement:
-                return obj._score_deductions['calced'][scope]['order'][expected_placement][0]
+                return obj._score_deductions['calced'][scope]['order'][expected_placement][index]
             else:
                 # no fighter with that placement, possibly because this list is not full
                 return None
@@ -1101,8 +1103,15 @@ class MetaList:
     
 
     def get_included_templates(self, obj):
-        return self._included_templates
-    
+        templates = self._included_templates
+
+        if self.has_option(obj, 'differentiate-better.third') and not self._results_are_ordered['third']:
+            templates.append('resolve_3')
+
+        if self.has_option(obj, 'differentiate-better.fifth') and not self._results_are_ordered['fifth']:
+            templates.append('resolve_5')
+
+        return templates
 
     """
         import_struct(self, obj, struct)
