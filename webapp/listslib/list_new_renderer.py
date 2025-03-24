@@ -104,9 +104,15 @@ class ListRenderer:
                 elif fighter in self.list._score_deductions['results']['second']:
                     return '2.'
                 elif fighter in self.list._score_deductions['results']['third']:
-                    return '3.'
+                    if self.list.has_option("differentiate-better.third") and self.list.get_fourth() == fighter:
+                        return '4.'
+                    else:
+                        return '3.'
                 elif fighter in self.list._score_deductions['results']['fifth']:
-                    return '5.'
+                    if self.list.has_option("differentiate-better.fifth") and self.list.get_sixth() == fighter:
+                        return '6.'
+                    else:
+                        return '5.'
                 else:
                     return ''
             else:
