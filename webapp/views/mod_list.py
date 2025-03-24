@@ -449,6 +449,9 @@ def clear_match_result(id, match_id):
 
         if not is_new:
             db.session.delete(match_result)
+
+        if group.completed:
+            group.completed = False
         
     db.session.commit()
 
