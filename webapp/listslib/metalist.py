@@ -1089,15 +1089,13 @@ class MetaList:
         if not 'third' in obj._score_deductions['results']:
             return BlankFighter
         
-        if self._results_are_ordered:
+        if self._results_are_ordered['third']:
             third = self.get_third(obj)
             if len(third) == 2:
                 return third[1]
             return BlankFighter
 
-        # TODO:
-
-        return BlankFighter
+        return self._evaluate_fighter_ref(obj, {'loser': 'resolve_3'})
 
     """
         get_fifth(obj)
@@ -1126,15 +1124,13 @@ class MetaList:
         if not 'third' in obj._score_deductions['results']:
             return BlankFighter
         
-        if self._results_are_ordered:
+        if self._results_are_ordered['fifth']:
             fifth = self.get_fifth(obj)
             if len(fifth) == 2:
                 return fifth[1]
             return BlankFighter
 
-        # TODO:
-
-        return BlankFighter
+        return self._evaluate_fighter_ref(obj, {'loser': 'resolve_5'})
     
 
     def get_included_templates(self, obj):

@@ -76,7 +76,8 @@ def dump_list(list, group):
                 if plm == 3 and list.has_option("differentiate-better.third"):
                     if list.get_fourth() == fighter:
                         local_plm = 4
-                elif plm == 5 and list.has_option("differentiate-better.fifth"):
+
+                if plm == 5 and list.has_option("differentiate-better.fifth"):
                     if list.get_sixth() == fighter:
                         local_plm = 6
 
