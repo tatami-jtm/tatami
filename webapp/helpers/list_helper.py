@@ -9,10 +9,12 @@ def load_list(group):
     list_cls = list_type.list_class()
 
     list = list_cls()
+
     struct = {
         'fighters': [],
         'matches': {},
-        'playoff_matches': {}
+        'playoff_matches': {},
+        'options': []
     }
 
     if group.random_seed:
@@ -39,13 +41,13 @@ def load_list(group):
             else:
                 struct['playoff_matches'][match.listslib_match_id] = match.get_result()[1]._make_list_result()
 
-    list.import_struct(struct)
-
     if group.event.setting('place.differentiate-better.third', False):
-        list.set_option("differentiate-better.third")
+        struct['options'].append("differentiate-better.third")
 
     if group.event.setting('place.differentiate-better.fifth', False):
-        list.set_option("differentiate-better.fifth")
+        struct['options'].append("differentiate-better.fifth")
+
+    list.import_struct(struct)
 
     return list
 

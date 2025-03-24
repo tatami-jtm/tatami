@@ -291,9 +291,9 @@ class MetaList:
             'fifth': False
         }
 
-        if (rao := self._com.find('meta/results-are-ordered')):
-            self._results_are_ordered['third'] = rao.attrib['third'] == 'true'
-            self._results_are_ordered['fifth'] = rao.attrib['fifth'] == 'true'
+        if (rao := self._com.find('meta/results-are-ordered')) is not None:
+            self._results_are_ordered['third'] = rao.attrib['third-place'] == 'true'
+            self._results_are_ordered['fifth'] = rao.attrib['fifth-place'] == 'true'
 
         for rule in self._com.findall('rules/score/*'):
             cmd = rule.tag
@@ -609,6 +609,15 @@ class MetaList:
                 # no fighter with that placement, possibly because this list is not full
                 return None
 
+        if 'final_placed' in ref:
+            index = 0 if not 'index' in ref else ref['index']
+
+            if len(obj._score_deductions['results'][ref['final_placed']]) > index:
+                return obj._score_deductions['results'][ref['final_placed']][index]
+            else:
+                # no fighter with that placement, possibly because this list is not full
+                return None
+
     """
         get_match_by_id(obj, match_id, informational_only=False)
 
@@ -893,6 +902,31 @@ class MetaList:
         # Store results
         obj._score_deductions['results'][on] = fighters
 
+        if on == 'third':
+            if self.has_option(obj, 'differentiate-better.third') and not self._results_are_ordered['third']:
+                if 'resolve_3' not in self._playoff_match_ids:
+                    self._playoff_match_ids.append('resolve_3')
+
+                self._matches['resolve_3'] = {
+                    'white': fighter_refs[0],
+                    'blue': fighter_refs[1],
+                    'tags': [],
+                    'no': None,
+                }
+                return self.__score_resolve_match(obj, None, {'id': 'resolve_3'})
+
+        if on == 'fifth':
+            if self.has_option(obj, 'differentiate-better.fifth') and not self._results_are_ordered['fifth']:
+                if 'resolve_5' not in self._playoff_match_ids:
+                    self._playoff_match_ids.append('resolve_5')
+                self._matches['resolve_5'] = {
+                    'white': fighter_refs[0],
+                    'blue': fighter_refs[1],
+                    'tags': [],
+                    'no': None,
+                }
+                return self.__score_resolve_match(obj, None, {'id': 'resolve_5'})
+
         return True
 
     """
@@ -1120,6 +1154,10 @@ class MetaList:
     """
     def import_struct(self, obj, struct):
         self.init(obj)
+
+        for option in struct['options']:
+            self.set_option(obj, option)
+
         for fighter in struct['fighters']:
             self.alloc(obj, fighter)
         
@@ -1157,7 +1195,8 @@ class MetaList:
             'fighters': [],
             'matches': {},
             'random_seed': obj._random_seed,
-            'playoff_matches': {}
+            'playoff_matches': {},
+            'options': obj._options
         }
 
         fighters_prep_list = {}
