@@ -77,7 +77,12 @@ def team_rankings():
                 if team not in teams:
                     teams[team] = {1:0, 2:0, 3:0, 5:0, 7:0}
                 
-                teams[team][participant.final_placement] += 1
+                if participant.final_placement == 4:
+                    teams[team][3] += 1
+                elif participant.final_placement == 6:
+                    teams[team][5] += 1
+                else:
+                    teams[team][participant.final_placement] += 1
 
         if len(teams.keys()):
             teams = dict(sorted(teams.items(), key=lambda t: (t[1][1], t[1][2], t[1][3], t[1][5]), reverse=True))
