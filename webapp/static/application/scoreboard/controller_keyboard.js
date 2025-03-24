@@ -36,7 +36,9 @@ INSIDE_OUT_LIST = [
                 if (j >= INSIDE_OUT_LIST.length) break;
 
                 KEYBINDS[INSIDE_OUT_LIST[j][i]] = (() => { up_elem.click() })
+                up_elem.setAttribute('title', "(" + INSIDE_OUT_LIST[j][i] + ")")
                 KEYBINDS[INSIDE_OUT_LIST[j][i + 1]] = (() => { down_elem.click() })
+                down_elem.setAttribute('title', "(" + INSIDE_OUT_LIST[j][i+1] + ")")
                 j++;
             }
         }
