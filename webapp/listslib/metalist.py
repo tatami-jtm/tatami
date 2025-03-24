@@ -286,6 +286,14 @@ class MetaList:
     """
     def __load_score_rules(self):
         self._score_rules = []
+        self._results_are_ordered = {
+            'third': False,
+            'fifth': False
+        }
+
+        if (rao := self._com.find('meta/results-are-ordered')):
+            self._results_are_ordered['third'] = rao.attrib['third'] == 'true'
+            self._results_are_ordered['fifth'] = rao.attrib['fifth'] == 'true'
 
         for rule in self._com.findall('rules/score/*'):
             cmd = rule.tag
@@ -1032,6 +1040,25 @@ class MetaList:
         return obj._score_deductions['results']['third']
 
     """
+        get_fourth(obj)
+
+        tries to get fourth if possible
+    """
+    def get_fourth(self, obj):
+        assert obj._score_complete, \
+            "placements not available until full score evaluation"
+
+        if not 'third' in obj._score_deductions['results']:
+            return BlankFighter
+        
+        if self._results_are_ordered:
+            return self.get_third(obj)[1]
+
+        # TODO:
+
+        return BlankFighter
+
+    """
         get_fifth(obj)
 
         materially equivalent to get_third, except the fighter(s) placed in the 'fifth' slot is
@@ -1045,6 +1072,25 @@ class MetaList:
             return (BlankFighter, BlankFighter)
 
         return obj._score_deductions['results']['fifth']
+
+    """
+        get_sixth(obj)
+
+        tries to get fourth if possible
+    """
+    def get_sixth(self, obj):
+        assert obj._score_complete, \
+            "placements not available until full score evaluation"
+
+        if not 'third' in obj._score_deductions['results']:
+            return BlankFighter
+        
+        if self._results_are_ordered:
+            return self.get_fifth(obj)[1]
+
+        # TODO:
+
+        return BlankFighter
     
 
     def get_included_templates(self, obj):
