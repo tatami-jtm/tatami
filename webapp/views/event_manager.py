@@ -751,7 +751,13 @@ def import_registrations_do(fn):
         if suggested_group_offset is not None:
             registration.suggested_group = row[suggested_group_offset]
 
-        registration.confirmed = request.form['confirm_all'] == 'yes'
+        if request.form['confirm_all'] == 'yes':
+            registration.confirmed = True
+        elif request.form['confirm_all'] == 'no':
+            registration.confirmed = False
+        else:
+            registration.confirmed = row[int(request.form['confirm_all'])].strip() != ''
+
         registration.registered = False
         registration.weighed_in = False
         registration.placed = False
@@ -1185,7 +1191,7 @@ def _load_csv(fn):
         csvreader = csv.reader(csvfile)
 
         for row in csvreader:
-            data.append(row)
+            data.append([i.strip() for i in row])
 
     rowcount = len(data)
     if rowcount == 0:

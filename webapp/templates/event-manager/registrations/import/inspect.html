@@ -55,8 +55,11 @@
 
     {{ form.Label(for_id='confirm_all', text='Voranmeldung für importierte TN bestätigen') }}
     {% call form.Select(id='confirm_all', name='confirm_all') %}
-        {{ form.SelectOption(value='yes', text='Ja') }}
-        {{ form.SelectOption(value='no', text='no') }}
+        {{ form.SelectOption(value='yes', text='Ja, alle bestätigen') }}
+        {{ form.SelectOption(value='no', text='Nein, nicht bestätigen') }}
+        {% for col in range(colcount) %}
+            {{ form.SelectOption(value=col, text='Bestätigen, wenn Spalte ' ~ loop.index ~ ' nicht leer') }}
+        {% endfor %}
     {% endcall %}
 
     {{ buttons.PrimaryButton(type='submit', text='TN importieren')}}
