@@ -140,6 +140,9 @@ def save_config():
         g.event.save_setting('proximity_placement.hide_name', 'proxplace_hide_name' in request.form)
         g.event.save_setting('proximity_placement.hide_club', 'proxplace_hide_club' in request.form)
 
+        g.event.save_setting('place.differentiate-better.third', 'differentiate_better_third_place' in request.form)
+        g.event.save_setting('place.differentiate-better.fifth', 'differentiate_better_fifth_place' in request.form)
+
         g.event.scoreboard_ruleset = ScoreboardRuleset.query.get(request.form['sbid'])
         db.session.commit()
 

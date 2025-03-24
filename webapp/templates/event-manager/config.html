@@ -60,6 +60,10 @@
             {{ form.FormCheck(id='proxplace_hide_name', name='proxplace_hide_name', label='TN-Name bei Einteilung nach gewichtsnahen Gruppen ausblenden', checked=g.event.setting('proximity_placement.hide_name', False)) }}
 
             {{ form.FormCheck(id='proxplace_hide_club', name='proxplace_hide_club', label='Verein bzw. Verband bei Einteilung nach gewichtsnahen Gruppen ausblenden', checked=g.event.setting('proximity_placement.hide_club', False)) }}
+
+            {{ form.FormCheck(id='differentiate_better_third_place', name='differentiate_better_third_place', label='Dritten Platz ggf. auskämpfen (3. vs. 4. Platz)', checked=g.event.setting('place.differentiate-better.third', False)) }}
+
+            {{ form.FormCheck(id='differentiate_better_fifth_place', name='differentiate_better_fifth_place', label='Fünften Platz ggf. auskämpfen (5. vs. 6. Platz)', checked=g.event.setting('place.differentiate-better.fifth', False)) }}
         {% endcall %}
         {% call cards.CardBody() %}
             {{ form.Label(for_id='sbid', text="Scoreboard") }}
