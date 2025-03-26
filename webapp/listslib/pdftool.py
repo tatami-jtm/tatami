@@ -63,4 +63,4 @@ def make_header_and_footer(pdfstr, group):
     out.write(pdf_io)
     pdf_io.seek(0)
 
-    return pdf_io.getvalue()
+    return pdf_io.getvalue(), len(reader.pages)

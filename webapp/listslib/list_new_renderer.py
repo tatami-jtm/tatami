@@ -182,4 +182,5 @@ class ListRenderer:
         )
     
     def render_image(self, page=1):
-        return pdftool.make_image(self.render_pdf(), page - 1)
+        pdf_data = self.render_pdf()
+        return pdftool.make_image(pdf_data[0], page - 1), pdf_data[1]

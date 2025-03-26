@@ -266,6 +266,8 @@ class Group(db.Model):
     currently_used = db.Column(db.Boolean)
     last_used_at = db.Column(db.DateTime())
 
+    display_page_count = db.Column(db.Integer())
+
     _system = (None, None) # for memoizing calculated system
     
     def cut_title(self):
@@ -273,6 +275,9 @@ class Group(db.Model):
             return ""
         
         return self.title[len(self.event_class.short_title) + 1:]
+    
+    def list_page_count(self):
+        return self.display_page_count or self.list_system().display_page_count
 
 
     def list_system(self):

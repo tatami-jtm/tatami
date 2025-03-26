@@ -12,9 +12,9 @@
         {% endcall %}
     {% endif %}
 
-    {% if shown_list.list_system().display_page_count > 1 %}
+    {% if shown_list.list_page_count() > 1 %}
         {%- call pagination.Pagination() -%}
-            {% for _ in range(shown_list.list_system().display_page_count) %}
+            {% for _ in range(shown_list.list_page_count()) %}
                 {{ pagination.PaginationItem(href="?shown_list=" ~ shown_list.id ~ "&page=" ~ loop.index ~ "&show_only_one_list=" ~ request.values.get('show_only_one_list', 'no'), label=loop.index, active=(request.values.get('page', "1") == ""~loop.index)) }}
             {% endfor %}
         {%- endcall -%}
