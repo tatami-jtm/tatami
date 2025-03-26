@@ -361,13 +361,14 @@ def assign_all_proximity(id):
 
     if request.method == 'POST':
         segmentation = list(map(int, request.values.getlist('before')))
+        allowed_registrations = list(map(int, request.values.getlist('allow')))
         group = None
         current_initial = None
         groups_created = 0
         participants_created = 0
 
         for registration in registrations.all():
-            if registration.id in segmentation or not group:
+            if not group or (registration.id in segmentation and group.participants.count() > 0):
                 current_initial = registration
 
                 group = Group(created_manually=False, event=g.event, event_class=event_class,
@@ -379,6 +380,9 @@ def assign_all_proximity(id):
                 db.session.add(group)
                 g.event.log(g.device.title, 'DEBUG', f'Neue Gruppe {group.title} erstellt.')
                 groups_created += 1
+
+            if registration.id not in allowed_registrations:
+                continue
 
             group.max_weight = registration.verified_weight
             group.title = f"{event_class.short_title} -{group.max_weight / 1000}kg"
