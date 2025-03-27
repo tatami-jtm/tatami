@@ -737,6 +737,7 @@ def import_registrations_do(fn):
     contact_details_offset = int(request.form['contact_details']) if request.form['contact_details'] != 'null' else None
     club_offset = int(request.form['club']) if request.form['club'] != 'null' else None
     association_offset = int(request.form['association']) if request.form['association'] != 'null' else None
+    external_id_offset = int(request.form['external_id']) if request.form['external_id'] != 'null' else None
     event_class_offset = int(request.form['event_class'])
     suggested_group_offset = int(request.form['suggested_group']) if request.form['suggested_group'] != 'null' else None
 
@@ -763,6 +764,9 @@ def import_registrations_do(fn):
 
         if suggested_group_offset is not None:
             registration.suggested_group = row[suggested_group_offset]
+
+        if external_id_offset is not None:
+            registration.external_id = row[external_id_offset]
 
         if request.form['confirm_all'] == 'yes':
             registration.confirmed = True
