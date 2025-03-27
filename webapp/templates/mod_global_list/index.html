@@ -135,7 +135,7 @@
                     {{ colboard.ColboardColumnHeader(title="Kampfliste") }}
                     {% call colboard.ColboardColumnBody() %}
                         {%- call pagination.Pagination() -%}
-                            {% for _ in range(current_group.list_system().display_page_count) %}
+                            {% for _ in range(current_group.list_page_count()) %}
                                 {{ pagination.PaginationItem(href="?group=" ~ current_group.id ~ "&page=" ~ loop.index, label=loop.index, active=(request.values.get('page', "1") == ""~loop.index)) }}
                             {% endfor %}
                         {%- endcall -%}

@@ -83,67 +83,6 @@
         </playoff>
     </rules>
 
-    <display>
-        <template page="4">
-            <write-header x="137.5" y="16.75" />
-            <write-fighter x="22" y="48" type="full">
-                <fighter id="1" />
-            </write-fighter>
-            <write-fighter x="22" y="54" type="full">
-                <fighter id="2" />
-            </write-fighter>
-            <write-fighter x="22" y="60" type="full">
-                <fighter id="3" />
-            </write-fighter>
-            <write-score x="60.125" y="48" match-id="AvB" for="white" />
-            <write-score x="60.125" y="54" match-id="AvB" for="blue" />
-
-            <write-score x="67.5" y="48" match-id="AvC" for="white" />
-            <write-score x="67.5" y="60" match-id="AvC" for="blue" />
-
-            <write-score x="75" y="54" match-id="BvC" for="white" />
-            <write-score x="75" y="60" match-id="BvC" for="blue" />
-
-            <write-total x="82.5" y="48" fighter-id="1" option="points" />
-            <write-total x="91.5" y="48" fighter-id="1" option="score" />
-            <write-total x="100.5" y="48" fighter-id="1" option="placement" />
-            <write-total x="82.5" y="54" fighter-id="2" option="points" />
-            <write-total x="91.5" y="54" fighter-id="2" option="score" />
-            <write-total x="100.5" y="54" fighter-id="2" option="placement" />
-            <write-total x="82.5" y="60" fighter-id="3" option="points" />
-            <write-total x="91.5" y="60" fighter-id="3" option="score" />
-            <write-total x="100.5" y="60" fighter-id="3" option="placement" />
-
-            <write-fighter x="22" y="116.75" type="default">
-                <fighter id="1" playoff="e123up" />
-            </write-fighter>
-            <write-fighter x="22" y="122.75" type="default">
-                <fighter id="2" playoff="e123up" />
-            </write-fighter>
-            <write-fighter x="65.5" y="117" type="default">
-                <winner match-id="upXvY" />
-            </write-fighter>
-
-            <write-fighter x="65.5" y="131.75" type="default">
-                <fighter id="3" playoff="e123up" />
-            </write-fighter>
-
-            <write-fighter x="103" y="122.25" type="short">
-                <winner match-id="upXYvZ" />
-            </write-fighter>
-
-            <write-fighter x="152" y="230" type="default">
-                <placed on="1" />
-            </write-fighter>
-            <write-fighter x="152" y="236" type="default">
-                <placed on="2" />
-            </write-fighter>
-            <write-fighter x="152" y="242" type="default">
-                <placed on="3" />
-            </write-fighter>
-        </template>
-    </display>
-
     <html-renderer>
         <include file="pool3" />
         <include file="playoff_up" />

@@ -136,14 +136,24 @@ if (SBRULES.controls.includes('osaekomi')) {
             sbState.white.osaekomi.since = sbState.blue.osaekomi.since
             sbState.white.osaekomi.scores_given = []
 
-            // TODO: remove given scores for blue
+            sbState.blue.osaekomi.scores_given.forEach((score) => {
+                if (sbState.blue.scores[score].value > 0) {
+                    sbState.blue.scores[score].value -= 1
+                    sbState.blue.scores[score].pending = false
+                }
+            })
         } else if(sbState.white.osaekomi.running) {
             sbState.white.osaekomi.running = false
             sbState.blue.osaekomi.running = true
             sbState.blue.osaekomi.since = sbState.white.osaekomi.since
             sbState.blue.osaekomi.scores_given = []
 
-            // TODO: remove given scores for white
+            sbState.white.osaekomi.scores_given.forEach((score) => {
+                if (sbState.white.scores[score].value > 0) {
+                    sbState.white.scores[score].value -= 1
+                    sbState.white.scores[score].pending = false
+                }
+            })
         }
 
         toggle_osaekomi.blur()

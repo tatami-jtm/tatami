@@ -1,0 +1,54 @@
+{%- import "components/datasets.html" as datasets -%}
+{%- import "components/badges.html" as badges -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/form.html" as form -%}
+
+{% set event_page="registrations" %}
+{% set curpage = "clubs" %}
+{% extends "layouts/event-manager.html" %}
+{% block title %}{{ g.event.title }}{% endblock %}
+
+{% block body %}
+{% include "event-manager/registrations/_header.html" %}
+
+<h2>Vereine</h2>
+
+<p>Die Teilnehmenden wurden für die folgenden Vereine gemeldet:</p>
+
+<form action="" method="GET" class="mb-3">
+    {% call layout.Grid(class="align-center") %}
+        {% call layout.GridColumn(span="auto") %}
+            {% call form.Select(id='class_filter', name='class_filter', class="mb-0") %}
+                {{ form.SelectOption(text="(alle Kampfklassen)", value="") }}
+                {% for cl in g.event.classes.order_by('title') %}
+                    {{ form.SelectOption(text=cl.title, value=cl.id,
+                        selected=(cl.id == filtered_class.id)) }}
+                {% endfor %}
+            {% endcall %}
+        {% endcall %}
+        {% call layout.GridColumn(span="auto") %}
+            {{ buttons.SecondaryButton(type="submit", text="Filtern", class="mb-0") }}
+        {% endcall %}
+    {% endcall %}
+</form>
+
+{% call datasets.Table() %}
+    {% call datasets.TableHead() %}
+        {{ datasets.TableHeadColumn(text="Verband") }}
+        {{ datasets.TableHeadColumn(text="Bezeichnung") }}
+        {{ datasets.TableHeadColumn(text="TN") }}
+    {% endcall %}
+    {% call datasets.TableBody() %}
+        {% for club in clubs %}
+            {% call datasets.TableRow() %}
+                {{ datasets.TableColumn(text=club.assoc) }}
+                {{ datasets.TableColumn(text=club.name) }}
+                {% call datasets.TableColumn() %}
+                    {{ badges.Badge(href=url_for('event_manager.registrations', event=g.event.slug, club_filter=club.name), style="inactive", text="%d TN" % club.count) }}
+                {% endcall %}
+            {% endcall %}
+        {% endfor %}
+    {% endcall %}
+{% endcall %}
+
+{% endblock %}

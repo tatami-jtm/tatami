@@ -97,12 +97,18 @@ def display_image(id, page=1):
     if 'cumult' in request.values:
         time.sleep(random.random())
 
-    if not group.list_system().display_page_count > page - 1 >= 0:
+    if not group.list_page_count() > page - 1 >= 0:
         abort(404)
 
     lr = ListRenderer(group_list, g.event, group, served=False)
     image_io = io.BytesIO()
-    lr.render_image(page=page).save(image_io, 'PNG', quality=70)
+    image_data = lr.render_image(page=page)
+    image_data[0].save(image_io, 'PNG', quality=70)
+
+    if image_data[1] != group.list_page_count():
+        group.display_page_count = image_data[1]
+        db.session.commit()
+
     image_io.seek(0)
     return send_file(image_io, mimetype='image/png')
 
@@ -123,8 +129,12 @@ def display_pdf(id):
     lr = ListRenderer(group_list, g.event, group, served=False)
 
     pdf_io = io.BytesIO()
-    pdf_io.write(lr.render_pdf())
+    pdf_io.write((pdf_data := lr.render_pdf())[0])
     pdf_io.seek(0)
+
+    if pdf_data[1] != group.list_page_count():
+        group.display_page_count = pdf_data[1]
+        db.session.commit()
 
     return send_file(pdf_io, mimetype='application/pdf')
 
@@ -449,6 +459,9 @@ def clear_match_result(id, match_id):
 
         if not is_new:
             db.session.delete(match_result)
+
+        if group.completed:
+            group.completed = False
         
     db.session.commit()
 

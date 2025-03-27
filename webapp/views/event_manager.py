@@ -526,6 +526,19 @@ def print_registrations():
     return render_template("event-manager/registrations/print_all.html", filtered_class=filtered_class)
 
 
+@eventmgr_view.route('/registrations/print/cards')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def print_registration_cards():
+    filtered_class = None
+
+    if request.values.get('id', None):
+        filtered_class = EventClass.query.filter_by(id=request.values['id']).one_or_404()
+
+    return render_template("event-manager/registrations/print_cards.html", filtered_class=filtered_class)
+
+
 @eventmgr_view.route('/registrations/class_<id>_registrations.csv')
 @eventmgr_view.route('/registrations/registrations.csv')
 @login_required
@@ -543,6 +556,7 @@ def class_registrations_as_csv(id=None):
         'Kampfklasse',
         'Nachname',
         'Vorname',
+        'Externe ID',
         'Verein',
         'Verband',
         'Gewicht (gemeldet)',
@@ -557,6 +571,7 @@ def class_registrations_as_csv(id=None):
             registration.event_class.short_title,
             registration.last_name,
             registration.first_name,
+            registration.external_id,
             registration.club,
             registration.association.short_name if registration.association else None,
             registration.suggested_group,
@@ -724,6 +739,7 @@ def import_registrations_do(fn):
     contact_details_offset = int(request.form['contact_details']) if request.form['contact_details'] != 'null' else None
     club_offset = int(request.form['club']) if request.form['club'] != 'null' else None
     association_offset = int(request.form['association']) if request.form['association'] != 'null' else None
+    external_id_offset = int(request.form['external_id']) if request.form['external_id'] != 'null' else None
     event_class_offset = int(request.form['event_class'])
     suggested_group_offset = int(request.form['suggested_group']) if request.form['suggested_group'] != 'null' else None
 
@@ -751,7 +767,16 @@ def import_registrations_do(fn):
         if suggested_group_offset is not None:
             registration.suggested_group = row[suggested_group_offset]
 
-        registration.confirmed = request.form['confirm_all'] == 'yes'
+        if external_id_offset is not None:
+            registration.external_id = row[external_id_offset]
+
+        if request.form['confirm_all'] == 'yes':
+            registration.confirmed = True
+        elif request.form['confirm_all'] == 'no':
+            registration.confirmed = False
+        else:
+            registration.confirmed = row[int(request.form['confirm_all'])].strip() != ''
+
         registration.registered = False
         registration.weighed_in = False
         registration.placed = False
@@ -861,6 +886,28 @@ def create_association():
         return redirect(url_for('event_manager.edit_association', event=g.event.slug, id=association.id))
 
     return render_template("event-manager/associations/new.html", association=association)
+
+
+@eventmgr_view.route('/clubs')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def clubs():
+    if request.values.get('class_filter', None):
+        filtered_class = EventClass.query.filter_by(id=request.values['class_filter']).one_or_404()
+        base_query = g.event.registrations.filter_by(event_class=filtered_class)
+    else:
+        filtered_class = None
+        base_query = g.event.registrations
+
+    club_query = base_query \
+        .join(Association) \
+        .with_entities(Registration.club, Association.short_name, db.func.count(Registration.id)) \
+        .group_by(Registration.club, Registration.association_id)
+    clubs = [{"name": i[0], "assoc": i[1], "count": i[2]} for i in club_query.all()]
+    clubs = sorted(clubs, key=lambda c: (-1 * c["count"], c["name"]))
+
+    return render_template("event-manager/clubs.html", clubs=clubs, filtered_class=filtered_class)
 
 
 @eventmgr_view.route('/devices')
@@ -1024,7 +1071,7 @@ def device_position_create():
     return redirect(url_for('event_manager.devices', event=g.event.slug))
 
 
-@eventmgr_view.route('/quick-sign-in', methods=["POST"])
+@eventmgr_view.route('/quick-sign-in', methods=["GET", "POST"])
 @login_required
 @check_and_apply_event
 @check_is_event_supervisor
@@ -1041,28 +1088,20 @@ def quick_sign_in():
     device.token = str(uuid.uuid4())
     device.title = f"Admin-Zugang - {current_user.display_name}"
 
-    device.confirmed = True
-    device.confirmed_at = datetime.now()
-
+    device.confirmed = False
     device.registered_at = datetime.now()
     device.registered_by_id = current_user.id
 
-    pos = DevicePosition.query.filter_by(
-        event=g.event, id=request.form['position']).one_or_404()
-    role = EventRole.query.filter_by(id=request.form['role']).one_or_404()
-
-    device.position_id = pos.id
-    device.event_role_id = role.id
+    device.position_id = None
+    device.event_role_id = None
 
     db.session.commit()
 
     session['device_token'] = device.token
 
-    flash('Willkommen! Die Schnelleinwahl war erfolgreich.', 'success')
+    g.event.log(current_user.qualified_name(), 'DEBUG', f'Schnelleinwahl vorgenommen')
 
-    g.event.log(current_user.qualified_name(), 'DEBUG', f'Schnelleinwahl vorgenommen mit Rolle {device.event_role.name} an {device.position.title}')
-
-    return redirect(url_for('devices.index', event=g.event.slug))
+    return redirect(url_for('event_manager.devices', event=g.event.slug))
 
 
 
@@ -1185,7 +1224,7 @@ def _load_csv(fn):
         csvreader = csv.reader(csvfile)
 
         for row in csvreader:
-            data.append(row)
+            data.append([i.strip() for i in row])
 
     rowcount = len(data)
     if rowcount == 0:

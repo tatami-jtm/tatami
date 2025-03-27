@@ -106,22 +106,22 @@
         <!-- Repechage // For Round of 8 -->
         <match id="m17" no="17">
             <white><winner match-id="m13" /></white>
-            <blue><loser match-id="m12" /></blue>
+            <blue><loser match-id="m11" /></blue>
             <is a="repechage" />
         </match>
         <match id="m18" no="18">
             <white><winner match-id="m14" /></white>
-            <blue><loser match-id="m11" /></blue>
+            <blue><loser match-id="m12" /></blue>
             <is a="repechage" />
         </match>
         <match id="m19" no="19">
             <white><winner match-id="m15" /></white>
-            <blue><loser match-id="m10" /></blue>
+            <blue><loser match-id="m9" /></blue>
             <is a="repechage" />
         </match>
         <match id="m20" no="20">
             <white><winner match-id="m16" /></white>
-            <blue><loser match-id="m9" /></blue>
+            <blue><loser match-id="m10" /></blue>
             <is a="repechage" />
         </match>
 
@@ -152,13 +152,13 @@
         <!-- Repechage // Third Place Final -->
         <match id="m25" no="25">
             <white><winner match-id="m23" /></white>
-            <blue><loser match-id="m22" /></blue>
+            <blue><loser match-id="m21" /></blue>
             <is a="repechage" />
             <is a="thirdplace" />
         </match>
         <match id="m26" no="26">
             <white><winner match-id="m24" /></white>
-            <blue><loser match-id="m21" /></blue>
+            <blue><loser match-id="m22" /></blue>
             <is a="repechage" />
             <is a="thirdplace" />
         </match>

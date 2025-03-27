@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ g.event.title }} | Wiegemarken</title>
+
+    <style>
+        @font-face {
+            font-display: swap;
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 400;
+            src: url('/static/fonts/inter-v13-latin_latin-ext-regular.woff2') format('woff2');
+        }
+
+        @font-face {
+            font-display: swap;
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 500;
+            src: url('/static/fonts/inter-v13-latin_latin-ext-500.woff2') format('woff2');
+        }
+
+        @font-face {
+            font-display: swap;
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 700;
+            src: url('/static/fonts/inter-v13-latin_latin-ext-700.woff2') format('woff2');
+        }
+
+        @font-face {
+            font-display: swap;
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 900;
+            src: url('/static/fonts/inter-v13-latin_latin-ext-900.woff2') format('woff2');
+        }
+
+        * { box-sizing: border-box; }
+
+        html {
+            font-family: Inter, Arial, Helvetica, sans-serif;
+            font-size: 12pt;
+        }
+
+        body {
+            margin: 0 auto;
+            max-width: 21cm;
+        }
+
+        .card-list {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .card {
+            border: 1px solid #000000;
+            width: 9cm;
+            height: 8.5cm;
+            margin: 0.25cm 0;
+            break-inside: avoid;
+            font-size: 11pt;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            background-color: #f0f0f0;
+            padding: 0.25cm 0.35cm;
+            display: grid;
+            grid-template-columns: 3cm 1fr;
+            grid-template-rows: 1fr 1fr;
+            align-items: center;
+        }
+
+        .card-header .card-tatami {
+            grid-column: 1;
+            grid-row: 1;
+            color: #8a9b68;
+            font-weight: 900;
+            font-size: 10pt;
+        }
+
+        .card-header .card-title {
+            font-weight: 500;
+            font-size: 14pt;
+            grid-column: 1 3;
+            grid-row: 2;
+        }
+
+        .card-header .card-event {
+            grid-column: 2;
+            grid-row: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            text-align: right;
+            font-size: 10pt;
+        }
+
+        .card-data {
+            flex-grow: 1;
+            padding: 0.25cm 0;
+        }
+
+        .card .card-data table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .card .card-data table th,
+        .card .card-data table td {
+            padding: 0.2cm 0.35cm;
+            vertical-align: middle;
+        }
+        .card .card-data table tr:not(:last-child) th,
+        .card .card-data table tr:not(:last-child) td {
+            border-bottom: 1px solid #000;
+        }
+
+        .card .card-data table th {
+            text-align: left;
+            width: 2.75cm;
+            font-weight: normal;
+            border-right: 1px solid #000;
+            padding-right: 0.125cm;
+            font-size: 10pt;
+        }
+
+        .card .card-data table td {
+            font-size: 11.5pt;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card .card-line {
+            border-top: 1px dotted;
+            text-align: center;
+            padding: 0.15cm;
+            font-size: 8pt;
+            background-color: #f0f0f0;
+        }
+
+        .card .card-results {
+            display: flex;
+            background-color: #f0f0f0;
+            padding: 0.25cm 0;
+            padding-top: 0;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card .card-results>* {
+            margin: 0 0.35cm;
+        }
+        .card .card-suggested-group {
+            text-align: center;
+            font-size: 10pt;
+            margin-right: 0.15cm;
+            width: 1.75cm;
+        }
+        .card .card-weight-field {
+            flex-grow: 1;
+            text-align: right;
+            border: 2px solid;
+            padding: 0.25cm;
+            font-weight: 900;
+            font-size: 14pt;
+            background-color: white;
+        }
+
+        .card .card-checkbox {
+            text-align: center;
+            font-size: 10pt;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            align-self: flex-end;
+            margin-left: 0.15cm;
+        }
+        .card .card-checkbox::before {
+            content: '';
+            height: 0.5cm;
+            width: 0.5cm;
+            border: 1px solid;
+            margin-bottom: 0.05cm;
+        }
+    </style>
+</head>
+<body>
+    {% if filtered_class %}
+    {% set classes = [filtered_class] %}
+    {% else %}
+    {% set classes = g.event.classes %}
+    {% endif %}
+
+    <div class="card-list">
+        {% for evcl in classes %}
+            {% set query = evcl.registrations %}
+            {% for reg in query.order_by('last_name', 'first_name', 'club') %}
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-tatami">{{ config.BRAND_NAME }}</div>
+                        <div class="card-title">Wiegemarke</div>
+                        <div class="card-event">{{ g.event.title }}</div>
+                    </div>
+                    <div class="card-data">
+                        <table>
+                            <tr>
+                                <th>Nachname</th>
+                                <td>{{ reg.last_name.upper() }}</td>
+                            </tr>
+                            <tr>
+                                <th>Vorname</th>
+                                <td>{{ reg.first_name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Verein</th>
+                                <td>{{ reg.club }}</td>
+                            </tr>
+                            <tr>
+                                <th>Kampfklasse</th>
+                                <td>{{ evcl.title }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-line">wird von der Waage ausgefüllt:</div>
+                    <div class="card-results">
+                        <div class="card-suggested-group">Gemeldet:<br>{{ reg.suggested_group or '-' }}</div>
+                        <div class="card-weight-field">kg</div>
+                        <div class="card-checkbox">OK?</div>
+                        <div class="card-checkbox">EDV</div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+
+    <script>print();</script>
+</body>
+</html>

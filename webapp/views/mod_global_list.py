@@ -48,7 +48,7 @@ def index():
             completed_matches = current_group.matches.filter(
                 Match.completed==True,
                 (Match.obsolete==False) | (Match.obsolete==None)
-            )
+            ).order_by(Match.completed_at)
             obsolete_matches = current_group.matches.filter(
                 Match.obsolete==True,
                 Match.completed==True

@@ -11,8 +11,11 @@
 </li>
 {%- endmacro %}
 
-{%- macro SegmentationItem(text="") %}
+{%- macro SegmentationItem(text="", checkbox=False, id="", name="", value="", checked=True) %}
 <li class="segmentation-item">
-    {{ text or (caller() if caller is defined) }}
+    {%- if checkbox -%}
+        <input type="checkbox" id="{{ id }}" name="{{ name }}" value="{{ value }}" class="segmentation-item-checkbox" {{ 'checked' if checked }}>
+        <label for="{{ id }}" class="segmentation-item-label">{{ text or (caller() if caller is defined) }}</label>
+    {%- else -%}{{ text or (caller() if caller is defined) }}{%- endif -%}
 </li>
 {%- endmacro %}

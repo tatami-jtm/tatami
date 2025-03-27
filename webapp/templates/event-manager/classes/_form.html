@@ -109,7 +109,7 @@
         <h3>Zeitrahmen</h3>
 
         {{ form.Label(for_id="fighting_time", text="Kampfdauer") }}
-        {{ form.InputWithSuffix(name="fighting_time", id="fighting_time", suffix="Sekunden", value=event_class.fighting_time, type="number")}}
+        {{ form.InputWithSuffix(name="fighting_time", id="fighting_time", suffix="Sekunden", value='' ~ event_class.fighting_time, type="number")}}
         {% call form.FormPresets() %}
             {{ buttons.SubtleButton(inline=True, text="2 min", attr="onclick=\"fighting_time.value=120;\"")}}
             {{ buttons.SubtleButton(inline=True, text="3 min", attr="onclick=\"fighting_time.value=180;\"")}}
@@ -117,7 +117,7 @@
         {% endcall %}
 
         {{ form.Label(for_id="golden_score_time", text="Golden Score-Dauer") }}
-        {{ form.InputWithSuffix(name="golden_score_time", id="golden_score_time", suffix="Sekunden", value=event_class.golden_score_time, type="number")}}
+        {{ form.InputWithSuffix(name="golden_score_time", id="golden_score_time", suffix="Sekunden", value='' ~ event_class.golden_score_time or '0', type="number")}}
         {% call form.FormPresets() %}
             {{ buttons.SubtleButton(inline=True, text="ohne", attr="onclick=\"golden_score_time.value=0;\"")}}
             {{ buttons.SubtleButton(inline=True, text="2 min", attr="onclick=\"golden_score_time.value=120;\"")}}
@@ -127,7 +127,7 @@
         {% endcall %}
 
         {{ form.Label(for_id="between_fights_time", text="Pausendauer") }}
-        {{ form.InputWithSuffix(name="between_fights_time", id="between_fights_time", suffix="Sekunden", value=event_class.between_fights_time, type="number")}}
+        {{ form.InputWithSuffix(name="between_fights_time", id="between_fights_time", suffix="Sekunden", value='' ~ event_class.between_fights_time, type="number")}}
         {% call form.FormPresets() %}
             {{ buttons.SubtleButton(inline=True, text="6 min", attr="onclick=\"between_fights_time.value=360;\"")}}
             {{ buttons.SubtleButton(inline=True, text="10 min", attr="onclick=\"between_fights_time.value=600;\"")}}
