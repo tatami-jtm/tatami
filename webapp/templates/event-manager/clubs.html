@@ -34,15 +34,15 @@
 
 {% call datasets.Table() %}
     {% call datasets.TableHead() %}
-        {{ datasets.TableHeadColumn(text="Bezeichnung") }}
         {{ datasets.TableHeadColumn(text="Verband") }}
+        {{ datasets.TableHeadColumn(text="Bezeichnung") }}
         {{ datasets.TableHeadColumn(text="TN") }}
     {% endcall %}
     {% call datasets.TableBody() %}
         {% for club in clubs %}
             {% call datasets.TableRow() %}
-                {{ datasets.TableColumn(text=club.name) }}
                 {{ datasets.TableColumn(text=club.assoc) }}
+                {{ datasets.TableColumn(text=club.name) }}
                 {% call datasets.TableColumn() %}
                     {{ badges.Badge(href=url_for('event_manager.registrations', event=g.event.slug, club_filter=club.name), style="inactive", text="%d TN" % club.count) }}
                 {% endcall %}
