@@ -526,6 +526,19 @@ def print_registrations():
     return render_template("event-manager/registrations/print_all.html", filtered_class=filtered_class)
 
 
+@eventmgr_view.route('/registrations/print/cards')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def print_registration_cards():
+    filtered_class = None
+
+    if request.values.get('id', None):
+        filtered_class = EventClass.query.filter_by(id=request.values['id']).one_or_404()
+
+    return render_template("event-manager/registrations/print_cards.html", filtered_class=filtered_class)
+
+
 @eventmgr_view.route('/registrations/class_<id>_registrations.csv')
 @eventmgr_view.route('/registrations/registrations.csv')
 @login_required
