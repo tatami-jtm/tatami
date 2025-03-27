@@ -882,6 +882,28 @@ def create_association():
     return render_template("event-manager/associations/new.html", association=association)
 
 
+@eventmgr_view.route('/clubs')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def clubs():
+    if request.values.get('class_filter', None):
+        filtered_class = EventClass.query.filter_by(id=request.values['class_filter']).one_or_404()
+        base_query = g.event.registrations.filter_by(event_class=filtered_class)
+    else:
+        filtered_class = None
+        base_query = g.event.registrations
+
+    club_query = base_query \
+        .join(Association) \
+        .with_entities(Registration.club, Association.short_name, db.func.count(Registration.id)) \
+        .group_by(Registration.club, Registration.association_id)
+    clubs = [{"name": i[0], "assoc": i[1], "count": i[2]} for i in club_query.all()]
+    clubs = sorted(clubs, key=lambda c: (-1 * c["count"], c["name"]))
+
+    return render_template("event-manager/clubs.html", clubs=clubs, filtered_class=filtered_class)
+
+
 @eventmgr_view.route('/devices')
 @login_required
 @check_and_apply_event

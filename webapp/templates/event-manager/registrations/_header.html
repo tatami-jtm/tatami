@@ -8,4 +8,7 @@
     
     {{ switches.TabItem(href=url_for('event_manager.associations', event=g.event.slug),
         label="Verbände", active=curpage == 'associations') }}
+    
+    {{ switches.TabItem(href=url_for('event_manager.clubs', event=g.event.slug),
+        label="Vereine", active=curpage == 'clubs') }}
 {% endcall %}
