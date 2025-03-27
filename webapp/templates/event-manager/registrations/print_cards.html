@@ -208,7 +208,7 @@
             {% for reg in query.order_by('last_name', 'first_name', 'club') %}
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-tatami">TATAMI</div>
+                        <div class="card-tatami">{{ config.BRAND_NAME }}</div>
                         <div class="card-title">Wiegemarke</div>
                         <div class="card-event">{{ g.event.title }}</div>
                     </div>
@@ -244,6 +244,6 @@
         {% endfor %}
     </div>
 
-    <script>//print();</script>
+    <script>print();</script>
 </body>
 </html>

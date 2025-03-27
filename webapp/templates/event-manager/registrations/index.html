@@ -119,13 +119,25 @@
 {% call datasets.Dataset(size="medium") %}
     {% call datasets.DatasetMenu() %}
         {% if filtered_class %}
-            {{ buttons.SubtleButton(href=url_for('event_manager.print_registrations', event=g.event.slug, id=filtered_class.id), text=("TN-/Wiegeliste drucken"), target='_blank', inline=True) }}
-            {{ buttons.SubtleButton(href=url_for('event_manager.print_registration_cards', event=g.event.slug, id=filtered_class.id), text=("Wiegemarken drucken"), target='_blank', inline=True) }}
-            {{ buttons.SubtleButton(href=url_for('event_manager.class_registrations_as_csv', event=g.event.slug, id=filtered_class.id), text="CSV exportieren", inline=True) }}
+            {% call buttons.SubtleButton(href=url_for('event_manager.print_registrations', event=g.event.slug, id=filtered_class.id), target='_blank', inline=True) %}
+                {{ buttons.ButtonIcon(icon="printer", label="TN-/Wiegeliste drucken") }}
+            {% endcall %}
+            {% call buttons.SubtleButton(href=url_for('event_manager.print_registration_cards', event=g.event.slug, id=filtered_class.id), target='_blank', inline=True) %}
+                {{ buttons.ButtonIcon(icon="hand-card", label="Wiegemarken drucken") }}
+            {% endcall %}
+            {% call buttons.SubtleButton(href=url_for('event_manager.class_registrations_as_csv', event=g.event.slug, id=filtered_class.id), target='_blank', inline=True) %}
+                {{ buttons.ButtonIcon(icon="database-export", label="CSV exportieren") }}
+            {% endcall %}
         {% else %}
-            {{ buttons.SubtleButton(href=url_for('event_manager.print_registrations', event=g.event.slug), text=("TN-/Wiegeliste drucken"), target='_blank', inline=True) }}
-            {{ buttons.SubtleButton(href=url_for('event_manager.print_registration_cards', event=g.event.slug), text=("Wiegemarken drucken"), target='_blank', inline=True) }}
-            {{ buttons.SubtleButton(href=url_for('event_manager.class_registrations_as_csv', event=g.event.slug), text=("CSV exportieren"), inline=True) }}
+            {% call buttons.SubtleButton(href=url_for('event_manager.print_registrations', event=g.event.slug), target='_blank', inline=True) %}
+                {{ buttons.ButtonIcon(icon="printer", label="TN-/Wiegeliste drucken") }}
+            {% endcall %}
+            {% call buttons.SubtleButton(href=url_for('event_manager.print_registration_cards', event=g.event.slug), target='_blank', inline=True) %}
+                {{ buttons.ButtonIcon(icon="hand-card", label="Wiegemarken drucken") }}
+            {% endcall %}
+            {% call buttons.SubtleButton(href=url_for('event_manager.class_registrations_as_csv', event=g.event.slug), target='_blank', inline=True) %}
+                {{ buttons.ButtonIcon(icon="database-export", label="CSV exportieren") }}
+            {% endcall %}
         {% endif %}
     {% endcall %}
     {% call datasets.Table() %}

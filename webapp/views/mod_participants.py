@@ -141,3 +141,35 @@ def new():
         return redirect(url_for('mod_participants.edit', event=g.event.slug, id=registration.id))
 
     return render_template("mod_participants/new.html", registration=registration)
+
+
+@mod_participants_view.route('/print')
+@check_and_apply_event
+@check_is_registered
+def print_all():
+    if not g.device.event_role.may_use_participants:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    filtered_class = None
+
+    if request.values.get('id', None):
+        filtered_class = EventClass.query.filter_by(id=request.values['id']).one_or_404()
+
+    return render_template("event-manager/registrations/print_all.html", filtered_class=filtered_class)
+
+
+@mod_participants_view.route('/print/cards')
+@check_and_apply_event
+@check_is_registered
+def print_cards():
+    if not g.device.event_role.may_use_participants:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    filtered_class = None
+
+    if request.values.get('id', None):
+        filtered_class = EventClass.query.filter_by(id=request.values['id']).one_or_404()
+
+    return render_template("event-manager/registrations/print_cards.html", filtered_class=filtered_class)
