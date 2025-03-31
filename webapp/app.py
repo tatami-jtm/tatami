@@ -16,6 +16,7 @@ app.config['BRAND_NAME'] = "TATAMI 2025"
 # SQLAlchemy and Migrate
 app.config['SQLALCHEMY_DATABASE_URI'] = SETTINGS['SQL_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 280}  # prevent timeouts/500 errors on prod
 db.init_app(app)
 migrate = Migrate(app, db)
 
