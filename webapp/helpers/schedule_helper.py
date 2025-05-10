@@ -58,7 +58,7 @@ def do_match_schedule(mat):
         if selected_group is not None:
             next_match = get_next_match(selected_group)
 
-            if next_match is None or not next_match.schedulable():
+            if next_match is None or not next_match.schedulable(consider_preptime=True):
                 # if not, if the current group's next item is a break, decrease group break counter
                 if next_match is None:
                     selected_group.list_break_count -= 1

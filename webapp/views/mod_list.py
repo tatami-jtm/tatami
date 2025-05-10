@@ -246,7 +246,7 @@ def schedule_match(id, match_id):
     if not match.scheduled:
         if match.obsolete:
             flash("Match beruht auf veralteten Daten und kann daher nicht angesetzt werden.", 'danger')
-        elif match.schedulable():
+        elif match.schedulable(consider_preptime=True):
             match.scheduled = True
             match.scheduled_at = datetime.now()
             max_schedule_key = group.event_class.matches.filter_by(scheduled=True).order_by(Match.match_schedule_key.desc()).first()
@@ -492,7 +492,7 @@ def api_schedule_match(match_id):
                 'status': 'error',
                 'message': 'Match beruht auf veralteten Daten und kann daher nicht angesetzt werden.'
             }), 400
-        elif match.schedulable():
+        elif match.schedulable(consider_preptime=True):
             match.scheduled = True
             match.scheduled_at = datetime.now()
             max_schedule_key = match.group.event_class.matches.filter_by(scheduled=True) \

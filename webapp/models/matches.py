@@ -61,16 +61,23 @@ class Match(db.Model):
     def has_result(self):
         return self.results.count() == 1
     
-    def schedulable(self):
+    def schedulable(self, consider_preptime = False):
         now = dt.now()
         break_time = self.group.event_class.between_fights_time
 
+        timeout = 0
+        if consider_preptime:
+            # timeout is the time already pre-planned before this match
+            # to be as safe as possible, we are going to only count 3/4ths of it
+            timeout = self.group.estimated_average_fight_duration() * \
+                len(self.group.assigned_to_position.scheduled_matches(include_called_up=True))
+
         if self.white.last_fight_at is not None:
-            if (now - self.white.last_fight_at).total_seconds() < break_time:
+            if (now - self.white.last_fight_at).total_seconds() < (break_time - 0.75 * timeout):
                 return False
         
         if self.blue.last_fight_at is not None:
-            if (now - self.blue.last_fight_at).total_seconds() < break_time:
+            if (now - self.blue.last_fight_at).total_seconds() < (break_time - 0.75 * timeout):
                 return False
         
         return True
