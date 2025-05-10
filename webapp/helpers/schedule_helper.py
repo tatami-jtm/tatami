@@ -76,6 +76,7 @@ def do_match_schedule(mat):
                 
                 next_match.scheduled = True
                 next_match.scheduled_at = dt.now()
+                next_match.device_position = next_match.group.assigned_to_position
                 next_match.match_schedule_key = (max_schedule_key.match_schedule_key if max_schedule_key is not None else 0) + 1
                 next_match.white.last_fight_at = dt.now()
                 next_match.blue.last_fight_at = dt.now()
