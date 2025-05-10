@@ -262,8 +262,10 @@ class Group(db.Model):
     completed_at = db.Column(db.DateTime())
 
     random_seed = db.Column(db.Integer())
+    list_break_count = db.Column(db.Integer())
 
     currently_used = db.Column(db.Boolean)
+    scheduled_for = db.Column(db.Integer())
     last_used_at = db.Column(db.DateTime())
 
     display_page_count = db.Column(db.Integer())

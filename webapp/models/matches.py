@@ -18,6 +18,10 @@ class Match(db.Model):
     group = db.relationship('Group', backref=db.backref(
         'matches', lazy='dynamic'))
 
+    device_position_id = db.Column(db.Integer(), db.ForeignKey('device_position.id'))
+    device_position = db.relationship('DevicePosition', backref=db.backref(
+        'assigned_matches', lazy='dynamic'))
+
     white_id = db.Column(db.Integer(), db.ForeignKey('participant.id'))
     white = db.relationship('Participant', foreign_keys=[white_id], backref=db.backref(
         'white_matches', lazy='dynamic'))
