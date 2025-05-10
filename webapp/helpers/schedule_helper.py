@@ -180,6 +180,9 @@ def open_which_list(groups, config):
 def get_blockspread_or_presaved_list(groups):
     groups = groups.filter_by(opened=True).order_by('scheduled_for').all()
 
+    if len(groups) == 0:
+        return None
+
     if groups[0].scheduled_for is not None:
         return groups[0]
     
