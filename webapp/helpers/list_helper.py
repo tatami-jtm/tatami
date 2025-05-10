@@ -138,6 +138,8 @@ def reset_list(group):
     group.completed_at = None
     group.currently_used = False
     group.last_used_at = None
+    group.list_break_count = group.list_system().break_count
+    group.scheduled_for = None
 
     for participant in group.participants:
         participant.final_placement = None
