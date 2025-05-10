@@ -318,7 +318,10 @@ def write_match_result(id, match_id):
         
     is_new, match_result = match.get_result()
 
-    if request.form['winner'] == 'white':
+    if 'winner' not in request.form or request.form['winner'] not in ('white', 'blue'):
+        flash("Es wurde kein Ergebnis eingetragen, da nicht genügend Informationen übermittelt wurden.", 'danger')
+        return redirect(request.form['origin_url'])
+    elif request.form['winner'] == 'white':
         match_result.is_white_winner = True
         match_result.is_blue_winner = False
 
@@ -369,9 +372,6 @@ def write_match_result(id, match_id):
             match.white.removed = True
         else:
             match.white.removed = False
-    else:
-        flash("Es wurde kein Ergebnis eingetragen, da nicht genügend Informationen übermittelt wurden.", 'danger')
-        return redirect(request.form['origin_url'])
     
     has_sb_data = False
     sb_data = {
