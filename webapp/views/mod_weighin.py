@@ -25,7 +25,9 @@ def index():
     if "query" in request.values:
         query = query.filter(Registration.last_name.ilike(f"{request.values['query']}%") |
                              Registration.external_id.ilike(f"{request.values['query']}%") |
-                             Registration.club.ilike(f"{request.values['query']}%"))
+                             Registration.club.ilike(f"{request.values['query']}%") |
+                             Registration.club.ilike(f"% {request.values['query']}%") |
+                             Registration.club.ilike(f"%-{request.values['query']}%"))
         quarg = request.values['query']
 
     query = query.order_by('weighed_in', 'registered', 'last_name', 'first_name')
