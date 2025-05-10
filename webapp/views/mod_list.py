@@ -160,7 +160,7 @@ def display_all_pdf():
 
     for group, group_list in collected_groups:
         lr = ListRenderer(group_list, g.event, group, served=False)
-        pdf = PdfReader(io.BytesIO(lr.render_pdf()))
+        pdf = PdfReader(io.BytesIO(lr.render_pdf()[0]))
 
         for page in pdf.pages:
             pdfw.add_page(page)
@@ -196,7 +196,7 @@ def display_all_zip():
         lr = ListRenderer(group_list, g.event, group, served=False)
 
         pdf_io = io.BytesIO()
-        pdf_io.write(lr.render_pdf())
+        pdf_io.write(lr.render_pdf()[0])
         pdf_io.seek(0)
 
         title = group.title
