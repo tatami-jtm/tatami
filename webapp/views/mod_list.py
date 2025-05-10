@@ -251,8 +251,10 @@ def schedule_match(id, match_id):
             match.scheduled_at = datetime.now()
             max_schedule_key = group.event_class.matches.filter_by(scheduled=True).order_by(Match.match_schedule_key.desc()).first()
             match.match_schedule_key = (max_schedule_key.match_schedule_key if max_schedule_key is not None else 0) + 1
-            match.white.last_fight_at = datetime.now()
-            match.blue.last_fight_at = datetime.now()
+            match.white.last_fight_at = datetime.now() + \
+                    group.estimated_average_fight_duration_delta()
+            match.blue.last_fight_at = datetime.now() + \
+                    group.estimated_average_fight_duration_delta()
 
             if not group.opened:
                 group.opened = True
@@ -497,8 +499,10 @@ def api_schedule_match(match_id):
                 .order_by(Match.match_schedule_key.desc()).first()
             match.match_schedule_key = (max_schedule_key.match_schedule_key \
                                         if max_schedule_key is not None else 0) + 1
-            match.white.last_fight_at = datetime.now()
-            match.blue.last_fight_at = datetime.now()
+            match.white.last_fight_at = datetime.now() + \
+                    match.group.estimated_average_fight_duration_delta()
+            match.blue.last_fight_at = datetime.now() + \
+                    match.group.estimated_average_fight_duration_delta()
 
             if not match.group.opened:
                 match.group.opened = True

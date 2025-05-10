@@ -2,7 +2,7 @@ from ..listslib import compile_list
 from . import db
 import base64
 import hashlib
-import re
+import re, datetime
 
 PRONOUNCABLE_HASH = {
     '0': 'ja',
@@ -313,15 +313,7 @@ class Group(db.Model):
 
         return max(0, estimated_total_matches - completed_matches)
     
-    def estimated_remaining_fight_duration(self, in_minutes = False):
-        # Don't overestimate when we're done already
-        if self.completed:
-            return 0
-
-        estimated_match_count = self.estimated_remaining_fight_count()
-        delta = self.estimated_fight_count() - estimated_match_count
-        estimated_match_count = max(1, self.estimated_fight_count() * self.participants.count() / self.list_system().mandatory_maximum - delta)
-
+    def estimated_average_fight_duration(self):
         # Presumption:
         # 1/3rd of all matches will take only 1/2 of the fighting time
         # 1/3rd of all matches will take exactly the fighting time
@@ -339,12 +331,29 @@ class Group(db.Model):
         else:
             long_match_duration = fighting_time + min(fighting_time * 1 / 2, golden_score_time)
         
-        average_match_duration = (short_match_duration + middle_match_duration + long_match_duration) / 3
+        average_fight_duration = (short_match_duration + middle_match_duration + long_match_duration) / 3
+        estimated_between_time = 30 # 30 seconds assumption for in-between fights
+
+        return average_fight_duration + estimated_between_time
+    
+    def estimated_average_fight_duration_delta(self):
+        return datetime.timedelta(seconds=self.estimated_average_fight_duration())
+
+    def estimated_remaining_fight_duration(self, in_minutes = False):
+        # Don't overestimate when we're done already
+        if self.completed:
+            return 0
+
+        estimated_match_count = self.estimated_remaining_fight_count()
+        delta = self.estimated_fight_count() - estimated_match_count
+        estimated_match_count = max(1, self.estimated_fight_count() * self.participants.count() / self.list_system().mandatory_maximum - delta)
+
+        remaining_duration = estimated_match_count * self.estimated_average_fight_duration()
 
         if in_minutes:
-            return int(0.5 + (estimated_match_count * average_match_duration) / 60)
-        else:
-            return estimated_match_count * average_match_duration
+            return int(0.5 + remaining_duration / 60)
+
+        return remaining_duration
     
     def placements(self):
         return self.participants.filter(Participant.final_placement != None).order_by(Participant.final_placement).all()
