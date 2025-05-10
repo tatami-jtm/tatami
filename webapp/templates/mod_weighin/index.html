@@ -31,6 +31,23 @@
         {% endcall %}
     {% endcall %}
 
+    {% if the_one_registration %}
+        {% call cards.Card() %}
+            {% call cards.CardBody(class="py-1") %}
+                {% call layout.Grid(class="align-center") %}
+                    {% call layout.GridColumn(span="") %}Es wurde folgender/n TN mit einem exakten Treffer gefunden: <strong>{{ the_one_registration.first_name }} {{ the_one_registration.last_name }}</strong>{% endcall %}
+                    {% call layout.GridColumn(span="auto") %}
+                        {% if not the_one_registration.weighed_in %}
+                            {{ buttons.SecondaryButton(text="Einwiegen", href=url_for('mod_weighin.for_participant', event=g.event.slug, id=the_one_registration.id)) }}
+                        {% else %}
+                            {{ buttons.DangerButton(text="Zurücknehmen", href=url_for('mod_weighin.correct_for_participant', event=g.event.slug, id=the_one_registration.id, query=quarg)) }}
+                        {% endif %}
+                    {% endcall %}
+                {% endcall %}
+            {% endcall %}
+        {% endcall %}
+    {% endif %}
+
     {% call datasets.Dataset(size="medium") %}
         {% call datasets.Table() %}
             {% call datasets.TableHead() %}
@@ -64,7 +81,7 @@
                                 {{ buttons.SecondaryButton(text="Einwiegen", href=url_for('mod_weighin.for_participant', event=g.event.slug, id=reg.id, query=quarg), inline=True) }}
                             {% else %}
                                 {{ buttons.SubtleButton(text="Zurücknehmen", href=url_for('mod_weighin.correct_for_participant', event=g.event.slug, id=reg.id, query=quarg), inline=True) }}
-                            {% endif %}                      
+                            {% endif %}
                         {% endcall %}
                     {% endcall %}
                 {% endfor %}

@@ -20,6 +20,7 @@ def index():
     
     query = g.event.registrations.filter_by(confirmed=True)
     quarg = None
+    the_one_registration = None
 
     if "query" in request.values:
         query = query.filter(Registration.last_name.ilike(f"{request.values['query']}%") |
@@ -27,12 +28,28 @@ def index():
                              Registration.club.ilike(f"{request.values['query']}%"))
         quarg = request.values['query']
 
-    query = query.order_by('weighed_in', 'registered', 'last_name', 'first_name').all()
+    query = query.order_by('weighed_in', 'registered', 'last_name', 'first_name')
+    
+    if quarg:
+        if query.count() == 1:
+            the_one_registration = query.one()
+        
+        elif query.filter_by(external_id=quarg).count() == 1:
+            the_one_registration = query.filter_by(external_id=quarg).one()
+        
+        elif query.filter_by(last_name=quarg).count() == 1:
+            the_one_registration = query.filter_by(last_name=quarg).one()
+
+    query = query.all()
 
     # only currently weighing classes:
     query = [q for q in query if q.event_class and q.event_class.begin_weigh_in and not q.event_class.begin_placement]
+
+    if the_one_registration and the_one_registration not in query:
+        the_one_registration = None
     
-    return render_template("mod_weighin/index.html", query=query, quarg=quarg)
+    return render_template("mod_weighin/index.html", query=query, quarg=quarg,
+                           the_one_registration=the_one_registration)
 
 
 @mod_weighin_view.route('/for/<id>', methods=['GET', 'POST'])
