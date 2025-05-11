@@ -1,16 +1,21 @@
 let createHelperWindow = () => {
     let hw = document.createElement("div")
     document.body.appendChild(hw)
-    hw.innerText = "loading proximity helper..."
+    hw.innerText = "Helfer lädt…"
     hw.style.position = "fixed"
-    hw.style.bottom = "1em"
+    hw.style.bottom = "0.5em"
+    hw.style.right = "0.5em"
+    hw.style.padding = "1em"
     hw.style.fontFamily = "Reddit Mono"
+    hw.style.fontSize = "0.95em"
     hw.style.whiteSpace = "pre-wrap"
-    hw.style.right = "1em"
-    hw.style.color = "red"
+    hw.style.color = "white"
+    hw.style.backgroundColor = "#36363a"
+    hw.style.borderTop = "0.5em solid teal"
     hw.style.userSelect = "none"
-    hw.style.pointerEvents = "none"
-    hw.style.width = "275px"
+    hw.style.width = "300px"
+    hw.style.maxHeight = "70vh"
+    hw.style.overflowY = "auto"
 
     return hw
 }
