@@ -9,11 +9,12 @@
     {% set SBRULES = g.event.sb_rules() %}
     {% call match.Match(large=large) %}
         {{ match.MatchHeader(group=mobj.group.title, tags=mobj.get_readable_tags()) }}
-        {{ match.MatchSchedule(status=('done' if mobj.completed else
+        {{ match.MatchSchedule(status=(None if mobj.obsolete else
+                                       'done' if mobj.completed else
                                        'running' if mobj.running else
                                        'pending' if mobj.called_up else
                                        'scheduled' if mobj.scheduled else None),
-                               label=('jetzt' if mobj.running else ''),
+                               label=('jetzt' if mobj.running and not mobj.completed else ''),
                                no=mobj.match_list_no or '-') if schedule }}
         {% call match.MatchBody() %}
             {{ match.MatchLineup(white_name=mobj.white.full_name,
