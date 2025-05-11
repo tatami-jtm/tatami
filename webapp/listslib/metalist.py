@@ -1165,8 +1165,10 @@ class MetaList:
             self.match_cleanup(obj)
             match_result = struct['matches'][match_id]
             match = self.get_match_by_id(obj, match_id)
-            match.set_result(match_result)
-            self.enter_results(obj, match_result)
+
+            if match is not None:
+                match.set_result(match_result)
+                self.enter_results(obj, match_result)
 
             # Better be safe than sorry, get info schedule and run score after every
             # match has been entered, so that resolv-matches can be added possibly
