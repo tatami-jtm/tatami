@@ -95,8 +95,8 @@ let updateHelperWindow = (hw, data) => {
     groupDataString = groupDataString.trim()
 
     hw.innerText = ("Anzahl der Gruppen:  " + String(numberOfGroups).padStart(4) + "\n" +
-                    "Max. Gruppengröße:   " + String(maxGroupUserCount).padStart(4) + "\n" +
-                    "Übersprungene TN:    " + String(ignoredItems).padStart(4) + "\n" +
+                    "Max. Gruppengröße:   " + String(maxGroupUserCount).padStart(4) + " TN\n" +
+                    "Übersprungene TN:    " + String(ignoredItems).padStart(4) + " TN\n" +
                     "Max. Differenz (kg): " + String(maxGroupWeightDiff).padStart(4) + " kg\n" +
                     "Max. Differenz (%):  " + String(maxGroupWeightDiffPerc).padStart(4) + " %\n\n") + groupDataString
 }
