@@ -540,7 +540,10 @@ def switch_placements(id, group_id):
                 second_participant.manually_placed = True
             
             db.session.commit()
-            return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id))
+
+            if "stay-on-page" not in request.values:
+                return redirect(url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id,
+                                        group=group.id))
 
         else:
             flash("Wählen Sie genau zwei Positionen aus, die vertauscht werden sollen", 'danger')

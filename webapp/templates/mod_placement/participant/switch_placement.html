@@ -13,7 +13,7 @@
 
     <h1>Kampfklasse {{ event_class.title }} &ndash; TN tauschen</h1>    
 
-    <form action="" method="POST">
+    <form action="?" method="POST">
         {% call cards.Card() %}
             {% call cards.CardBody() %}
                 <p class="mb-1">In der Gruppe</p>
@@ -33,7 +33,8 @@
                 {% endfor %}
             {% endcall %}
             {% call cards.CardFooter() %}
-                {{ buttons.PrimaryButton(type='submit', text='Setzen') }}
+                {{ buttons.PrimaryButton(type='submit', text='Tauschen und zurück') }}
+                {{ buttons.PrimaryButton(type='submit', text='Tauschen', attr='formaction="?stay-on-page=1"') }}
                 {{ buttons.SecondaryButton(href=url_for('mod_placement.for_class', event=g.event.slug, id=event_class.id, group=group.id), text='Abbrechen') }}
             {% endcall %}
         {% endcall %}
