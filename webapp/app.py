@@ -45,6 +45,10 @@ babel = Babel(app, locale_selector=lambda: 'de')
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
 
+@app.context_processor
+def inject_app():
+    return { "app": app }
+
 if 'OFFLINE' in SETTINGS and SETTINGS['OFFLINE']:
     @app.before_request
     def offline_mode():
