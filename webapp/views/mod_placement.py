@@ -77,6 +77,7 @@ def add_group(id):
 
         if request.form['system']:
             group.system_id = int(request.form['system'])
+            group.list_break_count = group.list_system().break_count
         else:
             group.system_id = None
 
@@ -110,6 +111,7 @@ def edit_group(id, group_id):
 
         if request.form['system']:
             group.system_id = int(request.form['system'])
+            group.list_break_count = group.list_system().break_count
         else:
             group.system_id = None
 
@@ -743,6 +745,7 @@ def _randomly_place_group(group, method='random'):
     current_count = 0
 
     group.system = list_system
+    group.list_break_count = group.list_system().break_count
 
     while current_count < list_max_count:
         # Is there already a participant at this position

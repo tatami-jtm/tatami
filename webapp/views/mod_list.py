@@ -160,7 +160,7 @@ def display_all_pdf():
 
     for group, group_list in collected_groups:
         lr = ListRenderer(group_list, g.event, group, served=False)
-        pdf = PdfReader(io.BytesIO(lr.render_pdf()))
+        pdf = PdfReader(io.BytesIO(lr.render_pdf()[0]))
 
         for page in pdf.pages:
             pdfw.add_page(page)
@@ -196,7 +196,7 @@ def display_all_zip():
         lr = ListRenderer(group_list, g.event, group, served=False)
 
         pdf_io = io.BytesIO()
-        pdf_io.write(lr.render_pdf())
+        pdf_io.write(lr.render_pdf()[0])
         pdf_io.seek(0)
 
         title = group.title
@@ -246,13 +246,15 @@ def schedule_match(id, match_id):
     if not match.scheduled:
         if match.obsolete:
             flash("Match beruht auf veralteten Daten und kann daher nicht angesetzt werden.", 'danger')
-        elif match.schedulable():
+        elif match.schedulable(consider_preptime=True):
             match.scheduled = True
             match.scheduled_at = datetime.now()
             max_schedule_key = group.event_class.matches.filter_by(scheduled=True).order_by(Match.match_schedule_key.desc()).first()
             match.match_schedule_key = (max_schedule_key.match_schedule_key if max_schedule_key is not None else 0) + 1
-            match.white.last_fight_at = datetime.now()
-            match.blue.last_fight_at = datetime.now()
+            match.white.last_fight_at = datetime.now() + \
+                    group.estimated_average_fight_duration_delta()
+            match.blue.last_fight_at = datetime.now() + \
+                    group.estimated_average_fight_duration_delta()
 
             if not group.opened:
                 group.opened = True
@@ -316,7 +318,10 @@ def write_match_result(id, match_id):
         
     is_new, match_result = match.get_result()
 
-    if request.form['winner'] == 'white':
+    if 'winner' not in request.form or request.form['winner'] not in ('white', 'blue'):
+        flash("Es wurde kein Ergebnis eingetragen, da nicht genügend Informationen übermittelt wurden.", 'danger')
+        return redirect(request.form['origin_url'])
+    elif request.form['winner'] == 'white':
         match_result.is_white_winner = True
         match_result.is_blue_winner = False
 
@@ -367,9 +372,6 @@ def write_match_result(id, match_id):
             match.white.removed = True
         else:
             match.white.removed = False
-    else:
-        flash("Es wurde kein Ergebnis eingetragen, da nicht genügend Informationen übermittelt wurden.", 'danger')
-        return redirect(request.form['origin_url'])
     
     has_sb_data = False
     sb_data = {
@@ -490,15 +492,17 @@ def api_schedule_match(match_id):
                 'status': 'error',
                 'message': 'Match beruht auf veralteten Daten und kann daher nicht angesetzt werden.'
             }), 400
-        elif match.schedulable():
+        elif match.schedulable(consider_preptime=True):
             match.scheduled = True
             match.scheduled_at = datetime.now()
             max_schedule_key = match.group.event_class.matches.filter_by(scheduled=True) \
                 .order_by(Match.match_schedule_key.desc()).first()
             match.match_schedule_key = (max_schedule_key.match_schedule_key \
                                         if max_schedule_key is not None else 0) + 1
-            match.white.last_fight_at = datetime.now()
-            match.blue.last_fight_at = datetime.now()
+            match.white.last_fight_at = datetime.now() + \
+                    match.group.estimated_average_fight_duration_delta()
+            match.blue.last_fight_at = datetime.now() + \
+                    match.group.estimated_average_fight_duration_delta()
 
             if not match.group.opened:
                 match.group.opened = True

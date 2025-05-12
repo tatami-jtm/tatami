@@ -23,7 +23,7 @@
                 {{ form.SelectOption(value="3", text="3 WP") }}
                 {{ form.SelectOption(value="5", text="5 WP (Yuko)") }}
                 {{ form.SelectOption(value="7", text="7 WP (Wazaari)") }}
-                {{ form.SelectOption(value="10", text="10 WP (Ippon)") }}
+                {{ form.SelectOption(value="10", text="10 WP (Ippon)", selected=True) }}
             {% endcall %}
 
             {{ form.FormCheck(id="current-match-" ~ current_match.id ~ "-loser-disqualified", name="loser_disqualified", value="yes", label="Verlierer/in disqualifiziert (direkter Hansokumake)") }}
