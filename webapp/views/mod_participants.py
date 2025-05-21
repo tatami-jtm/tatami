@@ -168,8 +168,13 @@ def print_cards():
         return redirect(url_for('devices.index', event=g.event.slug))
 
     filtered_class = None
+    filtered_registrations = None
 
     if request.values.get('id', None):
         filtered_class = EventClass.query.filter_by(id=request.values['id']).one_or_404()
+    
+    if (queried_registrations := request.values.getlist("registrations")):
+        filtered_registrations = map(lambda id: g.event.registrations.filter_by(id=id).one_or_none(),
+                                     queried_registrations)
 
-    return render_template("event-manager/registrations/print_cards.html", filtered_class=filtered_class)
+    return render_template("event-manager/registrations/print_cards.html", filtered_class=filtered_class, filtered_registrations=filtered_registrations)
