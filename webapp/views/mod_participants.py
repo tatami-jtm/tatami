@@ -6,6 +6,8 @@ from .devices import check_is_registered
 
 from ..models import db, Registration, EventClass
 
+from datetime import datetime
+
 mod_participants_view = Blueprint('mod_participants', __name__)
 
 @mod_participants_view.route('/')
@@ -178,3 +180,68 @@ def print_cards():
                                      queried_registrations)
 
     return render_template("event-manager/registrations/print_cards.html", filtered_class=filtered_class, filtered_registrations=filtered_registrations)
+
+
+@mod_participants_view.route('/action/<action>', methods=["POST"])
+@check_and_apply_event
+@check_is_registered
+def action(action):
+    if not g.device.event_role.may_use_participants:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+
+    if (queried_registrations := request.values.getlist("registrations")):
+        filtered_registrations = map(lambda id: g.event.registrations.filter_by(id=id).one_or_none(),
+                                     queried_registrations)
+    else:
+        filtered_registrations = g.event.registrations.all()
+
+    relevant_registrations = []
+    
+    for registration in filtered_registrations:
+        if action == "confirm":
+            if not registration.confirmed:
+                registration.confirmed = True
+                relevant_registrations.append(str(registration.id))
+        
+        elif action == "weigh-in":
+            if not registration.verified_weight:
+                guessed_weight = registration.guess_weight()
+
+                if guessed_weight:
+                    registration.verified_weight = int(guessed_weight * 1000)
+                    registration.weighed_in = True
+
+                    if not registration.registered and \
+                        g.event.setting('count_weighin_as_registration', False):
+                        registration.registered = True
+                        registration.registered_at = datetime.now()
+                relevant_registrations.append(str(registration.id))
+
+            elif not registration.weighed_in:
+                registration.weighed_in = True
+
+                if not registration.registered and \
+                    g.event.setting('count_weighin_as_registration', False):
+                    registration.registered = True
+                    registration.registered_at = datetime.now()
+
+                relevant_registrations.append(str(registration.id))
+
+            else:
+                if not registration.registered and \
+                    g.event.setting('count_weighin_as_registration', False):
+                    registration.registered = True
+                    registration.registered_at = datetime.now()
+                    relevant_registrations.append(str(registration.id))
+
+    db.session.commit()
+    g.event.log(g.device.title, 'DEBUG',
+                f'Massenaktion {action} ausgeführt für Registrierungen {", ".join(relevant_registrations)}.')
+
+    if action == "confirm":
+        flash("Voranmeldung für die TN wurde bestätigt.", 'success')
+    elif action == "weigh-in":
+        flash("TN wurden eingewogen wie angemeldet.", 'success')
+
+    return redirect(url_for('event_manager.registrations', event=g.event.slug))

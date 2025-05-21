@@ -735,6 +735,13 @@ def registration_action(action):
                     registration.registered_at = datetime.now()
 
                 relevant_registrations.append(str(registration.id))
+            
+            else:
+                if not registration.registered and \
+                    g.event.setting('count_weighin_as_registration', False):
+                    registration.registered = True
+                    registration.registered_at = datetime.now()
+                    relevant_registrations.append(str(registration.id))
 
     db.session.commit()
     g.event.log(current_user.qualified_name(), 'DEBUG',

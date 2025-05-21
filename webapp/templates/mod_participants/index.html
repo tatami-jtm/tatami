@@ -131,6 +131,15 @@
                         {{ buttons.ButtonIcon(icon="hand-card", label="Wiegemarken drucken") }}
                     {% endcall %}
                 {% endif %}
+
+                {{ datasets.DatasetMenuSpacer() }}
+
+                {% call buttons.SubtleButton(type='submit', inline=True, attr='formaction="' ~ url_for('mod_participants.action', event=g.event.slug, action="confirm") ~ '" formmethod="POST"') %}
+                    {{ buttons.ButtonIcon(icon="double-check", label="Bestätigen") }}
+                {% endcall %}
+                {% call buttons.SubtleButton(type='submit', inline=True, attr='formaction="' ~ url_for('mod_participants.action', event=g.event.slug, action="weigh-in") ~ '" formmethod="POST"') %}
+                    {{ buttons.ButtonIcon(icon="weight-alt", label="Wiegen wie gemeldet") }}
+                {% endcall %}
             {% endcall %}
             {% call datasets.Table() %}
                 {% call datasets.TableHead() %}
