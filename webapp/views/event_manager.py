@@ -693,6 +693,61 @@ def create_registration():
     return render_template("event-manager/registrations/new.html", registration=registration)
 
 
+@eventmgr_view.route('/registrations/action/<action>', methods=["POST"])
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def registration_action(action):
+    if (queried_registrations := request.values.getlist("registrations")):
+        filtered_registrations = map(lambda id: g.event.registrations.filter_by(id=id).one_or_none(),
+                                     queried_registrations)
+    else:
+        filtered_registrations = g.event.registrations.all()
+
+    relevant_registrations = []
+    
+    for registration in filtered_registrations:
+        if action == "confirm":
+            if not registration.confirmed:
+                registration.confirmed = True
+                relevant_registrations.append(str(registration.id))
+        
+        elif action == "weigh-in":
+            if not registration.verified_weight:
+                guessed_weight = registration.guess_weight()
+
+                if guessed_weight:
+                    registration.verified_weight = int(guessed_weight * 1000)
+                    registration.weighed_in = True
+
+                    if not registration.registered and \
+                        g.event.setting('count_weighin_as_registration', False):
+                        registration.registered = True
+                        registration.registered_at = datetime.now()
+                relevant_registrations.append(str(registration.id))
+
+            elif not registration.weighed_in:
+                registration.weighed_in = True
+
+                if not registration.registered and \
+                    g.event.setting('count_weighin_as_registration', False):
+                    registration.registered = True
+                    registration.registered_at = datetime.now()
+
+                relevant_registrations.append(str(registration.id))
+
+    db.session.commit()
+    g.event.log(current_user.qualified_name(), 'DEBUG',
+                f'Massenaktion {action} ausgeführt für Registrierungen {", ".join(relevant_registrations)}.')
+
+    if action == "confirm":
+        flash("Voranmeldung für die TN wurde bestätigt.", 'success')
+    elif action == "weigh-in":
+        flash("TN wurden eingewogen wie angemeldet.", 'success')
+
+    return redirect(url_for('event_manager.registrations', event=g.event.slug))
+
+
 @eventmgr_view.route('/registrations/import', methods=['GET', 'POST'])
 @login_required
 @check_and_apply_event

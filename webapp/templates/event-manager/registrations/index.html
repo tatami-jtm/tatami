@@ -143,10 +143,10 @@
 
             {{ datasets.DatasetMenuSpacer() }}
 
-            {% call buttons.SubtleButton(type='submit', inline=True, attr='formaction="" formmethod="POST"') %}
+            {% call buttons.SubtleButton(type='submit', inline=True, attr='formaction="' ~ url_for('event_manager.registration_action', event=g.event.slug, action="confirm") ~ '" formmethod="POST"') %}
                 {{ buttons.ButtonIcon(icon="double-check", label="Bestätigen") }}
             {% endcall %}
-            {% call buttons.SubtleButton(type='submit', inline=True, attr='formaction="" formmethod="POST"') %}
+            {% call buttons.SubtleButton(type='submit', inline=True, attr='formaction="' ~ url_for('event_manager.registration_action', event=g.event.slug, action="weigh-in") ~ '" formmethod="POST"') %}
                 {{ buttons.ButtonIcon(icon="weight-alt", label="Wiegen wie gemeldet") }}
             {% endcall %}
         {% endcall %}

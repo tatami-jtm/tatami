@@ -65,6 +65,29 @@ class Registration(db.Model):
 
         return self.first_name[0].upper() + ". " + self.last_name.upper() + assoc_pt
     
+    def guess_weight(self):
+        if not self.suggested_group:
+            return None
+
+        base = self.suggested_group.strip().lower()
+
+        if base.startswith("-"):
+            base = base[1:].strip()
+        
+        if base.endswith("kg"):
+            base = base[:-2].strip()
+        elif base.endswith("kilo"):
+            base = base[:-4].strip()
+        
+        if "," in base:
+            base = base.replace(".", "")
+            base = base.replace(",", ".")
+        
+        try:
+            return float(base)
+        except:
+            return None
+    
     def anon_name(self):
         base_hash = self.last_name.encode() + b" " + self.first_name.encode() + f"{self.id}".encode()
         base_hash = base64.b16encode(hashlib.md5(base_hash).digest()).decode()
