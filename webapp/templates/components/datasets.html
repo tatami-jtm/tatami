@@ -10,6 +10,10 @@
 </div>
 {%- endmacro -%}
 
+{%- macro DatasetMenuSpacer() -%}
+<div class="dataset-menu-spacer"></div>
+{%- endmacro -%}
+
 {%- macro Table(class="") -%}
 <table class="table {{ class }}">
     {{ caller() }}
@@ -49,7 +53,7 @@
 {%- endmacro -%}
 
 {%- macro TableCheckColumn(name="", id="", type="checkbox") -%}
-<td class="table-check-container"><input type="{{ type }}" name="{{ name }}" id="{{ id }}"></td>
+<td class="table-check-container"><input type="{{ type }}" name="{{ name }}" value="{{ id }}" id="{{ id }}"></td>
 {%- endmacro -%}
 
 {%- macro TableColumn(text=None, check_id=None) -%}

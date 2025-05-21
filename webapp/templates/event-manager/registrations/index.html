@@ -116,80 +116,91 @@
 <h2>{{ g.event.registrations.count() }} Teilnehmende</h2>
 {% endif %}
 
-{% call datasets.Dataset(size="medium") %}
-    {% call datasets.DatasetMenu() %}
-        {% if filtered_class %}
-            {% call buttons.SubtleButton(href=url_for('event_manager.print_registrations', event=g.event.slug, id=filtered_class.id), target='_blank', inline=True) %}
-                {{ buttons.ButtonIcon(icon="printer", label="TN-/Wiegeliste drucken") }}
+<form action="" method="GET">
+    {% call datasets.Dataset(size="medium") %}
+        {% call datasets.DatasetMenu() %}
+            {% if filtered_class %}
+                {% call buttons.SubtleButton(href=url_for('event_manager.print_registrations', event=g.event.slug, id=filtered_class.id), target='_blank', inline=True) %}
+                    {{ buttons.ButtonIcon(icon="printer", label="TN-/Wiegeliste drucken") }}
+                {% endcall %}
+                {% call buttons.SubtleButton(type='submit', inline=True, attr='formaction="' ~ url_for('event_manager.print_registration_cards', event=g.event.slug, id=filtered_class.id) ~ '" formmethod="GET" formtarget="_blank"') %}
+                    {{ buttons.ButtonIcon(icon="hand-card", label="Wiegemarken drucken") }}
+                {% endcall %}
+                {% call buttons.SubtleButton(href=url_for('event_manager.class_registrations_as_csv', event=g.event.slug, id=filtered_class.id), target='_blank', inline=True) %}
+                    {{ buttons.ButtonIcon(icon="database-export", label="CSV exportieren") }}
+                {% endcall %}
+            {% else %}
+                {% call buttons.SubtleButton(href=url_for('event_manager.print_registrations', event=g.event.slug), target='_blank', inline=True) %}
+                    {{ buttons.ButtonIcon(icon="printer", label="TN-/Wiegeliste drucken") }}
+                {% endcall %}
+                {% call buttons.SubtleButton(type='submit', inline=True, attr='formaction="' ~ url_for('event_manager.print_registration_cards', event=g.event.slug) ~ '" formmethod="GET" formtarget="_blank"') %}
+                    {{ buttons.ButtonIcon(icon="hand-card", label="Wiegemarken drucken") }}
+                {% endcall %}
+                {% call buttons.SubtleButton(href=url_for('event_manager.class_registrations_as_csv', event=g.event.slug), target='_blank', inline=True) %}
+                    {{ buttons.ButtonIcon(icon="database-export", label="CSV exportieren") }}
+                {% endcall %}
+            {% endif %}
+
+            {{ datasets.DatasetMenuSpacer() }}
+
+            {% call buttons.SubtleButton(type='submit', inline=True, attr='formaction="" formmethod="POST"') %}
+                {{ buttons.ButtonIcon(icon="double-check", label="Bestätigen") }}
             {% endcall %}
-            {% call buttons.SubtleButton(href=url_for('event_manager.print_registration_cards', event=g.event.slug, id=filtered_class.id), target='_blank', inline=True) %}
-                {{ buttons.ButtonIcon(icon="hand-card", label="Wiegemarken drucken") }}
+            {% call buttons.SubtleButton(type='submit', inline=True, attr='formaction="" formmethod="POST"') %}
+                {{ buttons.ButtonIcon(icon="weight-alt", label="Wiegen wie gemeldet") }}
             {% endcall %}
-            {% call buttons.SubtleButton(href=url_for('event_manager.class_registrations_as_csv', event=g.event.slug, id=filtered_class.id), target='_blank', inline=True) %}
-                {{ buttons.ButtonIcon(icon="database-export", label="CSV exportieren") }}
-            {% endcall %}
-        {% else %}
-            {% call buttons.SubtleButton(href=url_for('event_manager.print_registrations', event=g.event.slug), target='_blank', inline=True) %}
-                {{ buttons.ButtonIcon(icon="printer", label="TN-/Wiegeliste drucken") }}
-            {% endcall %}
-            {% call buttons.SubtleButton(href=url_for('event_manager.print_registration_cards', event=g.event.slug), target='_blank', inline=True) %}
-                {{ buttons.ButtonIcon(icon="hand-card", label="Wiegemarken drucken") }}
-            {% endcall %}
-            {% call buttons.SubtleButton(href=url_for('event_manager.class_registrations_as_csv', event=g.event.slug), target='_blank', inline=True) %}
-                {{ buttons.ButtonIcon(icon="database-export", label="CSV exportieren") }}
-            {% endcall %}
-        {% endif %}
-    {% endcall %}
-    {% call datasets.Table() %}
-        {% call datasets.TableHead() %}
-            {{ datasets.TableHeadEmptyColumn() }}
-            {{ datasets.TableHeadColumn(href="?order_by=event_class", text="Kampfklasse") }}
-            {{ datasets.TableHeadColumn(href="?order_by=last_name", text="Nachname") }}
-            {{ datasets.TableHeadColumn(href="?order_by=first_name", text="Vorname") }}
-            {{ datasets.TableHeadColumn(text="Ext. ID") }}
-            {{ datasets.TableHeadColumn(href="?order_by=club", text="Verein") }}
-            {{ datasets.TableHeadColumn(href="?order_by=association", text="Verband") }}
-            {{ datasets.TableHeadColumn(href="?order_by=verified_weight", text="Gewicht") }}
-            {{ datasets.TableHeadColumn(text="Status") }}
-            {{ datasets.TableHeadEmptyColumn() }}
         {% endcall %}
-        {% call datasets.TableBody() %}
-            {% for reg in query %}
-            {%- set check_id = ("registration-"~reg.id) -%}
-                {% call datasets.TableRow() %}
-                    {{ datasets.TableCheckColumn(name="registrations", id=check_id) }}
-                    {{ datasets.TableColumn(text=reg.event_class.title, check_id=check_id) }}
-                    {{ datasets.TableColumn(text=reg.last_name, check_id=check_id) }}
-                    {{ datasets.TableColumn(text=reg.first_name, check_id=check_id) }}
-                    {{ datasets.TableColumn(text=reg.external_id or '-', check_id=check_id) }}
-                    {{ datasets.TableColumn(text=reg.club or '-', check_id=check_id) }}
-                    {{ datasets.TableColumn(text=(reg.association.short_name if reg.association else '-'), check_id=check_id) }}
-                    {% call datasets.TableColumn(check_id=check_id) %}
-                        {% if reg.weighed_in and reg.verified_weight %}
-                            {{ reg.verified_weight / 1000 }} kg
-                        {% else %}
-                            -
-                        {% endif %}
-                    {% endcall %}
-                    {% call datasets.TableColumn(check_id=check_id) %}
-                        {% if reg.weighed_in %}
-                        <span class="text-success fw-bold">Eingewogen</span>
-                        {% elif reg.registered %}
-                        <span class="text-warning fw-bold">Akkreditiert</span>
-                        {% elif reg.confirmed %}
-                        <span class="text-danger fw-bold">Anmeldung bestätigt</span>
-                        {% else %}
-                        Nicht bestätigt
-                        {% endif %}
-                    {% endcall %}
-                    {% call datasets.TableButtonsColumn() %}
-                        {% call buttons.SubtleButton(href=url_for('event_manager.edit_registration', event=g.event.slug, id=reg.id), inline=True, title="Bearbeiten") %}
-                            {{ buttons.ButtonIcon(icon="edit-pencil") }}
+        {% call datasets.Table() %}
+            {% call datasets.TableHead() %}
+                {{ datasets.TableHeadEmptyColumn() }}
+                {{ datasets.TableHeadColumn(href="?order_by=event_class", text="Kampfklasse") }}
+                {{ datasets.TableHeadColumn(href="?order_by=last_name", text="Nachname") }}
+                {{ datasets.TableHeadColumn(href="?order_by=first_name", text="Vorname") }}
+                {{ datasets.TableHeadColumn(text="Ext. ID") }}
+                {{ datasets.TableHeadColumn(href="?order_by=club", text="Verein") }}
+                {{ datasets.TableHeadColumn(href="?order_by=association", text="Verband") }}
+                {{ datasets.TableHeadColumn(href="?order_by=verified_weight", text="Gewicht") }}
+                {{ datasets.TableHeadColumn(text="Status") }}
+                {{ datasets.TableHeadEmptyColumn() }}
+            {% endcall %}
+            {% call datasets.TableBody() %}
+                {% for reg in query %}
+                {%- set check_id = ("registration-"~reg.id) -%}
+                    {% call datasets.TableRow() %}
+                        {{ datasets.TableCheckColumn(name="registrations", id=check_id) }}
+                        {{ datasets.TableColumn(text=reg.event_class.title, check_id=check_id) }}
+                        {{ datasets.TableColumn(text=reg.last_name, check_id=check_id) }}
+                        {{ datasets.TableColumn(text=reg.first_name, check_id=check_id) }}
+                        {{ datasets.TableColumn(text=reg.external_id or '-', check_id=check_id) }}
+                        {{ datasets.TableColumn(text=reg.club or '-', check_id=check_id) }}
+                        {{ datasets.TableColumn(text=(reg.association.short_name if reg.association else '-'), check_id=check_id) }}
+                        {% call datasets.TableColumn(check_id=check_id) %}
+                            {% if reg.weighed_in and reg.verified_weight %}
+                                {{ reg.verified_weight / 1000 }} kg
+                            {% else %}
+                                -
+                            {% endif %}
+                        {% endcall %}
+                        {% call datasets.TableColumn(check_id=check_id) %}
+                            {% if reg.weighed_in %}
+                            <span class="text-success fw-bold">Eingewogen</span>
+                            {% elif reg.registered %}
+                            <span class="text-warning fw-bold">Akkreditiert</span>
+                            {% elif reg.confirmed %}
+                            <span class="text-danger fw-bold">Anmeldung bestätigt</span>
+                            {% else %}
+                            Nicht bestätigt
+                            {% endif %}
+                        {% endcall %}
+                        {% call datasets.TableButtonsColumn() %}
+                            {% call buttons.SubtleButton(href=url_for('event_manager.edit_registration', event=g.event.slug, id=reg.id), inline=True, title="Bearbeiten") %}
+                                {{ buttons.ButtonIcon(icon="edit-pencil") }}
+                            {% endcall %}
                         {% endcall %}
                     {% endcall %}
-                {% endcall %}
-            {% endfor %}
+                {% endfor %}
+            {% endcall %}
         {% endcall %}
     {% endcall %}
-{% endcall %}
+</form>
 {% endblock body %}
