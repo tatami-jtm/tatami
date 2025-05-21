@@ -167,7 +167,7 @@
                 {% for reg in query %}
                 {%- set check_id = ("registration-"~reg.id) -%}
                     {% call datasets.TableRow() %}
-                        {{ datasets.TableCheckColumn(name="registrations", id=check_id) }}
+                        {{ datasets.TableCheckColumn(name="registrations", id=check_id, value=reg.id) }}
                         {{ datasets.TableColumn(text=reg.event_class.title, check_id=check_id) }}
                         {{ datasets.TableColumn(text=reg.last_name, check_id=check_id) }}
                         {{ datasets.TableColumn(text=reg.first_name, check_id=check_id) }}

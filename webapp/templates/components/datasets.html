@@ -52,8 +52,8 @@
 </tr>
 {%- endmacro -%}
 
-{%- macro TableCheckColumn(name="", id="", type="checkbox") -%}
-<td class="table-check-container"><input type="{{ type }}" name="{{ name }}" value="{{ id }}" id="{{ id }}"></td>
+{%- macro TableCheckColumn(name="", id="", type="checkbox", value="") -%}
+<td class="table-check-container"><input type="{{ type }}" name="{{ name }}" value="{{ value or id }}" id="{{ id }}"></td>
 {%- endmacro -%}
 
 {%- macro TableColumn(text=None, check_id=None) -%}
