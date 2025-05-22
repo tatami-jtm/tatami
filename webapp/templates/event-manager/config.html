@@ -52,7 +52,7 @@
             {{ form.FormCheck(id='count_weighin_as_registration', name='count_weighin_as_registration', label='Nicht akkreditierte TN gelten als angemeldet, wenn sie eingewogen wurden', checked=g.event.setting('count_weighin_as_registration', False)) }}
             {{ form.FormNotice(text='Dies ist insb. auszuwählen, wenn keine gesonderte Akkreditierung stattfindet, sondern die TN gleich zur Waage gehen können.') }}
 
-            {{ form.FormCheck(id='write_activity_log', name='write_activity_log', label='Veranstaltungsprotokoll schreiben', checked=g.event.setting('write_activity_log', False)) }}
+            {{ form.FormCheck(id='write_activity_log', name='write_activity_log', label='Veranstaltungsprotokoll schreiben', checked=g.event.setting('write_activity_log', True)) }}
 
             {{ form.FormCheck(id='use_association_instead_of_club', name='use_association_instead_of_club', label='Anstelle des Vereins wird für die Listen, das Scoreboard u. a. der Verband verwendet', checked=g.event.setting('use_association_instead_of_club', False)) }}
             {{ form.FormNotice(text='Dies ist insb. bei Meisterschaften mit Vorqualifikation auszuwählen, bei denen der Verband maßgeblich ist. Eine Änderung dieser Einstellung gilt nur für TN, die danach einer Gruppe zugewiesen werden.') }}

@@ -205,7 +205,8 @@
     <div class="card-list">
         {% for evcl in classes %}
             {% set query = evcl.registrations %}
-            {% for reg in query.order_by('last_name', 'first_name', 'club') %}
+            {% for reg in query.order_by('last_name', 'first_name', 'club')
+                if filtered_registrations == None or reg in filtered_registrations %}
                 <div class="card">
                     <div class="card-header">
                         <div class="card-tatami">{{ config.BRAND_NAME }}</div>
