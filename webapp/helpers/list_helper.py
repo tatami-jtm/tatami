@@ -165,7 +165,10 @@ def _check_if_match_is_obsolete(dbmatch, listmatch):
         
         # Do not modify existing matches that have results
         # or are already scheduled, instead mark them as obsolete
-        if dbmatch.scheduled or dbmatch.has_result():
+        if dbmatch.scheduled or dbmatch.has_result() or (
+            listmatch.get_white().get_id() == '__blank' or
+            listmatch.get_blue().get_id() == '__blank'
+        ):
             dbmatch.obsolete = True
             dbmatch.scheduled = False
             dbmatch.called_up = False
