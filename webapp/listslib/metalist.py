@@ -3,6 +3,8 @@ import random
 from .match import Match
 from .fighter import BlankFighter
 
+from functools import cmp_to_key
+
 ARBITRARY_MAX_VALUE = 1 << 16
 MAX_PLAYOFF = 3
 PLACE_MAPPING = [None, "first", "second", "third", "third", "fifth", "fifth"]
@@ -856,13 +858,75 @@ class MetaList:
         }
 
         # Sort base data by points/scores, where equal, order is undefined
-        sorted_data = sorted(base_data.items(), key=lambda i: (i[1], not i[0].is_disqualified()), reverse=True)
+        sorted_data = sorted(base_data.items(), key=cmp_to_key(self.__compare_scores(obj)), reverse=True)
 
         # Store sorted data-duplicate
         obj._score_deductions['calced'][scope]['order'] = sorted_data[::]
 
         # We do not validate for equal scores, that is a task for the playoff-resolvers
         return True
+    
+    """
+        __compare_scores()
+    """
+    def __compare_scores(self, obj):
+        def inner_compare(first, second):
+            first_obj, first_score = first
+            second_obj, second_score = second
+
+            if first_obj.is_disqualified() != second_obj.is_disqualified():
+                if first_obj.is_disqualified():
+                    return -1
+                else:
+                    return 1
+            
+            elif first_score[0] != second_score[0]:
+                if first_score[0] > second_score[0]:
+                    return 1
+                else:
+                    return -1
+                
+            elif first_score[1] != second_score[1]:
+                if first_score[1] > second_score[1]:
+                    return 1
+                else:
+                    return -1
+                
+            else:
+                first_wins = 0
+                second_wins = 0
+                for m in self._match_order:
+                    if 'clip' in m: continue
+
+                    match_id = m['match']
+                    mr = obj._match_results[match_id]
+                    mobj = mr.get_match()
+
+                    fighters = (mobj.get_white(), mobj.get_blue())
+
+                    if first_obj not in fighters or second_obj not in fighters:
+                        continue
+
+                    if mr.is_white_winner():
+                        if fighters[0] == first_obj:
+                            first_wins += 1
+                        else:
+                            second_wins += 1
+                    elif mr.is_blue_winner():
+                        if fighters[1] == first_obj:
+                            first_wins += 1
+                        else:
+                            second_wins += 1
+                
+                if first_wins != second_wins:
+                    if first_wins > second_wins:
+                        return 1
+                    else:
+                        return -1
+
+            return 0
+        
+        return inner_compare
 
     """
         __score_set_result(obj, on, attr, props)
