@@ -106,6 +106,8 @@ class MatchResult(db.Model):
     match = db.relationship('Match', backref=db.backref(
         'results', lazy='dynamic'))
     
+    db.UniqueConstraint(match_id)
+    
     white_points = db.Column(db.Integer()) # 1 if winner 0 else
     white_score = db.Column(db.Integer()) # 10/7/1 for winner 0 else
     is_white_winner = db.Column(db.Boolean())
