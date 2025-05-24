@@ -28,6 +28,7 @@
                 {{ form.Label(for_id='method', text='Losverfahren') }}
                 {% call form.Select(id='method', name='method') %}
                     {{ form.SelectOption(value='random', text='Zufällig', selected=True) }}
+                    {{ form.SelectOption(value='club_random', text='Zufällig (Verein berücksichtigen)') }}
                     {{ form.SelectOption(value='smallest_weight', text='Nach Gewicht (niedrigstes zuerst)') }}
                     {{ form.SelectOption(value='largest_weight', text='Nach Gewicht (höchstes zuerst)') }}
                 {% endcall %}
