@@ -173,6 +173,7 @@ for (const side of sides) {
                 "[data-control='" + side + ".reduce'][data-score='" + score_name + "']")
 
             up_elem.addEventListener('click', () => {
+                up_elem.blur()
                 if (sbState[side].scores[score_name].pending)
                     sbState[side].scores[score_name].pending = false
                 else
@@ -183,6 +184,7 @@ for (const side of sides) {
             });
 
             down_elem.addEventListener('click', () => {
+                down_elem.blur()
                 sbState[side].scores[score_name].pending = false
 
                 if (sbState[side].scores[score_name].value == 0)
