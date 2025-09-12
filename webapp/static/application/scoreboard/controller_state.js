@@ -32,7 +32,8 @@ const makeState = (config) => {
                 scores_given: []
             },
             scores: {}
-        }
+        },
+        disable_timer: false
     }
 
     for (const score_name in SBRULES.scores) {

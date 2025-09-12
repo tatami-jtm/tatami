@@ -26,8 +26,13 @@ const renderControls = () => {
         global_time.classList.add('running')
     } else {
         disable_btn(stop_time)
-        enable_btn(start_time)
         global_time.classList.remove('running')
+
+        if (sbState.disable_timer)
+            disable_btn(start_time)
+        else
+            enable_btn(start_time)
+
     }
 
     if (sbState.time.goldenScore) {
