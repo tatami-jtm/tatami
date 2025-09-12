@@ -33,7 +33,7 @@
 
 {% if assigned_lists|length %}
     {% call cards.Card() %}
-        {% for list in assigned_lists %}
+        {% for list in assigned_lists if not list.completed %}
             {{ cards.CardHeader(text=list.title, class="tj-schedgrp-btn", actionable=True, attr='data-tj-oneof=\'{"common": ".tj-schedgrp-element", "unique": "#group-' ~ list.id ~ '", "class": "hidden", "classWhen": "off", "ownClass": "active", "ownCommon": ".tj-schedgrp-btn"}\'') }}
             {% call cards.CardBody(class="tj-schedgrp-element hidden", id="group-" ~ list.id) %}
                 {% for match in list.matches.filter_by(scheduled=False, completed=False) if not match.obsolete %}
