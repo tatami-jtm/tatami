@@ -744,6 +744,13 @@ def _randomly_place_group(group, method='random'):
     list_max_count = list_system.mandatory_maximum
     current_count = 0
 
+    current_club = None
+    clubs = [i[0] for i in participants.with_entities(Participant.association_name)
+             .group_by(Participant.association_name).all()]
+    
+    # shuffle clubs already
+    random.shuffle(clubs)
+
     group.system = list_system
     group.list_break_count = group.list_system().break_count
 
@@ -766,9 +773,19 @@ def _randomly_place_group(group, method='random'):
                 data_pairs.append([participant, participant.registration.verified_weight])
             
             data_pairs = sorted(data_pairs, key=lambda p: p[1])
+
+        elif method == 'club_random':
+            if current_club and not participants.filter_by(association_name=current_club).count():
+                current_club = None
+
+            if current_club is None:
+                current_club = clubs.pop()
     
         if method == 'random':
             next_participant = random.choice(participants.all())
+        elif method == 'club_random':
+            next_participant = random.choice(
+                participants.filter_by(association_name=current_club).all())
         elif method == 'smallest_weight':
             next_participant = data_pairs[0][0]
         elif method == 'largest_weight':

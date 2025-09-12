@@ -244,4 +244,4 @@ def action(action):
     elif action == "weigh-in":
         flash("TN wurden eingewogen wie angemeldet.", 'success')
 
-    return redirect(url_for('event_manager.registrations', event=g.event.slug))
+    return redirect(url_for('mod_participants.index', event=g.event.slug))

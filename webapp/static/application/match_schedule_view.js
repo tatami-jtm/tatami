@@ -190,6 +190,10 @@ document.querySelector("[data-tatami-end-callup]").addEventListener("click", () 
 document.querySelectorAll("[data-tatami-enter-results]").forEach((btn) => {
     btn.addEventListener("click", async () => {
         offlineModal.classList.remove('shown')
+
+        //btn.setAttribute('disabled', true)
+        btn.blur()
+
         if (document.getElementById('match-winner').value == 'white') {
             sbState.view.screen = 'winner:white'
             setOption('winner:name', document.querySelector("[data-tatami-source=\"current_match.white.name\"]").value)
@@ -253,6 +257,8 @@ document.querySelectorAll("[data-tatami-enter-results]").forEach((btn) => {
         }
 
         console.log(response)
+
+        btn.removeAttribute('disabled')
 
         if (response.ok) {
             let reply = await response.json()
