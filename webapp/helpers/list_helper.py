@@ -32,7 +32,7 @@ def load_list(group):
                 f.disqualify()
             elif participant.removed:
                 f.remove()
-            struct['fighters'].append(f)        
+            struct['fighters'].append(f)
 
     for match in group.matches.all():
         if not match.obsolete and match.has_result():

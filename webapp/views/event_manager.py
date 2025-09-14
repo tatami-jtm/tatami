@@ -10,6 +10,8 @@ from ..models import db, Event, EventClass, DeviceRegistration, \
 
 from ..helpers import _get_or_create
 
+from ..listslib import ListRenderer, EmptyListMock
+
 from datetime import datetime
 import time, uuid, os, csv, io, zipfile
 
@@ -1171,12 +1173,39 @@ def quick_sign_in():
     return redirect(url_for('event_manager.devices', event=g.event.slug))
 
 
-
-@eventmgr_view.route('/offline-scoreboard')
+@eventmgr_view.route('/generator')
 @login_required
 @check_and_apply_event
 @check_is_event_supervisor
-def offline_board():
+def generators():
+    list_types = ListSystem.all_enabled()
+    return render_template('event-manager/generators.html', list_types=list_types)
+
+
+@eventmgr_view.route('/generator/list-<event_class>-<list>.pdf')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def generate_list(event_class, list):
+    event_class = g.event.classes.filter_by(id=event_class).one_or_404()
+    list_system = ListSystem.all_enabled().filter_by(list_file=list).one_or_404()
+
+    elm = EmptyListMock(event_class=event_class, list_system=list_system)
+    ell = elm.get_list()
+    lr = ListRenderer(ell, g.event, elm, served=False)
+
+    pdf_io = io.BytesIO()
+    pdf_io.write((pdf_data := lr.render_pdf())[0])
+    pdf_io.seek(0)
+
+    return send_file(pdf_io, mimetype='application/pdf')
+
+
+@eventmgr_view.route('/generator/offline-scoreboard')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def generate_offline_board():
     zip_io = io.BytesIO()
     zip_file = zipfile.ZipFile(zip_io, mode='w')
 
