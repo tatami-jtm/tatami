@@ -1,12 +1,36 @@
 {%- import "components/buttons.html" as buttons -%}
 {%- import "components/layout.html" as layout -%}
 {%- import "components/alerts.html" as alerts -%}
+{%- import "components/datasets.html" as datasets -%}
 
 {% set event_page="generators" %}
 {% extends "layouts/event-manager.html" %}
 {% block title %}{{ g.event.title }} | Werkzeug-Downloads{% endblock %}
 {% block body %}
-<h1>Werkzeug-Downloads</h1>
+<h1>Werkzeuge</h1>
+
+<p>Hier können Sie verschiedene Werkzeuge herunterladen:</p>
+
+<h2>Listenvorlagen</h2>
+
+<p>Wählen Sie eine Kampfklasse und einen Listentyp aus:</p>
+
+{% call datasets.Dataset() %}
+    {% call datasets.Table() %}
+        {% for class in g.event.classes %}
+            {% call datasets.TableRow() %}
+                {{ datasets.TableColumn(text=class.title) }}
+                {% for lt in list_types %}
+                    {% call datasets.TableButtonsColumn() %}
+                        {% call buttons.SubtleButton(href=url_for('event_manager.generate_list', event=g.event.slug, event_class=class.id, list=lt.list_file), inline=True) %}
+                            {{ buttons.ButtonIcon(icon='download-square', label=lt.list_file) }}
+                        {% endcall %}
+                    {% endcall %}
+                {% endfor %}
+            {% endcall %}
+        {% endfor %}
+    {% endcall %}
+{% endcall %}
 
 <h2>Offline-Scoreboard</h2>
 
@@ -18,6 +42,6 @@
     <p>Diese Funktion ist bislang noch experimentell und sollte nur eingeschränkt verwendet werden.</p>
 {% endcall %}
 
-{{ buttons.SecondaryButton(href=url_for('event_manager.offline_board', event=g.event.slug), text="Scoreboard herunterladen") }}
+{{ buttons.SecondaryButton(href=url_for('event_manager.generate_offline_board', event=g.event.slug), text="Scoreboard herunterladen") }}
 
 {% endblock body %}
