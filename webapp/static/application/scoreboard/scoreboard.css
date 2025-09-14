@@ -154,7 +154,7 @@ body {
 }
 
 .view-main .main-grid .main-row-score .score-grid .score-full_text {
-    font-size: 30vh;
+    font-size: 35vh;
     font-weight: bold;
     text-align: center;
     flex-grow: 1;
@@ -266,7 +266,7 @@ body {
 .view-main .main-grid .main-row-score .score-grid .score-shido .card-shido,
 .view-main .main-grid .main-row-score .score-grid .score-shido .card-hansokumake {
     height: 30vh;
-    width: 9vh;
+    width: 5vw;
     display: block;
     border-radius: 2vmin;
     color: #600;
@@ -290,7 +290,7 @@ body {
     text-transform: uppercase;
 }
 .view-main .main-grid .main-row-score .score-grid .score-shido .card-shido.hidden + .card-shido.hidden + .card-hansokumake {
-    width: 29vh;
+    width: 17vw;
     font-size: 20vh;
     padding-top: 5vh;
 }
@@ -581,13 +581,13 @@ body {
     left: 0;
     right: 0;
     padding: 3vh 2vw;
-    font-size: 8vh;
+    font-size: 7vh;
     font-weight: bold;
     text-align: center;
 }
 .view-winner .winner-name {
     padding: 0 2vw;
-    font-size: 25vh;
+    font-size: 20vh;
     font-weight: bold;
     text-align: center;
     margin-bottom: 1vh;
@@ -595,6 +595,6 @@ body {
     hyphens: auto;
 }
 .view-winner .winner-club {
-    font-size: 12.5vh;
+    font-size: 10vh;
     text-align: center;
 }
