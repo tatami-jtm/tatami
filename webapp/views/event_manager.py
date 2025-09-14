@@ -1171,8 +1171,15 @@ def quick_sign_in():
     return redirect(url_for('event_manager.devices', event=g.event.slug))
 
 
+@eventmgr_view.route('/generator')
+@login_required
+@check_and_apply_event
+@check_is_event_supervisor
+def generators():
+    return render_template('event-manager/generators.html')
 
-@eventmgr_view.route('/offline-scoreboard')
+
+@eventmgr_view.route('/generator/offline-scoreboard')
 @login_required
 @check_and_apply_event
 @check_is_event_supervisor

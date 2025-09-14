@@ -1,0 +1,23 @@
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/layout.html" as layout -%}
+{%- import "components/alerts.html" as alerts -%}
+
+{% set event_page="generators" %}
+{% extends "layouts/event-manager.html" %}
+{% block title %}{{ g.event.title }} | Werkzeug-Downloads{% endblock %}
+{% block body %}
+<h1>Werkzeug-Downloads</h1>
+
+<h2>Offline-Scoreboard</h2>
+
+<p>Sie können ein Offline-Scoreboard für diese Veranstaltung erzeugen und herunterladen. Das Offline-Scoreboard kann dann auch ohne Anmeldung oder Netzwerk-Verbindung verwendet werden.</p>
+
+<p>Ggf. müssen Sie Sicherheitsfunktionen deaktivieren, um das Offline-Scoreboard nutzen zu können. In Firefox müssen Sie bspw. in <a href="about:config">about:config</a> die Einstellung <code>security.fileuri.strict_origin_policy</code> deaktivieren, damit zwischen dem Controller und dem Scoreboard Daten übertragen werden können. Alternativ können Sie einen HTTP-Server verwenden, um das Offline-Scoreboard auf localhost bereitzustellen.</p>
+
+{% call alerts.WarningAlert() %}
+    <p>Diese Funktion ist bislang noch experimentell und sollte nur eingeschränkt verwendet werden.</p>
+{% endcall %}
+
+{{ buttons.SecondaryButton(href=url_for('event_manager.offline_board', event=g.event.slug), text="Scoreboard herunterladen") }}
+
+{% endblock body %}
