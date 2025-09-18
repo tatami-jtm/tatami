@@ -46,6 +46,8 @@ def do_match_schedule(mat):
 
     attempts = 2 * LIMIT_OF_FORECAST_FOR_SCHEDULE
 
+    NEXT_FIGHT_AT = 0
+
     while len(mat.scheduled_matches()) < LIMIT_OF_FORECAST_FOR_SCHEDULE:
         attempts -= 1
 
@@ -62,6 +64,10 @@ def do_match_schedule(mat):
                 # if not, if the current group's next item is a break, decrease group break counter
                 if next_match is None:
                     selected_group.list_break_count -= 1
+                else:
+                    remaining_break_time = next_match.remaining_break_time()
+                    if remaining_break_time > NEXT_FIGHT_AT:
+                        NEXT_FIGHT_AT = remaining_break_time
 
                 # clear current groups scheduled-for key and current group status
                 selected_group.currently_used = False
@@ -103,6 +109,8 @@ def do_match_schedule(mat):
         db.session.commit()
     
     db.session.commit()
+
+    return NEXT_FIGHT_AT
 
 
 def make_config(max_concurrent_groups, max_concurrent_participants):

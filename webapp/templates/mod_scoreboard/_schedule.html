@@ -38,6 +38,10 @@
     {% if g.event.setting('scheduling.use', True) %}
         <p>Die Listen werden auf dieser Matte automatisch geführt. Folglich sind entweder noch keine Listen freigegeben, alle Kämpf erledigt oder es muss zurzeit eine Pause stattfinden.</p>
 
+        {% if break_time %}
+            <p class="fw-bold">Geschätzte Pausenzeit: {{ break_time }}</p>
+        {% endif %}
+
         {{ buttons.SecondaryButton(href='?', text='Seite aktualisieren') }}
     {% else %}
         <p>Unten können ggf. Kämpfe ausgewählt werden, die jetzt stattfinden können.</p>
@@ -87,7 +91,7 @@
 <h3>Weitere Kämpfe</h3>
 
 {% call cards.Card() %}
-    {% for list in assigned_lists %}
+    {% for list in assigned_lists if not list.completed %}
         {{ cards.CardHeader(text=list.title, class="tj-schedgrp-btn", actionable=True, attr='data-tj-oneof=\'{"common": ".tj-schedgrp-element", "unique": "#group-' ~ list.id ~ '", "class": "hidden", "classWhen": "off", "ownClass": "active", "ownCommon": ".tj-schedgrp-btn"}\'') }}
         {% call cards.CardBody(class="tj-schedgrp-element hidden", id="group-" ~ list.id) %}
             {% for match in list.matches.filter_by(scheduled=False, completed=False) if not match.obsolete %}

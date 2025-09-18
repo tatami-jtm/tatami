@@ -61,6 +61,18 @@ class Match(db.Model):
     def has_result(self):
         return self.results.count() == 1
     
+    def remaining_break_time(self):
+        now = dt.now()
+        break_time = self.group.event_class.between_fights_time
+
+        remaining_time = max(
+            0,
+            int(break_time - (now - self.white.last_fight_at).total_seconds()) if self.white.last_fight_at is not None else 0,
+            int(break_time - (now - self.blue.last_fight_at).total_seconds()) if self.blue.last_fight_at is not None else 0,
+        )
+
+        return remaining_time
+    
     def schedulable(self, consider_preptime = False):
         now = dt.now()
         break_time = self.group.event_class.between_fights_time

@@ -130,6 +130,7 @@ const managedTick = () => {
 }
 
 window.addEventListener("load", () => {
+    sbState.disable_timer = true
     setInterval(managedTick, 50)
 })
 
@@ -282,6 +283,7 @@ document.querySelectorAll("[data-tatami-enter-results]").forEach((btn) => {
                 callup_again.classList.remove('btn-danger-subtle')
 
                 enter_results.classList.add('disabled')
+                sbState.disable_timer = true
             }
         } else {
             document.getElementById('offline-error-message').innerText = response.status + " " + response.statusText
@@ -315,6 +317,8 @@ let do_callup = () => {
     callup_again.innerText = 'Erneut aufrufen'
     callup_again.classList.remove('btn-secondary')
     callup_again.classList.add('btn-danger-subtle')
+
+    sbState.disable_timer = false
 
     enter_results.classList.remove('disabled');
     console.log(enter_results)
