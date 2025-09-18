@@ -10,6 +10,8 @@ from ..models import db, Group, Match
 
 from .. import helpers
 
+import pprint
+
 mod_global_list_view = Blueprint('mod_global_list', __name__)
 
 @mod_global_list_view.route('/')
@@ -96,6 +98,27 @@ def update_group(id):
     g.event.log(g.device.title, 'DEBUG', f'Die Gruppe {group.title} wurde bearbeitet')
 
     return redirect(url_for('mod_global_list.index', event=g.event.slug, group_list=request.form['group_list']))
+
+
+@mod_global_list_view.route('/group/<id>/debug')
+@check_and_apply_event
+@check_is_registered
+def debug(id):
+    if not g.device.event_role.may_use_global_list:
+        flash('Sie haben keine Berechtigung, hierauf zuzugreifen.', 'danger')
+        return redirect(url_for('devices.index', event=g.event.slug))
+    
+    group = g.event.groups.filter_by(id=id).one_or_404()
+    group_list = helpers.load_list(group)
+
+    match_schedule = pprint.pformat(group_list.get_schedule(True))
+
+    dbmatches = '\n'.join([
+        m.printable()
+        for m in group.matches.all()
+    ])
+
+    return render_template('mod_global_list/debug.html', group=group, match_schedule=match_schedule, dbmatches=dbmatches)
 
 
 @mod_global_list_view.route('/group/<id>/parameters', methods=['GET', 'POST'])

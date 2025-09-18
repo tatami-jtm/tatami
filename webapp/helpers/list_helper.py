@@ -105,6 +105,12 @@ def dump_list(list, group):
             if existing_match is not None:
                 existing_match = _check_if_match_is_obsolete(existing_match, item['match'])
 
+                # Update some mostly informational properties just in case
+                existing_match.is_playoff = list.is_playoff(match_id)
+                existing_match.list_tags = ",".join(match_tags)
+                existing_match.match_list_no = match_no
+
+
             if existing_match is None:
                 match = Match(event=group.event, event_class=group.event_class, group=group)
                 db.session.add(match)
@@ -160,6 +166,7 @@ def reset_list(group):
 
 
 def _check_if_match_is_obsolete(dbmatch, listmatch):
+    listmatch_result = listmatch.get_result()
     if (dbmatch.white.id != listmatch.get_white().get_id() or
         dbmatch.blue.id != listmatch.get_blue().get_id()):
         
@@ -178,6 +185,13 @@ def _check_if_match_is_obsolete(dbmatch, listmatch):
         else:
             dbmatch.white = Participant.query.filter_by(id=listmatch.get_white().get_id()).one()
             dbmatch.blue = Participant.query.filter_by(id=listmatch.get_blue().get_id()).one()
+
+    elif (listmatch_result and listmatch_result.get_absolute_winner()):
+        dbmatch.obsolete = True
+        dbmatch.scheduled = False
+        dbmatch.called_up = False
+        dbmatch.running = False
+        dbmatch = None
 
     elif dbmatch.obsolete is None:
         dbmatch.obsolete = False

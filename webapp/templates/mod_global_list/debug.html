@@ -1,0 +1,25 @@
+{%- import "components/layout.html" as layout -%}
+{%- import "components/datasets.html" as datasets -%}
+{%- import "components/buttons.html" as buttons -%}
+{%- import "components/form.html" as form -%}
+
+
+{% extends "layouts/application.html" %}
+{% block title %}Hauptliste{% endblock %}
+{% block body %}
+{% call layout.Container() %}
+
+    <h1>Debugging-Ausgabe für {{ group.title }}</h1>
+
+    <h2>Anstehende Kämpfe</h2>
+
+    <pre><code>{{ match_schedule }}</code></pre>
+
+    <h2>Datenbank-Matches</h2>
+
+    <pre><code>{{ dbmatches }}</code></pre>
+
+    {{ buttons.PrimaryButton(href=url_for('mod_global_list.index', event=g.event.slug, group=group.id), text="Zurück zur Hauptliste") }}
+
+{% endcall %}
+{% endblock body %}
