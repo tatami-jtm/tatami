@@ -693,6 +693,14 @@ class MetaList:
             elif blue_disqualified:
                 mr = match.mk_result()
                 mr.set_absolute_winner('white')
+
+                # Set scores in accordance with Art. 8.2.2 of the SOR-Refereeing Rules
+
+                mr.set_points_white(1)
+                mr.set_score_white(10)
+                mr.set_points_blue(0)
+                mr.set_score_blue(0)
+
                 mr.set_data_white((), (), False)
                 mr.set_data_blue((), (), True)
                 self.enter_results(obj, mr)
@@ -700,6 +708,14 @@ class MetaList:
             elif white_disqualified:
                 mr = match.mk_result()
                 mr.set_absolute_winner('blue')
+
+                # Set scores in accordance with Art. 8.2.2 of the SOR-Refereeing Rules
+
+                mr.set_points_white(0)
+                mr.set_score_white(0)
+                mr.set_points_blue(1)
+                mr.set_score_blue(10)
+
                 mr.set_data_white((), (), True)
                 mr.set_data_blue((), (), False)
                 self.enter_results(obj, mr)
@@ -835,10 +851,6 @@ class MetaList:
             match_id = m['match']
             mr = obj._match_results[match_id]
             mobj = mr.get_match()
-
-            # absolute winners do not earn any points
-            if mr.get_absolute_winner() in ['white', 'blue']:
-                continue
 
             white_key = mobj.get_white()
             if white_key in base_data:  # may be false due to scopes
