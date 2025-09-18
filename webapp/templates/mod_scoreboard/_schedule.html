@@ -38,6 +38,10 @@
     {% if g.event.setting('scheduling.use', True) %}
         <p>Die Listen werden auf dieser Matte automatisch geführt. Folglich sind entweder noch keine Listen freigegeben, alle Kämpf erledigt oder es muss zurzeit eine Pause stattfinden.</p>
 
+        {% if break_time %}
+            <p class="fw-bold">Geschätzte Pausenzeit: {{ break_time }}</p>
+        {% endif %}
+
         {{ buttons.SecondaryButton(href='?', text='Seite aktualisieren') }}
     {% else %}
         <p>Unten können ggf. Kämpfe ausgewählt werden, die jetzt stattfinden können.</p>

@@ -34,12 +34,16 @@ def managed():
     for assigned_list in assigned_lists:
         helpers.force_create_list(assigned_list)
 
+    break_time = None
     if g.event.setting('scheduling.use', True):
-        helpers.do_match_schedule(g.mat)
+        break_time = helpers.do_match_schedule(g.mat) or None
+
+    if break_time is not None:
+        break_time = f"{break_time//60}min {break_time%60}s"
 
     helpers.do_promote_scheduled_fights(g.mat)
 
-    return render_template("mod_scoreboard/managed.html", assigned_lists=assigned_lists)
+    return render_template("mod_scoreboard/managed.html", assigned_lists=assigned_lists, break_time=break_time)
 
 
 @mod_scoreboard_view.route('/managed/api/reload')
@@ -59,9 +63,13 @@ def api_reload():
     for assigned_list in assigned_lists:
         helpers.force_create_list(assigned_list)
 
+    break_time = None
     if g.event.setting('scheduling.use', True):
-        helpers.do_match_schedule(g.mat)
+        break_time = helpers.do_match_schedule(g.mat) or None
+
+    if break_time is not None:
+        break_time = f"{break_time//60}min {break_time%60}s"
 
     helpers.do_promote_scheduled_fights(g.mat)
 
-    return render_template("mod_scoreboard/_schedule.html", assigned_lists=assigned_lists)
+    return render_template("mod_scoreboard/_schedule.html", assigned_lists=assigned_lists, break_time=break_time)
