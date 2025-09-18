@@ -52,9 +52,9 @@ class Match(db.Model):
     obsolete = db.Column(db.Boolean)
 
     def printable(self):
-        return f"Match<{self.listslib_match_id}>('{self.white.full_name}', '{self.blue.full_name}'" + \
+        return f"{self.id}. Match<{self.listslib_match_id}>\n  ('{self.white.full_name}', '{self.blue.full_name}'" + \
             (', obsolete=True' if self.obsolete else '') + \
-                (f", result={self.get_result()[1].printable()}" if self.has_result() else '') + \
+                (f", result=\n    {self.get_result()[1].printable()}" if self.has_result() else '') + \
                     ")"
 
     def get_result(self):
@@ -142,7 +142,7 @@ class MatchResult(db.Model):
     full_time = db.Column(db.Integer())
 
     def printable(self):
-        return f"MatchResult(winner={self.winner()}, score={self.score()}, loser_dq={self.loser_disqualified()}, loser_rm={self.loser_removed()})"
+        return f"{self.id}. MatchResult(winner='{self.winner()}', score={self.score()}, loser_dq={self.loser_disqualified()}, loser_rm={self.loser_removed()})"
 
     def winner(self):
         if self.is_white_winner:
