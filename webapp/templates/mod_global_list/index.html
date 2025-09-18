@@ -80,6 +80,9 @@
     {% if current_group %}
         {%- call colboard.ColboardColumn(span=3) -%}
             {% call colboard.ColboardColumnHeader(title=current_group.title) %}
+                {%- call buttons.SubtleButton(href=url_for('mod_global_list.debug', event=g.event.slug, id=current_group.id), disabled=not current_group.marked_ready) -%}
+                    {{ buttons.ButtonIcon(icon="bug", label="Debug") }}
+                {%- endcall -%}
                 {%- call buttons.SubtleButton(href=url_for('mod_global_list.parameters', event=g.event.slug, id=current_group.id), disabled=not current_group.marked_ready) -%}
                     {{ buttons.ButtonIcon(icon="database-settings", label="Parameter") }}
                 {%- endcall -%}

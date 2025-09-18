@@ -51,6 +51,12 @@ class Match(db.Model):
     # This flag will be set, when this match is obsolete because of a change in the lists
     obsolete = db.Column(db.Boolean)
 
+    def printable(self):
+        return f"Match<{self.listslib_match_id}>('{self.white.full_name}', '{self.blue.full_name}'" + \
+            (', obsolete=True' if self.obsolete else '') + \
+                (f", result={self.get_result()[1].printable()}" if self.has_result() else '') + \
+                    ")"
+
     def get_result(self):
         if self.results.count() != 1:
             return True, MatchResult(match=self)
@@ -133,7 +139,10 @@ class MatchResult(db.Model):
     is_blue_removed = db.Column(db.Boolean()) # e. g. injury
 
     scoreboard_data = db.Column(db.Text())
-    full_time = db.Column(db.Integer())    
+    full_time = db.Column(db.Integer())
+
+    def printable(self):
+        return f"MatchResult(winner={self.winner()}, score={self.score()}, loser_dq={self.loser_disqualified()}, loser_rm={self.loser_removed()})"
 
     def winner(self):
         if self.is_white_winner:
