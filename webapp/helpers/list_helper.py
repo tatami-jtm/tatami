@@ -160,6 +160,7 @@ def reset_list(group):
 
 
 def _check_if_match_is_obsolete(dbmatch, listmatch):
+    listmatch_result = listmatch.get_result()
     if (dbmatch.white.id != listmatch.get_white().get_id() or
         dbmatch.blue.id != listmatch.get_blue().get_id()):
         
@@ -178,6 +179,13 @@ def _check_if_match_is_obsolete(dbmatch, listmatch):
         else:
             dbmatch.white = Participant.query.filter_by(id=listmatch.get_white().get_id()).one()
             dbmatch.blue = Participant.query.filter_by(id=listmatch.get_blue().get_id()).one()
+
+    elif (listmatch_result and listmatch_result.get_absolute_winner()):
+        dbmatch.obsolete = True
+        dbmatch.scheduled = False
+        dbmatch.called_up = False
+        dbmatch.running = False
+        dbmatch = None
 
     elif dbmatch.obsolete is None:
         dbmatch.obsolete = False
