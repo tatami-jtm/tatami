@@ -105,6 +105,12 @@ def dump_list(list, group):
             if existing_match is not None:
                 existing_match = _check_if_match_is_obsolete(existing_match, item['match'])
 
+                # Update some mostly informational properties just in case
+                existing_match.is_playoff = list.is_playoff(match_id)
+                existing_match.list_tags = ",".join(match_tags)
+                existing_match.match_list_no = match_no
+
+
             if existing_match is None:
                 match = Match(event=group.event, event_class=group.event_class, group=group)
                 db.session.add(match)

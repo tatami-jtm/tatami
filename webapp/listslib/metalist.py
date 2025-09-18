@@ -162,6 +162,12 @@ class MetaList:
 
                 self._matches[match_id] = match_data
 
+        # add resolv-matches to playoffs
+
+        for rm in self._com.findall("rules/score/resolve-match"):
+            match_id = rm.attrib['id']
+            self._playoff_match_ids.append(match_id)
+
     """
         __load_single_match()
 
