@@ -76,8 +76,9 @@ def add_group(id):
         group.max_weight = int(float(request.form['max_weight']) * 1000) if request.form['max_weight'] else None
 
         if request.form['system']:
-            group.system_id = int(request.form['system'])
-            group.list_break_count = group.list_system().break_count
+            system = ListSystem.all_enabled().filter_by(id=request.form['system']).one_or_none()
+            group.system_id = system.id
+            group.list_break_count = system.break_count
         else:
             group.system_id = None
 
