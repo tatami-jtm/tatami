@@ -66,12 +66,12 @@
             {% set show_for_club = g.event.setting('show_for_club', 'club') %}
             {{ form.Label(for_id='show_for_club', text="Anzeige von Verband/Verein") }}
             {% call form.Select(id='show_for_club', name='show_for_club') %}
-                {{ form.SelectOption(value='club', selected=(show_for_club == 'club'), text="Nur Verein") }}
-                {{ form.SelectOption(value='club+assoc', selected=(show_for_club == 'club+assoc'), text="Verein und Verband") }}
-                {{ form.SelectOption(value='assoc+club', selected=(show_for_club == 'assoc+club'), text="Verband und Verein") }}
-                {{ form.SelectOption(value='assoc', selected=(show_for_club == 'assoc'), text="Nur Verband") }}
+                {{ form.SelectOption(value='club', selected=(show_for_club == 'club'), text="Verein") }}
+                {{ form.SelectOption(value='club+assoc', selected=(show_for_club == 'club+assoc'), text="Verein (Verband)") }}
+                {{ form.SelectOption(value='assoc+club', selected=(show_for_club == 'assoc+club'), text="Verband · Verein") }}
+                {{ form.SelectOption(value='assoc', selected=(show_for_club == 'assoc'), text="Verband") }}
             {% endcall %}
-            {{ form.FormNotice(text='Dies ist insb. bei Meisterschaften mit Vorqualifikation auszuwählen, bei denen der Verband maßgeblich ist. Eine Änderung dieser Einstellung gilt nur für TN, die danach einer Gruppe zugewiesen werden.') }}
+            {{ form.FormNotice(text='Dies ist insb. bei Meisterschaften mit Vorqualifikation anzupassen, bei denen der Verband maßgeblich ist. Eine Änderung dieser Einstellung gilt nur für TN, die danach einer Gruppe zugewiesen werden.') }}
         {% endcall %}
         {% call cards.CardBody() %}
             {{ form.Label(for_id='sbid', text="Scoreboard") }}
