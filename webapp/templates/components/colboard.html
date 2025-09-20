@@ -19,6 +19,10 @@
 </div>
 {%- endmacro -%}
 
+{%- macro ColboardColumnHeaderSpacer() -%}
+<div class="colboard-column-header-spacer"></div>
+{%- endmacro -%}
+
 {%- macro ColboardColumnTitle(title="") -%}
 <div class="colboard-column-title">{{ title or caller() }}</div>
 {%- endmacro -%}
