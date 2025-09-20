@@ -90,16 +90,20 @@
 
 <h3>Weitere Kämpfe</h3>
 
-{% call cards.Card() %}
-    {% for list in assigned_lists if not list.completed %}
-        {{ cards.CardHeader(text=list.title, class="tj-schedgrp-btn", actionable=True, attr='data-tj-oneof=\'{"common": ".tj-schedgrp-element", "unique": "#group-' ~ list.id ~ '", "class": "hidden", "classWhen": "off", "ownClass": "active", "ownCommon": ".tj-schedgrp-btn"}\'') }}
-        {% call cards.CardBody(class="tj-schedgrp-element hidden", id="group-" ~ list.id) %}
-            {% for match in list.matches.filter_by(scheduled=False, completed=False) if not match.obsolete %}
-                {{ match_summary(match, controls=True, schedule=False) }}
-            {% else %}
-                <p>In dieser Gruppe stehen keine Kämpfe mehr aus.</p>
-            {% endfor %}
-            <p><a href="{{ url_for('mod_list.display', event=g.event.slug, shown_list=list.id, show_only_one_list='yes') }}" data-show-list>Liste anzeigen</a></p>
-        {% endcall %}
-    {% endfor %}
-{% endcall %}
+{% if assigned_lists|length %}
+    {% call cards.Card() %}
+        {% for list in assigned_lists if not list.completed %}
+            {{ cards.CardHeader(text=list.title, class="tj-schedgrp-btn", actionable=True, attr='data-tj-oneof=\'{"common": ".tj-schedgrp-element", "unique": "#group-' ~ list.id ~ '", "class": "hidden", "classWhen": "off", "ownClass": "active", "ownCommon": ".tj-schedgrp-btn"}\'') }}
+            {% call cards.CardBody(class="tj-schedgrp-element hidden", id="group-" ~ list.id) %}
+                {% for match in list.matches.filter_by(scheduled=False, completed=False) if not match.obsolete %}
+                    {{ match_summary(match, controls=True, schedule=False) }}
+                {% else %}
+                    <p>In dieser Gruppe stehen keine Kämpfe mehr aus.</p>
+                {% endfor %}
+                <p><a href="{{ url_for('mod_list.display', event=g.event.slug, shown_list=list.id, show_only_one_list='yes') }}" data-show-list>Liste anzeigen</a></p>
+            {% endcall %}
+        {% endfor %}
+    {% endcall %}
+{% else %}
+    <p>Es stehen keine (weiteren) Kämpfe zur Verfügung.</p>
+{% endif %}
