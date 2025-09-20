@@ -54,9 +54,6 @@
 
             {{ form.FormCheck(id='write_activity_log', name='write_activity_log', label='Veranstaltungsprotokoll schreiben', checked=g.event.setting('write_activity_log', True)) }}
 
-            {{ form.FormCheck(id='use_association_instead_of_club', name='use_association_instead_of_club', label='Anstelle des Vereins wird für die Listen, das Scoreboard u. a. der Verband verwendet', checked=g.event.setting('use_association_instead_of_club', False)) }}
-            {{ form.FormNotice(text='Dies ist insb. bei Meisterschaften mit Vorqualifikation auszuwählen, bei denen der Verband maßgeblich ist. Eine Änderung dieser Einstellung gilt nur für TN, die danach einer Gruppe zugewiesen werden.') }}
-
             {{ form.FormCheck(id='proxplace_hide_name', name='proxplace_hide_name', label='TN-Name bei Einteilung nach gewichtsnahen Gruppen ausblenden', checked=g.event.setting('proximity_placement.hide_name', False)) }}
 
             {{ form.FormCheck(id='proxplace_hide_club', name='proxplace_hide_club', label='Verein bzw. Verband bei Einteilung nach gewichtsnahen Gruppen ausblenden', checked=g.event.setting('proximity_placement.hide_club', False)) }}
@@ -64,6 +61,17 @@
             {{ form.FormCheck(id='differentiate_better_third_place', name='differentiate_better_third_place', label='Dritten Platz ggf. auskämpfen (3. vs. 4. Platz)', checked=g.event.setting('place.differentiate-better.third', False)) }}
 
             {{ form.FormCheck(id='differentiate_better_fifth_place', name='differentiate_better_fifth_place', label='Fünften Platz ggf. auskämpfen (5. vs. 6. Platz)', checked=g.event.setting('place.differentiate-better.fifth', False)) }}
+        {% endcall %}
+        {% call cards.CardBody() %}
+            {% set show_for_club = g.event.setting('show_for_club', 'club') %}
+            {{ form.Label(for_id='show_for_club', text="Anzeige von Verband/Verein") }}
+            {% call form.Select(id='show_for_club', name='show_for_club') %}
+                {{ form.SelectOption(value='club', selected=(show_for_club == 'club'), text="Verein") }}
+                {{ form.SelectOption(value='club+assoc', selected=(show_for_club == 'club+assoc'), text="Verein (Verband)") }}
+                {{ form.SelectOption(value='assoc+club', selected=(show_for_club == 'assoc+club'), text="Verband · Verein") }}
+                {{ form.SelectOption(value='assoc', selected=(show_for_club == 'assoc'), text="Verband") }}
+            {% endcall %}
+            {{ form.FormNotice(text='Dies ist insb. bei Meisterschaften mit Vorqualifikation anzupassen, bei denen der Verband maßgeblich ist. Eine Änderung dieser Einstellung gilt nur für TN, die danach einer Gruppe zugewiesen werden.') }}
         {% endcall %}
         {% call cards.CardBody() %}
             {{ form.Label(for_id='sbid', text="Scoreboard") }}

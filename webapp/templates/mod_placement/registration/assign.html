@@ -35,7 +35,7 @@
                         {{ form.SelectDefaultOption() }}
                         {% for reg in registrations.all() %}
                             {% call form.SelectOption(value=reg.id, selected=(registration and registration.id == reg.id)) %}
-                                {{ reg.last_name }}, {{ reg.first_name }} &ndash; {{ reg.association.name if g.event.setting('use_association_instead_of_club', False) and reg.association else reg.club }} ({{ reg.verified_weight / 1000 }} kg)
+                                {{ reg.last_name }}, {{ reg.first_name }} &ndash; {{ reg.for_club(g.event.setting('show_for_club', 'club')) }} ({{ reg.verified_weight / 1000 }} kg)
                             {% endcall %}
                         {% endfor %}
                     {% endcall %}
