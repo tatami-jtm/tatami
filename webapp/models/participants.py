@@ -103,6 +103,19 @@ class Registration(db.Model):
         base_hash = base64.b16encode(hashlib.md5(base_hash).digest()).decode()
         return "".join([*map(lambda x: PRONOUNCABLE_HASH[x], base_hash[:4])]).capitalize()
     
+    def for_club(self, option='club'):
+        match option:
+            case 'club':
+                return self.club
+            case 'club+assoc':
+                return self.club + ' (' + self.association.short_name + ')'
+            case 'assoc+club':
+                return self.association.short_name + ' · ' + self.club
+            case 'assoc':
+                return self.association.name
+        
+        return '??'
+
     def matches_status(self, filter):
         # All registrations match no filter
         if filter is None:

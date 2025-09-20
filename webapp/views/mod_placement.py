@@ -183,10 +183,7 @@ def assign(id):
 
                 participant.registration = registration
 
-                if g.event.setting('use_association_instead_of_club', False) and registration.association:
-                    participant.association_name = registration.association.name
-                else:
-                    participant.association_name = registration.club
+                participant.association_name = registration.for_club(g.event.setting('show_for_club', 'club'))
 
                 registration.placed = True
                 registration.placed_at = registration.placed_at or dt.now()
@@ -327,10 +324,7 @@ def assign_all_predefined(id):
 
                 participant.registration = registration
 
-                if g.event.setting('use_association_instead_of_club', False) and registration.association:
-                    participant.association_name = registration.association.name
-                else:
-                    participant.association_name = registration.club
+                participant.association_name = registration.for_club(g.event.setting('show_for_club', 'club'))
 
                 registration.placed = True
                 registration.placed_at = registration.placed_at or dt.now()
@@ -407,10 +401,7 @@ def assign_all_proximity(id):
 
             participant.registration = registration
 
-            if g.event.setting('use_association_instead_of_club', False) and registration.association:
-                participant.association_name = registration.association.name
-            else:
-                participant.association_name = registration.club
+            participant.association_name = registration.for_club(g.event.setting('show_for_club', 'club'))
 
             registration.placed = True
             registration.placed_at = registration.placed_at or dt.now()
@@ -805,10 +796,7 @@ def _refresh_participant_name(participant, registration):
     if len(participant.full_name) > 21:
          participant.full_name = f"{registration.first_name[0]}. {registration.last_name}"
 
-    if g.event.setting('use_association_instead_of_club', False) and registration.association:
-        participant.association_name = registration.association.name
-    else:
-        participant.association_name = registration.club
+    participant.association_name = registration.for_club(g.event.setting('show_for_club', 'club'))
 
 
 def _refresh_participant_weight(event_class, participant, registration, group):
@@ -862,10 +850,7 @@ def _refresh_participant_weight(event_class, participant, registration, group):
 
         participant.registration = registration
 
-        if g.event.setting('use_association_instead_of_club', False) and registration.association:
-            participant.association_name = registration.association.name
-        else:
-            participant.association_name = registration.club
+        participant.association_name = registration.for_club(g.event.setting('show_for_club', 'club'))
 
         registration.placed = True
         registration.placed_at = registration.placed_at or dt.now()

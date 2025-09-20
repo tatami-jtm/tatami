@@ -50,7 +50,8 @@
                             {{ segmentation.SegmentationControl(id='before_'~reg.id, name='before', value=reg.id, checked=default_segmentation[reg.id]) }}
                         {% endif %}
                         {% call segmentation.SegmentationItem(checkbox=True, id="allow_" ~ reg.id, name="allow", value=reg.id, checked=True) %}
-                            <strong>{{ reg.verified_weight / 1000 }} kg</strong> &ndash; {% if g.event.setting('proximity_placement.hide_name', False) %}<span class="font-monospace">{{ reg.anon_name() }}</span>{% else %}{{ reg.first_name }} {{ reg.last_name }}{% endif %} ({% if g.event.setting('proximity_placement.hide_club', False) %}<span class="font-monospace">{{ reg.anon_club() }}</span>{% else %}{{ reg.association.name if g.event.setting('use_association_instead_of_club', False) and reg.association else reg.club }}{% endif %})
+                            <strong>{{ reg.verified_weight / 1000 }} kg</strong> &ndash; {% if g.event.setting('proximity_placement.hide_name', False) %}<span class="font-monospace">{{ reg.anon_name() }}</span>{% else %}{{ reg.first_name }} {{ reg.last_name }}{% endif %}
+                                ({% if g.event.setting('proximity_placement.hide_club', False) %}<span class="font-monospace">{{ reg.anon_club() }}</span>{% else %}{{ reg.for_club(g.event.setting('show_for_club', 'club')) }}{% endif %})
                         {% endcall %}
                     {% endfor %}
                 {% endcall %}

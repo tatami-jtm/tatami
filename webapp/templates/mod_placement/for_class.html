@@ -31,7 +31,7 @@
                 {%- call list.ListItem() -%}
                     {%- call list.ListItemBody() -%}
                         {{ list.ListItemBodyHeader(reg.first_name + ' ' + reg.last_name) }}
-                        {{ list.ListItemBodyDetail(reg.association.name if g.event.setting('use_association_instead_of_club', False) and reg.association else reg.club) }}
+                        {{ list.ListItemBodyDetail(reg.for_club(g.event.setting('show_for_club', 'club'))) }}
                         {{ list.ListItemBodyDetail(reg.verified_weight / 1000 ~ ' kg') }}
                     {%- endcall -%}
                     {%- call list.ListItemMenu() -%}

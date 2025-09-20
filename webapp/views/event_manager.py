@@ -137,7 +137,7 @@ def save_config():
     elif request.form['form'] == 'misc':
         g.event.save_setting('count_weighin_as_registration', 'count_weighin_as_registration' in request.form)
         g.event.save_setting('write_activity_log', 'write_activity_log' in request.form)
-        g.event.save_setting('use_association_instead_of_club', 'use_association_instead_of_club' in request.form)
+        g.event.save_setting('show_for_club', request.form['show_for_club'])
 
         g.event.save_setting('proximity_placement.hide_name', 'proxplace_hide_name' in request.form)
         g.event.save_setting('proximity_placement.hide_club', 'proxplace_hide_club' in request.form)
