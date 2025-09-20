@@ -100,6 +100,7 @@ const managedTick = () => {
         setOption("white:club", document.querySelector("[data-tatami-source=\"current_match.white.association\"]").value)
         setOption("blue:name", document.querySelector("[data-tatami-source=\"current_match.blue.name\"]").value)
         setOption("blue:club", document.querySelector("[data-tatami-source=\"current_match.blue.association\"]").value)
+        callup_again.removeAttribute('disabled')
     } else {
         setOption("class", '')
         setOption("progress", '')
@@ -107,6 +108,7 @@ const managedTick = () => {
         setOption("white:club", '')
         setOption("blue:name", '')
         setOption("blue:club", '')
+        callup_again.setAttribute('disabled', 'disabled')
     }
 
 
