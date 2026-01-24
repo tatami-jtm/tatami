@@ -1216,7 +1216,7 @@ class MetaList:
     
 
     def get_included_templates(self, obj):
-        templates = self._included_templates
+        templates = self._included_templates[::]
 
         if self.has_option(obj, 'differentiate-better.third') and not self._results_are_ordered['third']:
             templates.append('resolve_3')
